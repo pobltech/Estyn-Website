@@ -99,6 +99,16 @@ body {
 .bg-lightblue {background-color: $estyn-lightblue}
 .bg-white {background-color:$estyn-white}
 
+.bg-signpost-blue {background-color: $esytn-signpost-blue;}
+.bg-signpost-lightpink {background-color: $esytn-signpost-lightpink;}
+.bg-signpost-lightpink2 {background-color: $estyn-signpost-lightpink2;}
+.bg-signpost-darkpink {background-color: $esytn-signpost-darkpink;}
+.bg-signpost-lime {background-color: $esytn-signpost-lime;}
+.bg-signpost-verylightbrown {background-color: $esytn-signpost-verylightbrown;}
+.bg-signpost-green {background-color: $esytn-signpost-green;}
+.bg-signpost-green2 {background-color: $esytn-signpost-green2;}
+
+
 /** TYPOGRAPHY **/
 
 p, li {
@@ -133,6 +143,20 @@ p, li {
         font-optical-sizing: auto;
         font-weight: 400;
         font-style: normal;
+    }
+
+    .rounded-circle {
+        background: $estyn-footertext;
+    
+        span {
+            color: $estyn-darkblue;
+            font-size: 18px;
+            line-height: 18px;
+    
+            a {
+                color: $estyn-darkblue;
+            }
+        }
     }
 }
 
@@ -1088,17 +1112,14 @@ p.sp-desc {
     left: 0;
 }
 
-.rounded-circle {
-    background: $estyn-footertext;
-
-    span {
+.dot-link-arrow {
+    a, a:focus, a:visited, a:active {
         color: $estyn-darkblue;
-        font-size: 18px;
-        line-height: 18px;
+        text-decoration: none;
 
-        a {
-            color: $estyn-darkblue;
-        }
+        font-family: "museo", serif;
+        font-size: 18px;
+        font-weight: 700;
     }
 }
 
