@@ -152,7 +152,7 @@ add_action('init', function () {
         ],
         'public' => true,
         'has_archive' => true,
-        'menu_icon' => 'dashicons-media-document',
+        'menu_icon' => 'dashicons-admin-site-alt',
         'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
         'rewrite' => ['slug' => 'news-articles'],
         'show_in_rest' => true, // Enable Gutenberg editor
@@ -170,7 +170,7 @@ add_action('init', function () {
         ],
         'public' => true,
         'has_archive' => true,
-        'menu_icon' => 'dashicons-media-document',
+        'menu_icon' => 'dashicons-hammer',
         'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
         'rewrite' => ['slug' => 'improvement-resources'],
         'show_in_rest' => true, // Enable Gutenberg editor
@@ -214,3 +214,96 @@ function add_improvement_resource_types() {
     }
 }
 add_action('init', __NAMESPACE__ . '\\add_improvement_resource_types');
+
+/**
+ * Register 'estyn_eduprovider' post type.
+ */
+add_action('init', function () {
+    register_post_type('estyn_eduprovider', [
+        'labels' => [
+            'name' => __('Providers', 'sage'),
+            'singular_name' => __('Provider', 'sage'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-welcome-learn-more',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
+        'rewrite' => ['slug' => 'education-providers'],
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ]);
+});
+
+/**
+ * Create the Sector taxonomy and the Local Authority taxonomy for the Education Providers post type.
+ */
+function create_eduprovider_taxonomies() {
+    $labels = array(
+        'name' => _x( 'Sectors', 'taxonomy general name', 'sage' ),
+        'singular_name' => _x( 'Sector', 'taxonomy singular name', 'sage' ),
+        'search_items' =>  __( 'Search Sectors', 'sage' ),
+        'all_items' => __( 'All Sectors', 'sage' ),
+        'edit_item' => __( 'Edit Sector', 'sage' ),
+        'update_item' => __( 'Update Sector', 'sage' ),
+        'add_new_item' => __( 'Add New Sector', 'sage' ),
+        'new_item_name' => __( 'New Sector Name', 'sage' ),
+        'menu_name' => __( 'Sectors', 'sage' ),
+    );
+
+    register_taxonomy('sector', array('estyn_eduprovider', 'estyn_imp_resource'), array(
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => 'sector' ),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+
+    $labels = array(
+        'name' => _x( 'Local Authorities', 'taxonomy general name', 'sage' ),
+        'singular_name' => _x( 'Local Authority', 'taxonomy singular name', 'sage' ),
+        'search_items' =>  __( 'Search Local Authorities', 'sage' ),
+        'all_items' => __( 'All Local Authorities', 'sage' ),
+        'edit_item' => __( 'Edit Local Authority', 'sage' ),
+        'update_item' => __( 'Update Local Authority', 'sage' ),
+        'add_new_item' => __( 'Add New Local Authority', 'sage' ),
+        'new_item_name' => __( 'New Local Authority Name', 'sage' ),
+        'menu_name' => __( 'Local Authorities', 'sage' ),
+    );
+
+    register_taxonomy('local_authority', array('estyn_eduprovider'), array(
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => 'local-authority' ),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+}
+add_action( 'init', __NAMESPACE__ . '\\create_eduprovider_taxonomies', 0 );
+
+/**
+ * Create the Status taxonomy for the Education Providers post type.
+ */
+function create_eduprovider_status_taxonomy() {
+    $labels = array(
+        'name' => _x( 'Statuses', 'taxonomy general name', 'sage' ),
+        'singular_name' => _x( 'Status', 'taxonomy singular name', 'sage' ),
+        'search_items' =>  __( 'Search Statuses', 'sage' ),
+        'all_items' => __( 'All Statuses', 'sage' ),
+        'edit_item' => __( 'Edit Status', 'sage' ),
+        'update_item' => __( 'Update Status', 'sage' ),
+        'add_new_item' => __( 'Add New Status', 'sage' ),
+        'new_item_name' => __( 'New Status Name', 'sage' ),
+        'menu_name' => __( 'Statuses', 'sage' ),
+    );
+
+    register_taxonomy('provider_status', array('estyn_eduprovider'), array(
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => 'provider-status' ),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+}
+add_action( 'init', __NAMESPACE__ . '\\create_eduprovider_status_taxonomy', 0 );

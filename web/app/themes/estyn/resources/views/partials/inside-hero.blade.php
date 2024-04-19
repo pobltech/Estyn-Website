@@ -2,6 +2,9 @@
 	<div class="container h-100 d-flex align-items-end mb-5 pb-5 px-md-4 px-xl-5">
 		<div class="row flex-fill">
 			<div class="col-12 insideHeroContent">
+				@if(isset($super))
+					<span class="fs-5 d-block inside-hero-super">{{ $super }}</span>
+				@endif
 				<h1>{!! $title !!}</h1>
 			</div>
 		</div>
@@ -39,7 +42,7 @@
                         </div>
 					</div>
                     <div class="col-12 col-md-6">
-                        <img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" class="img-fluid" />
+                        <img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" class="rounded-3 img-fluid" />
                     </div>
 				</div>
 			</div>
