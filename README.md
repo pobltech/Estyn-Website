@@ -3,6 +3,7 @@
   <br/>
   Bedrock + Sage theme + Pobl Tech Blocks plugin (+ dev source/environment for the blocks development)
   <br/>
+  <strong>Requires PHP 8.2</strong>
   <ul>
     <li>Set up your SQL database and user</li>
     <li>Import a copy of the database if needed</li>
