@@ -10,7 +10,6 @@
         <li>Set up your SQL database and user</li>
         <li>Import a copy of the database if needed</li>
         <li>composer install</li>
-        <li>Create your own branch and switch to it</li>
         <li>Start your PHP server</li>
       </ul>
     </li>
