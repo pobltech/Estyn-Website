@@ -22,7 +22,7 @@ vendor/
 
 # Ignore dotenv environment files and example
 .env
-.env.example
+#.env.example
 
 # Ignore Composer's files
 composer.phar
