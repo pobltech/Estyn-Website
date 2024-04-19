@@ -4,11 +4,12 @@
   Bedrock + Sage theme + Pobl Tech Blocks plugin (+ dev source/environment for the blocks development)
   <br/>
   <ul>
-    <li>In root directory:
+    <li>Set up your SQL database and user</li>
+    <li>Import a copy of the database if needed</li>
+    <li>Make sure to change site URL and wp home to whatever you're going to use</li>
+    <li>In the root directory:
       <ul>
         <li>Add and populate .env file ( https://roots.io/bedrock/docs/environment-variables/ )</li>
-        <li>Set up your SQL database and user</li>
-        <li>Import a copy of the database if needed</li>
         <li>composer install</li>
         <li>Start your PHP server</li>
       </ul>
@@ -46,11 +47,13 @@
     </li>        
     <li>ALSO, useful: To clear cache (application, view and config), from the root directory:
       <ul>
+        <li>Install the WordPress CLI ( brew install wp-cli )</li>
         <li>wp acorn cache:clear</li>
         <li>wp acorn view:clear</li>
         <li>wp acorn config:clear</li>
       </ul>
     </li>
+    <li>Also: You might want to download a copy of the uploaded images/files and put them in the uploads folder</li>
   </ul>
 </a>
 
