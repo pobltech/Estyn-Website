@@ -15,6 +15,7 @@ vendor/
 /web/app/plugins/pobl-tech-blocks/**/.DS_Store
 /web/app/plugins/pobl-tech-blocks/**/node_modules/
 /web/app/plugins/pobl-tech-blocks/blocks/build/
+/web/app/plugins/pobl-tech-blocks/package-lock.json
 
 # We don't need the twentytwentyfour theme
 /web/app/themes/twentytwentyfour/
