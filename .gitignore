@@ -7,6 +7,7 @@ Thumbs.db
 vendor/
 /web/app/plugins/*
 /web/app/mu-plugins/
+/web/app/languages/*
 
 # BUT we want to include pobl-tech-blocks plugin, minus the node_modules and blocks/build folders
 !/web/app/plugins/pobl-tech-blocks/
