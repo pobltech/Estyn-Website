@@ -139,5 +139,10 @@
         'imageExtraClasses' => 'ctaSearchMap',
         'showSearchBox' => true
     ])
+    <div class="reportMain">
+	    <div class="container px-md-4 px-xl-5 pt-5">
+            @include('partials.inspection-and-report-schedule')
+        </div>
+    </div>
 
 @endsection
