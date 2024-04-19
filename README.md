@@ -18,6 +18,7 @@
     <li>In theme directory: 
       <ul>
         <li>composer install</li>
+        <li>(Note: it installs twentytwentyfour theme locally but this won't be pushed)</li>
         <li>yarn</li>
         <li>yarn build</li>
         <li>DON'T do yarn dev yet because you probably need to make changes to bud.config.js (which you shouldn't do in the main branch, so we'll come back to this</li>
@@ -26,14 +27,11 @@
     <li>In plugins/pobl-tech-blocks/ directory:
       <ul>
         <li>npm install (necessary to install "wp-scripts" package/command)</li>
-        <li>npm run build:cta-block</li>
-        <li>npm run build:carousel-block</li>
-        <li>npm run build:accordion-block</li>
-        <li>npm run build:accordion-item-block</li>
-        <li>("npm run build" might also work, in which case all the blocks get built)</li>
+        <li>npm run build</li>
       </ul>
     </li>
     <li>Visit the URL of you local server and check the site is working. If all good, continue...</li>
+    <li>Ask for the WP admin account login</li>
     <li>Create your own branch and switch to it</li>
     <li>In theme directory:
       <ul>
@@ -43,7 +41,14 @@
     </li>
     <li>If you are making changes to the blocks code, in the plugins/pobl-tech-blocks/ directory:
       <ul>
-        <li>npm run start:cta-block (or whichever block you're working on) and it'll continually monitor changes and build automatically (just like yarn dev). "npm run start" might also work, in which case all the blocks get monitored/built</li>
+        <li>npm run start</li>
+        <li>OR you can choose to do one of the following:</li>
+        <ul>
+          <li>npm run start:cta-block</li>
+          <li>npm run start:carousel-block</li>
+          <li>npm run start:accordion-block</li>
+          <li>npm run start:accordion-item-block</li>
+        </ul>
       </ul>
     </li>        
     <li>ALSO, useful: To clear cache (application, view and config), from the root directory:
