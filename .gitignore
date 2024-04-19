@@ -16,7 +16,8 @@ vendor/
 /web/app/plugins/pobl-tech-blocks/**/node_modules/
 /web/app/plugins/pobl-tech-blocks/blocks/build/
 
-
+# We don't need the twentytwentyfour theme
+/web/app/themes/twentytwentyfour/
 
 # Ignore dotenv environment files and example
 .env
