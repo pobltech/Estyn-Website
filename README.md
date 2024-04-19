@@ -6,10 +6,10 @@
   <ul>
     <li>In root directory:
       <ul>
-        <li>composer install</li>
+        <li>Add and populate .env file ( https://roots.io/bedrock/docs/environment-variables/ )</li>
         <li>Set up your SQL database and user</li>
         <li>Import a copy of the database if needed</li>
-        <li>Add and populate .env file ( https://roots.io/bedrock/docs/environment-variables/ )</li>
+        <li>composer install</li>
         <li>Start your PHP server</li>
       </ul>
     </li>
