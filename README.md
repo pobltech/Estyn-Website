@@ -17,10 +17,9 @@
     <li>In theme directory: 
       <ul>
         <li>composer install</li>
-        <li>Check bud.config.js in case you need to change the URL/s</li>
         <li>yarn</li>
         <li>yarn build</li>
-        <li>yarn dev</li>
+        <li>DON'T do yarn dev yet because you probably need to make changes to bud.config.js (which you shouldn't do in the main branch, so we'll come back to this</li>
       </ul>
     </li>
     <li>In plugins/pobl-tech-blocks/ directory:
@@ -31,9 +30,21 @@
         <li>npm run build:accordion-block</li>
         <li>npm run build:accordion-item-block</li>
         <li>("npm run build" might also work, in which case all the blocks get built)</li>
-        <li>If you are making changes to the blocks code then: npm run start:cta-block (or whichever block you're working on) and it'll continually monitor changes and build automatically (just like yarn dev). "npm run start" might also work, in which case all the blocks get monitored/built</li>
       </ul>
     </li>
+    <li>Visit the URL of you local server and check the site is working. If all good, continue...</li>
+    <li>Create your own branch and switch to it</li>
+    <li>In theme directory:
+      <ul>
+        <li>Edit bud.config.js and change the PROXY URL to your local server URL</li>
+        <li>yarn dev</li>
+      </ul>
+    </li>
+    <li>If you are making changes to the blocks code, in the plugins/pobl-tech-blocks/ directory:
+      <ul>
+        <li>npm run start:cta-block (or whichever block you're working on) and it'll continually monitor changes and build automatically (just like yarn dev). "npm run start" might also work, in which case all the blocks get monitored/built</li>
+      </ul>
+    </li>        
     <li>ALSO, useful: To clear cache (application, view and config), from the root directory:
       <ul>
         <li>wp acorn cache:clear</li>
