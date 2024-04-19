@@ -1,0 +1,110 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+@import "~bootstrap/dist/css/bootstrap.css";
+
+// Define a variable called estyn-blue with value #DCEEFE
+$estyn-blue: #DCEEFE;
+$estyn-green: #A2C83A; /** Secondary Estyn brand colour **/
+$estyn-darkblue: #0E4163; /** Most typography and dark backgrounds **/
+$estyn-lightblue: #DCEEFE; /** For light backgrounds other than white **/
+$estyn-bluegrey: #AABCC8; /** For lines **/
+$estyn-lightbluegrey: #F1F2F2; /** For lighter lines **/
+$estyn-footertext: #9DB2C0;
+$estyn-white: #FFFFFF;
+/** Border Radius **/
+$border-radius-form: 4px;
+$border-radius-sm: 10px;
+$border-radius-lg: 29px;
+
+.bg-estyn-blue {
+  background-color: $estyn-blue;
+}
+
+body {
+    background-color: $estyn-white;
+    color: $estyn-darkblue;
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.bg-blue {background-color: $estyn-blue}
+.bg-darkblue {background-color: $estyn-darkblue}
+.bg-lightblue {background-color: $estyn-lightblue}
+.bg-white {background-color:$estyn-white}
+
+/** CTA **/
+.card {
+	&.card-cta {
+		background-color: $estyn-lightblue;
+		
+		border-radius: $border-radius-lg;
+		border: none;
+
+		p {
+			font-size: 22px;
+			line-height: 30px;
+			font-weight: 400;
+		}
+	}
+}
+
+.ctaArc, .ctaArcMap {
+    left: 0;
+    right: 0;
+    z-index: -1;
+}
+
+.ctaArc {
+    top: 40%;
+
+    svg {
+        width: 100%;
+        background: rgb(42, 122, 176);
+        background: -moz-linear-gradient(0deg, rgba(42, 122, 176, 0) 0%, rgba(42, 122, 176, 0.09007352941176472) 100%);
+        background: -webkit-linear-gradient(0deg, rgba(42, 122, 176, 0) 0%, rgba(42, 122, 176, 0.09007352941176472) 100%);
+        background: linear-gradient(0deg, rgba(42, 122, 176, 0) 0%, rgba(42, 122, 176, 0.09007352941176472) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#2a7ab0", endColorstr="#2a7ab0", GradientType=1);
+    }
+}
+
+.ctaArcMap {
+    top: 200px;
+
+    svg {
+        width: 100%;
+    }
+}
+
+.ctaMapLink {
+    color: var(--estyn-white);
+    font-size: 18px;
+    line-height: 24px;
+    font-family: "museo", serif;
+    font-weight: 700;
+    font-style: normal;
+
+    &:hover {
+        color: var(--estyn-white);
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+
+.wp-block-create-block-pobl-tech-cta-block {
+	border: 1px dotted #f00;
+
+    img {
+        width: 100%;
+        height: auto;
+
+        &.breakOut {
+            margin-bottom: -25%;
+        }
+    }
+}

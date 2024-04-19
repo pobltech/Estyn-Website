@@ -1,0 +1,41 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "create-block/pobl-tech-accordion-item-block",
+	"version": "0.1.0",
+	"title": "Pobl Tech Accordion Item Block",
+	"category": "widgets",
+	"icon": "text",
+	"description": "Accordion item block",
+	"parent": [
+		"create-block/pobl-tech-accordion-block"
+	],
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "pobl-tech-accordion-item-block",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScript": "file:./view.js",
+	"attributes": {
+		"heading": {
+			"type": "string",
+			"default": "Accordion Item Heading"
+		},
+		"body": {
+			"type": "string",
+			"default": "Accordion item body"
+		},
+		"parentID": {
+			"type": "string",
+			"default": ""
+		},
+		"itemID": {
+			"type": "string",
+			"default": ""
+		}
+	}
+}

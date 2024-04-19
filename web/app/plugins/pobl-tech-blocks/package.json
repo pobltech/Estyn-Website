@@ -1,0 +1,36 @@
+{
+	"name": "pobl-tech-cta-block",
+	"version": "0.1.1",
+	"description": "Plugin that adds multiple Blocks to the Gutenberg editor.",
+	"author": "Pobl Tech",
+	"license": "GPL-2.0-or-later",
+	"main": "build/index.js",
+	"scripts": {
+		"build": "wp-scripts build --webpack-copy-php --webpack-src-dir=blocks/src/ --output-path=blocks/build/",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"start": "wp-scripts start --webpack-copy-php --webpack-src-dir=blocks/src/ --output-path=blocks/build/",
+		"start:cta-block": "wp-scripts start --webpack-copy-php --webpack-src-dir=blocks/src/pobl-tech-cta-block/ --output-path=blocks/build/pobl-tech-cta-block/",
+		"start:accordion-block": "wp-scripts start --webpack-copy-php --webpack-src-dir=blocks/src/pobl-tech-accordion-block/ --output-path=blocks/build/pobl-tech-accordion-block/",
+		"start:accordion-item-block": "wp-scripts start --webpack-copy-php --webpack-src-dir=blocks/src/pobl-tech-accordion-item-block/ --output-path=blocks/build/pobl-tech-accordion-item-block/",
+		"start:carousel-block": "wp-scripts start --webpack-copy-php --webpack-src-dir=blocks/src/pobl-tech-carousel-block/ --output-path=blocks/build/pobl-tech-carousel-block/",
+		"start:carousel-item-block": "wp-scripts start --webpack-copy-php --webpack-src-dir=blocks/src/pobl-tech-carousel-item-block/ --output-path=blocks/build/pobl-tech-carousel-item-block/",
+		"build:cta-block": "wp-scripts build --webpack-copy-php --webpack-src-dir=blocks/src/pobl-tech-cta-block/ --output-path=blocks/build/pobl-tech-cta-block/",
+		"build:accordion-block": "wp-scripts build --webpack-copy-php --webpack-src-dir=blocks/src/pobl-tech-accordion-block/ --output-path=blocks/build/pobl-tech-accordion-block/",
+		"build:accordion-item-block": "wp-scripts build --webpack-copy-php --webpack-src-dir=blocks/src/pobl-tech-accordion-item-block/ --output-path=blocks/build/pobl-tech-accordion-item-block/",
+		"build:carousel-block": "wp-scripts build --webpack-copy-php --webpack-src-dir=blocks/src/pobl-tech-carousel-block/ --output-path=blocks/build/pobl-tech-carousel-block/",
+		"build:carousel-item-block": "wp-scripts build --webpack-copy-php --webpack-src-dir=blocks/src/pobl-tech-carousel-item-block/ --output-path=blocks/build/pobl-tech-carousel-item-block/"
+
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^27.6.0"
+	},
+	"dependencies": {
+		"bootstrap": "^5.3.3",
+		"jquery": "^3.7.1",
+		"popper": "^1.0.1"
+	}
+}

@@ -1,0 +1,54 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "create-block/pobl-tech-cta-block",
+	"version": "0.1.0",
+	"title": "Pobl Tech CTA Block",
+	"category": "widgets",
+	"icon": "admin-comments",
+	"description": "CTA block from Pobl Tech",
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "pobl-tech-cta-block",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScript": "file:./view.js",
+	"attributes": {
+		"heading": {
+			"type": "string",
+			"default": "Call to Action!"
+		},
+		"text": {
+			"type": "string",
+			"default": "This is a call to action!"
+		},
+		"buttonText": {
+			"type": "string",
+			"default": "Click me!"
+		},
+		"buttonURL": {
+			"type": "string",
+			"default": "#"
+		},
+		"imageURL": {
+			"type": "string",
+			"default": "https://via.placeholder.com/150"
+		},
+		"imageAlt": {
+			"type": "string",
+			"default": "Placeholder image"
+		},
+		"imageBreakOut": {
+			"type": "boolean",
+			"default": false
+		},
+		"variant": {
+			"type": "string",
+			"default": "general"
+		}
+	}
+}

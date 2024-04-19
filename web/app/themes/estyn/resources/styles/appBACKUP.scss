@@ -1,0 +1,1286 @@
+@import 'bootstrap/scss/bootstrap';
+@import 'common/fonts';
+
+// Define a variable called estyn-blue with value #DCEEFE
+$estyn-blue: #DCEEFE;
+
+.bg-estyn-blue {
+  background-color: $estyn-blue;
+}
+
+/** Main Colours **/
+$estyn-blue: #2A7AB0; /** Primary Estyn brand colour **/
+$estyn-green: #A2C83A; /** Secondary Estyn brand colour **/
+$estyn-darkblue: #0E4163; /** Most typography and dark backgrounds **/
+$estyn-lightblue: #DCEEFE; /** For light backgrounds other than white **/
+$estyn-bluegrey: #AABCC8; /** For lines **/
+$estyn-lightbluegrey: #F1F2F2; /** For lighter lines **/
+$estyn-footertext: #9DB2C0;
+$estyn-white: #FFFFFF;
+$border-radius-form: 4px;
+$border-radius-sm: 10px;
+$border-radius-lg: 29px;
+
+/** Bootstrap form inputs overrides **/
+$input-font-family: "PT Sans", sans-serif;
+$input-bg: $estyn-white;
+$input-focus-bg: $estyn-white;
+$input-color: $estyn-darkblue;
+$input-border-color: $estyn-bluegrey;
+$input-border-radius: $border-radius-form;
+$input-border-width: 1px;
+
+/** Padding and margin (using Bootstrap stuff) **/
+$p-1: map-get($spacers, 1);
+$p-2: map-get($spacers, 2);
+$p-3: map-get($spacers, 3);
+$p-4: map-get($spacers, 4);
+$p-5: map-get($spacers, 5);
+$m-1: $p-1;
+$m-2: $p-2;
+$m-3: $p-3;
+$m-4: $p-4;
+$m-5: $p-5;
+
+body {
+    background-color: $estyn-white;
+    color: $estyn-darkblue;
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.container {
+    max-width: 1600px;
+
+/*     @media (min-width: 1200px) {
+        max-width: 1600px;
+    }
+
+    @media (min-width: 992px) {
+        max-width: 1600px;
+    }
+
+    @media (min-width: 768px) {
+        max-width: 1600px;
+    }
+
+    @media (min-width: 576px) { 
+        max-width: 1600px;
+    } */
+}
+
+.bg-blue {background-color: $estyn-blue}
+.bg-darkblue {background-color: $estyn-darkblue}
+.bg-lightblue {background-color: $estyn-lightblue}
+.bg-white {background-color:$estyn-white}
+
+/** TYPOGRAPHY **/
+
+p, li {
+    color: $estyn-darkblue;
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 26px;
+    margin-bottom: 1.6rem;
+
+    strong {
+        font-weight: 700;
+    }
+}
+
+
+.footer {
+    p, li {
+        color: $estyn-footertext;
+        font-size: 16px;
+        line-height: 22px;
+        margin-bottom: 1.4rem;
+    }
+
+    h5 {
+        color: $estyn-white;
+        font-size: 16px;
+        line-height: 24px;
+        font-family: "Source Sans 3", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+    }
+}
+
+
+
+
+
+h1 {
+    color: $estyn-darkblue;
+    font-size: 46px;
+    line-height: 55px;
+    font-family: "museo", serif;
+    font-weight: 700;
+    font-style: normal;
+
+    margin-bottom: $m-5;
+}
+.insideHero h1 {
+    color: $estyn-white;
+    font-size: 56px;
+    line-height: 62px;
+}
+
+h2 {
+    color: $estyn-darkblue;
+    font-size: 40px;
+    font-family: "museo", serif;
+    font-weight: 700;
+    font-style: normal;
+
+    margin-bottom: $m-4;
+}
+h3 {
+    color: $estyn-darkblue;
+    font-size: 27px;
+    font-family: "museo", serif;
+    font-weight: 700;
+    font-style: normal;
+
+    margin-bottom: $m-4;
+}
+h4 {
+    color: $estyn-darkblue;
+    font-size: 24px;
+    line-height: 30px;
+    font-family: "museo", serif;
+    font-weight: 700;
+    font-style: normal;
+
+    margin-bottom: $m-4;
+}
+h5 {
+    color: $estyn-darkblue;
+    font-size: 20px;
+    line-height: 26px;
+    font-family: "museo", serif;
+    font-weight: 700;
+    font-style: normal;
+
+    margin-bottom: $m-4;
+}
+
+blockquote {
+    color: $estyn-darkblue;
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 20px;
+    line-height: 26px;
+    position:relative;
+    margin-bottom: 1.6rem;
+
+    &::before {
+        content: '';
+        position:absolute;
+        left:-20px;
+        top:0;
+        bottom:0;
+        width:2px;
+        background-color: $estyn-blue;
+    }
+}
+
+
+.btn {
+    border-radius: 500px;
+    padding: 0.8rem 1.2rem;
+}
+.input-group .btn {
+    border-radius: $border-radius-sm;
+}
+.btn-primary {
+    font-size: 16px;
+    font-family: "museo", serif;
+    font-weight: 700;
+    font-style: normal;
+    background-color: $estyn-blue;
+    border-color: transparent;
+    color: $estyn-white;
+    position: relative;
+
+    &.focus, &:focus, &:not(:disabled):not(.disabled):active, &:hover {
+        background: $estyn-darkblue;
+        border: 1px solid transparent;
+        color:$estyn-white;
+    }
+}
+
+.btn-secondary {
+    font-size: 16px;
+    font-family: "museo", serif;
+    font-weight: 700;
+    font-style: normal;
+    background-color: $estyn-green;
+    border-color: transparent;
+    color:$estyn-darkblue;
+    position: relative;
+    
+    &.focus, &:focus, &:not(:disabled):not(.disabled):active, &:hover {
+        background: $estyn-white;
+        border: 1px solid transparent;
+        color:$estyn-darkblue;
+    }
+}
+.btn-outline-primary {
+    font-size: 18px;
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    color: $estyn-darkblue;
+    border-color: $estyn-darkblue;
+}
+.btn-outline-primary.focus, .btn-outline-primary:focus, .btn-outline-primary:not(:disabled):not(.disabled):active, .btn-outline-primary:hover {
+    background: $estyn-darkblue;
+    color:$estyn-white;
+    border-color: $estyn-darkblue;
+}
+.btn-outline-light {
+    font-size: 16px;
+    font-family: "museo", serif;
+    font-weight: 700;
+    font-style: normal;
+    color: $estyn-white;
+    border-color: $estyn-white;
+}
+.btn-outline-light.focus, .btn-outline-light:focus, .btn-outline-light:not(:disabled):not(.disabled):active, .btn-outline-light:hover {
+    background: $estyn-darkblue;
+    color:$estyn-white;
+    border-color: $estyn-darkblue;
+}
+.btn-outline-info {
+    font-size: 14px;
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    color: $estyn-darkblue;
+    border-color: $estyn-bluegrey;
+}
+.btn-outline-info.focus, .btn-outline-info:focus, .btn-outline-info:not(:disabled):not(.disabled):active, .btn-outline-info:hover {
+    background: $estyn-darkblue;
+    color:$estyn-white;
+    border-color: $estyn-darkblue;
+}
+.btn-outline-info i {
+    margin-left: 5px;
+}
+.btn-link {
+    font-size: 18px;
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    color: $estyn-darkblue;
+}
+.btn-link.focus, .btn-link:focus, .btn-link:not(:disabled):not(.disabled):active, .btn-link:hover {
+    color:$estyn-blue;
+}
+.homeHero .btn-link {
+    padding: 0;
+    font-size: 18px;
+    color: $estyn-white;
+}
+.homeHero .btn-link.focus, .homeHero .btn-link:focus, .homeHero .btn-link:not(:disabled):not(.disabled):active, .homeHero .btn-link:hover {
+    color:$estyn-lightblue;
+}
+hr:not([size]) {
+    height: 1px;
+}
+hr {
+    height: 1px;
+    color: $estyn-bluegrey;
+    background-color: $estyn-bluegrey;
+    opacity: 1;
+/*     margin-top: 2rem!important;
+    margin-bottom: 2rem!important; */
+
+    margin: $m-5 0;
+}
+.reportMain hr{
+    height: 4px;
+    color: $estyn-lightbluegrey;
+    background-color: $estyn-lightbluegrey;
+}
+hr.hrGreen{
+    height: 4px;
+    color: $estyn-green;
+    background-color: $estyn-green;
+}
+hr.hrnav{
+    color: $estyn-lightblue;
+    background-color: $estyn-lightblue;
+}
+/** Nav **/
+.navbar {
+    border-bottom: 1px solid $estyn-lightblue;
+}
+.nav-item.dropdown {
+    position:initial; /*important so that mega menu is full width*/
+}
+.nav-item .dropdown-toggle::after {
+    margin-left: 1em;
+    margin-top: .5em;
+    border:none;
+    display: inline-block;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Font Awesome 6 Pro'; 
+    font-style: normal; /* Add this line for sharp style */
+    content: '\f107';
+    font-weight: 900;
+}
+.nav-item {
+    font-size: 20px;
+    font-family: "museo", serif;
+    font-weight: 700;
+    font-style: normal;
+    color: $estyn-blue;
+    border-right: 1px solid $estyn-lightblue;
+    margin-bottom: 0;
+    
+    &.nav-search, &.nav-language {
+        border-right: none; /* Remove border lines to right */
+    }
+
+    &.nav-language {
+        
+        .nav-link {
+            border-right: 1px solid $estyn-lightblue;
+        }
+    }
+}
+.nav-item-no-border {
+    border-right: none; /* Remove border lines to right */
+}
+.navbar-expand-xl .navbar-nav .nav-link, .navbar-nav .nav-link {
+    padding-right: 2rem;
+    padding-left: 2rem;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: $estyn-blue;
+}
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover {
+    color: $estyn-darkblue;
+}
+.nav-item-sub, .nav-item-main {
+    float:left;
+    clear:both;
+}
+.nav-item-sub {
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 500;
+    color: $estyn-darkblue;
+}
+.dropdown-menu.megaMenu, .dropdown-menu[data-bs-popper] {
+    left:0;
+    right:0;
+    margin-top: 1px; /* to show border line */
+}
+.dropdown-menu.megaMenu {
+    padding: .5rem 0;
+    color: $estyn-darkblue;
+    background-color: $estyn-white;
+    border-top:none;
+    border-right:none;
+    border-left:none;
+    border-bottom:1px solid $estyn-lightblue;
+    border-radius: 0;
+}
+.megaMenuFeature {
+    position:relative;
+}
+.megaMenuFeature::after {
+    content: '';
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    border:1px solid $estyn-lightblue;
+}
+.megaMenuFeature .sp-text a, .megaMenuFeature .sp-text a .sp-title {
+    color: $estyn-blue;
+}
+.navbar .form-control, .navbar .input-group .btn-primary  {
+    border: 1px solid $estyn-blue;
+}
+.navbar .form-control {
+    border-radius: $border-radius-sm;
+}
+.megaMenuMain ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.megaMenuMain li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    color: $estyn-blue;
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 26px;
+    margin: 0.5rem 0;
+}
+.megaMenuMain li a {
+    color: $estyn-blue;
+    text-decoration: none;
+}
+.megaMenuMain li a:hover {
+    color: $estyn-darkblue;
+}
+.findmysector {
+    color: $estyn-darkblue;
+    font-size: 14px;
+    line-height: 20px;
+    font-family: "museo", serif;
+    font-weight: 500;
+    font-style: normal;
+}
+/** Hero **/
+.insideHero, .homeHero {
+    width:100%;
+    height:700px;
+    position:relative;
+}
+.insideHeroContent, .homeHeroContent {
+    margin-bottom:200px;
+}
+.heroImage {
+    z-index: -2;
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+}
+.heroImage img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.heroOverlay {
+    z-index: -1;
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    background: rgb(14,65,99);
+    background: -moz-linear-gradient(0deg, rgba(14,65,99,0.7497373949579832) 20%, rgba(14,65,99,0.21752450980392157) 80%);
+    background: -webkit-linear-gradient(0deg, rgba(14,65,99,0.7497373949579832) 20%, rgba(14,65,99,0.21752450980392157) 80%);
+    background: linear-gradient(0deg, rgba(14,65,99,0.7497373949579832) 20%, rgba(14,65,99,0.21752450980392157) 80%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#0e4163",endColorstr="#0e4163",GradientType=1);
+}
+.insideHero h1, .homeHero h1 {
+    color: $estyn-white;
+    font-size: 56px;
+    line-height: 62px;
+    position:relative;
+}
+.insideHero h1::after, .homeHero h1::after {
+    content: '';
+    position: absolute;
+    background-color:  $estyn-green;
+    bottom: -20px;
+    left:0;
+    width:327px;
+    height:4px;
+}
+/** Intro **/
+.insideIntro {
+    background-color: $estyn-lightblue;
+
+    .inside-intro-content {
+
+        .btn {
+            margin-bottom: $m-3;
+        }
+    }
+}
+.homeIntro {background-color: $estyn-blue;}
+.insideIntroArc, .homeIntroArc {margin-top: -71px;} /*Make this the same as the height of the SVG*/
+.insideIntroArc svg, .homeIntroArc svg {width:100%;}
+.insideIntro p {
+    font-size: 26px;
+    line-height: 33px;
+    margin-bottom: 1.8rem;
+}
+.homeIntro h2, .homeIntro p, .homeIntro .form-label {color: $estyn-white;}
+.homeIntro .form-label {font-size: 20px;}
+.homeProviderCol {
+    border-right: 1px solid #6AA2C8;
+}
+.homeIntro .form-control {
+    color: $estyn-darkblue;
+    background-color: #7EB1D6;
+    background-clip: padding-box;
+    border: 1px solid $estyn-lightbluegrey;
+    border-radius: $border-radius-sm;
+}
+.homeIntro .input-group .btn-secondary{
+    border: 1px solid $estyn-lightbluegrey;
+}
+
+/** Signposting **/
+.sp-icon-cont {
+    width: 72px;
+    height: 72px;
+    border-radius: $border-radius-sm;
+    background-color: $estyn-blue;
+}
+.navbar .sp-icon-cont {
+    width: 59px;
+    height: 59px;
+}
+.sp-icon-cont i {
+    color: $estyn-white;
+    font-size: 28px;
+}
+.navbar .sp-icon-cont i {
+    font-size: 24px;
+}
+p.sp-title {
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: 700;
+}
+.navbar p.sp-title {
+    font-size: 16px;
+    line-height: 20px;
+}
+p.sp-desc {
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 400;
+}
+.navbar p.sp-desc {
+    font-size: 14px;
+    line-height: 18px;
+}
+.sp-text a {
+    color: $estyn-darkblue;
+    text-decoration: none;
+}
+.sp-text a:hover, .sp-text a .sp-title:hover {
+    color: $estyn-blue;
+}
+
+/** Search **/
+.searchFilter .form-control {
+    border-radius: $border-radius-sm;
+}
+.searchFilter h2.accordion-header {
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 16px;
+}
+.searchFilter .accordion-button {
+    padding: 1rem 0;
+    font-size: 16px;
+    color: $estyn-darkblue;
+    background-color: $estyn-white;
+}
+.searchFilter .accordion-body {
+    padding: 1rem 0;
+}
+.searchResourceType, .searchResourceDate {
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    color: $estyn-darkblue;
+    font-size:12px;
+}
+.searchResourceType {font-weight: 600;}
+.searchResourceDate {font-weight: 400;}
+
+/** Full report **/
+.reportContents .list-group-item {
+    padding: .5rem 5px;
+    color: $estyn-darkblue;
+    background-color: $estyn-white;
+    border-color: $estyn-lightblue;
+}
+.reportContents .list-group-item.active {
+    color: $estyn-darkblue;
+    background-color: $estyn-lightblue;
+    border-color: $estyn-lightblue;
+}
+.reportContents .list-group-item-action:focus, .reportContents .list-group-item-action:hover {
+    color: $estyn-white;
+    background-color: $estyn-darkblue;
+}
+
+.break-out-of-containers {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
+
+/** CTA **/
+.cta {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+
+    img {
+        position: absolute;
+        height: 100%;
+        left: 50%;
+        width: 100%;
+        transform: translate(-50%, 0);
+        object-fit: contain;
+
+        &:not(.breakOut) {
+            @include media-breakpoint-down(md) {
+                position: static;
+                max-width: 100%;
+                height: auto;
+                width: auto;
+                transform: none;
+            }
+        }
+
+        &.breakOut {
+            position: static;
+            max-width: 100%;
+            width: auto;
+            height: auto;
+            transform: none;
+            
+            margin-bottom: -25%;
+            margin-top: -8%;
+
+            @include media-breakpoint-down(xxl) {
+                margin-bottom: -20%;
+                margin-top: -10%;
+            }
+
+            @include media-breakpoint-down(md) {
+                margin-bottom: 0;
+                margin-top: 0;
+            }
+        }
+
+        &.ctaSearchMap {
+            @include media-breakpoint-down(xxl) {
+                max-width: 80%;
+            }
+            max-width: 61%;
+        }
+    }
+
+    .cta-search-col {
+        input {
+            font-family: "PT Sans", sans-serif;
+            color: $estyn-blue;
+            
+            &::placeholder {
+                font-family: "PT Sans", sans-serif;
+                color: $estyn-blue;
+            }
+        }
+
+        .input-group {
+            width: 70%;
+        }
+    }
+}
+
+.card {
+    
+    &.card-cta {
+        background-color: $estyn-lightblue;
+        
+        border-radius: $border-radius-lg;
+        border: none;
+        
+
+        p {
+            font-size: 22px;
+            line-height: 30px;
+            font-weight: 400;
+        }
+    }
+}
+
+.ctaArc, .ctaArcMap {
+    left: 0;
+    right: 0;
+    z-index: -1;
+}
+
+.ctaArc {
+    top: 40%;
+
+    svg {
+        width: 100%;
+        background: rgb(42, 122, 176);
+        background: -moz-linear-gradient(0deg, rgba(42, 122, 176, 0) 0%, rgba(42, 122, 176, 0.09007352941176472) 100%);
+        background: -webkit-linear-gradient(0deg, rgba(42, 122, 176, 0) 0%, rgba(42, 122, 176, 0.09007352941176472) 100%);
+        background: linear-gradient(0deg, rgba(42, 122, 176, 0) 0%, rgba(42, 122, 176, 0.09007352941176472) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#2a7ab0", endColorstr="#2a7ab0", GradientType=1);
+    }
+}
+
+.ctaArcMap {
+    top: 200px;
+
+    svg {
+        width: 100%;
+    }
+}
+
+.ctaMapLink {
+    color: $estyn-white;
+    font-size: 18px;
+    line-height: 24px;
+    font-family: "museo", serif;
+    font-weight: 700;
+    font-style: normal;
+
+    &:hover {
+        color: $estyn-white;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+.slideMenu {
+/*     .carousel-control-next, .carousel-control-prev {
+        position: inherit;
+        display: block;
+        width: auto;
+    } */
+    .card {
+        min-width: 456px;
+        overflow: hidden;
+        position: relative;
+        background: transparent;
+        border: none;
+
+        .card-footer {
+            border: none;
+            background: transparent;
+        }
+
+        .slideCardBody {
+            width: 100%;
+            overflow: hidden;
+            padding-top: 130%;
+            position: relative;
+
+            img {
+                bottom: 0;
+                height: 100%;
+                left: 0;
+                -o-object-fit: cover;
+                object-fit: cover;
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 100%;
+                border-radius: $border-radius-sm;
+            }
+        }
+    }
+}
+.pobl-tech-carousel-block {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
+.pobl-tech-carousel-block-slider {
+    scroll-behavior: smooth;
+}
+
+.scrollCont {
+    scroll-behavior: smooth;
+}
+
+.reportMain {
+    p, li {
+        font-size: 19px;
+        line-height: 26px;
+    }
+
+    p.lead {
+        font-size: 26px;
+        line-height: 32px;
+        font-weight: 400;
+    }
+}
+
+.reportTypeHero, .reportDateHero, .reportReadHero {
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    line-height: 16px;
+}
+
+.reportTypeHero {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.reportDateHero, .reportReadHero {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.landscapeImg {
+    width: 100%;
+    padding-top: 60%;
+    position: relative;
+    border-radius: $border-radius-sm;
+    overflow: hidden;
+
+    img {
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.reportProviders {
+    .list-group-item {
+        padding: .3rem 0;
+        color: $estyn-blue;
+        text-decoration: underline;
+        border: none;
+        font-weight: 700;
+        font-size: 19px;
+
+        &:focus, &:hover {
+            color: $estyn-darkblue;
+            background-color: $estyn-lightblue;
+        }
+    }
+}
+
+.resourceList {
+    .list-group-item {
+        background-color: $estyn-lightblue;
+        margin: .3rem 0;
+        padding: .8rem 1rem;
+        border: none;
+        border-radius: $border-radius-sm;
+        font-size: 16px;
+        font-family: "museo", serif;
+        font-weight: 700;
+        font-style: normal;
+        color: $estyn-darkblue;
+
+        &:hover {
+            background-color: $estyn-darkblue;
+            color: $estyn-white;
+        }
+
+        &:hover .searchResourceType, &:hover .searchResourceDate {
+            color: $estyn-white;
+        }
+    }
+}
+
+/* .form-control {
+    color: $estyn-darkblue;
+    background-color: $estyn-lightblue;
+    border: 1px solid $estyn-darkblue;
+    border-radius: $border-radius-form;
+} */
+
+.footer {
+    .list-group-item {
+        padding: .5rem 0;
+        color: $estyn-footertext;
+        background-color: transparent;
+        border: none;
+
+        &:hover {
+            color: $estyn-white;
+        }
+    }
+
+    .nav-link {
+        display: block;
+        padding: .5rem 2rem .5rem 0;
+        color: $estyn-white;
+
+        &:hover {
+            color: $estyn-darkblue;
+        }
+    }
+
+    .fa-ul {
+        margin-left: 2em;
+
+        li {
+            margin-bottom: 0.5rem;
+
+            a {
+                color: $estyn-footertext;
+            }
+        }
+    }
+}
+
+.mainNum {
+    width: 36px;
+    float: left;
+}
+
+.numrel {
+    padding-top: 100%;
+    position: relative;
+    width: 100%;
+}
+
+.numrow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.rounded-circle {
+    background: $estyn-footertext;
+
+    span {
+        color: $estyn-darkblue;
+        font-size: 18px;
+        line-height: 18px;
+
+        a {
+            color: $estyn-darkblue;
+        }
+    }
+}
+
+.wp-block-file {
+
+    font-size: inherit;
+    margin-bottom: 0;
+
+    &:not(.wp-element-button) {
+        font-size: inherit;
+    }
+
+    a, a:visited, a:active {
+        /** 
+            Similar to .resourceList .list-group-item
+        **/
+        background-color: $estyn-lightblue;
+        margin: $m-3 0;
+        padding: .8rem 1rem;
+        border: none;
+        border-radius: $border-radius-sm;
+        font-size: 16px;
+        font-family: "museo", serif;
+        font-weight: 700;
+        font-style: normal;
+        color: $estyn-darkblue;
+
+        display: block;
+
+        text-decoration: none;
+        &:visited, &:active {
+            color: $estyn-darkblue;
+        }
+
+        &:hover {
+            background-color: $estyn-darkblue;
+            color: $estyn-white;
+        }
+
+        @include media-breakpoint-down(lg) {
+            margin: .25rem 0;
+            padding: .7rem 0.9rem;
+            font-size: 15px;
+            line-height: 23px;
+        }
+
+        @include media-breakpoint-down(sm) {
+            margin: .2rem 0;
+            padding: .6rem 0.8rem;
+            font-size: 14px;
+            line-height: 22px;
+        }
+    }
+
+}
+
+/** Rogue Media Queries **/
+@media (max-width: 1800px) {
+
+}
+
+@media (max-width: 1200px) {
+
+}
+
+@media (max-width: 992px) {
+    :root {
+        /** Border Radius **/
+        --border-radius-lg: 16px;
+    }
+
+    .navbar-brand img {
+        width: 160px;
+    }
+
+    p, li, .reportMain p, .insideIntro p, .card.card-cta p, .reportMain li, blockquote {
+        font-size: 18px;
+        line-height: 28px;
+    }
+
+    .reportMain p.lead {
+        font-size: 19px;
+        line-height: 29px;
+    }
+
+    h1 {
+        font-size: 36px;
+        line-height: 41px;
+    }
+
+    .insideHero h1, .homeHero h1 {
+        font-size: 46px;
+        line-height: 50px;
+    }
+
+    h2 {
+        font-size: 33px;
+    }
+
+    h3 {
+        font-size: 24px;
+    }
+
+    h4 {
+        font-size: 20px;
+        line-height: 30px;
+    }
+
+    .reportTypeHero, .reportDateHero, .reportReadHero {
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        font-size: 15px;
+    }
+
+    .btn-outline-primary {
+        font-size: 15px;
+    }
+
+    .btn-outline-info {
+        font-size: 13px;
+    }
+
+    .btn-outline-light {
+        font-size: 15px;
+    }
+
+    .btn-link {
+        font-size: 15px;
+    }
+
+    .homeHero .btn-link {
+        font-size: 17px;
+    }
+
+    .sp-icon-cont {
+        width: 67px;
+        height: 67px;
+    }
+
+    .sp-icon-cont i {
+        font-size: 26px;
+    }
+
+    p.sp-title {
+        font-size: 18px;
+        line-height: 22px;
+    }
+
+    p.sp-desc {
+        font-size: 16px;
+        line-height: 20px;
+    }
+
+    .reportProviders .list-group-item {
+        padding: .25rem 0;
+        font-size: 17px;
+        line-height: 25px;
+    }
+
+    .resourceList .list-group-item {
+        margin: .25rem 0;
+        padding: .7rem 0.9rem;
+        font-size: 15px;
+        line-height: 23px;
+    }
+}
+
+@media (max-width: 768px) {
+    .homeProviderCol {
+        border-right: none;
+    }
+}
+
+@media (max-width: 576px) {
+    :root {
+        /** Border Radius **/
+        --border-radius-sm: 8px;
+        --border-radius-lg: 10px;
+    }
+
+    .navbar-brand img {
+        width: 86px;
+    }
+
+    p, li, .reportMain p, .insideIntro p, .card.card-cta p, .reportMain li, blockquote {
+        font-size: 16px;
+        line-height: 22px;
+        margin-bottom: 1.2rem;
+    }
+
+    .reportMain p.lead {
+        font-size: 17px;
+        line-height: 23px;
+    }
+
+    h1 {
+        font-size: 26px;
+        line-height: 31px;
+    }
+
+    .insideHero h1, .homeHero h1 {
+        font-size: 32px;
+        line-height: 34px;
+    }
+
+    .insideHero h1::after, .homeHero h1::after {
+        width: 70%;
+    }
+
+    h2 {
+        font-size: 26px;
+    }
+
+    h3 {
+        font-size: 20px;
+    }
+
+    h4 {
+        font-size: 16px;
+        line-height: 20px;
+    }
+
+    .reportTypeHero, .reportDateHero, .reportReadHero {
+        font-size: 12px;
+    }
+
+    .btn-primary {
+        font-size: 14px;
+    }
+
+    .btn-outline-primary {
+        font-size: 14px;
+    }
+
+    .btn-outline-info {
+        font-size: 12px;
+    }
+
+    .btn-outline-light {
+        font-size: 14px;
+    }
+
+    .btn-link {
+        font-size: 14px;
+    }
+
+    .homeHero .btn-link {
+        font-size: 16px;
+    }
+
+    .sp-icon-cont {
+        width: 63px;
+        height: 63px;
+    }
+
+    .sp-icon-cont i {
+        font-size: 24px;
+    }
+
+    p.sp-title {
+        font-size: 16px;
+        line-height: 20px;
+    }
+
+    p.sp-desc {
+        font-size: 14px;
+        line-height: 18px;
+    }
+
+    :root {
+        --border-radius-lg: 10px;
+    }
+
+    .slideMenu .card {
+        min-width: 248px;
+
+        .card-footer p {
+            font-size: 14px;
+        }
+    }
+
+    .reportProviders .list-group-item {
+        padding: .2rem 0;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .resourceList .list-group-item {
+        margin: .2rem 0;
+        padding: .6rem 0.8rem;
+        font-size: 14px;
+        line-height: 22px;
+    }
+}

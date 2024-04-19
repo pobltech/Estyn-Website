@@ -1,0 +1,57 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "create-block/pobl-tech-carousel-block",
+	"version": "0.1.0",
+	"title": "Pobl Tech Carousel Block",
+	"category": "widgets",
+	"icon": "smiley",
+	"description": "Example block scaffolded with Create Block tool.",
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "pobl-tech-carousel-block",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScript": "file:./view.js",
+	"attributes": {
+		"postTypeOfPostsToDisplayAsCarouselItems": {
+			"type": "string",
+			"default": "post"
+		},
+		"heading": {
+			"type": "string",
+			"default": "Carousel Heading"
+		},
+		"numberOfPostsToDisplay": {
+			"type": "number",
+			"default": 5
+		},
+		"description": {
+			"type": "string",
+			"default": "Some descriptive text here..."
+		},
+		"carouselId": {
+			"type": "string"
+		},
+		"postIdsOfPostsToDisplayAsCarouselItems": {
+			"type": "array",
+			"default": []
+		},
+		"populateCarouselUsing": {
+			"type": "string",
+			"default": "postType"
+		},
+		"buttonText": {
+			"type": "string",
+			"default": "See More"
+		},
+		"buttonLink": {
+			"type": "string",
+			"default": "#"
+		}
+	}
+}

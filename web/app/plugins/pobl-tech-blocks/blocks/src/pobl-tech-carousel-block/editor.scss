@@ -1,0 +1,82 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+$estyn-blue: #2A7AB0;
+$estyn-green: #A2C83A;
+$estyn-darkblue: #0E4163;
+$estyn-lightblue: #DCEEFE;
+$estyn-bluegrey: #AABCC8;
+$estyn-lightbluegrey: #F1F2F2;
+$estyn-footertext: #9DB2C0;
+$estyn-white: #FFFFFF;
+$border-radius-form: 4px;
+$border-radius-sm: 10px;
+$border-radius-lg: 29px;
+
+.wp-block-create-block-pobl-tech-carousel-block {
+	border: 1px dotted #f00;
+}
+
+.pobl-tech-carousel-block-slider {
+	scroll-behavior: smooth;
+}
+
+.pobl-tech-carousel-remove-post-button {
+	display: none;
+	position: absolute;
+	top: 0;
+	right: 0;
+
+	background-color: red;
+
+	&.is-primary {
+		background-color: red;
+	}
+}
+
+.carousel-item-container {
+	position: relative;
+
+	&:hover {
+		.pobl-tech-carousel-remove-post-button {
+			display: block;
+		}
+	}
+
+	.card {
+		min-width: 456px;
+		overflow: hidden;
+		position: relative;
+		background: transparent;
+		border: none;
+
+		.slideCardBody {
+			width: 100%;
+			overflow: hidden;
+			padding-top: 130%;
+			position: relative;
+		}
+
+		img {
+			bottom: 0;
+			height: 100%;
+			left: 0;
+			-o-object-fit: cover;
+			object-fit: cover;
+			position: absolute;
+			right: 0;
+			top: 0;
+			width: 100%;
+			border-radius: 10px;
+			border-radius: $border-radius-sm;
+		}
+
+		.card-footer {
+			border: none;
+    		background: transparent;
+		}
+	}
+}
