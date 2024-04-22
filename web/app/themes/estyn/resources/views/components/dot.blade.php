@@ -1,0 +1,1 @@
+<div class="rounded-circle {{ $bgColourClass }} p-3" aria-hidden="true"></div>

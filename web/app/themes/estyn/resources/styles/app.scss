@@ -108,6 +108,12 @@ body {
 .bg-signpost-green {background-color: $esytn-signpost-green;}
 .bg-signpost-green2 {background-color: $esytn-signpost-green2;}
 
+pre {
+    code {
+        word-break: break-all;
+        text-wrap: wrap;
+    }
+}
 
 /** TYPOGRAPHY **/
 
