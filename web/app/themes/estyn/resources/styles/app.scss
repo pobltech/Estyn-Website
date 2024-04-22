@@ -1,12 +1,10 @@
 @import 'bootstrap/scss/bootstrap';
 @import 'common/fonts';
 
-// Define a variable called estyn-blue with value #DCEEFE
+/* Define a variable called estyn-blue with value #DCEEFE
 $estyn-blue: #DCEEFE;
+*/
 
-.bg-estyn-blue {
-  background-color: $estyn-blue;
-}
 
 /** Main Colours **/
 $estyn-blue: #2A7AB0; /** Primary Estyn brand colour **/
@@ -20,6 +18,13 @@ $estyn-white: #FFFFFF;
 $border-radius-form: 4px;
 $border-radius-sm: 10px;
 $border-radius-lg: 29px;
+
+/** Override Bootstrap default border colour **/
+$border-color: $estyn-bluegrey;
+:root {
+    --bs-border-color: #AABCC8;
+}
+
 
 /** 
 
@@ -94,6 +99,9 @@ body {
     } */
 }
 
+.bg-estyn-blue {
+    background-color: $estyn-blue;
+}
 .bg-blue {background-color: $estyn-blue}
 .bg-darkblue {background-color: $estyn-darkblue}
 .bg-lightblue {background-color: $estyn-lightblue}
@@ -1055,6 +1063,12 @@ p.sp-desc {
             color: $estyn-white;
         }
     }
+}
+
+.resource-creator-circle-image {
+    width: 58px;
+    height: 58px;
+    object-fit: cover;
 }
 
 /* .form-control {

@@ -21,8 +21,35 @@
                   @endif
                 </div>
               </div>
+            </div>
+            @if(isset($providerDetails))
+              <hr class="my-4">
+              <div class="row">
+                <div class="col-12">
+                  <div class="d-flex">
+                      @if(isset($providerDetails['icon_image']))
+                        <img src="{{ $providerDetails['icon_image']['url'] }}" alt="{{ $providerDetails['icon_image']['alt'] }}" class="img-fluid rounded-circle me-3 border resource-creator-circle-image">
+                      @endif
+                      <div class="d-flex flex-column justify-content-center">
+                        <span class="d-block"><strong>{{ $providerDetails['name'] }}</strong></span>
+                        @if(isset($providerDetails['number_of_pupils']) || isset($providerDetails['age_range']))
+                          <span class="d-block">
+                            @if(isset($providerDetails['number_of_pupils']))
+                              <span class="d-inline-block me-3">{{ __('Number of pupils', 'sage') . ': ' . $providerDetails['number_of_pupils'] }}</span>
+                            @endif
+                            @if(isset($providerDetails['age_range']))
+                              <span>{{ __('Age range', 'sage') . ': ' . $providerDetails['age_range'] }}</span>
+                            @endif
+                          </span>
+                        @endif
+                      </div>
+                  </div>
+                </div>
+              </div>
+            @endif
+            <div class="row">
               <div class="col-12">
-                <hr class="hrGreen mt-3">
+                <hr class="hrGreen mt-4">
               </div>
             </div>
           </div>
