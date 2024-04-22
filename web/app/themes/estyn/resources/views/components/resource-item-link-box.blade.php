@@ -5,7 +5,10 @@
 				{{ $title }}
 			</div>
 			<div>
-				<span class="searchResourceDate me-2">{{ $superDate }}</span>
+				@if(isset($superText))
+					<span class="searchResourceDate me-2"><strong>{{ $superText }}</strong></span>
+				@endif
+				<span class="searchResourceDate">{{ $superDate }}</span>
 			</div>
 		</div>
 	@else

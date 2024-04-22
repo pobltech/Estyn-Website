@@ -60,7 +60,11 @@
                       </nav>
                     </footer>
                   @endif
-      
+
+                <hr>
+                @include('partials.provider-resources-list',
+                  ['providerPost' => $providerPost]
+                )
               </div>
             </div>
       </div>
