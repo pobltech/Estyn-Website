@@ -7,7 +7,9 @@
         @endif
     </div>
     <div class="sp-text ms-3 mt-2">
-        <a href="{{ $linkURL }}" class="stretched-link"><p class="sp-title m-0">{{ $title }}</p></a>
-        <p class="sp-desc m-0">{{ $description }}</p>
+        <a href="{{ $linkURL }}" class="stretched-link">
+            <p class="sp-title m-0">{{ $title }}</p>
+            <p class="sp-desc m-0">{{ $description }}</p>
+        </a>
     </div>
 </div>

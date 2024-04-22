@@ -5,7 +5,25 @@
 				@if(isset($super))
 					<span class="fs-5 d-block inside-hero-super">{{ $super }}</span>
 				@endif
+				@if(isset($sectors))
+					@foreach($sectors as $sector)
+						<span class="inside-hero-sector">{{ $sector->name }}</span>
+					@endforeach
+				@endif
+				@if(isset($localAuthorities))
+					@foreach($localAuthorities as $localAuthority)
+						<span class="inside-hero-local-authority">{{ $localAuthority->name }}</span>
+					@endforeach
+				@endif
 				<h1>{!! $title !!}</h1>
+				@if(isset($followUpStatusses))
+					@foreach($followUpStatusses as $followUpStatus)
+						<div class="d-flex me-3">
+							<span class="rounded-circle me-3 bg-estyn-blue p-3 follow-up-status-circle"></span>
+							<span class="follow-up-status">{{ $followUpStatus->name }}</span>
+						</div>
+					@endforeach
+				@endif
 			</div>
 		</div>
 	</div>
@@ -32,20 +50,38 @@
 </div>
 <div class="insideIntro position-relative w-100">
 	<div class="container px-md-4 px-xl-5">
-		<div class="row d-flex justify justify-content-center">
-			<div class="col-12 col-md-10 my-5">
-				<div class="row">
-					<div class="col-12 col-md-6">
-						<h2 class="mb-3 mb-md-4">{{ $secondHeading }}</h2>
-                        <div class="inside-intro-content">
-                            {!! $introContent !!}
-                        </div>
+		@if(isset($insideIntroLinks))
+			<div class="row p-5">
+				<div class="col-12 mb-5">
+					<div class="d-flex justify-content-between">
+						@foreach($insideIntroLinks as $link)
+							@include('components.signpost', [
+								'linkURL' => $link['url'],
+								'bgColourClass' => $link['bgColourClass'],
+								'iconClasses' => $link['iconClasses'],
+								'title' => $link['title'],
+								'description' => $link['description']
+							])
+						@endforeach
 					</div>
-                    <div class="col-12 col-md-6">
-                        <img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" class="rounded-3 img-fluid" />
-                    </div>
 				</div>
 			</div>
-		</div>
+		@else
+			<div class="row d-flex justify justify-content-center">
+				<div class="col-12 col-md-10 my-5">
+					<div class="row">
+						<div class="col-12 col-md-6">
+							<h2 class="mb-3 mb-md-4">{{ $secondHeading }}</h2>
+							<div class="inside-intro-content">
+								{!! $introContent !!}
+							</div>
+						</div>
+						<div class="col-12 col-md-6">
+							<img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" class="rounded-3 img-fluid" />
+						</div>
+					</div>
+				</div>
+			</div>
+		@endif
 	</div>
 </div>
