@@ -26,7 +26,9 @@
     wp_reset_postdata();
 @endphp
 @if(!empty($resources))
-    <h2 class="h2">{{ __('Other resources from this provider', 'sage') }}</h2>
+    @if((!isset($noHeading)) || (isset($noHeading) && $noHeading === false))
+        <h2 class="h2">{{ __('Other resources from this provider', 'sage') }}</h2>
+    @endif
     @include('components.resource-list', [
         'items' => $items,
         'noMarginBottom' => true

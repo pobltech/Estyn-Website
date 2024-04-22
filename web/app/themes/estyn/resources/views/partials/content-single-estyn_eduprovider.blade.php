@@ -126,28 +126,9 @@
         </div>
         <div class="row mb-5">
             <div class="col-12 col-md-6">
-                @include('components.resource-list', [
-                    'items' => [
-                        [
-                            'linkURL' => '#',
-                            'superText' => __('Resource type', 'sage'),
-                            'superDate' => '07/11/2021',
-                            'title' => __('Resource title', 'sage')
-                        ],
-                        [
-                            'linkURL' => '#',
-                            'superText' => __('Resource type', 'sage'),
-                            'superDate' => '02/03/2017',
-                            'title' => __('Resource title', 'sage')
-                        ],
-                        [
-                            'linkURL' => '#',
-                            'superText' => __('Resource type', 'sage'),
-                            'superDate' => '22/11/2013',
-                            'title' => __('Resource title', 'sage')
-                        ]
-                    ],
-                    'noMarginBottom' => true
+                @include('partials.provider-resources-list', [
+                    'noHeading' => true,
+                    'providerPost' => $post
                 ])
             </div>
             <div class="col-12 col-md-6"></div>
