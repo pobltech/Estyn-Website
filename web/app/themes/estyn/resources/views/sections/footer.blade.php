@@ -61,7 +61,7 @@
 				</div>
 			</div>
 			<div class="col-12 col-md-4 col-lg-3 mb-4">
-				<h5 class="my-3">Popular</h5>
+				<h5 class="my-3">Publications and policies</h5>
 				<div class="list-group list-group-flush">
 				  <a href="#" class="list-group-item list-group-item-action">
 				    The current link item
@@ -72,7 +72,7 @@
 				</div>
 			</div>
 			<div class="col-12 col-md-4 col-lg-3 mb-4">
-				<h5 class="my-3">Popular</h5>
+				<h5 class="my-3">Key inspection documentation</h5>
 				<div class="list-group list-group-flush">
 				  <a href="#" class="list-group-item list-group-item-action">
 				    The current link item
@@ -87,9 +87,11 @@
 	<div class="w-100 py-4 bg-blue">
 		<div class="container px-md-4 px-xl-5 py-4">
 			<nav class="nav">
-			  <a class="nav-link active" aria-current="page" href="#">Active</a>
-			  <a class="nav-link" href="#">Link</a>
-			  <a class="nav-link" href="#">Link</a>
+			  <a class="nav-link active" aria-current="page" href="#">Contact us</a>
+			  <a class="nav-link" href="#">Privacy policy</a>
+			  <a class="nav-link" href="#">Accessibility</a>
+			  <a class="nav-link" href="#">Terms of use</a>
+			  <a class="nav-link" href="#">Sitemap</a>
 			</nav>
 		</div>
 	</div>
