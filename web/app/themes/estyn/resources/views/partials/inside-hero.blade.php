@@ -77,7 +77,13 @@
 							</div>
 						</div>
 						<div class="col-12 col-md-6">
-							<img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" class="rounded-3 img-fluid" />
+							@if(isset($introImageWidth))
+								<div class="d-flex justify-content-center pt-4">
+							@endif	
+								<img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" {{ isset($introImageWidth) ? 'width=' . $introImageWidth : '' }} class="rounded-3 img-fluid" />
+							@if(isset($introImageWidth))
+								</div>
+							@endif
 						</div>
 					</div>
 				</div>

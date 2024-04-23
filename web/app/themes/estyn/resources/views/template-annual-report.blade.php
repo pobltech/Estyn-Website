@@ -13,7 +13,8 @@
             <a class="btn btn-outline-primary">Annual report 2022-23</a>
         ',
         'introImageSrc' => asset('images/annualreportframed.jpg'),
-        'introImageAlt' => 'CTA example'
+        'introImageAlt' => 'CTA example',
+        'introImageWidth' => 300
     ])
     <div class="reportMain">
         <div class="container px-md-4 px-xl-5">
@@ -50,7 +51,9 @@
                     <a class="btn btn-outline-primary">{{ __('View full archive', 'sage') }}</a>
                 </div>
                 <div class="col-12 col-md-6">
-                    <img class="img-fluid" src="{{ asset('images/estynannualreport2.jpg') }}" alt="Estyn annual report 2" />
+                    <div class="d-flex justify-content-center">
+                        <img class="img-fluid" width="377" src="{{ asset('images/estynannualreport2.jpg') }}" alt="Estyn annual report 2" />
+                    </div>
                 </div>
             </div>
         </div>
