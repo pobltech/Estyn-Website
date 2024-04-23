@@ -5,9 +5,6 @@
 <nav class="navbar navbar-expand-xl navbar-light bg-white">
   <div class="container my-2 my-sm-3 px-3 px-sm-4 px-xl-5">
     <a class="navbar-brand" href="{{ home_url('/') }}"><img src="@asset('images/estyn-logo.svg')" alt="{!! $siteName !!}" width="138"/></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav ms-auto">
         <!-- Parents Carers and learners -->
@@ -227,7 +224,7 @@
 			    		</div>
 						</div>
       		</div>
-        </li>
+        </li>{{--
         <!-- Language -->
         <li class="nav-item nav-language d-flex flex-column justify-content-center">
           <a class="nav-link" href="#">Cymraeg</a>
@@ -268,9 +265,57 @@
           		</div>
           	</div>
           </div>
-        </li>
+        </li> --}}
       </ul>
     </div>
+	<div class="d-flex flex-row justify-content-end">
+		<ul class="d-flex flex-row navbar-nav">
+			<!-- Language -->
+			<li class="nav-item nav-language d-flex flex-column justify-content-center">
+			<a class="nav-link" href="#">Cymraeg</a>
+			</li>
+			<!-- Search -->
+			<li class="nav-item d-flex flex-column justify-content-center nav-search dropdown">
+			<a class="nav-link" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
+			<div class="megaMenu dropdown-menu w-100 bg-white">
+				<div class="container my-4">
+					<div class="row d-flex justify-content-center">
+						<div class="col-12 col-md-8">
+							<div class="row">
+								<div class="col-6 megaMenuFeature">
+									<div class="row">
+										<div class="col-10">
+											<h3 class="mb-4">Search Estyn</h3>
+											<div class="input-group mb-3">
+														<input type="text" class="form-control" placeholder="" aria-label="estynSearch" aria-describedby="estynSearch">
+														<button class="btn btn-primary" type="button" id="estynSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+														</div>
+													</div>
+												</div>
+									</div>
+									<div class="col-6 megaMenuMain">
+										<div class="row">
+											<div class="col-10 offset-2">
+												<h3 class="mb-4">Popular</h3>
+											<ul aria-labelledby="navbarProfessionalDropdownMenuLink">
+												<li><a href="https://google.co.uk">Action</a></li>
+												<li><a href="#">Another action</a></li>
+												<li><a href="#">Something else here</a></li>
+											</ul>	
+											</div>
+										</div>
+									</div>
+									</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</li>
+		</ul>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+		</button>
+	</div>
   </div>
 </nav>
 </header>
