@@ -9,8 +9,8 @@
     <div class="container h-100 w-100 d-flex align-items-end mb-5 pb-5 px-md-4 px-xl-5">
       <div class="row flex-fill">
         <div class="col-12 col-md-10 col-lg-8 col-xl-6 homeHeroContent">
-          <h1>Placing learners at the heart of our work</h1>
-          <a class="btn btn-link mt-4">Read more about what we do <i class="fa-sharp fa-solid fa-arrow-right"></i></a>
+          <h1>{{ __('Placing learners at the heart of our work', 'sage') }}</h1>
+          <a class="btn btn-link mt-1">{{ __('Read more about what we do') }} <i class="fa-sharp fa-solid fa-arrow-right"></i></a>
         </div>
       </div>
     </div>
