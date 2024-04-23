@@ -1,3 +1,17 @@
+:root {
+    --navbar-brand-margin-right: 1rem;
+
+    @media (max-width: 1280px) {
+        --navbar-brand-margin-right: 0.5rem;
+    }
+
+    --navbar-toggler-font-size: 1.5rem;
+
+    @media (max-width: 576px) {
+        --navbar-toggler-font-size: 0.85rem;
+    }
+}
+
 /** Main Colours **/
 $estyn-blue: #2A7AB0; /** Primary Estyn brand colour **/
 $estyn-green: #A2C83A; /** Secondary Estyn brand colour **/
@@ -47,10 +61,12 @@ $input-border-width: 1px;
 
 /** Bootstrap nav overrides **/
 $navbar-light-color: $estyn-blue;
-$navbar-toggler-font-size: 0.85rem;
+$navbar-toggler-font-size: var(--navbar-toggler-font-size);
 $navbar-light-toggler-border-color: transparent;
 $navbar-light-toggler-icon-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='#{$estyn-blue}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
 $navbar-toggler-padding-x: 0;
+$navbar-brand-margin-end: var(--navbar-brand-margin-right);
+
 
 @import 'bootstrap/scss/bootstrap';
 @import 'common/fonts';
@@ -58,6 +74,7 @@ $navbar-toggler-padding-x: 0;
 /* Define a variable called estyn-blue with value #DCEEFE
 $estyn-blue: #DCEEFE;
 */
+
 
 
 /** Padding and margin (using Bootstrap stuff) **/
@@ -490,6 +507,11 @@ hr {
         .nav-link {
             padding-right: 2rem;
             padding-left: 2rem;
+
+            @media (max-width: 1317px) {
+                padding-right: 1.5rem;
+                padding-left: 1.5rem;
+            }
         }
     }
 }

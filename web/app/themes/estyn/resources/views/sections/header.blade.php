@@ -3,7 +3,7 @@
     {!! $siteName !!}
   </a> --}}
 <nav class="navbar navbar-expand-xl navbar-light bg-white">
-  <div class="container my-2 my-md-3 px-3 px-md-4 px-xl-5">
+  <div class="container my-2 my-sm-3 px-3 px-sm-4 px-xl-5">
     <a class="navbar-brand" href="{{ home_url('/') }}"><img src="@asset('images/estyn-logo.svg')" alt="{!! $siteName !!}" width="138"/></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
