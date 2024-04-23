@@ -8,9 +8,10 @@
         'date' => $date ?? null
     ];
 
-    $providerPost = get_field('resource_creator')[0];
+    $providerPost = get_field('resource_creator');
 
     if($providerPost) {
+        $providerPost = $providerPost[0]; // Get the first one; there should only be one
         $providerName = get_the_title($providerPost->ID);
         $providerIconImage = get_field('icon_image', $providerPost->ID) ? get_field('icon_image', $providerPost->ID) : null;
         $providerNumPupils = get_field('number_of_pupils', $providerPost->ID) ? get_field('number_of_pupils', $providerPost->ID) : null;
