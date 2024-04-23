@@ -467,6 +467,10 @@ hr {
     color: $estyn-blue;
     border-right: 1px solid $estyn-lightblue;
     margin-bottom: 0;
+
+    @include media-breakpoint-down(sm) {
+        font-size: 16px;
+    }
     
     &.nav-search, &.nav-language {
         border-right: none; /* Remove border lines to right */
@@ -508,7 +512,7 @@ hr {
             padding-right: 2rem;
             padding-left: 2rem;
 
-            @media (max-width: 1317px) {
+            @media (max-width: 1344px) {
                 padding-right: 1.5rem;
                 padding-left: 1.5rem;
             }
