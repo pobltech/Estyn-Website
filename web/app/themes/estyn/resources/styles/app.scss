@@ -1078,6 +1078,15 @@ p.sp-desc {
     border-radius: $border-radius-form;
 } */
 
+.register-for-updates {
+    .form-control {
+        color: $estyn-darkblue;
+        background-color: $estyn-lightblue;
+        border: 1px solid $estyn-darkblue;
+        border-radius: $border-radius-form;
+    }
+}
+
 .footer {
     .list-group-item {
         padding: .5rem 0;
