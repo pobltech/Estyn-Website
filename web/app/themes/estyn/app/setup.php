@@ -126,7 +126,7 @@ add_action('widgets_init', function () {
 /**
  * Register 'estyn_thematic_report' post type.
  */
-add_action('init', function () {
+/* add_action('init', function () {
     register_post_type('estyn_thematicreport', [
         'labels' => [
             'name' => __('Thematic Reports', 'sage'),
@@ -139,7 +139,7 @@ add_action('init', function () {
         'rewrite' => ['slug' => 'thematic-reports'],
         'show_in_rest' => true, // Enable Gutenberg editor
     ]);
-});
+}); */
 
 /**
  * Register 'estyn_newsarticle' post type.

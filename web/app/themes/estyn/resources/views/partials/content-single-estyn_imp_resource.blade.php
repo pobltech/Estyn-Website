@@ -27,6 +27,8 @@
 
     $resourceTypes = get_the_terms(get_the_ID(), 'improvement_resource_type');
     
+    $isThematicReport = false;
+
     if($resourceTypes) {
         $resourceTypeString = '';
 
@@ -36,40 +38,86 @@
             } else {
               $resourceTypeString .= ', ' . $resourceType->name;
             }
+
+            // If this is a Thematic Report then we want full width
+            if($resourceType->slug == 'thematic-report') {
+              $pageHeaderArgs['fullWidth'] = true;
+
+              $isThematicReport = true;
+            }
         }
 
         $pageHeaderArgs['subtitle'] = $resourceTypeString;
     }
 ?>
 @include('partials.page-header', $pageHeaderArgs)
-<div class="reportMain">
-	<div class="container px-md-4 px-xl-5">
-    <div class="row justify-content-center">
-      <div class="col-12 col-lg-10 col-xl-8">
-            <div class="row">
-              <div class="col-12">
-                  @if (has_post_thumbnail())
-                    @php(the_post_thumbnail(null, ['class' => 'img-fluid rounded-3 mb-4']))
-                  @endif
+@if($isThematicReport)
+  <div class="reportMain">
+    <div class="container px-md-4 px-xl-5">
+      <div class="row d-flex justify-content-between">
+        <div class="col-12 col-md-4">
+          <div class="row">
+            <div class="col-12 col-md-11">
+              <h3 class="mb-4">Contents</h3>
 
-                  @php(the_content())
-
-                  @if ($pagination)
-                    <footer>
-                      <nav class="page-nav" aria-label="Page">
-                        {!! $pagination !!}
-                      </nav>
-                    </footer>
-                  @endif
-
-                <hr>
-                @include('partials.provider-resources-list',
-                  ['providerPost' => $providerPost]
-                )
+              <div class="reportContents list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                  The current link item
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">A second link item</a>
+                <a href="#" class="list-group-item list-group-item-action">A third link item</a>
+                <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
               </div>
+
             </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-8">
+          @php(the_content())
+
+          @if ($pagination)
+            <footer>
+              <nav class="page-nav" aria-label="Page">
+                {!! $pagination !!}
+              </nav>
+            </footer>
+          @endif
+
+          {{-- comments_template(); --}}
+        </div>
       </div>
     </div>
   </div>
-</div>
+@else
+  <div class="reportMain">
+    <div class="container px-md-4 px-xl-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+              <div class="row">
+                <div class="col-12">
+                    @if (has_post_thumbnail())
+                      @php(the_post_thumbnail(null, ['class' => 'img-fluid rounded-3 mb-4']))
+                    @endif
+
+                    @php(the_content())
+
+                    @if ($pagination)
+                      <footer>
+                        <nav class="page-nav" aria-label="Page">
+                          {!! $pagination !!}
+                        </nav>
+                      </footer>
+                    @endif
+
+                  <hr>
+                  @include('partials.provider-resources-list',
+                    ['providerPost' => $providerPost]
+                  )
+                </div>
+              </div>
+        </div>
+      </div>
+    </div>
+  </div>
+@endif
 </article>
