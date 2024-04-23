@@ -36,7 +36,7 @@
 		</div>
 		<div class="row d-flex align-items-end">
 			<div class="col-12 col-md-6">
-				<p>{{ $carouselDescription }}</p>
+				<p>{{ $carouselDescription ?? '' }}</p>
 			</div>
 		    <div class="col-12 col-md-6 d-flex justify-content-between justify-content-md-end mb-3">
 		    	<a class="btn btn-outline-primary">{{ $carouselButtonText }}</a>
