@@ -6,7 +6,8 @@
   <div class="container my-2 my-sm-3 px-3 px-sm-4 px-xl-5">
     <a class="navbar-brand order-xl-1" href="{{ home_url('/') }}"><img src="@asset('images/estyn-logo.svg')" alt="{!! $siteName !!}" width="138"/></a>
     <div class="collapse navbar-collapse order-3 order-xl-2" id="navbarNavDropdown">
-      <ul class="navbar-nav ms-auto">
+		<hr class="p-0 m-0 w-100 d-block d-xl-none">
+      <ul class="navbar-nav ms-auto mt-5 mt-xl-0">
         <!-- Parents Carers and learners -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -276,7 +277,7 @@
 			</li>
 			<!-- Search -->
 			<li class="nav-item d-flex flex-column justify-content-center nav-search dropdown">
-			<a class="nav-link pe-4 pe-xl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
+			<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
 			<div class="megaMenu dropdown-menu w-100 bg-white">
 				<div class="container my-4">
 					<div class="row d-flex justify-content-center">
@@ -313,7 +314,7 @@
 		</li>
 		</ul>
 		<button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
+			<span class="navbar-toggler-icon"></span>
 		</button>
 	</div>
   </div>

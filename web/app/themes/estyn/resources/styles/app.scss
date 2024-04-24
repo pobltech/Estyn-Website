@@ -127,6 +127,8 @@ body {
     } */
 }
 
+
+
 .bg-estyn-blue {
     background-color: $estyn-blue;
 }
@@ -462,6 +464,29 @@ hr {
             line-height: 18px;
         }
     }
+
+    .navbar-collapse {
+        height: 100vh;
+        width: 100%;
+        z-index: 9999;
+        transition: height ease-in 100ms;
+
+        hr {
+            position: absolute;
+            top: 68px;
+            left: 0;
+
+            color: $estyn-blue;
+
+            @include media-breakpoint-down(xl) {
+                top: 88px;
+            }
+
+            @include media-breakpoint-down(sm) {
+                top: 68px;
+            }
+        }
+    }
 }
 .nav-item {
     &.dropdown {
@@ -493,6 +518,10 @@ hr {
         
         .nav-link {
             border-right: 1px solid $estyn-lightblue;
+
+            @include media-breakpoint-down(xl) {
+                border-right: none;
+            }
         }
     }
 
