@@ -9,10 +9,18 @@
 		<hr class="p-0 m-0 w-100 d-block d-xl-none">
       <ul class="navbar-nav ms-auto mt-5 mt-xl-0">
         <!-- Parents Carers and learners -->
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown mb-4 mb-xl-0">
           <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          	<span class="nav-item-sub">Estyn for</span>
-            <span class="nav-item-main">Parents, carers & learners</span>
+          	<div class="d-flex justify-content-between d-xl-inline-block">
+				<div>
+					<span class="nav-item-sub">Estyn for</span>
+					<span class="nav-item-main">Parents, carers & learners</span>
+				</div>
+				<div class="d-block d-xl-none">
+					<!-- Font awesome right arrow (with stem) icon -->
+					<i class="fa-sharp fa-solid fa-arrow-right pt-3"></i>
+				</div>
+			</div>
           </a>
           <div class="megaMenu dropdown-menu w-100 bg-white">
           	<div class="container my-4">
@@ -61,10 +69,18 @@
       		</div>
         </li>
         <!-- Education Proffessionals -->
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown mb-4 mb-xl-0">
           <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          	<span class="nav-item-sub">Estyn for</span>
-            <span class="nav-item-main">Education professionals</span>
+		    <div class="d-flex justify-content-between d-xl-inline-block">
+				<div>
+					<span class="nav-item-sub">Estyn for</span>
+					<span class="nav-item-main">Education professionals</span>
+				</div>
+				<div class="d-block d-xl-none">
+					<!-- Font awesome right arrow (with stem) icon -->
+					<i class="fa-sharp fa-solid fa-arrow-right pt-3"></i>
+				</div>
+			</div>
           </a>
           <div class="megaMenu dropdown-menu w-100 bg-white">
           	<div class="container my-4">
@@ -178,8 +194,16 @@
         <!-- About -->
         <li class="nav-item nav-item-no-border dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          	<span class="nav-item-sub">Who we are</span>
-            <span class="nav-item-main">About Estyn</span>
+          	<div class="d-flex justify-content-between d-xl-inline-block">
+				<div>          	
+					<span class="nav-item-sub">Who we are</span>
+					<span class="nav-item-main">About Estyn</span>
+				</div>
+				<div class="d-block d-xl-none">
+					<!-- Font awesome right arrow (with stem) icon -->
+					<i class="fa-sharp fa-solid fa-arrow-right pt-3"></i>
+				</div>
+			</div>
           </a>
           <div class="megaMenu dropdown-menu w-100 bg-white">
           	<div class="container my-4">
@@ -273,11 +297,11 @@
 		<ul class="d-flex flex-row navbar-nav">
 			<!-- Language -->
 			<li class="nav-item nav-language d-flex flex-column justify-content-center">
-			<a class="nav-link" href="#">Cymraeg</a>
+				<a class="nav-link" href="#">Cymraeg</a>
 			</li>
 			<!-- Search -->
 			<li class="nav-item d-flex flex-column justify-content-center nav-search dropdown">
-			<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
+			<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xxl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
 			<div class="megaMenu dropdown-menu w-100 bg-white">
 				<div class="container my-4">
 					<div class="row d-flex justify-content-center">

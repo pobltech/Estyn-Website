@@ -482,11 +482,11 @@ hr {
             color: $estyn-blue;
 
             @include media-breakpoint-down(xl) {
-                top: 88px;
+                top: 94px;
             }
 
             @include media-breakpoint-down(sm) {
-                top: 68px;
+                top: 72px;
             }
         }
     }
@@ -560,9 +560,31 @@ hr {
             padding-right: 2rem;
             padding-left: 2rem;
 
-            @media (max-width: 1344px) {
-                padding-right: 1.5rem;
-                padding-left: 1.5rem;
+            @media (max-width: 1370px) {
+                padding-right: 0.9rem;
+                padding-left: 0.9rem;
+            }
+
+            @include media-breakpoint-down(sm) {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+
+        .nav-language {
+            .nav-link {
+                padding-right: 2rem;
+                padding-left: 2rem;
+    
+                @media (max-width: 1344px) {
+                    padding-right: 1.5rem;
+                    padding-left: 1.5rem;
+                }
+    
+                @include media-breakpoint-down(sm) {
+                    padding-left: 1.5rem;
+                    padding-right: 1.5rem;
+                }                
             }
         }
     }
@@ -1302,9 +1324,9 @@ p.sp-desc {
         --border-radius-lg: 16px;
     }
 
-    .navbar-brand img {
+/*     .navbar-brand img {
         width: 160px;
-    }
+    } */
 
     p, li, .reportMain p, .insideIntro p, .card.card-cta p, .reportMain li, blockquote {
         font-size: 18px;
