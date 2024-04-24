@@ -466,10 +466,13 @@ hr {
     }
 
     .navbar-collapse {
-        height: 100vh;
-        width: 100%;
-        z-index: 9999;
+        
+        
         transition: height ease-in 100ms;
+
+        @include media-breakpoint-down(xl) {
+            height: 100vh;
+        }
 
         hr {
             position: absolute;
