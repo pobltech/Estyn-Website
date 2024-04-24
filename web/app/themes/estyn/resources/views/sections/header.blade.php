@@ -13,8 +13,8 @@
           <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           	<div class="d-flex justify-content-between d-xl-inline-block">
 				<div>
-					<span class="nav-item-sub">Estyn for</span>
-					<span class="nav-item-main">Parents, carers & learners</span>
+					<span class="nav-item-sub">{{ __('Estyn for', 'sage') }}</span>
+					<span class="nav-item-main">{{ __('Parents, carers & learners', 'sage') }}</span>
 				</div>
 				<div class="d-block d-xl-none">
 					<!-- Font awesome right arrow (with stem) icon -->
@@ -26,7 +26,7 @@
           	<div class="container my-4">
           		<div class="row d-flex justify-content-center">
           			<div class="col-12 col-md-8">
-          				<h3 class="mb-4">Parents, carers & learners</h3>
+          				<h3 class="mb-4">{{ __('Parents, carers & learners', 'sage') }}</h3>
           				<div class="row">
           					<div class="col-12 col-sm-6 megaMenuFeature">
           						<div class="row">
@@ -73,8 +73,8 @@
           <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 		    <div class="d-flex justify-content-between d-xl-inline-block">
 				<div>
-					<span class="nav-item-sub">Estyn for</span>
-					<span class="nav-item-main">Education professionals</span>
+					<span class="nav-item-sub">{{ __('Estyn for', 'sage') }}</span>
+					<span class="nav-item-main">{{ __('Education professionals', 'sage') }}</span>
 				</div>
 				<div class="d-block d-xl-none">
 					<!-- Font awesome right arrow (with stem) icon -->
@@ -86,7 +86,7 @@
           	<div class="container my-4">
           		<div class="row d-flex justify-content-center">
           			<div class="col-12 col-md-8">
-          				<h3 class="mb-4">Educational professionals</h3>
+          				<h3 class="mb-4">{{ __('Educational professionals', 'sage') }}</h3>
           				<div class="row">
           					<div class="col-12 col-sm-6 megaMenuFeature">
           						<div class="row">
@@ -125,7 +125,7 @@
 					    		<hr class="hrnav">
 							    <div class="row mt-4 mt-sm-0">
 							    	<div class="col-12">
-							    		<h4 class="mb-3">Find my sector</h4>
+							    		<h4 class="mb-3">{{ __('Find my sector', 'sage') }}</h4>
 												<div class="row">
 													<div class="col-12 col-lg-6 col-xl-4 mb-2">
 														<a href="#" class="findmysector">Some stuff here</a>
@@ -194,8 +194,8 @@
           <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           	<div class="d-flex justify-content-between d-xl-inline-block">
 				<div>          	
-					<span class="nav-item-sub">Who we are</span>
-					<span class="nav-item-main">About Estyn</span>
+					<span class="nav-item-sub">{{ __('Who we are', 'sage') }}</span>
+					<span class="nav-item-main">{{ __('About Estyn', 'sage') }}</span>
 				</div>
 				<div class="d-block d-xl-none">
 					<!-- Font awesome right arrow (with stem) icon -->
@@ -207,7 +207,7 @@
           	<div class="container my-4">
           		<div class="row d-flex justify-content-center">
           			<div class="col-12 col-md-8">
-          				<h3 class="mb-4">About Estyn</h3>
+          				<h3 class="mb-4">{{ __('About Estyn', 'sage') }}</h3>
           				<div class="row">
           					<div class="col-12 col-sm-6 megaMenuFeature">
           						<div class="row">
@@ -299,16 +299,16 @@
 			</li>
 			<!-- Search -->
 			<li class="nav-item d-flex flex-column justify-content-center nav-search dropdown">
-			<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xxl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
-			<div class="megaMenu dropdown-menu w-100 bg-white">
+			<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xxl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
+			<div class="megaMenu dropdown-menu w-100 bg-white search-menu">
 				<div class="container my-4">
 					<div class="row d-flex justify-content-center">
-						<div class="col-12 col-md-8">
+						<div class="col-12 col-md-10">
 							<div class="row">
-								<div class="col-6 megaMenuFeature">
+								<div class="col-md-6 megaMenuFeature">
 									<div class="row">
-										<div class="col-10">
-											<h3 class="mb-4">Search Estyn</h3>
+										<div class="col-md-10 pb-4 pb-sm-0">
+											<h3 class="mb-4">{{ __('Search Estyn') }}</h3>
 											<div class="input-group mb-3">
 														<input type="text" class="form-control" placeholder="" aria-label="estynSearch" aria-describedby="estynSearch">
 														<button class="btn btn-primary" type="button" id="estynSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
@@ -316,10 +316,10 @@
 													</div>
 												</div>
 									</div>
-									<div class="col-6 megaMenuMain">
+									<div class="col-md-6 megaMenuMain mt-5 mt-sm-0">
 										<div class="row">
-											<div class="col-10 offset-2">
-												<h3 class="mb-4">Popular</h3>
+											<div class="col-md-10 offset-md-2">
+												<h3 class="mb-4">{{ __('Popular', 'sage') }}</h3>
 											<ul aria-labelledby="navbarProfessionalDropdownMenuLink">
 												<li><a href="https://google.co.uk">Action</a></li>
 												<li><a href="#">Another action</a></li>

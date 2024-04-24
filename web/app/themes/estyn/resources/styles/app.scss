@@ -635,6 +635,26 @@ hr {
         right:0;
         margin-top: 1px; /* to show border line */
     }
+
+    &.search-menu {
+        transition: height ease-in 100ms;
+        height: 0;
+
+        &.show {
+            position: fixed;
+            top: 110px;
+            height: auto;
+
+            @include media-breakpoint-down(xl) {
+                top: 98px;
+                height: 100%;
+            }
+
+            @include media-breakpoint-down(sm) {
+                top: 72px;
+            }
+        }
+    }
 }
 .megaMenuFeature {
     position:relative;
