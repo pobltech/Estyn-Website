@@ -25,27 +25,29 @@
           <div class="megaMenu dropdown-menu w-100 bg-white">
           	<div class="container my-4">
           		<div class="row d-flex justify-content-center">
-          			<div class="col-12 col-lg-8">
+          			<div class="col-12 px-0 col-lg-8">
           				<h3 class="mb-4">{{ __('Parents, carers & learners', 'sage') }}</h3>
           				<div class="row">
           					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
-												<div class="col-12 mb-4 position-relative">
+												<div class="col-12 col-xl-10 col-xxl-9 mb-4 position-relative">
 													@include('components.signpost', [
 														'bgColourClass' => 'bg-signpost-lightpink2',
 														'iconClasses' => 'fa-solid fa-magnifying-glass',
 														'title' => __('Provider search', 'sage'),
 														'description' => __('Find an education & training provider', 'sage'),
-														'linkURL' => 'https://www.google.co.uk'
+														'linkURL' => 'https://www.google.co.uk',
+														'arrow' => true
 													])
 												</div>
-												<div class="col-12 mb-4 position-relative">
+												<div class="col-12 col-xl-10 col-xxl-9 mb-4 position-relative">
 													@include('components.signpost', [
 														'bgColourClass' => 'bg-signpost-green2',
 														'iconClasses' => 'fa-solid fa-location-dot',
 														'title' => __('Provider map', 'sage'),
 														'description' => __('Find an education & training provider', 'sage'),
-														'linkURL' => 'https://www.google.co.uk'
+														'linkURL' => 'https://www.google.co.uk',
+														'arrow' => true
 													])
 												</div>
 											</div>
@@ -85,7 +87,7 @@
           <div class="megaMenu dropdown-menu w-100 bg-white">
           	<div class="container my-4">
           		<div class="row d-flex justify-content-center">
-          			<div class="col-12 col-lg-8">
+          			<div class="col-12 px-0 col-lg-8">
           				<h3 class="mb-4">{{ __('Educational professionals', 'sage') }}</h3>
           				<div class="row">
           					<div class="col-12 col-md-6 megaMenuFeature">
@@ -96,7 +98,8 @@
 														'iconClasses' => 'fa-solid fa-file',
 														'title' => __('Improvement Resources', 'sage'),
 														'description' => __('Resources to help providers improve', 'sage'),
-														'linkURL' => 'https://www.google.co.uk'
+														'linkURL' => 'https://www.google.co.uk',
+														'arrow' => true
 													])
 												</div>
 												<div class="col-12 mb-4 position-relative">
@@ -105,7 +108,8 @@
 														'iconClasses' => 'fa-solid fa-folder-open',
 														'title' => __('Inspection reports', 'sage'),
 														'description' => __('Search for an inspection report', 'sage'),
-														'linkURL' => 'https://www.google.co.uk'
+														'linkURL' => 'https://www.google.co.uk',
+														'arrow' => true
 													])
 												</div>
 								</div>
@@ -206,7 +210,7 @@
           <div class="megaMenu dropdown-menu w-100 bg-white">
           	<div class="container my-4">
           		<div class="row d-flex justify-content-center">
-          			<div class="col-12 col-lg-8">
+          			<div class="col-12 px-0 col-lg-8">
           				<h3 class="mb-4">{{ __('About Estyn', 'sage') }}</h3>
           				<div class="row">
           					<div class="col-12 col-md-6 megaMenuFeature">
@@ -217,7 +221,8 @@
 														'svg' => asset('images/estyn-logo-icon-only-darkblue.svg'),
 														'title' => __('About Estyn', 'sage'),
 														'description' => __('Who we are and what we do', 'sage'),
-														'linkURL' => 'https://www.google.co.uk'
+														'linkURL' => 'https://www.google.co.uk',
+														'arrow' => true
 													])
 												</div>
 												<div class="col-12 mb-4 position-relative">
@@ -226,7 +231,8 @@
 														'iconClasses' => 'fa-solid fa-users-rectangle',
 														'title' => __('Who\'s who', 'sage'),
 														'description' => __('Meet the team', 'sage'),
-														'linkURL' => 'https://www.google.co.uk'
+														'linkURL' => 'https://www.google.co.uk',
+														'arrow' => true
 													])
 												</div>
 											</div>
