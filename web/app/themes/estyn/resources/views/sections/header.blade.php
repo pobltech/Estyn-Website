@@ -4,8 +4,8 @@
   </a> --}}
 <nav class="navbar navbar-expand-xl navbar-light bg-white">
   <div class="container my-2 my-sm-3 px-3 px-sm-4 px-xl-5">
-    <a class="navbar-brand" href="{{ home_url('/') }}"><img src="@asset('images/estyn-logo.svg')" alt="{!! $siteName !!}" width="138"/></a>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <a class="navbar-brand order-xl-1" href="{{ home_url('/') }}"><img src="@asset('images/estyn-logo.svg')" alt="{!! $siteName !!}" width="138"/></a>
+    <div class="collapse navbar-collapse order-3 order-xl-2" id="navbarNavDropdown">
       <ul class="navbar-nav ms-auto">
         <!-- Parents Carers and learners -->
         <li class="nav-item dropdown">
@@ -268,7 +268,7 @@
         </li> --}}
       </ul>
     </div>
-	<div class="d-flex flex-row justify-content-end">
+	<div class="d-flex flex-row justify-content-end order-2 order-xl-3">
 		<ul class="d-flex flex-row navbar-nav">
 			<!-- Language -->
 			<li class="nav-item nav-language d-flex flex-column justify-content-center">
@@ -312,7 +312,7 @@
 			</div>
 		</li>
 		</ul>
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+		<button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 		</button>
 	</div>

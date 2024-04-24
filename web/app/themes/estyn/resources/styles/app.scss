@@ -63,13 +63,22 @@ $input-border-width: 1px;
 $navbar-light-color: $estyn-blue;
 $navbar-toggler-font-size: var(--navbar-toggler-font-size);
 $navbar-light-toggler-border-color: transparent;
+/* Nav mobile burger menu icon */
 $navbar-light-toggler-icon-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='#{$estyn-blue}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
 $navbar-toggler-padding-x: 0;
 $navbar-brand-margin-end: var(--navbar-brand-margin-right);
+$navbar-toggler-focus-width: 0;
 
 
 @import 'bootstrap/scss/bootstrap';
 @import 'common/fonts';
+
+.navbar-toggler {
+    /** Change the nav burger icon into an X. For some reason, using our own CSS variable didn't work **/
+    &:not(.collapsed) {
+        --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='%232A7AB0' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M7 7l16 16M23 7L7 23'/></svg>");
+    }
+}
 
 /* Define a variable called estyn-blue with value #DCEEFE
 $estyn-blue: #DCEEFE;
@@ -468,6 +477,10 @@ hr {
     border-right: 1px solid $estyn-lightblue;
     margin-bottom: 0;
 
+    @include media-breakpoint-down(xl) {
+        border-right: none;
+    }
+
     @include media-breakpoint-down(sm) {
         font-size: 16px;
     }
@@ -498,6 +511,9 @@ hr {
 
             @media (max-width: 1280px) {
                 margin-left: 0.5em;
+            }
+            @include media-breakpoint-down(xl) {
+                display: none;
             }
         }
     }
