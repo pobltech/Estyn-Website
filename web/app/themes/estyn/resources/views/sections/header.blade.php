@@ -25,10 +25,10 @@
           <div class="megaMenu dropdown-menu w-100 bg-white">
           	<div class="container my-4">
           		<div class="row d-flex justify-content-center">
-          			<div class="col-12 col-md-8">
+          			<div class="col-12 col-lg-8">
           				<h3 class="mb-4">{{ __('Parents, carers & learners', 'sage') }}</h3>
           				<div class="row">
-          					<div class="col-12 col-sm-6 megaMenuFeature">
+          					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
 												<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
@@ -50,9 +50,9 @@
 												</div>
 											</div>
 					        	</div>
-						        <div class="col-12 col-sm-6 megaMenuMain">
-						        	<div class="row mt-4 mt-sm-0">
-						        		<div class="col-sm-10 offset-sm-2">
+						        <div class="col-12 col-md-6 megaMenuMain">
+						        	<div class="row mt-4 mt-md-0">
+						        		<div class="col-md-10 offset-md-2">
 								          <ul aria-labelledby="navbarProfessionalDropdownMenuLink">
 								            <li><a href="https://google.co.uk">{{ __('What Estyn does', 'sage') }}</a></li>
 								            <li><a href="#">{{ __('Parents and carers community', 'sage') }}</a></li>
@@ -85,10 +85,10 @@
           <div class="megaMenu dropdown-menu w-100 bg-white">
           	<div class="container my-4">
           		<div class="row d-flex justify-content-center">
-          			<div class="col-12 col-md-8">
+          			<div class="col-12 col-lg-8">
           				<h3 class="mb-4">{{ __('Educational professionals', 'sage') }}</h3>
           				<div class="row">
-          					<div class="col-12 col-sm-6 megaMenuFeature">
+          					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
 												<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
@@ -110,9 +110,9 @@
 												</div>
 								</div>
 					        </div>
-						        <div class="col-12 col-sm-6 megaMenuMain">
-						        	<div class="row mt-4 mt-sm-0">
-						        		<div class="col-12 col-sm-10 offset-sm-2">
+						        <div class="col-12 col-md-6 megaMenuMain">
+						        	<div class="row mt-4 mt-md-0">
+						        		<div class="col-12 col-md-10 offset-md-2">
 								          <ul aria-labelledby="navbarProfessionalDropdownMenuLink">
 								            <li><a href="https://google.co.uk">Action</a></li>
 								            <li><a href="#">Another action</a></li>
@@ -123,7 +123,7 @@
 						      	</div>
 					    		</div>
 					    		<hr class="hrnav">
-							    <div class="row mt-4 mt-sm-0">
+							    <div class="row mt-4 mt-md-0">
 							    	<div class="col-12">
 							    		<h4 class="mb-3">{{ __('Find my sector', 'sage') }}</h4>
 												<div class="row">
@@ -206,10 +206,10 @@
           <div class="megaMenu dropdown-menu w-100 bg-white">
           	<div class="container my-4">
           		<div class="row d-flex justify-content-center">
-          			<div class="col-12 col-md-8">
+          			<div class="col-12 col-lg-8">
           				<h3 class="mb-4">{{ __('About Estyn', 'sage') }}</h3>
           				<div class="row">
-          					<div class="col-12 col-sm-6 megaMenuFeature">
+          					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
 												<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
@@ -231,9 +231,9 @@
 												</div>
 											</div>
 					        	</div>
-						        <div class="col-12 col-sm-6 megaMenuMain">
-						        	<div class="row mt-4 mt-sm-0">
-						        		<div class="col-12 col-sm-10 offset-sm-2">
+						        <div class="col-12 col-md-6 megaMenuMain">
+						        	<div class="row mt-4 mt-md-0">
+						        		<div class="col-12 col-md-10 offset-md-2">
 								          <ul aria-labelledby="navbarProfessionalDropdownMenuLink">
 								            <li><a href="https://google.co.uk">Action</a></li>
 								            <li><a href="#">Another action</a></li>
@@ -299,7 +299,7 @@
 			</li>
 			<!-- Search -->
 			<li class="nav-item d-flex flex-column justify-content-center nav-search dropdown">
-			<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xxl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
+			<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xxl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
 			<div class="megaMenu dropdown-menu w-100 bg-white search-menu">
 				<div class="container my-4">
 					<div class="row d-flex justify-content-center">
