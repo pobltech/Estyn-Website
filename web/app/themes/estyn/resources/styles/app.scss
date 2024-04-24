@@ -646,6 +646,11 @@ hr {
         right:0;
         bottom:0;
         border:1px solid $estyn-lightblue;
+
+        @include media-breakpoint-down(sm) {
+            top: 100%;
+            width: 100%;
+        }
     }
 
     .sp-text {

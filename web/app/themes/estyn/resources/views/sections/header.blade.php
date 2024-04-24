@@ -28,7 +28,7 @@
           			<div class="col-12 col-md-8">
           				<h3 class="mb-4">Parents, carers & learners</h3>
           				<div class="row">
-          					<div class="col-6 megaMenuFeature">
+          					<div class="col-12 col-sm-6 megaMenuFeature">
           						<div class="row">
 												<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
@@ -50,9 +50,9 @@
 												</div>
 											</div>
 					        	</div>
-						        <div class="col-6 megaMenuMain">
-						        	<div class="row">
-						        		<div class="col-10 offset-2">
+						        <div class="col-12 col-sm-6 megaMenuMain">
+						        	<div class="row mt-4 mt-sm-0">
+						        		<div class="col-sm-10 offset-sm-2">
 								          <ul aria-labelledby="navbarProfessionalDropdownMenuLink">
 								            <li><a href="https://google.co.uk">{{ __('What Estyn does', 'sage') }}</a></li>
 								            <li><a href="#">{{ __('Parents and carers community', 'sage') }}</a></li>
@@ -88,7 +88,7 @@
           			<div class="col-12 col-md-8">
           				<h3 class="mb-4">Educational professionals</h3>
           				<div class="row">
-          					<div class="col-6 megaMenuFeature">
+          					<div class="col-12 col-sm-6 megaMenuFeature">
           						<div class="row">
 												<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
@@ -108,11 +108,11 @@
 														'linkURL' => 'https://www.google.co.uk'
 													])
 												</div>
-											</div>
-					        	</div>
-						        <div class="col-6 megaMenuMain">
-						        	<div class="row">
-						        		<div class="col-10 offset-2">
+								</div>
+					        </div>
+						        <div class="col-12 col-sm-6 megaMenuMain">
+						        	<div class="row mt-4 mt-sm-0">
+						        		<div class="col-12 col-sm-10 offset-sm-2">
 								          <ul aria-labelledby="navbarProfessionalDropdownMenuLink">
 								            <li><a href="https://google.co.uk">Action</a></li>
 								            <li><a href="#">Another action</a></li>
@@ -123,11 +123,9 @@
 						      	</div>
 					    		</div>
 					    		<hr class="hrnav">
-							    <div class="row">
+							    <div class="row mt-4 mt-sm-0">
 							    	<div class="col-12">
 							    		<h4 class="mb-3">Find my sector</h4>
-
-
 												<div class="row">
 													<div class="col-12 col-lg-6 col-xl-4 mb-2">
 														<a href="#" class="findmysector">Some stuff here</a>
@@ -211,7 +209,7 @@
           			<div class="col-12 col-md-8">
           				<h3 class="mb-4">About Estyn</h3>
           				<div class="row">
-          					<div class="col-6 megaMenuFeature">
+          					<div class="col-12 col-sm-6 megaMenuFeature">
           						<div class="row">
 												<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
@@ -233,9 +231,9 @@
 												</div>
 											</div>
 					        	</div>
-						        <div class="col-6 megaMenuMain">
-						        	<div class="row">
-						        		<div class="col-10 offset-2">
+						        <div class="col-12 col-sm-6 megaMenuMain">
+						        	<div class="row mt-4 mt-sm-0">
+						        		<div class="col-12 col-sm-10 offset-sm-2">
 								          <ul aria-labelledby="navbarProfessionalDropdownMenuLink">
 								            <li><a href="https://google.co.uk">Action</a></li>
 								            <li><a href="#">Another action</a></li>
