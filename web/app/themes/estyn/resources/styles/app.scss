@@ -471,7 +471,7 @@ hr {
         transition: height ease-in 100ms;
 
         @include media-breakpoint-down(xl) {
-            height: 100vh;
+            min-height: 100vh;
         }
 
         hr {
@@ -635,6 +635,9 @@ header {
 }
 
 .dropdown-menu {
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+
     &.megaMenu {
         left:0;
         right:0;

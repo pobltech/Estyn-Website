@@ -27,7 +27,7 @@
           		<div class="row d-flex justify-content-center">
           			<div class="col-12 px-0 col-lg-8">
           				<h3 class="mb-4">{{ __('Parents, carers & learners', 'sage') }}</h3>
-          				<div class="row">
+          				<div class="row w-100">
           					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
 												<div class="col-12 mb-4 position-relative">
@@ -89,7 +89,7 @@
           		<div class="row d-flex justify-content-center">
           			<div class="col-12 px-0 col-lg-8">
           				<h3 class="mb-4">{{ __('Educational professionals', 'sage') }}</h3>
-          				<div class="row">
+          				<div class="row w-100">
           					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
 												<div class="col-12 mb-4 position-relative">
@@ -127,7 +127,7 @@
 						      	</div>
 					    		</div>
 					    		<hr class="hrnav">
-							    <div class="row mt-4 mt-md-0">
+							    <div class="row mt-4 mt-md-0 w-100">
 							    	<div class="col-12">
 							    		<h4 class="mb-3">{{ __('Find my sector', 'sage') }}</h4>
 												<div class="row">
@@ -212,7 +212,7 @@
           		<div class="row d-flex justify-content-center">
           			<div class="col-12 px-0 col-lg-8">
           				<h3 class="mb-4">{{ __('About Estyn', 'sage') }}</h3>
-          				<div class="row">
+          				<div class="row w-100">
           					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
 												<div class="col-12 mb-4 position-relative">
@@ -364,23 +364,35 @@
 
 			let applied = false;
 
+			function resetDropdownToggles() {
+				// Reset the dropdown toggles to their original state
+				$('header .dropdown-toggle').each(function(index, dropdownToggle) {
+					$(dropdownToggle).html(originalContent[index]);
+				});
+
+				// Show all the dropdown toggles' parent
+				$('header .dropdown-toggle').parent().show();
+			}
+
 			function applyMainNavDropdownToggleMobileBehaviour() {
 				$(navDropdownToggles).each(function(index, dropdownToggle) {
-					$(dropdownToggle).on('click', function() {
-						let dropdownMenu = $(this).next();
-						if (dropdownMenu.hasClass('show')) {
-							// Dropdown is open, change to "Back" with left arrow
-							$(this).html('<i class="fa-sharp fa-solid fa-arrow-left"></i> Back');
-
-							// Hide the other .dropdown-toggle elements' parent
-							$(navDropdownToggles).not(this).parent().hide();
-						} else {
-							// Dropdown is closed, change back to original content
-							$(this).html(originalContent[index]);
-
-							// Show the other .dropdown-toggle elements' parent
-							$(navDropdownToggles).not(this).parent().show();
+					$(dropdownToggle).on('show.bs.dropdown', function() {
+						if($(window).width() >= 1200) {
+							return;
 						}
+						// Dropdown is open, change to "Back" with left arrow
+						$(this).html('<i class="fa-sharp fa-solid fa-arrow-left"></i> Back');
+
+						// Hide the other .dropdown-toggle elements' parent
+						$(navDropdownToggles).not(this).parent().hide();
+					});
+
+					$(dropdownToggle).on('hide.bs.dropdown', function() {
+						if($(window).width() >= 1200) {
+							return;
+						}
+						//console.log('Dropdown is closed');
+						resetDropdownToggles();
 					});
 				});
 
@@ -399,21 +411,17 @@
 					}
 				} else {
 					if(applied) {
-						// Reset the dropdown toggles to their original state
-						$('header .dropdown-toggle').each(function(index, dropdownToggle) {
-							$(dropdownToggle).html(originalContent[index]);
-
-							// Remove on click events
-							$(dropdownToggle).off('click');
-						});
-
-						// Show all the dropdown toggles' parent
-						$('header .dropdown-toggle').parent().show();
-
-						applied = false;
+						resetDropdownToggles();
 					}
 				}
 			});
+
+			// Monitor $('header .navbar-collapse') show/hide
+			/*$('header .navbar-collapse').on('hide.bs.collapse', function() {
+				if(applied) {
+					resetDropdownToggles();
+				}
+			});*/
 		});
 	</script>
 @endpush
