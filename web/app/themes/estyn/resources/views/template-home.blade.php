@@ -6,7 +6,7 @@
 
 @section('content')
   <div class="homeHero">
-    <div class="container h-100 w-100 d-flex align-items-end mb-5 pb-5 px-md-4 px-xl-5">
+    <div class="container h-100 w-100 d-flex align-items-end mb-5 pb-5 px-3 px-sm-4 px-xl-5">
       <div class="row flex-fill">
         <div class="col-12 col-md-10 col-lg-8 col-xl-6 homeHeroContent">
           <h1>{{ __('Placing learners at the heart of our work', 'sage') }}</h1>
@@ -36,7 +36,7 @@
     </svg>
   </div>
   <div class="homeIntro position-relative w-100">
-    <div class="container px-md-4 px-xl-5">
+    <div class="container px-3 px-sm-4 px-xl-5">
       <div class="row d-flex justify justify-content-center">
         <div class="col-12 my-5">
           <div class="row">
@@ -53,8 +53,8 @@
               </div>
             </div>
             <div class="col-12 col-md-5 offset-md-1">
-              <h2>Estyn for you</h2>
-              <p>Search our education & training providers</p>
+              <h2 class="d-none d-md-block">Estyn for you</h2>
+              <p class="d-none d-md-block">Search our education & training providers</p>
               <div class="d-flex align-items-start flex-column flex-xxl-row">
                 <a class="btn btn-outline-light me-4 mb-3">Parents, carers & learners</a>
                 <a class="btn btn-outline-light me-4 mb-3">Education professionals</a>
