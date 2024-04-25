@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="heroImage">
-      <img src="https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg"/>
+      <img src="{{ asset('images/homeherofallback.png') }}"/>
     </div>
     <div class="heroOverlay"></div>
   </div>
