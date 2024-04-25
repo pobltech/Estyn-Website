@@ -30,7 +30,7 @@
           				<div class="row">
           					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
-												<div class="col-12 col-xl-10 col-xxl-9 mb-4 position-relative">
+												<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
 														'bgColourClass' => 'bg-signpost-lightpink2',
 														'iconClasses' => 'fa-solid fa-magnifying-glass',
@@ -40,7 +40,7 @@
 														'arrow' => true
 													])
 												</div>
-												<div class="col-12 col-xl-10 col-xxl-9 mb-4 position-relative">
+												<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
 														'bgColourClass' => 'bg-signpost-green2',
 														'iconClasses' => 'fa-solid fa-location-dot',
@@ -92,7 +92,7 @@
           				<div class="row">
           					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
-												<div class="col-12 col-xl-10 col-xxl-9 mb-4 position-relative">
+												<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
 														'bgColourClass' => 'bg-signpost-lightpink2',
 														'iconClasses' => 'fa-solid fa-file',
@@ -102,7 +102,7 @@
 														'arrow' => true
 													])
 												</div>
-												<div class="col-12 col-xl-10 col-xxl-9 mb-4 position-relative">
+												<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
 														'bgColourClass' => 'bg-signpost-green2',
 														'iconClasses' => 'fa-solid fa-folder-open',
@@ -215,7 +215,7 @@
           				<div class="row">
           					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
-												<div class="col-12 col-xl-10 col-xxl-9 mb-4 position-relative">
+												<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
 														'bgColourClass' => 'bg-signpost-lightpink2',
 														'svg' => asset('images/estyn-logo-icon-only-darkblue.svg'),
@@ -225,7 +225,7 @@
 														'arrow' => true
 													])
 												</div>
-												<div class="col-12 col-xl-10 col-xxl-9 mb-4 position-relative">
+												<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
 														'bgColourClass' => 'bg-signpost-green2',
 														'iconClasses' => 'fa-solid fa-users-rectangle',
