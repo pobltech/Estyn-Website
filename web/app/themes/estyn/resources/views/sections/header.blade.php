@@ -348,3 +348,72 @@
   </div>
 </nav>
 </header>
+@push('scripts')
+	<script>
+		jQuery(document).ready(function($) {
+			/**
+				On mobile, when clicking one of the main nav's dropdown toggles,
+				we need the toggler to change to a 'Back' link with a left arrow,
+				and hide the other dropdown toggles
+			**/
+			let navDropdownToggles = $('header .dropdown-toggle');
+			let originalContent = [];
+			$(navDropdownToggles).each(function(index, dropdownToggle) {
+				originalContent.push($(dropdownToggle).html());
+			});
+
+			let applied = false;
+
+			function applyMainNavDropdownToggleMobileBehaviour() {
+				$(navDropdownToggles).each(function(index, dropdownToggle) {
+					$(dropdownToggle).on('click', function() {
+						let dropdownMenu = $(this).next();
+						if (dropdownMenu.hasClass('show')) {
+							// Dropdown is open, change to "Back" with left arrow
+							$(this).html('<i class="fa-sharp fa-solid fa-arrow-left"></i> Back');
+
+							// Hide the other .dropdown-toggle elements' parent
+							$(navDropdownToggles).not(this).parent().hide();
+						} else {
+							// Dropdown is closed, change back to original content
+							$(this).html(originalContent[index]);
+
+							// Show the other .dropdown-toggle elements' parent
+							$(navDropdownToggles).not(this).parent().show();
+						}
+					});
+				});
+
+				applied = true;
+			}
+
+			if ($(window).width() < 1200) {
+				applyMainNavDropdownToggleMobileBehaviour();
+			}
+
+			// Monitor window size change
+			$(window).on('resize', function() {
+				if ($(window).width() < 1200) {
+					if (!applied) {
+						applyMainNavDropdownToggleMobileBehaviour();
+					}
+				} else {
+					if(applied) {
+						// Reset the dropdown toggles to their original state
+						$('header .dropdown-toggle').each(function(index, dropdownToggle) {
+							$(dropdownToggle).html(originalContent[index]);
+
+							// Remove on click events
+							$(dropdownToggle).off('click');
+						});
+
+						// Show all the dropdown toggles' parent
+						$('header .dropdown-toggle').parent().show();
+
+						applied = false;
+					}
+				}
+			});
+		});
+	</script>
+@endpush

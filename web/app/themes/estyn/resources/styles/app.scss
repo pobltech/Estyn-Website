@@ -554,6 +554,24 @@ hr {
 .nav-item-no-border {
     border-right: none; /* Remove border lines to right */
 }
+
+header {
+    .nav-link {
+        &.dropdown-toggle {
+            &.show {
+                /* On mobile, when one of the main nav's dropdowns is open,
+                    the toggler that was clicked changes to a 'Back' button,
+                    which needs to have no padding etc. */
+                @include media-breakpoint-down(xl) {
+                    padding: 0;
+                    margin: 0;
+                    line-height: normal;
+                }
+            }
+        }
+    }
+}
+
 .navbar-expand-xl {
     .navbar-nav {
         .nav-link {
@@ -569,6 +587,8 @@ hr {
                 padding-left: 0;
                 padding-right: 0;
             }
+
+
         }
 
         .nav-language {
