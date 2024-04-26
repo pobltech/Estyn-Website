@@ -152,12 +152,8 @@
 				});
 			});
 		</script>
-	@else
-		<script>
-			//console.log("No JavaScript for CTA with ID {{ $ctaUniqueID }}");
-		</script>
 	@endif
-	@if( (!isset($noJavaScript)) || $noJavaScript === false ) )
+	@if( (!isset($noJavaScript)) || $noJavaScript === false )
 		<script>
 			// Scale the image so it looks good in relation to the height of
 			// the text content
