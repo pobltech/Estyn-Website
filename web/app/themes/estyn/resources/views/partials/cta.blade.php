@@ -16,7 +16,7 @@
 								<div class="pt-cta-content">
 									<h2 class="mb-3 mb-md-4">{{ $ctaHeading }}</h2>
 									<p>{{ $ctaText }}</p>
-									<a class="btn btn-primary mt-sm-5" href="{{ $ctaButtonLinkURL }}">{{ $ctaButtonText }}</a>
+									<a class="btn btn-primary" href="{{ $ctaButtonLinkURL }}">{{ $ctaButtonText }}</a>
 								</div>
 							</div>
 							<div class="col-12 col-md-6 col-xl-5 offset-xl-1 position-relative px-5 px-md-0 text-center {{ isset($showSearchBox) && ($showSearchBox === true) ? 'cta-search-col' : '' }}">
@@ -39,7 +39,7 @@
 	@if(isset($darkArc) && ($darkArc === true))
 		<!-- Arc for larger screens -->
 		<div class="ctaArcMap position-absolute w-100 d-none d-md-block">
-			<svg width="1600" height="420" viewBox="0 0 1600 364" preserveAspectRatio="none">
+			<svg width="1600" height="364" viewBox="0 0 1600 364" preserveAspectRatio="none">
 			<path d=
 			"M0,54.7C0,54.7,392,0,792,0s808,54.7,808,54.7v310H0V54.7z" 
 			fill="#2A7AB0" />
@@ -53,7 +53,8 @@
 			fill="#2A7AB0" />
 			</svg>
 		</div>
-		<div class="w-100 bg-blue">
+		<div class="ctaArcMapBGFiller position-absolute w-100 bg-blue"></div>
+		<div class="w-100 bg-blue pt-5">
 			<div class="container py-5 px-md-4 px-xl-5">
 				<div class="row d-flex justify-content-center">
 					<div class="col-12 col-sm-10 col-xl-8">

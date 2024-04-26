@@ -1024,7 +1024,7 @@ p.sp-desc {
             }
             /* max-width: 61%; */
 
-            margin-bottom: -41%;
+            margin-bottom: -35%;
         }
     }
 
@@ -1040,7 +1040,7 @@ p.sp-desc {
         }
 
         .input-group {
-            width: 70%;
+            width: 100%;
         }
     }
 }
@@ -1087,10 +1087,25 @@ p.sp-desc {
 }
 
 .ctaArcMap {
-    top: 200px;
+    top: 24%;
+
+    @include media-breakpoint-down(md) {
+        top: 19%;
+    }
 
     svg {
         width: 100%;
+    }
+}
+
+.ctaArcMapBGFiller {
+    top: 38%;
+    z-index: -1;
+    height: 500px;
+
+    @include media-breakpoint-down(md) {
+        top: 33%;
+        height: 616px;
     }
 }
 
