@@ -177,14 +177,16 @@
     'ctaContainerExtraClasses' => 'ctaSearchMapContainer'
   ])
 
-@include('partials.slider', [
-    'carouselID' => 'estyn-home-latest-news-carousel',
-    'carouselHeading' => 'Latest articles',
-    'carouselDescription' => 'Blog posts and news articles from Estyn',
-    'carouselButtonText' => 'All articles',
-    'carouselItems' => $sliderItems,
-    'doNotDoJavaScript' => false
-  ])
+  <div class="mt-5">
+    @include('partials.slider', [
+        'carouselID' => 'estyn-home-latest-news-carousel',
+        'carouselHeading' => 'Latest articles',
+        'carouselDescription' => 'Blog posts and news articles from Estyn',
+        'carouselButtonText' => 'All articles',
+        'carouselItems' => $sliderItems,
+        'doNotDoJavaScript' => false
+      ])
+  </div>
 
   @while(have_posts()) @php(the_post())
     {{-- @include('partials.content-page') --}}
