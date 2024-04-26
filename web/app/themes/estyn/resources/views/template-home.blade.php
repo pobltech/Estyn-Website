@@ -43,9 +43,9 @@
             <div class="col-12 col-md-6 homeProviderCol">
               <div class="row">
                 <div class="col-12 col-md-10">
-                  <h2>Find a provider</h2>
-                  <label for="providerSearch" class="form-label">Search our education & training providers</label>
-                  <div class="input-group mb-3">
+                  <h2 class="mb-0 mb-sm-2">{{ __('Find a provider', 'sage') }}</h2>
+                  <label for="providerSearch" class="form-label mb-2 mb-md-4">Search our education & training providers</label>
+                  <div class="input-group mb-3 estyn-search-box">
                     <input type="text" class="form-control" placeholder="" aria-label="providerSearch" aria-describedby="providerSearch">
                     <button class="btn btn-secondary" type="button" id="providerSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
                   </div>
@@ -53,9 +53,9 @@
               </div>
             </div>
             <div class="col-12 col-md-5 offset-md-1">
-              <h2 class="d-none d-md-block">Estyn for you</h2>
-              <p class="d-none d-md-block">Search our education & training providers</p>
-              <div class="d-flex align-items-start flex-column flex-xxl-row">
+              <h2 class="d-none d-md-block mb-sm-2">{{ __('Estyn for you', 'sage') }}</h2>
+              <p class="d-none d-md-block mb-2 mb-md-4">Search our education & training providers</p>
+              <div class="d-flex align-items-start flex-column flex-sm-row flex-md-column flex-xxl-row">
                 <a class="btn btn-outline-light me-4 mb-3">Parents, carers & learners</a>
                 <a class="btn btn-outline-light me-4 mb-3">Education professionals</a>
               </div>

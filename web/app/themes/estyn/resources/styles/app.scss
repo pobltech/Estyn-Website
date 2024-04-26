@@ -412,6 +412,8 @@ blockquote {
     color: $estyn-lightblue;
 }
 
+
+
 hr {
     height: 1px;
     color: $estyn-bluegrey;
@@ -759,10 +761,11 @@ header {
     height:700px;
 
     @include media-breakpoint-down(sm) {
-        height: 455px;
+        height: 505px;
     }
 
     position:relative;
+    
 }
 .insideHeroContent, .homeHeroContent {
     margin-bottom:200px;
@@ -825,7 +828,59 @@ header {
         }
     }
 }
-.homeIntro {background-color: $estyn-blue;}
+.homeIntro {
+    background-color: $estyn-blue;
+
+    h2, p, .form-label {
+        color: $estyn-white;
+    }
+    
+    .form-label {
+        font-size: 20px;
+
+        @include media-breakpoint-down(lg) {
+            font-size: 18px;
+        }
+
+        @include media-breakpoint-down(sm) {
+            font-size: 16px;
+        }
+    }    
+
+    .form-control {
+        color: $estyn-darkblue;
+        background-color: #7EB1D6;
+        background-clip: padding-box;
+        border: 1px solid $estyn-lightbluegrey;
+        border-radius: $border-radius-sm;
+    }
+
+    .input-group {
+        .btn-secondary{
+            border: 1px solid $estyn-lightbluegrey;
+        }
+    }
+
+    .estyn-search-box {
+        .btn, .btn-secondary {
+            padding: 0.8rem 1.2rem;
+
+            @include media-breakpoint-down(md) {
+                padding: 0.5rem 1rem;
+                border-top-right-radius: 6px;
+                border-bottom-right-radius: 6px;
+            }
+        }
+
+        input[type="text"] {
+            @include media-breakpoint-down(md) {
+                border-top-left-radius: 6px;
+                border-bottom-left-radius: 6px;
+            }
+        }
+    }
+}
+
 .insideIntroArc, .homeIntroArc {margin-top: -71px;} /*Make this the same as the height of the SVG*/
 .insideIntroArc svg, .homeIntroArc svg {width:100%;}
 .insideIntro p {
@@ -833,20 +888,10 @@ header {
     line-height: 33px;
     margin-bottom: 1.8rem;
 }
-.homeIntro h2, .homeIntro p, .homeIntro .form-label {color: $estyn-white;}
-.homeIntro .form-label {font-size: 20px;}
+
+
 .homeProviderCol {
     border-right: 1px solid #6AA2C8;
-}
-.homeIntro .form-control {
-    color: $estyn-darkblue;
-    background-color: #7EB1D6;
-    background-clip: padding-box;
-    border: 1px solid $estyn-lightbluegrey;
-    border-radius: $border-radius-sm;
-}
-.homeIntro .input-group .btn-secondary{
-    border: 1px solid $estyn-lightbluegrey;
 }
 
 /** Signposting **/
