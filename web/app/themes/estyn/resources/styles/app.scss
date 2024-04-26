@@ -1072,6 +1072,11 @@ p.sp-desc {
             margin-bottom: -19%;
             height: 513px;
 
+            @include media-breakpoint-down(lg) {
+                margin-top: 0;
+                margin-bottom: -10%;
+            }
+
             @include media-breakpoint-down(sm) {
                 height: auto;
                 object-fit: auto;
