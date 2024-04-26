@@ -1010,10 +1010,27 @@ p.sp-desc {
     margin-right: -50vw;
 }
 
-.ctaSearchMapContainer {
+.ctaSearchMapContainer, .cta.ctaSearchMapContainer {
     .card-body {
         @include media-breakpoint-down(lg) {
             margin-bottom: 0;
+        }
+    }
+
+    .input-group {
+        .btn {
+            @include media-breakpoint-down(sm) {
+                padding: 0.5rem 1rem;
+                border-top-right-radius: 6px;
+                border-bottom-right-radius: 6px;
+            }
+        }
+
+        input[type="text"] {
+            @include media-breakpoint-down(md) {
+                border-top-left-radius: 6px;
+                border-bottom-left-radius: 6px;
+            }
         }
     }
 }
@@ -1079,7 +1096,7 @@ p.sp-desc {
 
             @include media-breakpoint-down(sm) {
                 height: auto;
-                object-fit: auto;
+                width: min(100%, 277px);
             }
         }
     }
@@ -1120,6 +1137,10 @@ p.sp-desc {
 
         .input-group {
             width: 100%;
+
+            @include media-breakpoint-down(lg) {
+                width: min(100%, 511px);
+            }
         }
     }
 }

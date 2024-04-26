@@ -22,7 +22,7 @@
 							<div class="col-12 col-lg-6 offset-xl-1 position-relative px-5 px-md-0 text-center text-lg-end {{ isset($showSearchBox) && ($showSearchBox === true) ? 'cta-search-col' : '' }}">
 								<img src="{{ $ctaImageURL }}" class="img-fluid pt-cta-image {{ isset($imageBreakOut) && ($imageBreakOut == true) ? 'breakOut' : '' }} {{ $imageExtraClasses ?? ''}}" alt="{{ $ctaImageAlt }}" />
 								@if(isset($showSearchBox) && ($showSearchBox === true))
-									<div class="d-flex justify-content-end ctaSearchBoxContainer">
+									<div class="d-flex justify-content-center justify-content-lg-end ctaSearchBoxContainer">
 										<div class="input-group mb-3 shadow rounded">
 											<input type="text" class="form-control" placeholder="Primary schools" aria-label="Primary schools" aria-describedby="button-addon2">
 											<button class="btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -162,8 +162,8 @@
 			// Scale the image so it looks good in relation to the height of
 			// the text content
 			jQuery(document).ready(function($) {
-				var contentHeight = $('#{{ $ctaUniqueID }} .pt-cta-content').height();
-				var height = contentHeight * 1.25; // 125% of the text content's height
+				const contentHeight = $('#{{ $ctaUniqueID }} .pt-cta-content').height();
+				const height = contentHeight * 1.25; // 125% of the text content's height
 				$('#{{ $ctaUniqueID }} .pt-cta-image:not(.breakOut)').css('height', height);
 			});
 		</script>

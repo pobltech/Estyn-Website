@@ -33,6 +33,6 @@ jQuery(document).ready(function($) {
         const contentHeight = $('#' + elemID + ' .pt-cta-content').height();
         const height = contentHeight * 1.25; // 125% of the text content's height
 
-        $('#' + elemID + ' .pt-cta-image').css('height', height);
+        $('#' + elemID + ' .pt-cta-image:not(.breakOut)').css('height', height);
     });
 });
