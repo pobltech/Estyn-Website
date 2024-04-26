@@ -27,7 +27,7 @@
     the JavaScript to make the carousel/s work.
 
  --}}
-<section class="slideMenu py-5 {{ $carouselSectionClass ?? '' }}" id="{{ $carouselID }}">
+<section class="slideMenu py-4 py-sm-5 {{ $carouselSectionClass ?? '' }}" id="{{ $carouselID }}">
 	<div class="container px-md-4 px-xl-5">
 		<div class="row">
 			<div class="col-12">
@@ -56,7 +56,7 @@
                         <div class="slideCardBody">
                             <img class="img-fluid" src="{{ $carouselItem['featured_image_src'] }}"/>
                         </div>
-                        <div class="card-footer py-sm-4 px-0">
+                        <div class="card-footer py-sm-4 pb-0 px-0">
                             <h4 class="mb-0">{{ $carouselItem['title'] }}</h4>
                             <p class="mb-0">{{ $carouselItem['excerpt'] }}</p>
                         </div>
@@ -87,12 +87,30 @@
                 let buttonRight = carouselElement.querySelector('#' + carouselID + '-slideRight');
                 let buttonLeft = carouselElement.querySelector('#' + carouselID + '-slideLeft');
 
+                const scrollAmountDesktop = 500;
+                const scrollAmountMobile = 200;
+
+                let scrollAmount = scrollAmountDesktop;
+
+
                 buttonRight.onclick = function () {
-                    carouselSliderElement.scrollLeft += 500;
+                    if(window.innerWidth < 576) {
+                        scrollAmount = scrollAmountMobile;
+                    } else {
+                        scrollAmount = scrollAmountDesktop;
+                    }
+
+                    carouselSliderElement.scrollLeft += scrollAmount;
                 };
 
                 buttonLeft.onclick = function () {
-                    carouselSliderElement.scrollLeft -= 500;
+                    if(window.innerWidth < 576) {
+                        scrollAmount = scrollAmountMobile;
+                    } else {
+                        scrollAmount = scrollAmountDesktop;
+                    }
+
+                    carouselSliderElement.scrollLeft -= scrollAmount;
                 };
             });
         </script>

@@ -39,13 +39,30 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         const carouselSlider = carouselElement.querySelector('.pobl-tech-carousel-block-slider');
 
+        const scrollAmountDesktop = 500;
+        const scrollAmountMobile = 200;
+
+        let scrollAmount = scrollAmountDesktop;
+
+
         buttonRight.onclick = function () {
-            carouselSlider.scrollLeft += 500;
+            if(window.innerWidth < 576) {
+                scrollAmount = scrollAmountMobile;
+            } else {
+                scrollAmount = scrollAmountDesktop;
+            }
+
+            carouselSliderElement.scrollLeft += scrollAmount;
         };
 
         buttonLeft.onclick = function () {
-            carouselSlider.scrollLeft -= 500;
-        };
+            if(window.innerWidth < 576) {
+                scrollAmount = scrollAmountMobile;
+            } else {
+                scrollAmount = scrollAmountDesktop;
+            }
 
+            carouselSliderElement.scrollLeft -= scrollAmount;
+        };
     });
 });

@@ -103,7 +103,7 @@
     $sliderItems = array_merge($sliderItems, $sliderItems);
   @endphp
 
-<div class="mt-sm-5">
+<div class="mt-4 mt-sm-5">
   @include('partials.slider', [
     'carouselID' => 'estyn-home-carousel',
     'carouselHeading' => 'Ways to improve',
