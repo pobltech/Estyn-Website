@@ -2,19 +2,21 @@
 	$ctaUniqueID = 'estyn-cta-' . uniqid();
 @endphp
 <section class="cta position-relative" id="{{ $ctaUniqueID }}">
-	<div class="container py-5 px-md-4 px-xl-5">
+	<div class="container {{ isset($noPY) && $noPY === false ? 'py-5' : '' }} px-3 px-sm-4 px-xl-5">
 		<div class="row justify justify-content-center">
 			<div class="col-12 col-md-10">
 				<div class="card card-cta">
-					<div class="card-body my-4 mx-3 my-md-5 mx-md-5">
+					<div class="card-body my-2 mx-0 my-sm-5 mx-sm-4 my-lg-5 mx-lg-5">
 						<div class="row">
-							<div class="col-12 col-md-6 col-xxl-4 mb-4 mb-md-0 pb-md-5">
-								<h2 class="mb-3 mb-md-4">{{ $ctaHeading }}</h2>
-								<p>{{ $ctaText }}</p>
-								<a class="btn btn-primary" href="{{ $ctaButtonLinkURL }}">{{ $ctaButtonText }}</a>
+							<div class="col-12 col-md-6 mb-4 mb-md-0 pb-md-5">
+								<div class="pt-cta-content">
+									<h2 class="mb-3 mb-md-4">{{ $ctaHeading }}</h2>
+									<p>{{ $ctaText }}</p>
+									<a class="btn btn-primary" href="{{ $ctaButtonLinkURL }}">{{ $ctaButtonText }}</a>
+								</div>
 							</div>
-							<div class="col-12 col-md-6 col-xxl-8 {{-- col-xl-5 offset-xl-1 --}} position-relative px-5 px-md-0 text-end {{ isset($showSearchBox) && ($showSearchBox === true) ? 'cta-search-col' : '' }}">
-								<img src="{{ $ctaImageURL }}" class="{{ isset($imageBreakOut) && ($imageBreakOut == true) ? 'breakOut' : '' }} {{ $imageExtraClasses ?? ''}}" alt="{{ $ctaImageAlt }}" />
+							<div class="col-12 col-md-6 col-xl-5 offset-xl-1 position-relative px-5 px-md-0 text-center {{ isset($showSearchBox) && ($showSearchBox === true) ? 'cta-search-col' : '' }}">
+								<img src="{{ $ctaImageURL }}" class="img-fluid pt-cta-image {{ isset($imageBreakOut) && ($imageBreakOut == true) ? 'breakOut' : '' }} {{ $imageExtraClasses ?? ''}}" alt="{{ $ctaImageAlt }}" />
 								@if(isset($showSearchBox) && ($showSearchBox === true))
 									<div class="d-flex justify-content-end">
 										<div class="input-group mb-3 shadow rounded">
@@ -148,6 +150,17 @@
 	@else
 		<script>
 			//console.log("No JavaScript for CTA with ID {{ $ctaUniqueID }}");
+		</script>
+	@endif
+	@if( (!isset($noJavaScript)) || $noJavaScript === false ) )
+		<script>
+			// Scale the image so it looks good in relation to the height of
+			// the text content
+			jQuery(document).ready(function($) {
+				var contentHeight = $('#{{ $ctaUniqueID }} .pt-cta-content').height();
+				var height = contentHeight * 1.25; // 125% of the text content's height
+				$('#{{ $ctaUniqueID }} .pt-cta-image').css('height', height);
+			});
 		</script>
 	@endif
 @endpush

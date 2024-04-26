@@ -962,29 +962,26 @@ p.sp-desc {
     margin-right: -50vw;
 
     img {
-        position: absolute;
-        height: 100%;
-        left: 50%;
-        width: 100%;
-        transform: translate(-50%, 0);
         object-fit: contain;
+/*         &:not(.breakOut) {
+            position: absolute;
+            height: 100%;
+            left: 50%;
+            width: 100%;
+            transform: translate(-50%, 0);
+            object-fit: contain;
 
-        &:not(.breakOut) {
             @include media-breakpoint-down(md) {
                 position: static;
+                width: 300px;
                 max-width: 100%;
                 height: auto;
-                width: auto;
                 transform: none;
             }
-        }
+        } */
 
         &.breakOut {
-            position: static;
             max-width: 100%;
-            width: auto;
-            height: auto;
-            transform: none;
             
             margin-bottom: -25%;
             margin-top: -8%;
@@ -1031,6 +1028,11 @@ p.sp-desc {
         background-color: $estyn-lightblue;
         
         border-radius: $border-radius-lg;
+
+        @include media-breakpoint-down(sm) {
+            border-radius: $border-radius-sm;
+        }
+
         border: none;
         
 

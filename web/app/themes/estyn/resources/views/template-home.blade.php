@@ -38,7 +38,7 @@
   <div class="homeIntro position-relative w-100">
     <div class="container px-3 px-sm-4 px-xl-5">
       <div class="row d-flex justify justify-content-center">
-        <div class="col-12 my-5">
+        <div class="col-12 my-4 my-sm-5">
           <div class="row">
             <div class="col-12 col-md-6 homeProviderCol">
               <div class="row">
@@ -72,7 +72,8 @@
     'ctaButtonLinkURL' => '/about-us',
     'ctaButtonText' => 'About Estyn',
     'ctaImageURL' => @asset('images/inspection1.png'),
-    'ctaImageAlt' => 'Estyn inspection'
+    'ctaImageAlt' => 'Estyn inspection',
+    'noPY' => true
   ])
 
   @php
