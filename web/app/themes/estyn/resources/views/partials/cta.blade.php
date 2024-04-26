@@ -1,7 +1,7 @@
 @php
 	$ctaUniqueID = 'estyn-cta-' . uniqid();
 @endphp
-<section class="cta position-relative" id="{{ $ctaUniqueID }}">
+<section class="cta position-relative {{ isset($ctaContainerExtraClasses) ? $ctaContainerExtraClasses : '' }}" id="{{ $ctaUniqueID }}">
 	<div class="container {{ isset($noPY) && $noPY === false ? 'py-5' : '' }} px-md-4 px-xl-5">
 		<div class="row justify justify-content-center">
 			<div class="col-12 col-md-10">
@@ -122,7 +122,7 @@
 	@endif
 </section>
 @push('scripts')
-    @if( (isset($darkArc) && ($darkArc === true)) && ((!isset($noJavaScript)) || ($noJavaScript === false)) )
+    @if( (isset($darkArc) && ($darkArc === true)) )
         <script>
             document.addEventListener('DOMContentLoaded', (event) => {
 				console.log('Initializing CTA with ID {{ $ctaUniqueID }}');

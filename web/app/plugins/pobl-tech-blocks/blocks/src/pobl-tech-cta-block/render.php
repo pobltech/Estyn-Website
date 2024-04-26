@@ -47,7 +47,9 @@
 				'ctaImageAlt' => $ctaImageAlt,
 				'imageBreakOut' => $imageBreakOut,
 				'imageExtraClasses' => $imageExtraClasses,
-				'showSearchBox' => $showSearchBox
+				'showSearchBox' => $showSearchBox,
+				'ctaContainerExtraClasses' => 'pt-cta-block',
+				'noJavaScript' => true
 			]);
 		} catch (InvalidArgumentException $e) {
 			$HTML = '<p>View not found</p>';
