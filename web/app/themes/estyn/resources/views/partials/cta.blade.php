@@ -6,7 +6,11 @@
 		<div class="row justify justify-content-center">
 			<div class="col-12 col-md-10">
 				<div class="card card-cta">
-					<div class="card-body my-2 mx-0 my-sm-5 mx-sm-4 my-lg-5 mx-lg-4">
+					@if(isset($imageBreakOut) && $imageBreakOut === true)
+						<div class="card-body my-2 mx-0 my-sm-5 mx-sm-4 my-lg-5 mx-lg-4 mb-0 mb-sm-2 mb-lg-3">
+					@else
+						<div class="card-body my-2 mx-0 my-sm-5 mx-sm-4 my-lg-5 mx-lg-4">
+					@endif
 						<div class="row">
 							<div class="col-12 col-md-6 mb-4 mb-md-0 pb-md-5">
 								<div class="pt-cta-content">
@@ -52,50 +56,50 @@
 		<div class="w-100 bg-blue">
 			<div class="container py-5 px-md-4 px-xl-5">
 				<div class="row d-flex justify-content-center">
-					<div class="col-12 col-lg-10 col-xl-8">
+					<div class="col-12 col-sm-10 col-xl-8">
 						<div class="row">
-							<div class="col-12 col-md-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Some stuff here <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								<a href="#" class="ctaMapLink">Non-maintained nurseries <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
 							</div>
-							<div class="col-12 col-md-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Some stuff here <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								<a href="#" class="ctaMapLink">Non-maintained nurseries <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
 							</div>
-							<div class="col-12 col-md-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Some stuff here <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								<a href="#" class="ctaMapLink">Non-maintained nurseries <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
 							</div>
-							<div class="col-12 col-md-4 mb-3">
-								<a href="#" class="ctaMapLink">Some stuff here <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								<a href="#" class="ctaMapLink">Primary <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
 							</div>
-							<div class="col-12 col-md-4 mb-3">
-								<a href="#" class="ctaMapLink">Some stuff here <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								<a href="#" class="ctaMapLink">Primary <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
 							</div>
-							<div class="col-12 col-md-4 mb-3">
-								<a href="#" class="ctaMapLink">Some stuff here <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								<a href="#" class="ctaMapLink">Primary <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
 							</div>
 						</div>
 						<div class="row collapse" id="{{ $ctaUniqueID }}-collapseSectors">
-							<div class="col-12 col-md-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Some stuff here <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								<a href="#" class="ctaMapLink">Secondary <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
 							</div>
-							<div class="col-12 col-md-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Some stuff here <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								<a href="#" class="ctaMapLink">Secondary <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
 							</div>
-							<div class="col-12 col-md-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Some stuff here <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								<a href="#" class="ctaMapLink">Secondary <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
 							</div>
-							<div class="col-12 col-md-4 mb-3">
-								<a href="#" class="ctaMapLink">Some stuff here <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								<a href="#" class="ctaMapLink">All-age <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
 							</div>
-							<div class="col-12 col-md-4 mb-3">
-								<a href="#" class="ctaMapLink">Some stuff here <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								<a href="#" class="ctaMapLink">All-age <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
 							</div>
-							<div class="col-12 col-md-4 mb-3">
-								<a href="#" class="ctaMapLink">Some stuff here <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								<a href="#" class="ctaMapLink">All-age <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-12 d-flex justify-content-center my-4">
-								<a id="{{ $ctaUniqueID }}-toggle-show-more" class="btn btn-outline-light cta-toggle-more-less" data-bs-toggle="collapse" href="#{{ $ctaUniqueID }}-collapseSectors" role="button" aria-expanded="false" aria-controls="{{ $ctaUniqueID }}-collapseSectors">Show more</a>
+								<a id="{{ $ctaUniqueID }}-toggle-show-more" class="btn btn-outline-primary px-5 text-white bg-transparent-even-when-active border-white rounded-3 cta-toggle-more-less" data-bs-toggle="collapse" href="#{{ $ctaUniqueID }}-collapseSectors" role="button" aria-expanded="false" aria-controls="{{ $ctaUniqueID }}-collapseSectors">{{ __('See more') }}</a>
 							</div>
 						</div>
 					</div>
@@ -125,7 +129,7 @@
     @if( (isset($darkArc) && ($darkArc === true)) )
         <script>
             document.addEventListener('DOMContentLoaded', (event) => {
-				console.log('Initializing CTA with ID {{ $ctaUniqueID }}');
+				//console.log('Initializing CTA with ID {{ $ctaUniqueID }}');
 				const ctaUniqueID = "{{ $ctaUniqueID }}";
 				const ctaToggleShowMore = document.getElementById("{{ $ctaUniqueID }}-toggle-show-more");
 				const ctaCollapseSectors = document.getElementById("{{ $ctaUniqueID }}-collapseSectors");
@@ -159,7 +163,7 @@
 			jQuery(document).ready(function($) {
 				var contentHeight = $('#{{ $ctaUniqueID }} .pt-cta-content').height();
 				var height = contentHeight * 1.25; // 125% of the text content's height
-				$('#{{ $ctaUniqueID }} .pt-cta-image').css('height', height);
+				$('#{{ $ctaUniqueID }} .pt-cta-image:not(.breakOut)').css('height', height);
 			});
 		</script>
 	@endif

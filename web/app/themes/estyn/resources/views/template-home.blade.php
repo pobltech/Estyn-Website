@@ -173,7 +173,8 @@
     'imageBreakOut' => true,
     'imageExtraClasses' => 'ctaSearchMap',
     'showSearchBox' => true,
-    'darkArc' => true
+    'darkArc' => true,
+    'ctaContainerExtraClasses' => 'ctaSearchMapContainer'
   ])
 
 @include('partials.slider', [

@@ -146,6 +146,18 @@ body {
 .bg-signpost-green {background-color: $esytn-signpost-green;}
 .bg-signpost-green2 {background-color: $esytn-signpost-green2;}
 
+.border-white {
+    border-color: white !important;
+}
+
+.bg-transparent-even-when-active {
+    background-color: transparent !important;
+
+    &:active {
+        background-color: transparent !important;
+    }
+}
+
 pre {
     code {
         word-break: break-all;
@@ -953,6 +965,14 @@ p.sp-desc {
     margin-right: -50vw;
 }
 
+.ctaSearchMapContainer {
+    .card-body {
+        @include media-breakpoint-down(lg) {
+            margin-bottom: 0;
+        }
+    }
+}
+
 /** CTA **/
 .cta {
     width: 100vw;
@@ -1000,9 +1020,11 @@ p.sp-desc {
 
         &.ctaSearchMap {
             @include media-breakpoint-down(xxl) {
-                max-width: 80%;
+                /* max-width: 80%; */
             }
-            max-width: 61%;
+            /* max-width: 61%; */
+
+            margin-bottom: -41%;
         }
     }
 
