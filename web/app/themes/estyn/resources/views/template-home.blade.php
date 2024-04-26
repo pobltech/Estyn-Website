@@ -6,7 +6,7 @@
 
 @section('content')
   <div class="homeHero">
-    <div class="container h-100 w-100 d-flex align-items-end mb-5 pb-5 px-3 px-sm-4 px-xl-5">
+    <div class="container h-100 w-100 d-flex align-items-end mb-5 pb-5 px-md-4 px-xl-5">
       <div class="row flex-fill">
         <div class="col-12 col-md-10 col-lg-8 col-xl-6 homeHeroContent">
           <h1>{{ __('Placing learners at the heart of our work', 'sage') }}</h1>
@@ -36,7 +36,7 @@
     </svg>
   </div>
   <div class="homeIntro position-relative w-100">
-    <div class="container px-3 px-sm-4 px-xl-5">
+    <div class="container px-md-4 px-xl-5">
       <div class="row d-flex justify justify-content-center">
         <div class="col-12 my-4 my-sm-5">
           <div class="row">
@@ -103,6 +103,7 @@
     $sliderItems = array_merge($sliderItems, $sliderItems);
   @endphp
 
+<div class="mt-5">
   @include('partials.slider', [
     'carouselID' => 'estyn-home-carousel',
     'carouselHeading' => 'Ways to improve',
@@ -111,6 +112,7 @@
     'carouselItems' => $sliderItems,
     'doNotDoJavaScript' => false
   ])
+</div>
 
 {{-- 'Our work' section (old design) --}}
 {{--

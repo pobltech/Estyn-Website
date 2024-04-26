@@ -31,7 +31,7 @@
 	<div class="container px-md-4 px-xl-5">
 		<div class="row">
 			<div class="col-12">
-				<h2 class="mb-3 mb-md-4">{{ $carouselHeading }}</h2>
+				<h2 class="mb-1 mb-md-1">{{ $carouselHeading }}</h2>
 			</div>
 		</div>
 		<div class="row d-flex align-items-end">
@@ -39,10 +39,10 @@
 				<p>{{ $carouselDescription ?? '' }}</p>
 			</div>
 		    <div class="col-12 col-md-6 d-flex justify-content-between justify-content-md-end mb-3">
-		    	<a class="btn btn-outline-primary">{{ $carouselButtonText }}</a>
+		    	<a class="btn btn-outline-primary rounded-3">{{ $carouselButtonText }}</a>
 		    	<div class="d-flex justify-content-end">
 				    <a id="{{ $carouselID }}-slideLeft" class="btn btn-link"><i class="fa-sharp fa-solid fa-arrow-left"></i></a>
-				    <a id="{{ $carouselID }}-slideRight" class="btn btn-link"><i class="fa-sharp fa-solid fa-arrow-right"></i></a>
+				    <a id="{{ $carouselID }}-slideRight" class="btn btn-link pe-0"><i class="fa-sharp fa-solid fa-arrow-right"></i></a>
 				  </div>
 		    </div>
 		</div>

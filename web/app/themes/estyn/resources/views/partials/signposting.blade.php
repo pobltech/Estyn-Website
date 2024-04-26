@@ -1,5 +1,5 @@
 <section class="signposting">
-	<div class="container py-5 px-3 px-sm-4 px-xl-5">
+	<div class="container py-5 px-md-4 px-xl-5">
 		<div class="row">
 			<div class="col-12">
 				<h2 class="mb-4">I want to...</h2>

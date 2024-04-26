@@ -292,6 +292,7 @@ blockquote {
     border-radius: 500px;
     padding: 0.8rem 1.2rem;
 }
+
 .input-group {
     .btn {
         border-radius: $border-radius-sm;
@@ -1091,6 +1092,11 @@ p.sp-desc {
         display: block;
         width: auto;
     } */
+
+    .btn {
+        padding: 0.5rem 1.2rem;
+    }
+
     .card {
         min-width: 456px;
         overflow: hidden;

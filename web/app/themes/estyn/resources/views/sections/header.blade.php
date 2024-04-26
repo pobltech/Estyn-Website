@@ -3,7 +3,7 @@
     {!! $siteName !!}
   </a> --}}
 <nav class="navbar navbar-expand-xl navbar-light bg-white">
-  <div class="container my-2 my-sm-3 px-3 px-sm-4 px-xl-5">
+  <div class="container my-2 my-sm-3 px-md-4 px-xl-5">
     <a class="navbar-brand order-xl-1" href="{{ home_url('/') }}"><img src="@asset('images/estyn-logo.svg')" alt="{!! $siteName !!}" width="138"/></a>
     <div class="collapse navbar-collapse order-3 order-xl-2" id="navbarNavDropdown">
 		<hr class="p-0 m-0 w-100 d-block d-xl-none">

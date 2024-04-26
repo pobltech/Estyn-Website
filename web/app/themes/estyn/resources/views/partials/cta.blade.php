@@ -2,17 +2,17 @@
 	$ctaUniqueID = 'estyn-cta-' . uniqid();
 @endphp
 <section class="cta position-relative" id="{{ $ctaUniqueID }}">
-	<div class="container {{ isset($noPY) && $noPY === false ? 'py-5' : '' }} px-3 px-sm-4 px-xl-5">
+	<div class="container {{ isset($noPY) && $noPY === false ? 'py-5' : '' }} px-md-4 px-xl-5">
 		<div class="row justify justify-content-center">
 			<div class="col-12 col-md-10">
 				<div class="card card-cta">
-					<div class="card-body my-2 mx-0 my-sm-5 mx-sm-4 my-lg-5 mx-lg-5">
+					<div class="card-body my-2 mx-0 my-sm-5 mx-sm-4 my-lg-5 mx-lg-4">
 						<div class="row">
 							<div class="col-12 col-md-6 mb-4 mb-md-0 pb-md-5">
 								<div class="pt-cta-content">
 									<h2 class="mb-3 mb-md-4">{{ $ctaHeading }}</h2>
 									<p>{{ $ctaText }}</p>
-									<a class="btn btn-primary" href="{{ $ctaButtonLinkURL }}">{{ $ctaButtonText }}</a>
+									<a class="btn btn-primary mt-5" href="{{ $ctaButtonLinkURL }}">{{ $ctaButtonText }}</a>
 								</div>
 							</div>
 							<div class="col-12 col-md-6 col-xl-5 offset-xl-1 position-relative px-5 px-md-0 text-center {{ isset($showSearchBox) && ($showSearchBox === true) ? 'cta-search-col' : '' }}">
