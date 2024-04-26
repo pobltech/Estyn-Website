@@ -1095,6 +1095,34 @@ p.sp-desc {
 
     .btn {
         padding: 0.5rem 1.2rem;
+
+        @include media-breakpoint-down(sm) {
+            padding-top: 0;
+        }
+
+        &.pt-carousel-arrow {
+            font-size: 24px;
+
+            padding-top: 0;
+            padding-bottom: 0;
+
+            text-decoration: none;
+
+            @include media-breakpoint-down(sm) {
+                font-size: 18px;
+                padding-right: 0.3rem;
+            }
+        }
+    }
+
+    .btn-outline-primary {
+        line-height: normal;
+
+        @include media-breakpoint-down(sm) {
+            border: none;
+            text-decoration: underline;
+            padding-left: 0;
+        }
     }
 
     .card {

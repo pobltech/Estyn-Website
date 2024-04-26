@@ -38,27 +38,27 @@
 			<div class="col-12 col-md-6">
 				<p>{{ $carouselDescription ?? '' }}</p>
 			</div>
-		    <div class="col-12 col-md-6 d-flex justify-content-between justify-content-md-end mb-3">
-		    	<a class="btn btn-outline-primary rounded-3">{{ $carouselButtonText }}</a>
+		    <div class="col-12 col-md-6 d-flex justify-content-between justify-content-md-end mb-2 mb-sm-3">
+		    	<a class="btn btn-outline-primary rounded-3 me-sm-4">{{ $carouselButtonText }}</a>
 		    	<div class="d-flex justify-content-end">
-				    <a id="{{ $carouselID }}-slideLeft" class="btn btn-link"><i class="fa-sharp fa-solid fa-arrow-left"></i></a>
-				    <a id="{{ $carouselID }}-slideRight" class="btn btn-link pe-0"><i class="fa-sharp fa-solid fa-arrow-right"></i></a>
+				    <a id="{{ $carouselID }}-slideLeft" class="btn btn-link pt-carousel-arrow d-flex flex-column justify-content-center"><i class="fa-sharp fa-solid fa-arrow-left"></i></a>
+				    <a id="{{ $carouselID }}-slideRight" class="btn btn-link pe-0 pt-carousel-arrow d-flex flex-column justify-content-center"><i class="fa-sharp fa-solid fa-arrow-right"></i></a>
 				  </div>
 		    </div>
 		</div>
 	</div>
-	<div class="{{ $carouselSliderWrapperClass ?? '' }} scrollCont w-100 overflow-auto my-3 pb-4 pb-md-5" id="{{ $carouselID }}-scrollCont">
+	<div class="{{ $carouselSliderWrapperClass ?? '' }} scrollCont w-100 overflow-auto my-sm-3 pb-4 pb-md-5" id="{{ $carouselID }}-scrollCont">
 	  <div class="container px-md-4 px-xl-5">
 	    <div class="row">
 	        <div class="d-flex flex-row flex-nowrap">
                 <?php foreach($carouselItems as $carouselItem) : ?>
-                    <div class="card me-4 h-100">
+                    <div class="card me-2 me-sm-4 h-100">
                         <div class="slideCardBody">
                             <img class="img-fluid" src="{{ $carouselItem['featured_image_src'] }}"/>
                         </div>
-                        <div class="card-footer py-4 px-0">
+                        <div class="card-footer py-sm-4 px-0">
                             <h4 class="mb-0">{{ $carouselItem['title'] }}</h4>
-                            <p>{{ $carouselItem['excerpt'] }}</p>
+                            <p class="mb-0">{{ $carouselItem['excerpt'] }}</p>
                         </div>
                     </div>
                 <?php endforeach; ?>

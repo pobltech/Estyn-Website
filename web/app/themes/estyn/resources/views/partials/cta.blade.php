@@ -12,7 +12,7 @@
 								<div class="pt-cta-content">
 									<h2 class="mb-3 mb-md-4">{{ $ctaHeading }}</h2>
 									<p>{{ $ctaText }}</p>
-									<a class="btn btn-primary mt-5" href="{{ $ctaButtonLinkURL }}">{{ $ctaButtonText }}</a>
+									<a class="btn btn-primary mt-sm-5" href="{{ $ctaButtonLinkURL }}">{{ $ctaButtonText }}</a>
 								</div>
 							</div>
 							<div class="col-12 col-md-6 col-xl-5 offset-xl-1 position-relative px-5 px-md-0 text-center {{ isset($showSearchBox) && ($showSearchBox === true) ? 'cta-search-col' : '' }}">
