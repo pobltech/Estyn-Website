@@ -1024,18 +1024,47 @@ p.sp-desc {
             }
             /* max-width: 61%; */
 
-            margin-bottom: -35%;
+            margin-bottom: -19%;
+            height: 513px;
+
+            @include media-breakpoint-down(sm) {
+                height: auto;
+                object-fit: auto;
+            }
         }
     }
 
     .cta-search-col {
         input {
             font-family: "PT Sans", sans-serif;
-            color: $estyn-blue;
+            color: $estyn-lightblue;
+            font-size: 24px;
+
+            @include media-breakpoint-down(sm) {
+                font-size: 16px;
+            }
             
             &::placeholder {
                 font-family: "PT Sans", sans-serif;
                 color: $estyn-blue;
+            }
+
+            &[type="text"] {
+                border-color: $estyn-blue;
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+        }
+
+        .ctaSearchBoxContainer {
+            position: absolute;
+            top: 75%;
+            right: 0px;
+            width: 100%;
+
+            @include media-breakpoint-down(sm) {
+                padding-left: $card-spacer-x;
+                padding-right: $card-spacer-x;
             }
         }
 

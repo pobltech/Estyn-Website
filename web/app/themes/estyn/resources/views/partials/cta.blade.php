@@ -12,17 +12,17 @@
 						<div class="card-body my-2 mx-0 my-sm-5 mx-sm-4 my-lg-5 mx-lg-4">
 					@endif
 						<div class="row">
-							<div class="col-12 col-md-6 mb-4 mb-md-0 pb-md-5">
+							<div class="col-12 col-lg-6 col-xl-5 col-xxl-4 mb-4 mb-md-0 pb-md-5">
 								<div class="pt-cta-content">
 									<h2 class="mb-3 mb-md-4">{{ $ctaHeading }}</h2>
 									<p>{{ $ctaText }}</p>
 									<a class="btn btn-primary" href="{{ $ctaButtonLinkURL }}">{{ $ctaButtonText }}</a>
 								</div>
 							</div>
-							<div class="col-12 col-md-6 col-xl-5 offset-xl-1 position-relative px-5 px-md-0 text-center {{ isset($showSearchBox) && ($showSearchBox === true) ? 'cta-search-col' : '' }}">
+							<div class="col-12 col-lg-6 offset-xl-1 position-relative px-5 px-md-0 text-center text-lg-end {{ isset($showSearchBox) && ($showSearchBox === true) ? 'cta-search-col' : '' }}">
 								<img src="{{ $ctaImageURL }}" class="img-fluid pt-cta-image {{ isset($imageBreakOut) && ($imageBreakOut == true) ? 'breakOut' : '' }} {{ $imageExtraClasses ?? ''}}" alt="{{ $ctaImageAlt }}" />
 								@if(isset($showSearchBox) && ($showSearchBox === true))
-									<div class="d-flex justify-content-end">
+									<div class="d-flex justify-content-end ctaSearchBoxContainer">
 										<div class="input-group mb-3 shadow rounded">
 											<input type="text" class="form-control" placeholder="Primary schools" aria-label="Primary schools" aria-describedby="button-addon2">
 											<button class="btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
