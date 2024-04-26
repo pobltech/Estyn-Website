@@ -86,13 +86,14 @@
 	</div>
 	<div class="w-100 py-4 bg-blue">
 		<div class="container px-md-4 px-xl-5 py-4">
-			<nav class="nav">
+			<nav class="nav flex-column flex-sm-row">
 			  <a class="nav-link active" aria-current="page" href="#">Contact us</a>
 			  <a class="nav-link" href="#">Privacy policy</a>
 			  <a class="nav-link" href="#">Accessibility</a>
 			  <a class="nav-link" href="#">Terms of use</a>
 			  <a class="nav-link" href="#">Sitemap</a>
 			</nav>
+			<span class="nav-link text-white">© Estyn {{ __('All rights reserved', 'sage') }}</span>
 		</div>
 	</div>
 </section>
