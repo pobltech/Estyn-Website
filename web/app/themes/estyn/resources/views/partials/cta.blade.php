@@ -54,48 +54,48 @@
 			</svg>
 		</div>
 		<div class="ctaArcMapBGFiller position-absolute w-100 bg-blue"></div>
-		<div class="w-100 bg-blue pt-5">
+		<div class="w-100 bg-blue pt-md-5">
 			<div class="container py-5 px-md-4 px-xl-5">
 				<div class="row d-flex justify-content-center">
 					<div class="col-12 col-sm-10 col-xl-8">
 						<div class="row">
 							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Non-maintained nurseries <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+								<a href="#" class="ctaMapLink">Non-maintained <span class="text-nowrap">nurseries <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 							</div>
 							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Non-maintained nurseries <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+								<a href="#" class="ctaMapLink">Non-maintained <span class="text-nowrap">nurseries <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 							</div>
 							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Non-maintained nurseries <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+								<a href="#" class="ctaMapLink">Non-maintained <span class="text-nowrap">nurseries <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 							</div>
 							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Primary <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+								<a href="#" class="ctaMapLink"><span class="text-nowrap">Primary <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 							</div>
 							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Primary <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+								<a href="#" class="ctaMapLink"><span class="text-nowrap">Primary <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 							</div>
 							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Primary <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+								<a href="#" class="ctaMapLink"><span class="text-nowrap">Primary <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 							</div>
 						</div>
 						<div class="row collapse" id="{{ $ctaUniqueID }}-collapseSectors">
 							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Secondary <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+								<a href="#" class="ctaMapLink"><span class="text-nowrap">Secondary <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 							</div>
 							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Secondary <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+								<a href="#" class="ctaMapLink"><span class="text-nowrap">Secondary <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 							</div>
 							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">Secondary <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+								<a href="#" class="ctaMapLink"><span class="text-nowrap">Secondary <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 							</div>
 							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">All-age <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+								<a href="#" class="ctaMapLink"><span class="text-nowrap">All-age <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 							</div>
 							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">All-age <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+								<a href="#" class="ctaMapLink"><span class="text-nowrap">All-age <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 							</div>
 							<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
-								<a href="#" class="ctaMapLink">All-age <i class="fa-sharp fa-regular fa-arrow-up-right"></i></a>
+								<a href="#" class="ctaMapLink"><span class="text-nowrap">All-age <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 							</div>
 						</div>
 						<div class="row">
