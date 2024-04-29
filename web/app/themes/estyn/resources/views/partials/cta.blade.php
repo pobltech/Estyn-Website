@@ -1,7 +1,7 @@
 @php
 	$ctaUniqueID = 'estyn-cta-' . uniqid();
 @endphp
-<section class="cta position-relative {{ isset($ctaContainerExtraClasses) ? $ctaContainerExtraClasses : '' }}" id="{{ $ctaUniqueID }}">
+<section class="cta my-5 position-relative {{ isset($ctaContainerExtraClasses) ? $ctaContainerExtraClasses : '' }}" id="{{ $ctaUniqueID }}">
 	<div class="container {{ isset($noPY) && $noPY === false ? 'py-5' : '' }} px-md-4 px-xl-5">
 		<div class="row justify justify-content-center">
 			<div class="col-12 col-md-10">

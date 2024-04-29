@@ -47,7 +47,7 @@
 		    </div>
 		</div>
 	</div>
-	<div class="{{ $carouselSliderWrapperClass ?? '' }} scrollCont w-100 overflow-auto my-sm-3 pb-4 pb-md-5" id="{{ $carouselID }}-scrollCont">
+	<div class="{{ $carouselSliderWrapperClass ?? '' }} scrollCont w-100 overflow-auto" id="{{ $carouselID }}-scrollCont">
 	  <div class="container px-md-4 px-xl-5">
 	    <div class="row">
 	        <div class="d-flex flex-row flex-nowrap">
