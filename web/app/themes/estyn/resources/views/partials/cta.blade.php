@@ -99,7 +99,7 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-12 d-flex justify-content-center my-4">
+							<div class="col-12 d-flex justify-content-center mt-4">
 								<a id="{{ $ctaUniqueID }}-toggle-show-more" class="btn btn-outline-primary px-5 text-white bg-transparent-even-when-active border-white rounded-3 cta-toggle-more-less" data-bs-toggle="collapse" href="#{{ $ctaUniqueID }}-collapseSectors" role="button" aria-expanded="false" aria-controls="{{ $ctaUniqueID }}-collapseSectors">{{ __('See more') }}</a>
 							</div>
 						</div>
