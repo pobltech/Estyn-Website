@@ -6,7 +6,7 @@
             <i class="{{ $iconClasses }}"></i>
         @endif
     </div>
-    <div class="sp-text ms-3 d-flex flex-column justify-content-center">
+    <div class="position-relative sp-text ms-3 d-flex flex-column justify-content-center">
         <a href="{{ $linkURL }}" class="stretched-link">
             <p class="sp-title m-0">{{ $title }}</p>
             <p class="sp-desc m-0">{{ $description }}</p>

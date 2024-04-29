@@ -15,8 +15,8 @@
         'introImageAlt' => get_field('intro_image_alt', $term) ?? __('Education in the ' . $term->name . ' sector', 'sage'),
     ])
 
-    <div class="container px-md-4 px-xl-5 mt-5 pt-sm-5">
-        <div class="row mt-5">
+    <div class="container px-md-4 px-xl-5 mt-5 pt-4 pt-sm-5">
+        <div class="row">
             <div class="col-12">
                 @include('partials.ways-to-improve')
                 @include('partials.slider', [

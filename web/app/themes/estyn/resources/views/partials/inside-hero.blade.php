@@ -67,23 +67,25 @@
 				</div>
 			</div>
 		@else
-			<div class="row d-flex justify justify-content-center">
+			<div class="row justify justify-content-center">
 				<div class="col-12 col-md-10 my-5">
 					<div class="row">
-						<div class="col-12 col-md-6">
-							<h2 class="mb-3 mb-md-4">{{ $secondHeading }}</h2>
-							<div class="inside-intro-content">
-								{!! $introContent !!}
+						<div class="col-11 col-md-6 pe-xl-5 pt-xl-5">
+							<div class="pt-xxl-5">
+								<h2 class="pe-xl-5">{{ $secondHeading }}</h2>
+								<div class="inside-intro-content">
+									{!! $introContent !!}
+								</div>
 							</div>
 						</div>
-						<div class="col-12 col-md-6">
-							@if(isset($introImageWidth))
-								<div class="d-flex justify-content-center pt-4">
-							@endif	
-								<img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" {{ isset($introImageWidth) ? 'width=' . $introImageWidth : '' }} class="rounded-3 img-fluid" />
-							@if(isset($introImageWidth))
+						<div class="col-12 col-md-6 ps-sm-5">
+							<div class="ps-lg-5">
+								<div class="d-flex justify-content-center px-me-5 px-md-0">
+									<div class="intro-image-container">
+										<img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" class="rounded-2 img-fluid" />
+									</div>
 								</div>
-							@endif
+							</div>
 						</div>
 					</div>
 				</div>
