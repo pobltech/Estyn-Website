@@ -10,15 +10,15 @@
     <div class="col-12 col-lg-8 col-xl-7">
         <div class="d-md-flex justify-content-lg-end">
             <div class="d-flex d-md-table">
-                <div class="me-2 me-sm-5 me-md-0 d-md-table-row">
-                    <div class="d-md-table-cell pb-2 pb-sm-3 pb-md-4 pe-md-5">     
+                <div class="me-sm-5 me-md-0 d-md-table-row">
+                    <div class="d-md-table-cell pb-3 pb-md-4 pe-md-5">     
                         @include('components.dot-link-arrow', [
                             'linkURL' => '#',
                             'text' => __('Numeracy', 'sage'),
                             'bgColourClass' => 'bg-signpost-blue'
                         ])
                     </div>
-                    <div class="d-md-table-cell pb-2 pb-sm-3 pb-md-4 pe-md-5">
+                    <div class="d-md-table-cell pb-3 pb-md-4 pe-md-5">
                         @include('components.dot-link-arrow', [
                             'linkURL' => '#',
                             'text' => __('Welsh Language', 'sage'),
@@ -33,15 +33,18 @@
                         ])
                     </div>
                 </div>
+                <div class="wtimprove-spacer d-md-none" aria-hidden="true">
+                    &nbsp;
+                </div>
                 <div class="d-md-table-row">
-                    <div class="d-md-table-cell pb-2 pb-sm-3 pb-md-0">
+                    <div class="d-md-table-cell pb-3 pb-md-0">
                         @include('components.dot-link-arrow', [
                             'linkURL' => '#',
                             'text' => __('Digital Skills', 'sage'),
                             'bgColourClass' => 'bg-signpost-lightpink'
                         ])
                     </div>
-                    <div class="d-md-table-cell pb-2 pb-sm-3 pb-md-0">
+                    <div class="d-md-table-cell pb-3 pb-md-0">
                         @include('components.dot-link-arrow', [
                             'linkURL' => '#',
                             'text' => __('Poverty', 'sage'),

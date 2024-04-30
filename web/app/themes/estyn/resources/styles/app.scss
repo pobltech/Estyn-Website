@@ -98,6 +98,12 @@ $m-3: $p-3;
 $m-4: $p-4;
 $m-5: $p-5;
 
+.wtimprove-spacer {
+    max-width: 60px;
+    width: 100%;
+}
+
+
 body {
     background-color: $estyn-white;
     color: $estyn-darkblue;
@@ -1510,7 +1516,7 @@ p.sp-desc {
         font-weight: 700;
 
         @include media-breakpoint-down(sm) {
-            font-size: 16px;
+            font-size: 14px;
         }
     }
 }

@@ -21,61 +21,61 @@
                 @include('partials.ways-to-improve')
                 @include('partials.slider', [
                     'carouselID' => 'sector-resources-carousel',
-                    'carouselHeading' => __('Featured secondary resources', 'sage'),
+                    'carouselHeading' => __('Featured ' . $term->name . ' resources', 'sage'),
                     'carouselDescription' => __('The latest resources for the ' . $term->name . ' sector.', 'sage'),
                     'carouselButtonText' => __('All resources', 'sage'),
-                    'carouselSectionClass' => 'pobl-tech-carousel-block',
+                    'carouselSectionClass' => 'pobl-tech-carousel-block mt-5 mb-5',
                     'carouselSliderWrapperClass' => 'pobl-tech-carousel-block-slider',
                     'carouselItems' => [
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ],
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ],
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ],
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ],
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ],
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ],
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ],
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ]
                     ],
                     'doNotDoJavaScript' => false
                 ])
 
                 @include('partials.cta', [
-                    'ctaHeading' => get_field('cta_heading', $term) ?? __('Find out more about Estyn', 'sage'),
-                    'ctaText' => get_field('cta_text', $term) ?? __('Find out what Estyn can do to help providers in the ' . $term->name . ' sector.', 'sage'),
+                    'ctaHeading' => get_field('cta_heading', $term) ?? __('What to expect ahead of an inspection', 'sage'),
+                    'ctaText' => get_field('cta_text', $term) ?? __('Our guide on what to expect during an inspection of your setting.', 'sage'),
                     'ctaButtonLinkURL' => get_field('cta_button_link', $term) ?? '#',
-                    'ctaButtonText' => get_field('cta_button_text', $term) ?? __('Find out more', 'sage'),
+                    'ctaButtonText' => get_field('cta_button_text', $term) ?? __('My inspection guide', 'sage'),
                     'ctaImageURL' => get_field('cta_image', $term) ?? asset('images/inspection1.png'),
                     'ctaImageAlt' => get_field('cta_image_alt', $term) ?? __('Education in the ' . $term->name . ' sector', 'sage')
                 ])
@@ -91,42 +91,42 @@
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ],
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ],
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ],
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ],
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ],
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ],
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ],
                         [
                             'featured_image_src' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
                             'title' => 'Attendance and attitudes to learning',
-                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
+                            'excerpt' => 'Attendance and attitudes to learning are important factors in learners\' achievement and wellbeing.'
                         ]
                     ],
                     'doNotDoJavaScript' => false
@@ -144,7 +144,7 @@
                     'showSearchBox' => true
                 ])
                 <div class="reportMain">
-                    <div class="container px-md-4 px-xl-5 pt-5">
+                    <div class="container px-md-4 px-xl-5">
                         @include('partials.inspection-and-report-schedule')
                     </div>
                 </div>

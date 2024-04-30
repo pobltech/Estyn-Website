@@ -27,13 +27,15 @@
     the JavaScript to make the carousel/s work.
 
  --}}
-<section class="slideMenu py-4 py-sm-5 {{ $carouselSectionClass ?? '' }}" id="{{ $carouselID }}">
+<section class="slideMenu {{ $carouselSectionClass ?? '' }}" id="{{ $carouselID }}">
 	<div class="container px-md-4 px-xl-5">
+        @if(isset($carouselHeading) && !empty($carouselHeading))
 		<div class="row">
 			<div class="col-12">
 				<h2 class="mb-1 mb-md-1">{{ $carouselHeading }}</h2>
 			</div>
 		</div>
+        @endif
 		<div class="row d-flex align-items-end">
 			<div class="col-12 col-md-6">
 				<p>{{ $carouselDescription ?? '' }}</p>

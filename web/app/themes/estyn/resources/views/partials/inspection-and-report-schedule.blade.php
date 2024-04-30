@@ -4,7 +4,7 @@
     </div>
 </div>
 <div class="row justify-content-center">
-    <div class="col-12 col-md-6">
+    <div class="col-12 col-md-6 mb-5">
         <h3>{{ __('Inspection schedule', 'sage') }}</h3>
         @include('components.resource-list', ['items' => [
             [
