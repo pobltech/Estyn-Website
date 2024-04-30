@@ -103,6 +103,14 @@ $m-5: $p-5;
     width: 100%;
 }
 
+.pt-share-button-container {
+    .btn, .btn-outline-info {
+        @include media-breakpoint-down(sm) {
+            border: none;
+            padding: 0;
+        }
+    }
+}
 
 body {
     background-color: $estyn-white;
@@ -426,7 +434,11 @@ hr {
     background-color: $estyn-bluegrey;
     opacity: 1;
 
-    margin: $m-5 0;
+    margin: $m-4 0;
+
+    @include media-breakpoint-down(sm) {
+        margin: $m-3 0;
+    }
 
     &:not([size]) {
         height: 1px;
