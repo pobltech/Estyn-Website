@@ -1508,6 +1508,10 @@ p.sp-desc {
         font-family: "museo", serif;
         font-size: 18px;
         font-weight: 700;
+
+        @include media-breakpoint-down(sm) {
+            font-size: 16px;
+        }
     }
 }
 
