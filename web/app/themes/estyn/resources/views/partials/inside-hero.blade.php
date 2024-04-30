@@ -28,7 +28,11 @@
 		</div>
 	</div>
 	<div class="heroImage">
-		<img src="{{ $heroImageSrc }}" alt="{{ $heroImageAlt }}" />
+		@if(isset($heroImageSrc))
+			<img src="{{ $heroImageSrc }}" alt="{{ $heroImageAlt }}" />
+		@elseif(isset($heroImageImgTag))
+			{!! $heroImageImgTag !!}
+		@endif
 	</div>
 	<div class="heroOverlay"></div>
 </div>
@@ -75,6 +79,15 @@
 								<h2 class="pe-xl-5">{{ $secondHeading }}</h2>
 								<div class="inside-intro-content">
 									{!! $introContent !!}
+									@if(isset($introLinks))
+										<div class="row">
+										@foreach($introLinks as $introLink)
+											<div class="col-12">
+												<a class="btn btn-outline-primary" href="{{ $introLink['url'] }}">{{ $introLink['text'] }}</a>
+											</div>
+										@endforeach
+										</div>
+									@endif
 								</div>
 							</div>
 						</div>
@@ -82,7 +95,11 @@
 							<div class="ps-lg-5">
 								<div class="d-flex justify-content-center px-me-5 px-md-0">
 									<div class="intro-image-container">
-										<img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" class="rounded-2 img-fluid" />
+										@if(isset($introImageSrc))
+											<img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" class="rounded-2 img-fluid" />
+										@elseif(isset($introImageID))
+											{!! wp_get_attachment_image($introImageID, 'full', false, ['class' => 'rounded-2 img-fluid']) !!}
+										@endif
 									</div>
 								</div>
 							</div>

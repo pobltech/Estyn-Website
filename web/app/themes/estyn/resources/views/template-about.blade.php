@@ -5,22 +5,22 @@
 @section('content')
     @include('partials.inside-hero', [
         'title' => __('About Estyn', 'sage'),
-        'heroImageSrc' => 'https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg',
-        'heroImageAlt' => 'Attendance and attitudes to learning photo 2 BPF ESP 55',
+        'heroImageImgTag' => get_the_post_thumbnail(),
         'secondHeading' => __('What do we do?', 'sage'),
         'introContent' => '
             <p>We want to make learning and training in Wales the best it can be for everyone.</p>
-            <p>Our priority is to help our community to keep getting better by guiding them and giving them the tools to improve.</p>
-            <a class="btn btn-outline-primary">Learn about Improvement</a><br/>
-            <a class="btn btn-outline-primary">Learn about Inspections</a>
-        ',
-        'introImageSrc' => asset('images/cta-example.png'),
-        'introImageAlt' => 'CTA example'
+            <p>Our priority is to help our community to keep getting better by guiding them and giving them the tools to improve.</p>',
+        'introLinks' => [
+            [ 'url' => '#', 'text' => 'Learn about Improvement'],
+            [ 'url' => '#', 'text' => 'Learn about Inspections']
+        ],
+        'introImageID' => get_field('intro_image')
     ])
 <div class="reportMain">
-	<div class="container px-md-4 px-xl-5 pt-5">
+	<div class="container px-md-4 px-xl-5 mt-5 pt-5">
         <h2>{{ __('Who are we?', 'sage') }}</h2>
-        <p>{{ __('We\'re the Education and Training Inspectorate for Wales. Meet the Chief Inspector and his team.', 'sage') }}</p>
+        <p>{{ __('We\'re the Education and Training Inspectorate for Wales.', 'sage') }}<br/>
+        {{ __('Meet the Chief Inspector and his team.', 'sage') }}</p>
 
         @include('partials.slider', [
             'carouselID' => 'estyn-meet-the-team-carousel',
@@ -28,7 +28,7 @@
             'carouselDescription' => null,
             'carouselButtonText' => __('Button?', 'sage'),
             'doNotDoJavaScript' => false,
-            'carouselSectionClass' => 'pobl-tech-carousel-block',
+            'carouselSectionClass' => 'pobl-tech-carousel-block pb-5',
             'carouselSliderWrapperClass' => 'pobl-tech-carousel-block-slider',
             'carouselItems' => [
                 [
@@ -74,7 +74,7 @@
             ]
         ])
     </div>
-    <div class="w-100 bg-lightblue">
+    <div class="w-100 bg-lightblue my-5">
         <div class="container py-5 px-md-4 px-xl-5">
             <div class="col-12">
                 <div class="row">
@@ -152,7 +152,8 @@
     'carouselDescription' => 'Blog posts and news articles from Estyn',
     'carouselButtonText' => 'All articles',
     'carouselItems' => $sliderItems,
-    'doNotDoJavaScript' => false
+    'doNotDoJavaScript' => false,
+    'carouselSectionClass' => 'pobl-tech-carousel-block py-5',
   ])
     <div class="container px-md-4 px-xl-5 pt-5">
         <?php

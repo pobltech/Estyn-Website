@@ -305,7 +305,7 @@
 			</li>
 			<!-- Search -->
 			<li class="nav-item d-flex flex-column justify-content-center nav-search dropdown">
-			<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xxl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
+			<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
 			<div class="megaMenu dropdown-menu w-100 bg-white search-menu">
 				<div class="container my-4">
 					<div class="row d-flex justify-content-center">
