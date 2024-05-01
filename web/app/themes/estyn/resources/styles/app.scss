@@ -865,26 +865,36 @@ header {
     }
 
     .intro-image-container {
-        position: relative;
-        width: 100%;
-        /* padding-top: 133.33%; */ /* 3:4 aspect ratio */
-        padding-top: 119.33%;
-        /* padding-top: 100%; */
-        overflow: hidden;
+        &.crop-portrait {
+            position: relative;
+            width: 100%;
+            /* padding-top: 133.33%; */ /* 3:4 aspect ratio */
+            padding-top: 119.33%;
+            /* padding-top: 100%; */
+            overflow: hidden;
 
-        @include media-breakpoint-down(md) {
-            padding-top: 300px;
-            width: 250px;
+            @include media-breakpoint-down(md) {
+                padding-top: 300px;
+                width: 250px;
+            }
+
+            img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center top;
+            }
         }
 
-        img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center top;
+        @include media-breakpoint-down(md) {
+            &:not(.crop-portrait) {
+                img {
+                    width: 400px;
+                }
+            }
         }
     }
 }

@@ -13,6 +13,7 @@
         'introContent' => get_field('intro_summary', $term) ?? __('Find out what Estyn can do to help providers in the ' . $term->name . ' sector.', 'sage'),
         'introImageSrc' => get_field('intro_image', $term) ?? asset('images/sectordefaultintro.jpg'),
         'introImageAlt' => get_field('intro_image_alt', $term) ?? __('Education in the ' . $term->name . ' sector', 'sage'),
+        'cropIntroImagePortrait' => true
     ])
 
     <div class="container px-md-4 px-xl-5 mt-5 pt-4 pt-sm-5">

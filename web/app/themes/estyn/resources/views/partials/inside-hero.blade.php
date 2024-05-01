@@ -74,8 +74,8 @@
 			<div class="row justify justify-content-center">
 				<div class="col-12 col-md-10 my-5">
 					<div class="row">
-						<div class="col-11 col-md-6 pb-5 pb-md-0 pe-xl-5 pt-xl-5">
-							<div class="pt-xxl-5">
+						<div class="col-11 col-md-6 pb-5 pb-md-0 pe-xl-5 {{ isset($cropIntroImagePortrait) && $cropIntroImagePortrait == true ? 'pt-xl-5' : '' }}">
+							<div class="{{ isset($cropIntroImagePortrait) && $cropIntroImagePortrait == true ? 'pt-xxl-5' : '' }}">
 								<h2 class="pe-xl-5">{{ $secondHeading }}</h2>
 								<div class="inside-intro-content">
 									{!! $introContent !!}
@@ -91,10 +91,10 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-12 col-md-6 ps-sm-5">
+						<div class="col-12 col-md-6 ps-md-5">
 							<div class="ps-lg-5">
 								<div class="d-flex justify-content-center px-me-5 px-md-0">
-									<div class="intro-image-container">
+									<div class="intro-image-container {{ isset($cropIntroImagePortrait) && $cropIntroImagePortrait == true ? 'crop-portrait' : '' }}">
 										@if(isset($introImageSrc))
 											<img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" class="rounded-2 img-fluid" />
 										@elseif(isset($introImageID))
