@@ -97,6 +97,34 @@
 						  </div>
                           @endif
 						</div>
+            @if((!isset($isNewsAndBlog)) || $isNewsAndBlog == false)
+              <h3 class="mt-5">Similar settings to mine</h3>
+              <div class="accordion accordion-flush" id="accordionFlushExample2">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-headingOne2">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne2" aria-expanded="false" aria-controls="flush-collapseOne2">
+                      Proximity
+                    </button>
+                  </h2>
+                  <div id="flush-collapseOne2" class="accordion-collapse collapse" aria-labelledby="flush-headingOne2" data-bs-parent="#accordionFlushExample2">
+                    <div class="accordion-body">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
+                        <label class="form-check-label" for="flexCheckDefault2">
+                          Default checkbox
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked2" checked>
+                        <label class="form-check-label" for="flexCheckChecked2">
+                          Checked checkbox
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>      
+            @endif
 					</div>
 				</div>
 			</div>
@@ -106,7 +134,14 @@
 					<div class="col-12">
 						<div class="d-flex justify-content-between">
 							<span>5181 results</span>
-							<span>Order by</span>
+              <span class="d-flex align-items-center">
+							<label class="text-nowrap me-3" for="sort-by">Sort by</label>
+                <select id="sort-by" class="form-select" aria-label="Default select example">
+                    <option value="1">Latest updated</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select>
+                </span>
 						</div>
 						<hr class="hrGreen my-3">
 					</div>
