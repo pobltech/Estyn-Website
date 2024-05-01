@@ -1636,6 +1636,12 @@ p.sp-desc {
 
 }
 
+.wp-block-image {
+    img {
+        aspect-ratio: auto !important;
+    }
+}
+
 /** Rogue Media Queries **/
 @media (max-width: 1800px) {
 

@@ -52,7 +52,7 @@
 ?>
 @include('partials.page-header', $pageHeaderArgs)
 @if($isThematicReport)
-  <div class="reportMain">
+  <div class="reportMain pt-md-4">
     <div class="container px-md-4 px-xl-5">
       <div class="row d-flex justify-content-between">
         <div class="col-12 col-md-4">
