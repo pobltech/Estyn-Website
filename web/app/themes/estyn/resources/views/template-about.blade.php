@@ -16,8 +16,8 @@
         ],
         'introImageID' => get_field('intro_image')
     ])
-<div class="reportMain">
-	<div class="container px-md-4 px-xl-5 mt-5 pt-5">
+<div class="reportMain pt-md-5">
+	<div class="container px-md-4 px-xl-5 mt-5">
         <h2>{{ __('Who are we?', 'sage') }}</h2>
         <p>{{ __('We\'re the Education and Training Inspectorate for Wales.', 'sage') }}<br/>
         {{ __('Meet the Chief Inspector and his team.', 'sage') }}</p>
@@ -25,8 +25,22 @@
         @include('partials.slider', [
             'carouselID' => 'estyn-meet-the-team-carousel',
             'carouselHeading' => __('Meet the team', 'sage'),
+            'carouselHeadingNumber' => 3,
             'carouselDescription' => null,
-            'carouselButtonText' => __('Button?', 'sage'),
+            'carouselLeftButtons' => [
+                [
+                    'link' => '#',
+                    'text' => __('Strategic directors', 'sage')
+                ],
+                [
+                    'link' => '#',
+                    'text' => __('Assistant directors', 'sage')
+                ],
+                [
+                    'link' => '#',
+                    'text' => __('Non-executive directors', 'sage')
+                ]
+            ],
             'doNotDoJavaScript' => false,
             'carouselSectionClass' => 'pobl-tech-carousel-block pb-5',
             'carouselSliderWrapperClass' => 'pobl-tech-carousel-block-slider',
@@ -74,52 +88,7 @@
             ]
         ])
     </div>
-    <div class="w-100 bg-lightblue my-5">
-        <div class="container py-5 px-md-4 px-xl-5">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-12 col-md-6">
-                        <h2 class="mb-3 mb-md-4">Our work</h2>
-                        <p>A short description of this section</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <!-- Box -->
-                    <div class="col-12 col-md-6 py-4">
-                        <div class="landscapeImg mb-4">
-                            <img src="https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg" alt=""/>
-                        </div>
-            <h4 class="mb-0">Title</h4>
-            <p>Desc</p>
-                    </div>
-                    <!-- Box -->
-                    <div class="col-12 col-md-6 py-4">
-                        <div class="landscapeImg mb-4">
-                            <img src="https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg" alt=""/>
-                        </div>
-            <h4 class="mb-0">Title</h4>
-            <p>Desc</p>
-                    </div>
-                    <!-- Box -->
-                    <div class="col-12 col-md-6 py-4">
-                        <div class="landscapeImg mb-4">
-                            <img src="https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg" alt=""/>
-                        </div>
-            <h4 class="mb-0">Title</h4>
-            <p>Desc</p>
-                    </div>
-                    <!-- Box -->
-                    <div class="col-12 col-md-6 py-4">
-                        <div class="landscapeImg mb-4">
-                            <img src="https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg" alt=""/>
-                        </div>
-            <h4 class="mb-0">Title</h4>
-            <p>Desc</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('partials.our-work')
   @php
     $query1 = new WP_Query([
       'post_type' => 'estyn_newsarticle',
@@ -153,12 +122,13 @@
     'carouselButtonText' => 'All articles',
     'carouselItems' => $sliderItems,
     'doNotDoJavaScript' => false,
-    'carouselSectionClass' => 'pobl-tech-carousel-block py-5',
+    'carouselSectionClass' => 'pobl-tech-carousel-block py-md-5',
   ])
     <div class="container px-md-4 px-xl-5 pt-5">
         <?php
             // TODO: Multiple buttons in CTA
         ?>
+        <div class="mb-md-5">
         @include('partials.cta', [
             'ctaHeading' => __('Working for us', 'sage'),
             'ctaText' => __('Our staff include corporate services, HMI and contracted trained inspectors.', 'sage'),
@@ -167,13 +137,14 @@
             'ctaImageURL' => asset('images/cta-example.png'),
             'ctaImageAlt' => 'CTA example'
         ])
+        </div>
 
-        <div class="row">
+        <div class="row pt-md-5 pb-5">
             <div class="col-12 col-sm-4">
                 <h2>{{ __('Get in touch', 'sage') }}</h2>
                 <p>{{ __('Whatever you need, get in touch', 'sage') }}.</p>
-                <a class="btn btn-outline-primary" href="#">{{ __('General inquiries', 'sage') }}</a>
-                <a class="btn btn-outline-primary" href="#">{{ __('Feedback', 'sage') }}</a>
+                <a class="btn btn-outline-primary me-3 mb-3" href="#">{{ __('General inquiries', 'sage') }}</a>
+                <a class="btn btn-outline-primary mb-3" href="#">{{ __('Feedback', 'sage') }}</a>
                 <a class="btn btn-outline-primary" href="#">{{ __('Contact the press office', 'sage') }}</a>
             </div>
         </div>

@@ -1210,10 +1210,10 @@ p.sp-desc {
     &.card-cta {
         background-color: $estyn-lightblue;
         
-        border-radius: $border-radius-lg;
+        border-radius: $border-radius-xxl;
 
         @include media-breakpoint-down(sm) {
-            border-radius: $border-radius-sm;
+            border-radius: $border-radius-lg;
         }
 
         border: none;
@@ -1405,7 +1405,7 @@ p.sp-desc {
     width: 100%;
     padding-top: 60%;
     position: relative;
-    border-radius: $border-radius-sm;
+    border-radius: $border-radius-lg;
     overflow: hidden;
 
     img {

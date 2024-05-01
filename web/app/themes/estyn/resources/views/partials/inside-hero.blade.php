@@ -74,7 +74,7 @@
 			<div class="row justify justify-content-center">
 				<div class="col-12 col-md-10 my-5">
 					<div class="row">
-						<div class="col-11 col-md-6 pe-xl-5 pt-xl-5">
+						<div class="col-11 col-md-6 pb-5 pb-md-0 pe-xl-5 pt-xl-5">
 							<div class="pt-xxl-5">
 								<h2 class="pe-xl-5">{{ $secondHeading }}</h2>
 								<div class="inside-intro-content">

@@ -28,24 +28,41 @@
 
  --}}
 <section class="slideMenu {{ $carouselSectionClass ?? '' }}" id="{{ $carouselID }}">
-	<div class="container px-md-4 px-xl-5">
+	<div class="container px-md-4 px-xl-5 mb-4">
         @if(isset($carouselHeading) && !empty($carouselHeading))
 		<div class="row">
 			<div class="col-12">
-				<h2 class="mb-1 mb-md-1">{{ $carouselHeading }}</h2>
+                @if(isset($carouselHeadingNumber) && !empty($carouselHeadingNumber))
+                    <h{{ $carouselHeadingNumber }}>{{ $carouselHeading }}</h{{ $carouselHeadingNumber }}>
+                @else
+				    <h2>{{ $carouselHeading }}</h2>
+                @endif
 			</div>
 		</div>
         @endif
-		<div class="row d-flex align-items-end">
-			<div class="col-12 col-md-6">
-				<p>{{ $carouselDescription ?? '' }}</p>
+        @if(isset($carouselLeftButtons) && !empty($carouselLeftButtons))
+		    <div class="d-flex justify-content-end justify-content-md-between align-items-sm-center">
+        @else
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+        @endif
+			<div class="mb-4 mb-sm-0">
+                @if(isset($carouselDescription) && !empty($carouselDescription))
+				    <p class="mb-0">{{ $carouselDescription }}</p>
+                @endif
+                @if(isset($carouselLeftButtons) && !empty($carouselLeftButtons))
+                    @foreach($carouselLeftButtons as $carouselLeftButton)
+                        <a class="d-none d-md-inline-block btn btn-outline-primary {{ $loop->iteration > 1 ? 'ms-4' : '' }}" href="{{ $carouselLeftButton['link'] }}">{{ $carouselLeftButton['text'] }}</a>
+                    @endforeach
+                @endif
 			</div>
-		    <div class="col-12 col-md-6 d-flex justify-content-between justify-content-md-end mb-2 mb-sm-3">
-		    	<a class="btn btn-outline-primary rounded-3 me-sm-4">{{ $carouselButtonText }}</a>
+		    <div class="d-flex justify-content-between justify-content-md-end">
+                @if(isset($carouselButtonText) && !empty($carouselButtonText))
+		    	    <a class="btn btn-outline-primary rounded-3 me-sm-4" href="{{ $carouselButtonLink ?? '#' }}">{{ $carouselButtonText }}</a>
+                @endif
 		    	<div class="d-flex justify-content-end">
 				    <a id="{{ $carouselID }}-slideLeft" class="btn btn-link pt-carousel-arrow d-flex flex-column justify-content-center"><i class="fa-sharp fa-solid fa-arrow-left"></i></a>
 				    <a id="{{ $carouselID }}-slideRight" class="btn btn-link pe-0 pt-carousel-arrow d-flex flex-column justify-content-center"><i class="fa-sharp fa-solid fa-arrow-right"></i></a>
-				  </div>
+				</div>
 		    </div>
 		</div>
 	</div>
