@@ -18,8 +18,9 @@
         'introImageAlt' => 'CTA example'
     ])
 <div class="reportMain">
-	<div class="container px-md-4 px-xl-5 pt-5">
+	<div class="container px-md-4 px-xl-5 pt-md-5">
         @include('partials.inspection-and-report-schedule')
+        <div class="mt-5 pt-5">
         @include('partials.slider', [
             'carouselID' => 'inspections-page-carousel',
             'carouselHeading' => __('Guidance & frameworks', 'sage'),
@@ -71,6 +72,9 @@
                 ]
             ]
         ])
+        </div>
+
+        <div class="mt-5 pt-md-5 pb-md-5">
         @include('partials.cta', [
             'ctaHeading' => __('Inspection Questionnaires', 'sage'),
             'ctaText' => 'Been asked to fill out an inspection questionnaire?',
@@ -79,9 +83,10 @@
             'ctaImageURL' => asset('images/cta-example.png'),
             'ctaImageAlt' => 'CTA example'
         ])
+        </div>
 
-        <div class="row">
-            <div class="col-12 col-sm-4">
+        <div class="row mt-5 pb-5 mb-5">
+            <div class="col-12 col-sm-6">
                 <h2>{{ __('Feedback', 'sage') }}</h2>
                 <p>Have something to share? Your suggestions, compliments and complaints help us to improve.</p>
                 <a class="btn btn-outline-primary" href="#">{{ __('View the full inspection schedule', 'sage') }}</a>

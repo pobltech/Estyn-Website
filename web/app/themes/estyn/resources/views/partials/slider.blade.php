@@ -35,7 +35,7 @@
                 @if(isset($carouselHeadingNumber) && !empty($carouselHeadingNumber))
                     <h{{ $carouselHeadingNumber }}>{{ $carouselHeading }}</h{{ $carouselHeadingNumber }}>
                 @else
-				    <h2>{{ $carouselHeading }}</h2>
+				    <h2 class="mb-2 mb-sm-3">{{ $carouselHeading }}</h2>
                 @endif
 			</div>
 		</div>
@@ -57,7 +57,7 @@
 			</div>
 		    <div class="d-flex justify-content-between justify-content-md-end">
                 @if(isset($carouselButtonText) && !empty($carouselButtonText))
-		    	    <a class="btn btn-outline-primary rounded-3 me-sm-4" href="{{ $carouselButtonLink ?? '#' }}">{{ $carouselButtonText }}</a>
+		    	    <a class="btn btn-outline-primary rounded-pill me-sm-4" href="{{ $carouselButtonLink ?? '#' }}">{{ $carouselButtonText }}</a>
                 @endif
 		    	<div class="d-flex justify-content-end">
 				    <a id="{{ $carouselID }}-slideLeft" class="btn btn-link pt-carousel-arrow d-flex flex-column justify-content-center"><i class="fa-sharp fa-solid fa-arrow-left"></i></a>
