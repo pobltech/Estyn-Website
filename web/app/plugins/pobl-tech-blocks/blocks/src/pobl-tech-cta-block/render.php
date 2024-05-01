@@ -19,7 +19,7 @@
 		$ctaImageURL = $attributes['imageURL'];
 	} else {
 		// map.svg which is in the block's assets/images folder
-		$ctaImageURL = plugins_url('pobl-tech-cta-block/blocks/assets/images/map.svg');
+		$ctaImageURL = plugins_url('pobl-tech-blocks/blocks/assets/images/map.svg');
 		$imageBreakOut = true;
 		$imageExtraClasses = 'ctaSearchMap';
 
