@@ -22,6 +22,21 @@
                 </div>
               </div>
             </div>
+            @if(isset($extraButtons))
+              <hr class="my-4">
+              <div class="row">
+                <div class="col-12">
+                  <div class="d-flex">
+                    @foreach($extraButtons as $button)
+                      <a href="{{ $button['url'] }}" class="btn btn-outline-info me-3">
+                        <span>{{ $button['text'] }}</span>
+                        <i class="{{ $button['iconClasses'] }}"></i>
+                      </a>
+                    @endforeach
+                  </div>
+                </div>
+              </div>
+            @endif
             @if(isset($providerDetails))
               <hr class="my-4">
               <div class="row">
