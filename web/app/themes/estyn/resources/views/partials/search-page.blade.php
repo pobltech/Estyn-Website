@@ -21,110 +21,115 @@
 						  <button class="btn btn-primary" type="button" id="searchFilter"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
 						</div>
 
-						<h3>Filters</h3>
-						<div class="accordion accordion-flush" id="accordionFlushExample">
-						  @if(isset($isNewsAndBlog) && $isNewsAndBlog)
+            <button class="btn btn-outline-primary d-md-none" data-bs-toggle="collapse" data-bs-target="#search-filters">{{ __('Filter results', 'sage' ) }}</button>
+            <hr class="d-md-none">
+
+            <div class="search-filters collapse d-md-block pb-5" id="search-filters">
+              <h3>Filters</h3>
+              <div class="accordion accordion-flush" id="accordionFlushExample">
+                @if(isset($isNewsAndBlog) && $isNewsAndBlog)
+                              <div class="accordion-item">
+                                  <h2 class="accordion-header" id="flush-headingOne">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                      Type
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body">
+                                      <div class="form-check">
+                                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                          <label class="form-check-label" for="flexCheckDefault">
+                                              Default checkbox
+                                          </label>
+                                      </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="accordion-item">
+                                  <h2 class="accordion-header" id="flush-headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                      Dates
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body">Controls</div>
+                                  </div>
+                              </div>
+                            @else
                             <div class="accordion-item">
-                                <h2 class="accordion-header" id="flush-headingOne">
-                                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                                    Type
-                                  </button>
-                                </h2>
-                                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                  <div class="accordion-body">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            Default checkbox
-                                        </label>
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="flush-headingTwo">
-                                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                                    Dates
-                                  </button>
-                                </h2>
-                                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                                  <div class="accordion-body">Controls</div>
-                                </div>
-                            </div>
-                          @else
-                          <div class="accordion-item">
-						    <h2 class="accordion-header" id="flush-headingOne">
-						      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-						        Sector
-						      </button>
-						    </h2>
-						    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-						      <div class="accordion-body">
-						      	<div class="form-check">
-								  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-								  <label class="form-check-label" for="flexCheckDefault">
-								    Default checkbox
-								  </label>
-								</div>
-								<div class="form-check">
-								  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-								  <label class="form-check-label" for="flexCheckChecked">
-								    Checked checkbox
-								  </label>
-								</div>
-						      </div>
-						    </div>
-						  </div>
-						  <div class="accordion-item">
-						    <h2 class="accordion-header" id="flush-headingTwo">
-						      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-						        Local authority
-						      </button>
-						    </h2>
-						    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-						      <div class="accordion-body">Controls</div>
-						    </div>
-						  </div>
-						  <div class="accordion-item">
-						    <h2 class="accordion-header" id="flush-headingThree">
-						      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-						        Tags
-						      </button>
-						    </h2>
-						    <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-						      <div class="accordion-body">Controls</div>
-						    </div>
-						  </div>
-                          @endif
-						</div>
-            @if((!isset($isNewsAndBlog)) || $isNewsAndBlog == false)
-              <h3 class="mt-5">Similar settings to mine</h3>
-              <div class="accordion accordion-flush" id="accordionFlushExample2">
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="flush-headingOne2">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne2" aria-expanded="false" aria-controls="flush-collapseOne2">
-                      Proximity
+                  <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                      Sector
                     </button>
                   </h2>
-                  <div id="flush-collapseOne2" class="accordion-collapse collapse" aria-labelledby="flush-headingOne2" data-bs-parent="#accordionFlushExample2">
+                  <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
-                        <label class="form-check-label" for="flexCheckDefault2">
-                          Default checkbox
-                        </label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked2" checked>
-                        <label class="form-check-label" for="flexCheckChecked2">
-                          Checked checkbox
-                        </label>
-                      </div>
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Default checkbox
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Checked checkbox
+                    </label>
+                  </div>
                     </div>
                   </div>
                 </div>
-              </div>      
-            @endif
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                      Local authority
+                    </button>
+                  </h2>
+                  <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">Controls</div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                      Tags
+                    </button>
+                  </h2>
+                  <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">Controls</div>
+                  </div>
+                </div>
+                            @endif
+              </div>
+              @if((!isset($isNewsAndBlog)) || $isNewsAndBlog == false)
+                <h3 class="mt-5">Similar settings to mine</h3>
+                <div class="accordion accordion-flush" id="accordionFlushExample2">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingOne2">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne2" aria-expanded="false" aria-controls="flush-collapseOne2">
+                        Proximity
+                      </button>
+                    </h2>
+                    <div id="flush-collapseOne2" class="accordion-collapse collapse" aria-labelledby="flush-headingOne2" data-bs-parent="#accordionFlushExample2">
+                      <div class="accordion-body">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
+                          <label class="form-check-label" for="flexCheckDefault2">
+                            Default checkbox
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked2" checked>
+                          <label class="form-check-label" for="flexCheckChecked2">
+                            Checked checkbox
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>      
+              @endif
+            </div>
 					</div>
 				</div>
 			</div>
@@ -132,7 +137,7 @@
 			<div class="searchResultsMain col-12 col-md-8">
 				<div class="row">
 					<div class="col-12">
-						<div class="d-flex justify-content-between">
+						<div class="d-flex align-items-center align-items-md-start justify-content-between">
 							<span>5181 results</span>
               <span class="d-flex align-items-center">
 							<label class="text-nowrap me-3" for="sort-by">Sort by</label>
