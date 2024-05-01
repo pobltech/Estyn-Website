@@ -1,6 +1,6 @@
 <a href="{{ $linkURL }}" class="list-group-item list-group-item-action">
 	@if(isset($dateOnRight))
-		<div class="d-flex w-100 justify-content-between">
+		<div class="d-md-flex w-100 justify-content-between">
 			<div>
 				{{ $title }}
 			</div>

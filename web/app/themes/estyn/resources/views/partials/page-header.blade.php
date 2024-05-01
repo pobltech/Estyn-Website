@@ -41,7 +41,7 @@
               <hr class="my-4">
               <div class="row">
                 <div class="col-12">
-                  <div class="d-flex">
+                  <div class="d-flex resource-creator">
                       @if(isset($providerDetails['icon_image']))
                         <img src="{{ $providerDetails['icon_image']['url'] }}" alt="{{ $providerDetails['icon_image']['alt'] }}" class="img-fluid rounded-circle me-3 border resource-creator-circle-image">
                       @endif
@@ -50,7 +50,7 @@
                         @if(isset($providerDetails['number_of_pupils']) || isset($providerDetails['age_range']))
                           <span class="d-block">
                             @if(isset($providerDetails['number_of_pupils']))
-                              <span class="d-inline-block me-3">{{ __('Number of pupils', 'sage') . ': ' . $providerDetails['number_of_pupils'] }}</span>
+                              <span class="d-inline-block me-2 me-md-3">{{ __('Number of pupils', 'sage') . ': ' . $providerDetails['number_of_pupils'] }}</span>
                             @endif
                             @if(isset($providerDetails['age_range']))
                               <span>{{ __('Age range', 'sage') . ': ' . $providerDetails['age_range'] }}</span>
