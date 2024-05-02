@@ -18,8 +18,8 @@
 				<h1>{!! $title !!}</h1>
 				@if(isset($followUpStatusses))
 					@foreach($followUpStatusses as $followUpStatus)
-						<div class="d-flex me-3">
-							<span class="rounded-circle me-3 bg-estyn-blue p-3 follow-up-status-circle"></span>
+						<div class="d-flex me-3 align-items-center">
+							<span class="rounded-circle me-2 bg-lightblue p-3 follow-up-status-circle"></span>
 							<span class="follow-up-status">{{ $followUpStatus->name }}</span>
 						</div>
 					@endforeach
