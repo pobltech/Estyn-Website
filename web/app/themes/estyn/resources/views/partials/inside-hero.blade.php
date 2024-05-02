@@ -5,18 +5,22 @@
 				@if(isset($super))
 					<span class="fs-5 d-block inside-hero-super">{{ $super }}</span>
 				@endif
-				@if(isset($sectors))
-					@foreach($sectors as $sector)
-						<span class="inside-hero-sector">{{ $loop->index > 0 ? ', ' : '' }}{{ $sector->name }}</span>
-					@endforeach
-				@endif
-				@if(isset($sectors) && isset($localAuthorities))
-					<span class="inside-hero-la-and-sectors-separator"> - </span>
-				@endif
-				@if(isset($localAuthorities))
-					@foreach($localAuthorities as $localAuthority)
-						<span class="inside-hero-local-authority">{{ $loop->index > 0 ? ', ' : '' }}{{ $localAuthority->name }}</span>
-					@endforeach
+				@if(isset($sectors) || isset($localAuthorities))
+					<span class="inside-hero-la-andor-sectors-container mb-3 d-block mb-md-0">
+						@if(isset($sectors))
+							@foreach($sectors as $sector)
+								<span class="inside-hero-sector">{{ $loop->index > 0 ? ', ' : '' }}{{ $sector->name }}</span>
+							@endforeach
+						@endif
+						@if(isset($sectors) && isset($localAuthorities))
+							<span class="inside-hero-la-and-sectors-separator"> - </span>
+						@endif
+						@if(isset($localAuthorities))
+							@foreach($localAuthorities as $localAuthority)
+								<span class="inside-hero-local-authority">{{ $loop->index > 0 ? ', ' : '' }}{{ $localAuthority->name }}</span>
+							@endforeach
+						@endif
+					</span>
 				@endif
 				<h1>{!! $title !!}</h1>
 				@if(isset($followUpStatusses))

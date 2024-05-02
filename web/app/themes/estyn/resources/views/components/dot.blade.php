@@ -1,1 +1,1 @@
-<div class="rounded-circle {{ $bgColourClass }} p-2 p-sm-3" aria-hidden="true"></div>
+<div class="rounded-circle {{ $bgColourClass }} {{ isset($dontShrink) ? 'p-3' : 'p-2 p-sm-3' }}" aria-hidden="true"></div>

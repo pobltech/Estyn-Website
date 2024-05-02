@@ -30,14 +30,14 @@
     ]
 ])
 <div class="reportMain pb-5">
-    <div class="container px-md-4 px-xl-5 mt-5 pt-5">
+    <div class="container px-md-4 px-xl-5 mt-5 pt-md-5">
         <div class="row">
             <div class="col-12">
                 <h2>{{ __('Inspections', 'sage') }}</h2>
             </div>
         </div>
-        <div class="row justify-content-between mb-5">
-            <div class="col-12 col-md-6">
+        <div class="row justify-content-center justify-content-md-between mb-5">
+            <div class="col-12 col-md-6 mb-4 mb-md-0">
                 @include('components.resource-list', [
                     'items' => [
                         [
@@ -62,19 +62,21 @@
                     'noMarginBottom' => true
                 ])
             </div>
-            <div class="col-12 col-md-5">
+            <div class="col-auto col-md-5">
                 <div class="mt-2 mb-4">
                     @include('components.dot-text-date', [
                         'text' => __('Next scheduled inspection/visit', 'sage'),
                         'date' => '23 October 2023',
-                        'bgColourClass' => 'bg-signpost-blue'
+                        'bgColourClass' => 'bg-signpost-blue',
+                        'dontShrink' => true
                     ])
                 </div>
                 <div>
                     @include('components.dot-text-date', [
                         'text' => __('Report publication date', 'sage'),
                         'date' => '28 December 2023',
-                        'bgColourClass' => 'bg-signpost-blue'
+                        'bgColourClass' => 'bg-signpost-blue',
+                        'dontShrink' => true
                     ])
                 </div>
             </div>
@@ -94,7 +96,7 @@
             </div>
         </div>
         <div class="row justify-content-between mb-5">
-            <div class="col-12 col-md-6">
+            <div class="col-12 pb-4 pb-md-0 col-md-6">
                 <img src="{{ asset('images/googlemapplaceholderimage.png') }}" alt="Google map placeholder" class="rounded-3 img-fluid"/>
             </div>
             <div class="col-12 col-md-5">
@@ -107,7 +109,7 @@
                 </p>
 
                 <h4>Telephone</h4>
-                <p>01633 123456</p>
+                <p class="mb-0">01633 123456</p>
             </div>
         </div>
     </div>
