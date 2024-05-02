@@ -53,22 +53,20 @@
 	</svg>
 </div>
 <div class="insideIntro position-relative w-100">
-	<div class="container px-md-4 px-xl-5">
+	<div class="container pb-md-5 px-md-4 px-xl-5">
 		@if(isset($insideIntroLinks))
-			<div class="row p-5">
-				<div class="col-12 mb-5">
-					<div class="d-flex justify-content-between">
-						@foreach($insideIntroLinks as $link)
-							@include('components.signpost', [
-								'linkURL' => $link['url'],
-								'bgColourClass' => $link['bgColourClass'],
-								'iconClasses' => $link['iconClasses'],
-								'title' => $link['title'],
-								'description' => $link['description']
-							])
-						@endforeach
+			<div class="row py-5 px-xl-5">
+				@foreach($insideIntroLinks as $link)
+					<div class="col-12 col-md-4 {{ $loop->index > 0 ? 'mt-3 mt-md-0' : '' }}">
+						@include('components.signpost', [
+							'linkURL' => $link['url'],
+							'bgColourClass' => $link['bgColourClass'],
+							'iconClasses' => $link['iconClasses'],
+							'title' => $link['title'],
+							'description' => $link['description']
+						])
 					</div>
-				</div>
+				@endforeach
 			</div>
 		@else
 			<div class="row justify justify-content-center">
