@@ -892,7 +892,7 @@ header {
         @include media-breakpoint-down(md) {
             &:not(.crop-portrait) {
                 img {
-                    width: 400px;
+                    width: 250px;
                 }
             }
         }
