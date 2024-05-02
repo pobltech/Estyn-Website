@@ -234,6 +234,24 @@ add_action('init', function () {
 });
 
 /**
+ * Register the Inspection Report post type.
+ */
+add_action('init', function () {
+    register_post_type('estyn_inspectionrpt', [
+        'labels' => [
+            'name' => __('Inspection Reports', 'sage'),
+            'singular_name' => __('Inspection Report', 'sage'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-clipboard',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
+        'rewrite' => ['slug' => 'inspection-reports'],
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ]);
+});
+
+/**
  * Create the Sector taxonomy and the Local Authority taxonomy for the Education Providers post type.
  */
 function create_eduprovider_taxonomies() {

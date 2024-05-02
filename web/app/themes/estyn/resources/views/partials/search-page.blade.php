@@ -101,7 +101,7 @@
                 </div>
                             @endif
               </div>
-              @if((!isset($isNewsAndBlog)) || $isNewsAndBlog == false)
+              @if((!isset($isNewsAndBlog)) && (!isset($isInspectionReportsSearch)) && (!isset($isInspectionScheduleSearch)))
                 <h3 class="mt-5">Similar settings to mine</h3>
                 <div class="accordion accordion-flush" id="accordionFlushExample2">
                   <div class="accordion-item">
@@ -193,6 +193,40 @@
                                         ]
                                     ]
                                 ])
+                            @elseif(isset($isInspectionReportsSearch) && $isInspectionReportsSearch)
+                                @include('components.resource-list', [
+                                    'items' => [
+                                        [
+                                            'linkURL' => '#',
+                                            'superText' => 'Inspection report',
+                                            'superDate' => '24/01/2024',
+                                            'title' => 'Cardiff High School'
+                                        ],
+                                        [
+                                            'linkURL' => '#',
+                                            'superText' => 'Inspection report',
+                                            'superDate' => '21/03/2023',
+                                            'title' => 'Cwmbran High School'
+                                        ]
+                                    ]
+                                ])
+                            @elseif(isset($isInspectionScheduleSearch) && $isInspectionScheduleSearch)
+                              @include('components.resource-list', [
+                                'items' => [
+                                  [
+                                    'linkURL' => '#',
+                                    'superText' => 'Upcoming inspection',
+                                    'superDate' => '05/11/2024',
+                                    'title' => 'Cardiff High School'
+                                  ],
+                                  [
+                                    'linkURL' => '#',
+                                    'superText' => 'Upcoming inspection',
+                                    'superDate' => '15/12/2024',
+                                    'title' => 'Cwmbran High School'
+                                  ]
+                                ]
+                              ])
                             @else
                             @include('components.resource-list', [
                                 'items' => [
