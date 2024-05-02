@@ -21,7 +21,7 @@
 						  <button class="btn btn-primary" type="button" id="searchFilter"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
 						</div>
 
-            <button class="btn btn-outline-primary d-md-none" data-bs-toggle="collapse" data-bs-target="#search-filters">{{ __('Filter results', 'sage' ) }}</button>
+            <button class="btn btn-outline-info d-md-none" data-bs-toggle="collapse" data-bs-target="#search-filters">{{ __('Filter results', 'sage' ) }}</button>
             <hr class="d-md-none">
 
             <div class="search-filters collapse d-md-block pb-5" id="search-filters">

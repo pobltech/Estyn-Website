@@ -58,15 +58,20 @@
         <div class="col-12 col-md-4">
           <div class="row">
             <div class="col-12 col-md-11">
-              <h3 class="mb-4">Contents</h3>
+              <button class="btn btn-outline-info d-md-none" data-bs-toggle="collapse" data-bs-target="#contents"><span>{{ __('Contents', 'sage' ) }}</span><i class="fa-sharp fa-solid fa-chevron-down"></i></button>
+              <hr class="d-md-none">
 
-              <div class="reportContents list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-                  The current link item
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">A second link item</a>
-                <a href="#" class="list-group-item list-group-item-action">A third link item</a>
-                <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
+              <div class="search-filters collapse d-md-block pb-5" id="contents">
+                <h3 class="mb-4">Contents</h3>
+
+                <div class="reportContents list-group list-group-flush">
+                  <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                    The current link item
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action">A second link item</a>
+                  <a href="#" class="list-group-item list-group-item-action">A third link item</a>
+                  <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
+                </div>
               </div>
 
             </div>
