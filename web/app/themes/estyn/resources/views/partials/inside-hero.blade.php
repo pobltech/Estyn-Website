@@ -7,12 +7,15 @@
 				@endif
 				@if(isset($sectors))
 					@foreach($sectors as $sector)
-						<span class="inside-hero-sector">{{ $sector->name }}</span>
+						<span class="inside-hero-sector">{{ $loop->index > 0 ? ', ' : '' }}{{ $sector->name }}</span>
 					@endforeach
+				@endif
+				@if(isset($sectors) && isset($localAuthorities))
+					<span class="inside-hero-la-and-sectors-separator"> - </span>
 				@endif
 				@if(isset($localAuthorities))
 					@foreach($localAuthorities as $localAuthority)
-						<span class="inside-hero-local-authority">{{ $localAuthority->name }}</span>
+						<span class="inside-hero-local-authority">{{ $loop->index > 0 ? ', ' : '' }}{{ $localAuthority->name }}</span>
 					@endforeach
 				@endif
 				<h1>{!! $title !!}</h1>
