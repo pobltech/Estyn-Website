@@ -65,7 +65,7 @@
       </div>
     </div>
   </div>
-  @include('partials.signposting')
+  @include('partials.home-page-signposting')
   @include('partials.cta', [
     'ctaHeading' => 'Who are Estyn?',
     'ctaText' => 'Estyn inspects education and training in Wales. Find out how and why we exist, and our vision for education in Wales',

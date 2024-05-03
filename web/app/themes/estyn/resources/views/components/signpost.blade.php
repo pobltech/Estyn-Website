@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-start">
     <div class="sp-icon-cont d-flex flex-shrink-0 justify-content-center align-items-center {{ $bgColourClass }}">
-        @if(isset($svg))
+        @if(isset($svg) && !empty($svg))
             <img src="{{ $svg }}" alt="{{ $iconImageAlt ?? '' }}"/>
         @else
             <i class="{{ $iconClasses }}"></i>

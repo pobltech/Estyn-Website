@@ -7,7 +7,20 @@
           @else
             <div class="col-12 col-lg-10 col-xl-8">
           @endif
-            <div class="row">
+              @if(isset($showProviderSearch) && $showProviderSearch)
+              <div class="row justify-content-md-between">
+              <div class="col-12 col-md-auto">
+                <h1 class="p-name mb-4">{!! $title !!}</h1>
+              </div>
+                <div class="col-12 col-md-4">
+                  <span class="d-block">Find a provider</span>
+										<div class="input-group mb-3 rounded">
+											<input type="text" class="form-control" placeholder="Primary schools" aria-label="Primary schools" aria-describedby="button-addon2">
+											<button class="btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+										</div>
+                </div>
+              @else
+              <div class="row">
               <div class="col-12">
                 <h1 class="p-name mb-4">{!! $title !!}</h1>
               </div>
@@ -21,6 +34,7 @@
                   @endif
                 </div>
               </div>
+              @endif
             </div>
             @if(isset($extraButtons))
               <hr class="my-4">
