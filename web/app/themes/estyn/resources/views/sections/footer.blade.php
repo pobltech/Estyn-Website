@@ -1,4 +1,4 @@
-<footer class="mt-5">
+<footer {{ isset($footerNoMT) ? 'class="mt-5"' : '' }}>
 <section class="footer bg-darkblue">
 	<div class="container px-md-4 px-xl-5 py-5">
 		<div class="row py-5">
