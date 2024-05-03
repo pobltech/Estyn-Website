@@ -5,7 +5,9 @@
             'superText' => $item['superText'] ?? null,
             'superDate' => $item['superDate'] ?? null,
             'dateOnRight' => $item['dateOnRight'] ?? null,
-            'title' => $item['title']
+            'title' => $item['title'],
+            'extraText' => $item['extraText'] ?? null,
+            'greenVersion' => $item['greenVersion'] ?? null
         ])
     @endforeach
 </div>

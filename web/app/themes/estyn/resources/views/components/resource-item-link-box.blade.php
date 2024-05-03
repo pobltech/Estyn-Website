@@ -1,4 +1,4 @@
-<a href="{{ $linkURL }}" class="list-group-item list-group-item-action">
+<a href="{{ $linkURL }}" class="list-group-item list-group-item-action {{ isset($greenVersion) && $greenVersion ? 'highlighted-vacancy' : '' }}">
 	@if(isset($dateOnRight))
 		<div class="d-md-flex w-100 justify-content-between">
 			<div>
@@ -14,8 +14,13 @@
 	@else
 		<div class="d-flex w-100 justify-content-start">
 			<span class="searchResourceType me-2">{{ $superText }}</span>
-			<span class="searchResourceDate me-2">{{ $superDate }}</span>
+			@if((!isset($greenVersion)) || $greenVersion === false)
+				<span class="searchResourceDate me-2">{{ $superDate }}</span>
+			@endif
 		</div>
-		{{ $title }}
+		<span class="d-block">{{ $title }}</span>
+		@if(isset($extraText))
+			<span class="searchResourceExtra">{{ $extraText }}</span>
+		@endif
 	@endif
 </a>

@@ -15,6 +15,7 @@
 /** Main Colours **/
 $estyn-blue: #2A7AB0; /** Primary Estyn brand colour **/
 $estyn-green: #A2C83A; /** Secondary Estyn brand colour **/
+$estyn-lightgreen: #ECF4D7;
 $estyn-darkblue: #0E4163; /** Most typography and dark backgrounds **/
 $estyn-lightblue: #DCEEFE; /** For light backgrounds other than white **/
 $estyn-bluegrey: #AABCC8; /** For lines **/
@@ -1044,7 +1045,8 @@ p.sp-desc {
 .searchFilter .accordion-body {
     padding: 1rem 0;
 }
-.searchResourceType, .searchResourceDate {
+
+.searchResourceType, .searchResourceDate, .searchResourceExtra {
     font-family: "Source Sans 3", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
@@ -1052,7 +1054,9 @@ p.sp-desc {
     font-size:12px;
 }
 .searchResourceType {font-weight: 600;}
-.searchResourceDate {font-weight: 400;}
+.searchResourceDate, .searchResourceExtra {font-weight: 400;}
+
+
 
 /** Full report **/
 .reportContents .list-group-item {
@@ -1464,8 +1468,19 @@ p.sp-desc {
             color: $estyn-white;
         }
 
-        &:hover .searchResourceType, &:hover .searchResourceDate {
+        &:hover .searchResourceType, &:hover .searchResourceDate, &:hover .searchResourceExtra {
             color: $estyn-white;
+        }
+
+        &.highlighted-vacancy {
+            background-color: $estyn-lightgreen;
+
+            .searchResourceType {
+                background-color: $estyn-green;
+                padding: $p-1 $p-2;
+                border-radius: $border-radius-lg;
+                margin-bottom: $m-2;
+            }
         }
     }
 }
