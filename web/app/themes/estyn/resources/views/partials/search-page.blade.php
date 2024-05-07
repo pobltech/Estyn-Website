@@ -79,11 +79,11 @@
                                   <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                                     <div class="accordion-body">
                                       <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="postType" value="all" id="flexCheckNewsAndBlog" checked>
+                                        <input class="form-check-input" type="radio" name="postType" id="flexCheckNewsAndBlog" checked>
                                         <label class="form-check-label" for="flexCheckNewsAndBlog">
                                           {{ __('All', 'sage') }}
                                         </label>
-                                      </div>                                    
+                                      </div>
                                       <div class="form-check">
                                         <input class="form-check-input" type="radio" name="postType" value="news" id="flexCheckNews">
                                         <label class="form-check-label" for="flexCheckNews">
@@ -102,20 +102,20 @@
                               <div class="accordion-item">
                                   <h2 class="accordion-header" id="flush-headingTwo">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                                      Dates
+                                      {{ __('Dates', 'sage') }}
                                     </button>
                                   </h2>
                                   <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
                                     <div class="accordion-body">
                                       <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="Any" id="flexCheckYearDefault" checked>
+                                        <input class="form-check-input" type="radio" name="year" id="flexCheckYearDefault" checked>
                                         <label class="form-check-label" for="flexCheckYearDefault">
                                           {{ __('Any year', 'sage') }}
                                         </label>
                                       </div>
                                       @for ($i = 2013; $i <= intval(date('Y')); $i++)
                                         <div class="form-check">
-                                          <input class="form-check-input" type="checkbox" value="{{ $i }}" id="flexCheckYear{{ $i }}">
+                                          <input class="form-check-input" type="radio" name="year" value="{{ $i }}" id="flexCheckYear{{ $i }}">
                                           <label class="form-check-label" for="flexCheckYear{{ $i }}">
                                             {{ $i }}
                                           </label>
@@ -126,23 +126,23 @@
                               </div>
                             @else
                             <div class="accordion-item">
-                  <h2 class="accordion-header" id="flush-headingOne">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                  <h2 class="accordion-header" id="flush-heading-sector">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-sector" aria-expanded="false" aria-controls="flush-collapse-sector">
                       Sector
                     </button>
                   </h2>
-                  <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                  <div id="flush-collapse-sector" class="accordion-collapse collapse" aria-labelledby="flush-heading-sector" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
                       <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                    <label class="form-check-label" for="flexCheckDefault">
-                      Default checkbox
+                    <input class="form-check-input" type="radio" name="sector" value="any" id="flexCheckSector-any" checked>
+                    <label class="form-check-label" for="flexCheckSector-any">
+                      {{ __('Any sector', 'sage') }}
                     </label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                    <label class="form-check-label" for="flexCheckChecked">
-                      Checked checkbox
+                    <input class="form-check-input" type="radio" name="sector" value="" id="flexCheckSector-Secondary">
+                    <label class="form-check-label" for="flexCheckSector-Secondary">
+                      {{ __('Secondary', 'sage') }}
                     </label>
                   </div>
                     </div>
@@ -203,11 +203,34 @@
 				</div>
 			</div>
 			<!-- Search Results -->
+      @php
+        $isNewsAndBlog = isset($isNewsAndBlog) ? $isNewsAndBlog : false;
+        $isInspectionReportsSearch = isset($isInspectionReportsSearch) ? $isInspectionReportsSearch : false;
+        $isInspectionScheduleSearch = isset($isInspectionScheduleSearch) ? $isInspectionScheduleSearch : false;
+
+        $isProviderSearch = isset($isProviderSearch) ? $isProviderSearch : false;
+
+        $isImprovementResourcesSearch = isset($isImprovementResourcesSearch) ? $isImprovementResourcesSearch : false;
+
+        $searchQuery = null;
+        $searchArgs = null;
+
+        if($isNewsAndBlog) {
+          $searchArgs = [
+            'post_type' => ['estyn_newsarticle', 'post'],
+            'posts_per_page' => -1
+          ];
+        }
+
+        if(!empty($searchArgs)) {
+          $searchQuery = new WP_Query($searchArgs);
+        }
+      @endphp
 			<div class="searchResultsMain col-12 col-md-8">
 				<div class="row">
 					<div class="col-12">
 						<div class="d-flex align-items-center align-items-md-start justify-content-between">
-							<span>5181 results</span>
+							<span>{{ (!empty($searchQuery)) && $searchQuery->have_posts() ? $searchQuery->found_posts : '0' }} {{ __('results', 'sage') }}</span>
               <span class="d-flex align-items-center">
 							<label class="text-nowrap me-3" for="sort-by">Sort by</label>
                 <select id="sort-by" class="form-select" aria-label="Default select example">
@@ -221,6 +244,44 @@
 					</div>
 					<div class="col-12">
 						<div class="list-group list-group-flush resourceList">
+              @if(!empty($searchQuery))
+                @php
+                  $items = [];
+                @endphp
+                @if($searchQuery->have_posts())
+                  @while($searchQuery->have_posts())
+                    @php
+                      $searchQuery->the_post();
+
+                      $postTypeName = (get_post_type_object(get_post_type()))->labels->singular_name;
+                      if($postTypeName == 'Post') {
+                        $postTypeName = __('Blog post', 'sage');
+                      }
+
+                      $postTypeName = ucfirst(strtolower($postTypeName));
+
+                      $items[] = [
+                        'linkURL' => get_the_permalink(),
+                        'superText' => $postTypeName,
+                        'superDate' => get_the_date('d/m/Y'),
+                        'title' => get_the_title()
+                      ];
+                    @endphp
+                  @endwhile
+
+                  @php
+                    wp_reset_postdata();
+                  @endphp
+                @endif
+
+                @if(!empty($items))
+                  @include('components.resource-list', [
+                    'items' => $items
+                  ])
+                @else
+                  <p>{{ __('No results found', 'sage') }}</p>
+                @endif
+              @else
 							@if(isset($isNewsAndBlog) && $isNewsAndBlog)
                                 @include('components.resource-list', [
                                     'items' => [
@@ -338,6 +399,7 @@
                                 ]
                             ])
                             @endif
+                          @endif
 						</div>
 					</div>
 				</div>

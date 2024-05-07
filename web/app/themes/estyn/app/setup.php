@@ -325,3 +325,19 @@ function create_eduprovider_status_taxonomy() {
     ));
 }
 add_action( 'init', __NAMESPACE__ . '\\create_eduprovider_status_taxonomy', 0 );
+
+add_action('wp_ajax_apply_filters_to_search_page', 'applyFiltersSearchPage');
+add_action('wp_ajax_nopriv_apply_filters_to_search_page', 'applyFiltersSearchPage');
+
+function applyFiltersSearchPage() {
+    // Get the search filters from the AJAX request
+    $searchFilters = $_POST['searchFilters'];
+
+    // Perform your filter logic here...
+
+    // Send back the response
+    echo "<p>IT WORKED!</p>";
+
+    // Always die in functions echoing AJAX response
+    die();
+}
