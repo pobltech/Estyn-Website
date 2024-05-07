@@ -1,3 +1,45 @@
+{{--
+  Search page can be:
+
+  News/blog posts.
+  Inspection reports.
+  Inspection schedule?
+  Providers (schools etc.)
+  Improvement resources.
+
+  They may share some of the same search filters,
+  but mostly have their own.
+
+  News/blog posts:
+  - Type (news/blog)(News Articles is a CPT, blog posts are Posts)
+  - Dates
+
+  Inspection reports:
+  - Sector
+  - Local authority
+
+  Inspection schedule:
+  - Sector
+  - Local authority
+
+  Providers:
+  - Sector
+  - Local authority
+  - Tags
+  - 'Similar settings to mine':
+  -- Proximity
+  -- Number of learners
+  -- Language medium
+  -- Age range
+
+  Improvement resources:
+  - Sector
+  - Local authority
+  - Tags
+  - Updated
+  - Type
+
+--}}
 
 <div class="searchHero mt-5">
 	<div class="container px-md-4 px-xl-5">
@@ -37,12 +79,24 @@
                                   <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                                     <div class="accordion-body">
                                       <div class="form-check">
-                                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                          <label class="form-check-label" for="flexCheckDefault">
-                                              Default checkbox
-                                          </label>
+                                        <input class="form-check-input" type="radio" name="postType" value="all" id="flexCheckNewsAndBlog" checked>
+                                        <label class="form-check-label" for="flexCheckNewsAndBlog">
+                                          {{ __('All', 'sage') }}
+                                        </label>
+                                      </div>                                    
+                                      <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="postType" value="news" id="flexCheckNews">
+                                        <label class="form-check-label" for="flexCheckNews">
+                                          {{ __('News article', 'sage') }}
+                                        </label>
                                       </div>
+                                      <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="postType" value="blog" id="flexCheckBlog">
+                                        <label class="form-check-label" for="flexCheckBlog">
+                                          {{ __('Blog post', 'sage') }}
+                                        </label>
                                       </div>
+                                    </div>
                                   </div>
                               </div>
                               <div class="accordion-item">
@@ -52,7 +106,22 @@
                                     </button>
                                   </h2>
                                   <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                                    <div class="accordion-body">Controls</div>
+                                    <div class="accordion-body">
+                                      <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="Any" id="flexCheckYearDefault" checked>
+                                        <label class="form-check-label" for="flexCheckYearDefault">
+                                          {{ __('Any year', 'sage') }}
+                                        </label>
+                                      </div>
+                                      @for ($i = 2013; $i <= intval(date('Y')); $i++)
+                                        <div class="form-check">
+                                          <input class="form-check-input" type="checkbox" value="{{ $i }}" id="flexCheckYear{{ $i }}">
+                                          <label class="form-check-label" for="flexCheckYear{{ $i }}">
+                                            {{ $i }}
+                                          </label>
+                                        </div>
+                                      @endfor
+                                    </div>
                                   </div>
                               </div>
                             @else
