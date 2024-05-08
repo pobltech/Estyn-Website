@@ -393,7 +393,7 @@ function estyn_get_news_and_blog_posts(\WP_REST_Request $request) {
     /* $args = array_merge($args, $params); */
 
     $query = new \WP_Query($args);
-    $posts = $query->posts;
+    
     // Convert the posts to the format expected by the client
     /* $posts = array_map(function($post) {
         return [
@@ -403,10 +403,12 @@ function estyn_get_news_and_blog_posts(\WP_REST_Request $request) {
     }, $posts);
     return $posts; */
 
-    if(empty($posts)) {
-        return __('Sorry, no resources were found based on your search criteria.', 'sage');
+    if($query->found_posts == 0) {
+        return ['html' => __('Sorry, no resources were found based on your search criteria.', 'sage'), 'totalPosts' => 0];
     }
 
+    $posts = $query->posts;
+    
     // We'll send the HTML, from the view, instead of the raw post data
     $items = [];
     foreach($posts as $post) {
