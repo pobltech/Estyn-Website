@@ -8,6 +8,12 @@ namespace App;
 
 use function Roots\bundle;
 
+// Output error_log() etc. to the terminal. TODO: Remove this in production.
+ini_set('error_log', 'php://stdout');
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 /**
  * Register the theme assets.
  *
@@ -326,18 +332,83 @@ function create_eduprovider_status_taxonomy() {
 }
 add_action( 'init', __NAMESPACE__ . '\\create_eduprovider_status_taxonomy', 0 );
 
-add_action('wp_ajax_apply_filters_to_search_page', 'applyFiltersSearchPage');
-add_action('wp_ajax_nopriv_apply_filters_to_search_page', 'applyFiltersSearchPage');
+/**
+ * Now for our own REST API endpoints
+ */
+add_action('rest_api_init', function () {
+    register_rest_route('estyn/v1', '/newsandblogposts/', array(
+        'methods' => 'GET',
+        'callback' => __NAMESPACE__ . '\\estyn_get_news_and_blog_posts',
+    ));
+});
+  
+// For the 'News and blog' page search and filters update (ajax) requests
+function estyn_get_news_and_blog_posts(\WP_REST_Request $request) {
+    error_log('estyn_get_news_and_blog_posts() called');
+    $params = $request->get_params();
+    
+    $args = [
+        'posts_per_page' => -1,
+        'post_type' => ['post', 'estyn_newsarticle'],
+    ];
 
-function applyFiltersSearchPage() {
-    // Get the search filters from the AJAX request
-    $searchFilters = $_POST['searchFilters'];
+    if(isset($params['postType'])) {
+        if($params['postType'] === 'estyn_newsarticle') {
+            $args['post_type'] = 'estyn_newsarticle';
+        } elseif($params['postType'] === 'post') {
+            $args['post_type'] = 'post';
+        }
+    }
 
-    // Perform your filter logic here...
+    if(isset($params['year'])) {
+        if(is_numeric($params['year'])) {
+            $args['date_query'] = [
+                [
+                    'year' => $params['year'],
+                ],
+            ];
+        }
+    }
 
-    // Send back the response
-    echo "<p>IT WORKED!</p>";
+    // Merge the request parameters into the query arguments
+    /* $args = array_merge($args, $params); */
 
-    // Always die in functions echoing AJAX response
-    die();
+    $query = new \WP_Query($args);
+    $posts = $query->posts;
+    // Convert the posts to the format expected by the client
+    /* $posts = array_map(function($post) {
+        return [
+            'title' => ['rendered' => $post->post_title],
+            'content' => ['rendered' => $post->post_content],
+        ];
+    }, $posts);
+    return $posts; */
+
+    if(empty($posts)) {
+        return __('Sorry, no resources were found based on your search criteria.', 'sage');
+    }
+
+    // We'll send the HTML, from the view, instead of the raw post data
+    $items = [];
+    foreach($posts as $post) {
+        $postTypeName = (get_post_type_object(get_post_type($post)))->labels->singular_name;
+        if($postTypeName == 'Post') {
+          $postTypeName = __('Blog post', 'sage');
+        }
+
+        $postTypeName = ucfirst(strtolower($postTypeName));
+
+        $items[] = [
+            'linkURL' => get_permalink($post->ID),
+            'superText' => $postTypeName,
+            'superDate' => get_the_date('d/m/Y', $post->ID),
+            'title' => get_the_title($post->ID),
+        ];
+    }
+
+    $HTML = \Roots\view('components.resource-list', [
+        'items' => $items
+    ]);
+
+    return $HTML->render();
 }

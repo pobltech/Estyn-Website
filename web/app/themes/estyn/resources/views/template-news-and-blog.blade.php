@@ -8,48 +8,43 @@
 		'isNewsAndBlog' => true
 	])
 @endsection
-@section('scripts')
+@push('scripts')
 	<script>
 		(function($) {
 			$(document).ready(function() {
 				$(".search-filters input").on("change", function() {
-					applyFiltersAjax();
+					applyFilters();
 				});
 			});
 
-			function applyFiltersAjax() {
-				console.log("Applying filters");
+			function applyFilters() {
 				var searchFilters = getSearchFilters();
 				$.ajax({
-					url: "/wp-admin/admin-ajax.php",
-					type: "POST",
-					data: {
-						action: "apply_filters_to_search_page",
-						searchFilters: searchFilters
-					},
+					url: "{{ rest_url('estyn/v1/newsandblogposts') }}",
+					type: "GET",
+					data: searchFilters,
 					success: function(response) {
 						console.log(response);
-						$(".searchResultsMain").html(response);
+						$("#search-results").html(response);
 					}
 				});
 			}
 
 			function getSearchFilters() {
-				var searchFilters = {};
-				$(".search-filters input").each(function() {
-					var $this = $(this);
-					var name = $this.attr("name");
-					var value = $this.val();
-					if ($this.is(":checked")) {
-						if (searchFilters[name]) {
-							searchFilters[name].push(value);
-						} else {
-							searchFilters[name] = [value];
-						}
-					}
-				});
-				return searchFilters;
+				let postType = "";
+				if($("#flexCheckNews").is(":checked")) {
+					postType = $("#flexCheckNews").val();
+				} else if($("#flexCheckBlog").is(":checked")) {
+					postType = $("#flexCheckBlog").val();
+				}
+
+				let year = $("#flush-collapseTwo input:checked").val();
+				
+				return {
+					postType: postType,
+					year: year
+				};
 			}
 		})(jQuery);
 	</script>
-@endsection
+@endpush

@@ -85,13 +85,13 @@
                                         </label>
                                       </div>
                                       <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="postType" value="news" id="flexCheckNews">
+                                        <input class="form-check-input" type="radio" name="postType" value="estyn_newsarticle" id="flexCheckNews">
                                         <label class="form-check-label" for="flexCheckNews">
                                           {{ __('News article', 'sage') }}
                                         </label>
                                       </div>
                                       <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="postType" value="blog" id="flexCheckBlog">
+                                        <input class="form-check-input" type="radio" name="postType" value="post" id="flexCheckBlog">
                                         <label class="form-check-label" for="flexCheckBlog">
                                           {{ __('Blog post', 'sage') }}
                                         </label>
@@ -242,7 +242,7 @@
 						</div>
 						<hr class="hrGreen my-3">
 					</div>
-					<div class="col-12">
+					<div class="col-12" id="search-results">
 						<div class="list-group list-group-flush resourceList">
               @if(!empty($searchQuery))
                 @php
