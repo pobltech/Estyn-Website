@@ -12,7 +12,32 @@
 	<script>
 		(function($) {
 			$(document).ready(function() {
-				$(".search-filters input").on("change", function() {
+				let searchBoxTypeingTimer;
+				let searchBoxTypingInterval = 500;
+				
+				$(".search-filters input:not([type='text'])").on("change", function() {
+					applyFilters();
+				});
+
+				$("#search-box-container input[type='text']").on("keyup", function(key) {
+					clearTimeout(searchBoxTypeingTimer);
+					
+					if($(this).val().length == 0) {
+						applyFilters();
+						return;
+					}
+
+					if(key.keyCode === 13) {
+						applyFilters();
+						return;
+					}
+
+					searchBoxTypeingTimer = setTimeout(function() {
+						applyFilters();
+					}, searchBoxTypingInterval);
+				});
+
+				$("#search-box-container button").on("click", function() {
 					applyFilters();
 				});
 			});
@@ -24,7 +49,7 @@
 					type: "GET",
 					data: searchFilters,
 					success: function(response) {
-						console.log(response);
+						//console.log(response);
 						$("#search-results").html(response);
 					}
 				});
@@ -37,12 +62,11 @@
 				} else if($("#flexCheckBlog").is(":checked")) {
 					postType = $("#flexCheckBlog").val();
 				}
-
-				let year = $("#flush-collapseTwo input:checked").val();
 				
 				return {
 					postType: postType,
-					year: year
+					year: $("#flush-collapseTwo input:checked").val(),
+					searchText: $("#search-box-container input[type='text']").val().trim()
 				};
 			}
 		})(jQuery);

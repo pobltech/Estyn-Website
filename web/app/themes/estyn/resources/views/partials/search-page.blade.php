@@ -58,7 +58,7 @@
 				<div class="row">
 					<div class="col-12 col-md-11">
 
-						<div class="input-group mb-4">
+						<div id="search-box-container" class="input-group mb-4">
 						  <input type="text" class="form-control" placeholder="" aria-label="Search filter" aria-describedby="searchFilter">
 						  <button class="btn btn-primary" type="button" id="searchFilter"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
 						</div>

@@ -344,8 +344,8 @@ add_action('rest_api_init', function () {
   
 // For the 'News and blog' page search and filters update (ajax) requests
 function estyn_get_news_and_blog_posts(\WP_REST_Request $request) {
-    error_log('estyn_get_news_and_blog_posts() called');
     $params = $request->get_params();
+    error_log(print_r($params, true));
     
     $args = [
         'posts_per_page' => -1,
@@ -368,6 +368,10 @@ function estyn_get_news_and_blog_posts(\WP_REST_Request $request) {
                 ],
             ];
         }
+    }
+
+    if(isset($params['searchText']) && !empty($params['searchText'])) {
+        $args['s'] = $params['searchText'];
     }
 
     // Merge the request parameters into the query arguments
