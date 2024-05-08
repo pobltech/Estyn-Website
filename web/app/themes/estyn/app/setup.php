@@ -20,7 +20,11 @@ error_reporting(E_ALL);
  * @return void
  */
 add_action('wp_enqueue_scripts', function () {
-    bundle('app')->enqueue();
+    bundle('app')->enqueue()->localize('estyn', [
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'news_and_blog_posts_search_rest_url' => rest_url('estyn/v1/newsandblogposts/'),
+        'nonce' => wp_create_nonce('wp_rest'),
+    ]);
 }, 100);
 
 /**
@@ -339,6 +343,10 @@ add_action('rest_api_init', function () {
     register_rest_route('estyn/v1', '/newsandblogposts/', array(
         'methods' => 'GET',
         'callback' => __NAMESPACE__ . '\\estyn_get_news_and_blog_posts',
+        'permission_callback' => function (\WP_REST_Request $request) {
+            $nonce = $request->get_header('X-WP-Nonce');
+            return wp_verify_nonce($nonce, 'wp_rest');
+        },
     ));
 });
   

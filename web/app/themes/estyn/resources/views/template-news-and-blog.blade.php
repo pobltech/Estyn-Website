@@ -45,9 +45,12 @@
 			function applyFilters() {
 				var searchFilters = getSearchFilters();
 				$.ajax({
-					url: "{{ rest_url('estyn/v1/newsandblogposts') }}",
+					url: estyn.news_and_blog_posts_search_rest_url,
 					type: "GET",
 					data: searchFilters,
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader('X-WP-Nonce', estyn.nonce);
+					},
 					success: function(response) {
 						//console.log(response);
 						$("#search-results").html(response);

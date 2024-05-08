@@ -1,5 +1,5 @@
 {{--
-	Template name: Search Page
+	Template name: Improvement Resources Search Page
  --}}
 @extends('layouts.app')
 

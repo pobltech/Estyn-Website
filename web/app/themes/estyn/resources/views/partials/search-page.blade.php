@@ -220,6 +220,11 @@
             'post_type' => ['estyn_newsarticle', 'post'],
             'posts_per_page' => -1
           ];
+
+          // If there's a Wordpress search query in the URL then add it to the search args
+          if(isset($_GET['s'])) {
+            $searchArgs['s'] = trim($_GET['s']);
+          }
         }
 
         if(!empty($searchArgs)) {
