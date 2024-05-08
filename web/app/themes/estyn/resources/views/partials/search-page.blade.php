@@ -236,7 +236,7 @@
 				<div class="row">
 					<div class="col-12">
 						<div class="d-flex align-items-center align-items-md-start justify-content-between">
-							<span>{{ (!empty($searchQuery)) && $searchQuery->have_posts() ? $searchQuery->found_posts : '0' }} {{ __('results', 'sage') }}</span>
+							<span><span class="search-results-number">{{ (!empty($searchQuery)) && $searchQuery->have_posts() ? $searchQuery->found_posts : '0' }}</span> {{ __('result/s', 'sage') }}</span>
               <span class="d-flex align-items-center">
 							<label class="text-nowrap me-3" for="sort-by">Sort by</label>
                 <select id="sort-by" class="form-select" aria-label="Default select example">

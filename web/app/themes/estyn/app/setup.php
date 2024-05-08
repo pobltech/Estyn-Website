@@ -429,5 +429,5 @@ function estyn_get_news_and_blog_posts(\WP_REST_Request $request) {
         'items' => $items
     ]);
 
-    return $HTML->render();
+    return ['html' => $HTML->render(), 'totalPosts' => $query->found_posts];
 }

@@ -11,26 +11,26 @@
 @push('scripts')
 	<script>
 		(function($) {
-			$(document).ready(function() {
-				let searchBoxTypingTimer;
-				let searchBoxTypingInterval = 500;
-				
+			let searchBoxTypingTimer = setTimeout(function() {}, 0);
+			const searchBoxTypingInterval = 500;
+
+			$(document).ready(function() {				
 				$(".search-filters input:not([type='text'])").on("change", function() {
 					applyFilters();
 				});
 
-				$("#search-box-container input[type='text']").on("keyup", function(key) {
-					clearTimeout(searchBoxTypingTimer);
-					
-					if($(this).val().length == 0) {
-						applyFilters();
-						return;
-					}
-
+				$("#search-box-container input[type='text']").on("keydown keyup", function(key) {
 					if(key.keyCode === 13) {
+						clearTimeout(searchBoxTypingTimer);
+
 						applyFilters();
+
 						return;
 					}
+				});
+
+				$("#search-box-container input[type='text']").on("input", function() {
+					clearTimeout(searchBoxTypingTimer);
 
 					searchBoxTypingTimer = setTimeout(function() {
 						applyFilters();
@@ -47,6 +47,8 @@
 			});
 
 			function applyFilters() {
+				clearTimeout(searchBoxTypingTimer);
+
 				$(".search-results-loading-indicator").show();
 				$("#search-results").html("");
 
@@ -60,7 +62,9 @@
 					},
 					success: function(response) {
 						//console.log(response);
-						$("#search-results").html(response);
+						$("#search-results").html(response.html);
+
+						$(".search-results-number").text(response.totalPosts);
 
 						$(".search-results-loading-indicator").hide();
 					}
