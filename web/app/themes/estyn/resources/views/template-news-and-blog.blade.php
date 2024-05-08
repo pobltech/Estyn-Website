@@ -12,7 +12,7 @@
 	<script>
 		(function($) {
 			$(document).ready(function() {
-				let searchBoxTypeingTimer;
+				let searchBoxTypingTimer;
 				let searchBoxTypingInterval = 500;
 				
 				$(".search-filters input:not([type='text'])").on("change", function() {
@@ -20,7 +20,7 @@
 				});
 
 				$("#search-box-container input[type='text']").on("keyup", function(key) {
-					clearTimeout(searchBoxTypeingTimer);
+					clearTimeout(searchBoxTypingTimer);
 					
 					if($(this).val().length == 0) {
 						applyFilters();
@@ -32,7 +32,7 @@
 						return;
 					}
 
-					searchBoxTypeingTimer = setTimeout(function() {
+					searchBoxTypingTimer = setTimeout(function() {
 						applyFilters();
 					}, searchBoxTypingInterval);
 				});
@@ -43,6 +43,9 @@
 			});
 
 			function applyFilters() {
+				$(".search-results-loading-indicator").show();
+				$("#search-results").html("");
+
 				var searchFilters = getSearchFilters();
 				$.ajax({
 					url: estyn.news_and_blog_posts_search_rest_url,
@@ -54,6 +57,8 @@
 					success: function(response) {
 						//console.log(response);
 						$("#search-results").html(response);
+
+						$(".search-results-loading-indicator").hide();
 					}
 				});
 			}

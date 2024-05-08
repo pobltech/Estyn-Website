@@ -247,165 +247,172 @@
 						</div>
 						<hr class="hrGreen my-3">
 					</div>
-					<div class="col-12" id="search-results">
-						<div class="list-group list-group-flush resourceList">
-              @if(!empty($searchQuery))
-                @php
-                  $items = [];
-                @endphp
-                @if($searchQuery->have_posts())
-                  @while($searchQuery->have_posts())
-                    @php
-                      $searchQuery->the_post();
-
-                      $postTypeName = (get_post_type_object(get_post_type()))->labels->singular_name;
-                      if($postTypeName == 'Post') {
-                        $postTypeName = __('Blog post', 'sage');
-                      }
-
-                      $postTypeName = ucfirst(strtolower($postTypeName));
-
-                      $items[] = [
-                        'linkURL' => get_the_permalink(),
-                        'superText' => $postTypeName,
-                        'superDate' => get_the_date('d/m/Y'),
-                        'title' => get_the_title()
-                      ];
-                    @endphp
-                  @endwhile
-
+					<div class="col-12">
+            <div class="d-flex justify-content-center">
+              <div class="search-results-loading-indicator spinner-border text-primary" role="status" style="display: none;">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            <div id="search-results">
+              <div class="list-group list-group-flush resourceList">
+                @if(!empty($searchQuery))
                   @php
-                    wp_reset_postdata();
+                    $items = [];
                   @endphp
-                @endif
+                  @if($searchQuery->have_posts())
+                    @while($searchQuery->have_posts())
+                      @php
+                        $searchQuery->the_post();
 
-                @if(!empty($items))
-                  @include('components.resource-list', [
-                    'items' => $items
-                  ])
+                        $postTypeName = (get_post_type_object(get_post_type()))->labels->singular_name;
+                        if($postTypeName == 'Post') {
+                          $postTypeName = __('Blog post', 'sage');
+                        }
+
+                        $postTypeName = ucfirst(strtolower($postTypeName));
+
+                        $items[] = [
+                          'linkURL' => get_the_permalink(),
+                          'superText' => $postTypeName,
+                          'superDate' => get_the_date('d/m/Y'),
+                          'title' => get_the_title()
+                        ];
+                      @endphp
+                    @endwhile
+
+                    @php
+                      wp_reset_postdata();
+                    @endphp
+                  @endif
+
+                  @if(!empty($items))
+                    @include('components.resource-list', [
+                      'items' => $items
+                    ])
+                  @else
+                    <p>{{ __('No results found', 'sage') }}</p>
+                  @endif
                 @else
-                  <p>{{ __('No results found', 'sage') }}</p>
-                @endif
-              @else
-							@if(isset($isNewsAndBlog) && $isNewsAndBlog)
+                @if(isset($isNewsAndBlog) && $isNewsAndBlog)
+                                  @include('components.resource-list', [
+                                      'items' => [
+                                          [
+                                              'linkURL' => '#',
+                                              'superText' => 'News article',
+                                              'superDate' => '24/01/2024',
+                                              'title' => 'Improving teaching through an emphasis on professional learning'
+                                          ],
+                                          [
+                                              'linkURL' => '#',
+                                              'superText' => 'News article',
+                                              'superDate' => '24/01/2024',
+                                              'title' => 'Improving attendance in secondary schools'
+                                          ],
+                                          [
+                                              'linkURL' => '#',
+                                              'superText' => 'News article',
+                                              'superDate' => '24/01/2024',
+                                              'title' => 'Improving attendance in secondary schools - training materials'
+                                          ],
+                                          [
+                                              'linkURL' => '#',
+                                              'superText' => 'News article',
+                                              'superDate' => '24/01/2024',
+                                              'title' => 'Developing early communication skills with predominantly pre verbal pupils'
+                                          ],
+                                          [
+                                              'linkURL' => '#',
+                                              'superText' => 'News article',
+                                              'superDate' => '24/01/2024',
+                                              'title' => 'Motivating pupils to speak Welsh'
+                                          ],
+                                          [
+                                              'linkURL' => '#',
+                                              'superText' => 'News article',
+                                              'superDate' => '24/01/2024',
+                                              'title' => 'Developing a programme to provide targeted support for vulnerable learners to improve their attendance'
+                                          ]
+                                      ]
+                                  ])
+                              @elseif(isset($isInspectionReportsSearch) && $isInspectionReportsSearch)
+                                  @include('components.resource-list', [
+                                      'items' => [
+                                          [
+                                              'linkURL' => '#',
+                                              'superText' => 'Inspection report',
+                                              'superDate' => '24/01/2024',
+                                              'title' => 'Cardiff High School'
+                                          ],
+                                          [
+                                              'linkURL' => '#',
+                                              'superText' => 'Inspection report',
+                                              'superDate' => '21/03/2023',
+                                              'title' => 'Cwmbran High School'
+                                          ]
+                                      ]
+                                  ])
+                              @elseif(isset($isInspectionScheduleSearch) && $isInspectionScheduleSearch)
                                 @include('components.resource-list', [
-                                    'items' => [
-                                        [
-                                            'linkURL' => '#',
-                                            'superText' => 'News article',
-                                            'superDate' => '24/01/2024',
-                                            'title' => 'Improving teaching through an emphasis on professional learning'
-                                        ],
-                                        [
-                                            'linkURL' => '#',
-                                            'superText' => 'News article',
-                                            'superDate' => '24/01/2024',
-                                            'title' => 'Improving attendance in secondary schools'
-                                        ],
-                                        [
-                                            'linkURL' => '#',
-                                            'superText' => 'News article',
-                                            'superDate' => '24/01/2024',
-                                            'title' => 'Improving attendance in secondary schools - training materials'
-                                        ],
-                                        [
-                                            'linkURL' => '#',
-                                            'superText' => 'News article',
-                                            'superDate' => '24/01/2024',
-                                            'title' => 'Developing early communication skills with predominantly pre verbal pupils'
-                                        ],
-                                        [
-                                            'linkURL' => '#',
-                                            'superText' => 'News article',
-                                            'superDate' => '24/01/2024',
-                                            'title' => 'Motivating pupils to speak Welsh'
-                                        ],
-                                        [
-                                            'linkURL' => '#',
-                                            'superText' => 'News article',
-                                            'superDate' => '24/01/2024',
-                                            'title' => 'Developing a programme to provide targeted support for vulnerable learners to improve their attendance'
-                                        ]
+                                  'items' => [
+                                    [
+                                      'linkURL' => '#',
+                                      'superText' => 'Upcoming inspection',
+                                      'superDate' => '05/11/2024',
+                                      'title' => 'Cardiff High School'
+                                    ],
+                                    [
+                                      'linkURL' => '#',
+                                      'superText' => 'Upcoming inspection',
+                                      'superDate' => '15/12/2024',
+                                      'title' => 'Cwmbran High School'
                                     ]
-                                ])
-                            @elseif(isset($isInspectionReportsSearch) && $isInspectionReportsSearch)
-                                @include('components.resource-list', [
-                                    'items' => [
-                                        [
-                                            'linkURL' => '#',
-                                            'superText' => 'Inspection report',
-                                            'superDate' => '24/01/2024',
-                                            'title' => 'Cardiff High School'
-                                        ],
-                                        [
-                                            'linkURL' => '#',
-                                            'superText' => 'Inspection report',
-                                            'superDate' => '21/03/2023',
-                                            'title' => 'Cwmbran High School'
-                                        ]
-                                    ]
-                                ])
-                            @elseif(isset($isInspectionScheduleSearch) && $isInspectionScheduleSearch)
-                              @include('components.resource-list', [
-                                'items' => [
-                                  [
-                                    'linkURL' => '#',
-                                    'superText' => 'Upcoming inspection',
-                                    'superDate' => '05/11/2024',
-                                    'title' => 'Cardiff High School'
-                                  ],
-                                  [
-                                    'linkURL' => '#',
-                                    'superText' => 'Upcoming inspection',
-                                    'superDate' => '15/12/2024',
-                                    'title' => 'Cwmbran High School'
                                   ]
-                                ]
+                                ])
+                              @else
+                              @include('components.resource-list', [
+                                  'items' => [
+                                      [
+                                          'linkURL' => '#',
+                                          'superText' => 'Effective practice',
+                                          'superDate' => '24/01/2024',
+                                          'title' => 'Improving teaching through an emphasis on professional learning'
+                                      ],
+                                      [
+                                          'linkURL' => '#',
+                                          'superText' => 'Effective practice',
+                                          'superDate' => '24/01/2024',
+                                          'title' => 'Improving attendance in secondary schools'
+                                      ],
+                                      [
+                                          'linkURL' => '#',
+                                          'superText' => 'Effective practice',
+                                          'superDate' => '24/01/2024',
+                                          'title' => 'Improving attendance in secondary schools - training materials'
+                                      ],
+                                      [
+                                          'linkURL' => '#',
+                                          'superText' => 'Effective practice',
+                                          'superDate' => '24/01/2024',
+                                          'title' => 'Developing early communication skills with predominantly pre verbal pupils'
+                                      ],
+                                      [
+                                          'linkURL' => '#',
+                                          'superText' => 'Effective practice',
+                                          'superDate' => '24/01/2024',
+                                          'title' => 'Motivating pupils to speak Welsh'
+                                      ],
+                                      [
+                                          'linkURL' => '#',
+                                          'superText' => 'Effective practice',
+                                          'superDate' => '24/01/2024',
+                                          'title' => 'Developing a programme to provide targeted support for vulnerable learners to improve their attendance'
+                                      ]
+                                  ]
                               ])
-                            @else
-                            @include('components.resource-list', [
-                                'items' => [
-                                    [
-                                        'linkURL' => '#',
-                                        'superText' => 'Effective practice',
-                                        'superDate' => '24/01/2024',
-                                        'title' => 'Improving teaching through an emphasis on professional learning'
-                                    ],
-                                    [
-                                        'linkURL' => '#',
-                                        'superText' => 'Effective practice',
-                                        'superDate' => '24/01/2024',
-                                        'title' => 'Improving attendance in secondary schools'
-                                    ],
-                                    [
-                                        'linkURL' => '#',
-                                        'superText' => 'Effective practice',
-                                        'superDate' => '24/01/2024',
-                                        'title' => 'Improving attendance in secondary schools - training materials'
-                                    ],
-                                    [
-                                        'linkURL' => '#',
-                                        'superText' => 'Effective practice',
-                                        'superDate' => '24/01/2024',
-                                        'title' => 'Developing early communication skills with predominantly pre verbal pupils'
-                                    ],
-                                    [
-                                        'linkURL' => '#',
-                                        'superText' => 'Effective practice',
-                                        'superDate' => '24/01/2024',
-                                        'title' => 'Motivating pupils to speak Welsh'
-                                    ],
-                                    [
-                                        'linkURL' => '#',
-                                        'superText' => 'Effective practice',
-                                        'superDate' => '24/01/2024',
-                                        'title' => 'Developing a programme to provide targeted support for vulnerable learners to improve their attendance'
-                                    ]
-                                ]
-                            ])
+                              @endif
                             @endif
-                          @endif
-						</div>
+              </div>
+            </div>
 					</div>
 				</div>
 			</div>
