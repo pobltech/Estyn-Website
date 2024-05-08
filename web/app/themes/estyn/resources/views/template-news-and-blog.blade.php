@@ -40,6 +40,10 @@
 				$("#search-box-container button").on("click", function() {
 					applyFilters();
 				});
+
+				$("#sort-by").on("change", function() {
+					applyFilters();
+				});
 			});
 
 			function applyFilters() {
@@ -70,11 +74,14 @@
 				} else if($("#flexCheckBlog").is(":checked")) {
 					postType = $("#flexCheckBlog").val();
 				}
+
+				let sort = $("#sort-by").val();
 				
 				return {
 					postType: postType,
 					year: $("#flush-collapseTwo input:checked").val(),
-					searchText: $("#search-box-container input[type='text']").val().trim()
+					searchText: $("#search-box-container input[type='text']").val().trim(),
+					sort: sort
 				};
 			}
 		})(jQuery);

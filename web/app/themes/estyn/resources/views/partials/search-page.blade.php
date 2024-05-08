@@ -218,7 +218,8 @@
         if($isNewsAndBlog) {
           $searchArgs = [
             'post_type' => ['estyn_newsarticle', 'post'],
-            'posts_per_page' => -1
+            'posts_per_page' => -1,
+            'orderby' => 'modified',
           ];
 
           // If there's a Wordpress search query in the URL then add it to the search args
@@ -239,9 +240,10 @@
               <span class="d-flex align-items-center">
 							<label class="text-nowrap me-3" for="sort-by">Sort by</label>
                 <select id="sort-by" class="form-select" aria-label="Default select example">
-                    <option value="1">Latest updated</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    <option value="modified">{{ __('Latest updated') }}</option>
+                    <option value="title">{{ __('Title') }}</option>
+                    <option value="date">{{ __('Publication date') }}</option>
+                    <option value="type">{{ __('Type') }}</option>
                   </select>
                 </span>
 						</div>

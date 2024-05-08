@@ -382,6 +382,13 @@ function estyn_get_news_and_blog_posts(\WP_REST_Request $request) {
         $args['s'] = $params['searchText'];
     }
 
+    if(isset($params['sort'])) {
+        $args['orderby'] = $params['sort'];
+        if($params['sort'] == 'title') {
+            $args['order'] = 'ASC';
+        }
+    }
+
     // Merge the request parameters into the query arguments
     /* $args = array_merge($args, $params); */
 
