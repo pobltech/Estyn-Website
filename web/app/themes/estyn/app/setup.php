@@ -22,7 +22,7 @@ error_reporting(E_ALL);
 add_action('wp_enqueue_scripts', function () {
     bundle('app')->enqueue()->localize('estyn', [
         'ajax_url' => admin_url('admin-ajax.php'),
-        'news_and_blog_posts_search_rest_url' => rest_url('estyn/v1/newsandblogposts/'),
+        'resources_search_rest_url' => rest_url('estyn/v1/resources_search/'),
         'nonce' => wp_create_nonce('wp_rest'),
     ]);
 }, 100);
@@ -340,9 +340,9 @@ add_action( 'init', __NAMESPACE__ . '\\create_eduprovider_status_taxonomy', 0 );
  * Now for our own REST API endpoints
  */
 add_action('rest_api_init', function () {
-    register_rest_route('estyn/v1', '/newsandblogposts/', array(
+    register_rest_route('estyn/v1', '/resources_search/', array(
         'methods' => 'GET',
-        'callback' => __NAMESPACE__ . '\\estyn_get_news_and_blog_posts',
+        'callback' => __NAMESPACE__ . '\\estyn_resources_search',
         'permission_callback' => function (\WP_REST_Request $request) {
             $nonce = $request->get_header('X-WP-Nonce');
             return wp_verify_nonce($nonce, 'wp_rest');
@@ -351,7 +351,7 @@ add_action('rest_api_init', function () {
 });
   
 // For the 'News and blog' page search and filters update (ajax) requests
-function estyn_get_news_and_blog_posts(\WP_REST_Request $request) {
+function estyn_resources_search(\WP_REST_Request $request) {
     $params = $request->get_params();
     error_log(print_r($params, true));
     

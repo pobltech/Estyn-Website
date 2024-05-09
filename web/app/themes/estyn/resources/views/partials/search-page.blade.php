@@ -4,7 +4,6 @@
   News/blog posts.
   Inspection reports.
   Inspection schedule?
-  Providers (schools etc.)
   Improvement resources.
 
   They may share some of the same search filters,
@@ -22,22 +21,12 @@
   - Sector
   - Local authority
 
-  Providers:
-  - Sector
-  - Local authority
-  - Tags
-  - 'Similar settings to mine':
-  -- Proximity
-  -- Number of learners
-  -- Language medium
-  -- Age range
-
   Improvement resources:
   - Sector
   - Local authority
   - Tags
   - Updated
-  - Type
+  - Type (Thematic Report, Effective Practice, or Additional Resource)
 
 --}}
 
@@ -70,134 +59,138 @@
               <h3>Filters</h3>
               <div class="accordion accordion-flush" id="accordionFlushExample">
                 @if(isset($isNewsAndBlog) && $isNewsAndBlog)
-                              <div class="accordion-item">
-                                  <h2 class="accordion-header" id="flush-headingOne">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                                      Type
-                                    </button>
-                                  </h2>
-                                  <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                    <div class="accordion-body">
-                                      <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="postType" id="flexCheckNewsAndBlog" checked>
-                                        <label class="form-check-label" for="flexCheckNewsAndBlog">
-                                          {{ __('All', 'sage') }}
-                                        </label>
-                                      </div>
-                                      <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="postType" value="estyn_newsarticle" id="flexCheckNews">
-                                        <label class="form-check-label" for="flexCheckNews">
-                                          {{ __('News article', 'sage') }}
-                                        </label>
-                                      </div>
-                                      <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="postType" value="post" id="flexCheckBlog">
-                                        <label class="form-check-label" for="flexCheckBlog">
-                                          {{ __('Blog post', 'sage') }}
-                                        </label>
-                                      </div>
-                                    </div>
-                                  </div>
-                              </div>
-                              <div class="accordion-item">
-                                  <h2 class="accordion-header" id="flush-headingTwo">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                                      {{ __('Dates', 'sage') }}
-                                    </button>
-                                  </h2>
-                                  <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                                    <div class="accordion-body">
-                                      <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="year" id="flexCheckYearDefault" checked>
-                                        <label class="form-check-label" for="flexCheckYearDefault">
-                                          {{ __('Any year', 'sage') }}
-                                        </label>
-                                      </div>
-                                      @for ($i = 2013; $i <= intval(date('Y')); $i++)
-                                        <div class="form-check">
-                                          <input class="form-check-input" type="radio" name="year" value="{{ $i }}" id="flexCheckYear{{ $i }}">
-                                          <label class="form-check-label" for="flexCheckYear{{ $i }}">
-                                            {{ $i }}
-                                          </label>
-                                        </div>
-                                      @endfor
-                                    </div>
-                                  </div>
-                              </div>
-                            @else
-                            <div class="accordion-item">
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="flush-headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                          Type
+                        </button>
+                      </h2>
+                      <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="postType" id="flexCheckNewsAndBlog" checked>
+                            <label class="form-check-label" for="flexCheckNewsAndBlog">
+                              {{ __('All', 'sage') }}
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="postType" value="estyn_newsarticle" id="flexCheckNews">
+                            <label class="form-check-label" for="flexCheckNews">
+                              {{ __('News article', 'sage') }}
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="postType" value="post" id="flexCheckBlog">
+                            <label class="form-check-label" for="flexCheckBlog">
+                              {{ __('Blog post', 'sage') }}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="flush-headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                          {{ __('Dates', 'sage') }}
+                        </button>
+                      </h2>
+                      <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="year" id="flexCheckYearDefault" checked>
+                            <label class="form-check-label" for="flexCheckYearDefault">
+                              {{ __('Any year', 'sage') }}
+                            </label>
+                          </div>
+                          @for ($i = 2013; $i <= intval(date('Y')); $i++)
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="year" value="{{ $i }}" id="flexCheckYear{{ $i }}">
+                              <label class="form-check-label" for="flexCheckYear{{ $i }}">
+                                {{ $i }}
+                              </label>
+                            </div>
+                          @endfor
+                        </div>
+                      </div>
+                  </div>
+                @else
+                <div class="accordion-item">
                   <h2 class="accordion-header" id="flush-heading-sector">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-sector" aria-expanded="false" aria-controls="flush-collapse-sector">
-                      Sector
+                      {{ __('Sector', 'sage') }}
                     </button>
                   </h2>
                   <div id="flush-collapse-sector" class="accordion-collapse collapse" aria-labelledby="flush-heading-sector" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
                       <div class="form-check">
-                    <input class="form-check-input" type="radio" name="sector" value="any" id="flexCheckSector-any" checked>
-                    <label class="form-check-label" for="flexCheckSector-any">
-                      {{ __('Any sector', 'sage') }}
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="sector" value="" id="flexCheckSector-Secondary">
-                    <label class="form-check-label" for="flexCheckSector-Secondary">
-                      {{ __('Secondary', 'sage') }}
-                    </label>
-                  </div>
+                        <input class="form-check-input" type="radio" name="sector" value="any" id="flexCheckSector-any" checked>
+                        <label class="form-check-label" for="flexCheckSector-any">
+                          {{ __('Any sector', 'sage') }}
+                        </label>
+                      </div>
+                      @foreach($sectors as $sector)
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="sector" value="{{ $sector->slug }}" id="flexCheckSector-{{ $sector->slug }}">
+                          <label class="form-check-label" for="flexCheckSector-{{ $sector->slug }}">
+                            {{ $sector->name }}
+                          </label>
+                        </div>
+                      @endforeach
                     </div>
                   </div>
                 </div>
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="flush-headingTwo">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                      Local authority
+                      {{ __('Local authority', 'sage') }}
                     </button>
                   </h2>
                   <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">Controls</div>
+                    <div class="accordion-body">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="localAuthority" value="Any" id="flexCheckLocalAuthority-any" checked>
+                        <label class="form-check-label" for="flexCheckLocalAuthority-any">
+                          {{ __('Any local authority', 'sage') }}
+                        </label>
+                      </div>
+                      @foreach($localAuthorities as $localAuthority)
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="localAuthority" value="{{ $localAuthority->slug }}" id="flexCheckLocalAuthority-{{ $localAuthority->slug }}">
+                          <label class="form-check-label" for="flexCheckLocalAuthority-{{ $localAuthority->slug }}">
+                            {{ $localAuthority->name }}
+                          </label>
+                        </div>
+                      @endforeach
+                    </div>
                   </div>
                 </div>
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="flush-headingThree">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                      Tags
+                      {{ __('Tags', 'sage') }}
                     </button>
                   </h2>
                   <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">Controls</div>
-                  </div>
-                </div>
-                            @endif
-              </div>
-              @if((!isset($isNewsAndBlog)) && (!isset($isInspectionReportsSearch)) && (!isset($isInspectionScheduleSearch)))
-                <h3 class="mt-5">Similar settings to mine</h3>
-                <div class="accordion accordion-flush" id="accordionFlushExample2">
-                  <div class="accordion-item">
-                    <h2 class="accordion-header" id="flush-headingOne2">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne2" aria-expanded="false" aria-controls="flush-collapseOne2">
-                        Proximity
-                      </button>
-                    </h2>
-                    <div id="flush-collapseOne2" class="accordion-collapse collapse" aria-labelledby="flush-headingOne2" data-bs-parent="#accordionFlushExample2">
-                      <div class="accordion-body">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
-                          <label class="form-check-label" for="flexCheckDefault2">
-                            Default checkbox
-                          </label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked2" checked>
-                          <label class="form-check-label" for="flexCheckChecked2">
-                            Checked checkbox
-                          </label>
-                        </div>
+                    <div class="accordion-body">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" value="" id="flexCheckTags-any" checked>
+                        <label class="form-check-label" for="flexCheckTags-any">
+                          {{ __('Any tag', 'sage') }}
+                        </label>
                       </div>
+                      @foreach($tags as $tag)
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" value="{{ $tag->slug }}" id="flexCheckTags-{{ $tag->slug }}">
+                          <label class="form-check-label" for="flexCheckTags-{{ $tag->slug }}">
+                            {{ $tag->name }}
+                          </label>
+                        </div>
+                      @endforeach
                     </div>
                   </div>
-                </div>      
-              @endif
+                </div>
+                @endif
+              </div>
             </div>
 					</div>
 				</div>
@@ -238,12 +231,12 @@
 						<div class="d-flex align-items-center align-items-md-start justify-content-between">
 							<span><span class="search-results-number">{{ (!empty($searchQuery)) && $searchQuery->have_posts() ? $searchQuery->found_posts : '0' }}</span> {{ __('result/s', 'sage') }}</span>
               <span class="d-flex align-items-center">
-							<label class="text-nowrap me-3" for="sort-by">Sort by</label>
-                <select id="sort-by" class="form-select" aria-label="Default select example">
-                    <option value="modified">{{ __('Latest updated') }}</option>
-                    <option value="title">{{ __('Title') }}</option>
-                    <option value="date">{{ __('Publication date') }}</option>
-                    <option value="type">{{ __('Type') }}</option>
+							<label class="text-nowrap me-3" for="sort-by">{{ __('Sort by', 'sage') }}</label>
+                <select id="sort-by" class="form-select">
+                    <option value="modified">{{ __('Latest updated', 'sage') }}</option>
+                    <option value="title">{{ __('Title', 'sage') }}</option>
+                    <option value="date">{{ __('Publication date', 'sage') }}</option>
+                    <option value="type">{{ __('Type', 'sage') }}</option>
                   </select>
                 </span>
 						</div>
@@ -421,3 +414,114 @@
 		</div>
 	</div>
 </section>
+@push('scripts')
+	<script>
+		(function($) {
+			let searchBoxTypingTimer = setTimeout(function() {}, 0);
+			const searchBoxTypingInterval = 500;
+
+			$(document).ready(function() {
+				hideSearchResultsLoadingIndicator();
+
+				$(".search-filters input:not([type='text'])").on("change", function() {
+					applyFilters();
+				});
+
+				$("#search-box-container input[type='text']").on("keydown keyup", function(key) {
+					if(key.keyCode === 13) {
+						clearTimeout(searchBoxTypingTimer);
+
+						applyFilters();
+
+						return;
+					}
+				});
+
+				$("#search-box-container input[type='text']").on("input", function() {
+					clearTimeout(searchBoxTypingTimer);
+
+					searchBoxTypingTimer = setTimeout(function() {
+						applyFilters();
+					}, searchBoxTypingInterval);
+				});
+
+				$("#search-box-container button").on("click", function() {
+					applyFilters();
+				});
+
+				$("#sort-by").on("change", function() {
+					applyFilters();
+				});
+			});
+
+			function applyFilters() {
+				clearTimeout(searchBoxTypingTimer);
+				showSearchResultsLoadingIndicator();
+
+				$("#search-results").fadeOut(250, function() {
+					var searchFilters = getSearchFilters();
+					$.ajax({
+						url: estyn.resources_search_rest_url,
+						type: "GET",
+						data: searchFilters,
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader('X-WP-Nonce', estyn.nonce);
+						},
+						success: function(response) {
+							//console.log(response);
+							
+								$("#search-results").html(response.html);
+								$("#search-results").fadeIn(250);
+								$(".search-results-number").text(response.totalPosts);
+							
+							
+							hideSearchResultsLoadingIndicator();
+						}
+					});
+				});
+			}
+
+      @if(isset($isNewsAndBlog) && $isNewsAndBlog)        
+			function getSearchFilters() {
+				let postType = "";
+				if($("#flexCheckNews").is(":checked")) {
+					postType = $("#flexCheckNews").val();
+				} else if($("#flexCheckBlog").is(":checked")) {
+					postType = $("#flexCheckBlog").val();
+				}
+
+				let sort = $("#sort-by").val();
+				
+				return {
+					postType: postType,
+					year: $("#flush-collapseTwo input:checked").val(),
+					searchText: $("#search-box-container input[type='text']").val().trim(),
+					sort: sort
+				};
+			}
+      @elseif(isset($isInspectionReportsSearch) && $isInspectionReportsSearch)
+      function getSearchFilters() {
+        
+      }
+      @elseif(isset($isInspectionScheduleSearch) && $isInspectionScheduleSearch)
+
+      @elseif(isset($isProviderSearch) && $isProviderSearch)
+
+      @elseif(isset($isImprovementResourcesSearch) && $isImprovementResourcesSearch)
+
+      @endif
+
+			function hideSearchResultsLoadingIndicator() {
+				$(".search-results-loading-indicator-container").animate({
+					opacity: 0
+				}, 1000);
+			}
+
+			function showSearchResultsLoadingIndicator() {
+				$(".search-results-loading-indicator-container").animate({
+					opacity: 1
+				}, 250);
+			}
+		})(jQuery);
+	</script>
+@endpush
