@@ -11,7 +11,7 @@
 
   News/blog posts:
   - Type (news/blog)(News Articles is a CPT, blog posts are Posts)
-  - Dates
+  - Dates (year)
 
   Inspection reports:
   - Sector
@@ -25,7 +25,7 @@
   - Sector
   - Local authority
   - Tags
-  - Updated
+  - Updated??
   - Type (Thematic Report, Effective Practice, or Additional Resource)
   - Year
 
@@ -210,6 +210,31 @@
                       </div>
                     </div>
                   </div>
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="flush-headingFive">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+                          {{ __('Year', 'sage') }}
+                        </button>
+                      </h2>
+                      <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="year" id="flexCheckYearDefault" checked>
+                            <label class="form-check-label" for="flexCheckYearDefault">
+                              {{ __('Any year', 'sage') }}
+                            </label>
+                          </div>
+                          @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="year" value="{{ $i }}" id="flexCheckYear{{ $i }}">
+                              <label class="form-check-label" for="flexCheckYear{{ $i }}">
+                                {{ $i }}
+                              </label>
+                            </div>
+                          @endfor
+                        </div>
+                      </div>
+                  </div>
                 @endif
                 @endif
               </div>
@@ -293,6 +318,15 @@
                 'taxonomy' => 'improvement_resource_type',
                 'field' => 'slug',
                 'terms' => $_GET['improvement_resource_type']
+              ]
+            ];
+          }
+
+          // Year
+          if(isset($_GET['year']) && $_GET['year'] != 'any') {
+            $searchArgs['date_query'] = [
+              [
+                'year' => $_GET['year']
               ]
             ];
           }
@@ -581,17 +615,7 @@
 				};
 			}
       @elseif(isset($isInspectionReportsSearch) && $isInspectionReportsSearch)
-      function getSearchFilters() {
-        return {
-          sector: $("#flush-collapse-sector input:checked").val(),
-          localAuthority: $("#flush-collapseTwo input:checked").val(),
-          searchText: $("#search-box-container input[type='text']").val().trim(),
-          sort: $("#sort-by").val(),
-          tags: $("#flush-collapseThree input:checked").map(function() {
-            return $(this).val();
-          }).get()
-        };
-      }
+
       @elseif(isset($isInspectionScheduleSearch) && $isInspectionScheduleSearch)
 
       @elseif(isset($isProviderSearch) && $isProviderSearch)
@@ -607,7 +631,8 @@
           tags: $("#flush-collapseThree input:checked").map(function() {
             return $(this).val();
           }).get(),
-          improvementResourceType: $("#flush-collapseFour input:checked").val()
+          improvementResourceType: $("#flush-collapseFour input:checked").val(),
+          year: $("#flush-collapseFive input:checked").val()
         };
       }
       @endif
