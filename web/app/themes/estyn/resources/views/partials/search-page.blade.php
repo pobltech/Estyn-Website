@@ -567,7 +567,7 @@
 					applyFilters();
 				});
 
-        @if(!empty($searchArgs)) {
+        @if(!empty($searchArgs))
           applyFilters();
         @endif
 			});
