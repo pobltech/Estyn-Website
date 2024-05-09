@@ -22,6 +22,12 @@
 			'taxonomy' => 'post_tag',
 			'hide_empty' => false,
 		]);
+
+		// improvement_resource_type taxonomy
+		$improvementResourceTypes = get_terms([
+			'taxonomy' => 'improvement_resource_type',
+			'hide_empty' => false,
+		]);
 	@endphp
 	@include('partials.search-page', [
 		'isImprovementResourcesSearch' => true,

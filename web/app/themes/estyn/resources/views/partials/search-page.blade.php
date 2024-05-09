@@ -184,6 +184,33 @@
                     </div>
                   </div>
                 </div>
+                @if(isset($improvementResourceTypes) && !empty($improvementResourceTypes))
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingFour">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                        {{ __('Type', 'sage') }}
+                      </button>
+                    </h2>
+                    <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
+                      <div class="accordion-body">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="improvement_resource_type" value="any" id="flexCheckType-any" checked>
+                          <label class="form-check-label" for="flexCheckType-any">
+                            {{ __('Any type', 'sage') }}
+                          </label>
+                        </div>
+                        @foreach($improvementResourceTypes as $improvementResourceType)
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="improvement_resource_type" value="{{ $improvementResourceType->slug }}" id="flexCheckType-{{ $improvementResourceType->slug }}">
+                            <label class="form-check-label" for="flexCheckType-{{ $improvementResourceType->slug }}">
+                              {{ $improvementResourceType->name }}
+                            </label>
+                          </div>
+                        @endforeach
+                      </div>
+                    </div>
+                  </div>
+                @endif
                 @endif
               </div>
             </div>
@@ -255,6 +282,17 @@
                 'taxonomy' => 'post_tag',
                 'field' => 'slug',
                 'terms' => $_GET['tag']
+              ]
+            ];
+          }
+
+          // Improvement resource type
+          if(isset($_GET['improvement_resource_type']) && $_GET['improvement_resource_type'] != 'any') {
+            $searchArgs['tax_query'] = [
+              [
+                'taxonomy' => 'improvement_resource_type',
+                'field' => 'slug',
+                'terms' => $_GET['improvement_resource_type']
               ]
             ];
           }
@@ -568,7 +606,8 @@
           sort: $("#sort-by").val(),
           tags: $("#flush-collapseThree input:checked").map(function() {
             return $(this).val();
-          }).get()
+          }).get(),
+          improvementResourceType: $("#flush-collapseFour input:checked").val()
         };
       }
       @endif

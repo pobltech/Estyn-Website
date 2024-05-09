@@ -427,6 +427,20 @@ function estyn_resources_search(\WP_REST_Request $request) {
         ];
     }
 
+    // improvement_resource_type
+    if(isset($params['improvementResourceType']) && term_exists($params['improvementResourceType']) ){
+        if(!isset($args['tax_query'])) {
+            $args['tax_query'] = [];
+        }
+        $args['tax_query'][] = [
+            [
+                'taxonomy' => 'improvement_resource_type',
+                'field' => 'slug',
+                'terms' => $params['improvementResourceType'],
+            ],
+        ];
+    }
+
     if(isset($params['tags'])) {
         $args['tag'] = $params['tags'];
     }
