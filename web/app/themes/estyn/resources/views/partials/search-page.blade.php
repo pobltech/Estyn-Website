@@ -165,6 +165,7 @@
                     </div>
                   </div>
                 </div>
+                @if(isset($tags) && !empty($tags))
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="flush-headingThree">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
@@ -184,6 +185,7 @@
                     </div>
                   </div>
                 </div>
+                @endif
                 @if(isset($improvementResourceTypes) && !empty($improvementResourceTypes))
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-headingFour">
@@ -615,6 +617,15 @@
 				};
 			}
       @elseif(isset($isInspectionReportsSearch) && $isInspectionReportsSearch)
+      function getSearchFilters() {
+        return {
+          postType: "estyn_inspectionrpt",
+          sector: $("#flush-collapse-sector input:checked").val(),
+          localAuthority: $("#flush-collapseTwo input:checked").val(),
+          searchText: $("#search-box-container input[type='text']").val().trim(),
+          sort: $("#sort-by").val()
+        };
+      }
 
       @elseif(isset($isInspectionScheduleSearch) && $isInspectionScheduleSearch)
 

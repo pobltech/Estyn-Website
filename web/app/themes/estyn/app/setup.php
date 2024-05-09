@@ -280,7 +280,7 @@ function create_eduprovider_taxonomies() {
         'menu_name' => __( 'Sectors', 'sage' ),
     );
 
-    register_taxonomy('sector', array('estyn_eduprovider', 'estyn_imp_resource'), array(
+    register_taxonomy('sector', array('estyn_eduprovider', 'estyn_imp_resource', 'estyn_inspectionrpt'), array(
         'labels' => $labels,
         'show_ui' => true,
         'show_admin_column' => true,
@@ -301,7 +301,7 @@ function create_eduprovider_taxonomies() {
         'menu_name' => __( 'Local Authorities', 'sage' ),
     );
 
-    register_taxonomy('local_authority', array('estyn_eduprovider', 'estyn_imp_resource'), array(
+    register_taxonomy('local_authority', array('estyn_eduprovider', 'estyn_imp_resource', 'estyn_inspectionrpt'), array(
         'labels' => $labels,
         'show_ui' => true,
         'show_admin_column' => true,
