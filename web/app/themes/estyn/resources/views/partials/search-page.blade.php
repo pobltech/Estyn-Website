@@ -249,9 +249,9 @@
 						</div>
 						<hr class="hrGreen my-3">
 					</div>
-					<div class="col-12">
-            <div class="d-flex justify-content-center">
-              <div class="search-results-loading-indicator spinner-border text-primary" role="status" style="display: none;">
+					<div class="col-12 position-relative">
+            <div class="search-results-loading-indicator-container d-flex justify-content-center">
+              <div class="search-results-loading-indicator spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
               </div>
             </div>

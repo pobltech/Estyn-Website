@@ -1675,6 +1675,14 @@ p.sp-desc {
     }
 }
 
+.search-results-loading-indicator-container {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translate(-50%, 0);
+    overflow: hidden;
+}
+
 /** Rogue Media Queries **/
 @media (max-width: 1800px) {
 
