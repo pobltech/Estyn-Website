@@ -185,6 +185,9 @@ add_action('init', function () {
         'rewrite' => ['slug' => 'improvement-resources'],
         'show_in_rest' => true, // Enable Gutenberg editor
     ]);
+
+    // Add tag support
+    register_taxonomy_for_object_type('post_tag', 'estyn_imp_resource');
 });
 
 /**
@@ -399,7 +402,10 @@ function estyn_resources_search(\WP_REST_Request $request) {
     }
 
     if(isset($params['localAuthority']) && term_exists($params['localAuthority']) ) {
-        $args['tax_query'] = [
+        if(!isset($args['tax_query'])) {
+            $args['tax_query'] = [];
+        }
+        $args['tax_query'][] = [
             [
                 'taxonomy' => 'local_authority',
                 'field' => 'slug',
@@ -409,7 +415,10 @@ function estyn_resources_search(\WP_REST_Request $request) {
     }
 
     if(isset($params['sector']) && term_exists($params['sector']) ){
-        $args['tax_query'] = [
+        if(!isset($args['tax_query'])) {
+            $args['tax_query'] = [];
+        }
+        $args['tax_query'][] = [
             [
                 'taxonomy' => 'sector',
                 'field' => 'slug',
