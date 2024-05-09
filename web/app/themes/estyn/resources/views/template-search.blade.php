@@ -24,7 +24,7 @@
 		]);
 	@endphp
 	@include('partials.search-page', [
-		'isImprovementResources' => true,
+		'isImprovementResourcesSearch' => true,
 		'localAuthorities' => $localAuthorities,
 		'sectors' => $sectors,
 		'tags' => $tags

@@ -277,7 +277,7 @@ function create_eduprovider_taxonomies() {
         'menu_name' => __( 'Sectors', 'sage' ),
     );
 
-    register_taxonomy('sector', array('estyn_eduprovider'), array(
+    register_taxonomy('sector', array('estyn_eduprovider', 'estyn_imp_resource'), array(
         'labels' => $labels,
         'show_ui' => true,
         'show_admin_column' => true,
@@ -298,7 +298,7 @@ function create_eduprovider_taxonomies() {
         'menu_name' => __( 'Local Authorities', 'sage' ),
     );
 
-    register_taxonomy('local_authority', array('estyn_eduprovider'), array(
+    register_taxonomy('local_authority', array('estyn_eduprovider', 'estyn_imp_resource'), array(
         'labels' => $labels,
         'show_ui' => true,
         'show_admin_column' => true,
@@ -365,6 +365,12 @@ function estyn_resources_search(\WP_REST_Request $request) {
             $args['post_type'] = 'estyn_newsarticle';
         } elseif($params['postType'] === 'post') {
             $args['post_type'] = 'post';
+        } elseif($params['postType'] === 'estyn_imp_resource') {
+            $args['post_type'] = 'estyn_imp_resource';
+        } elseif($params['postType'] === 'estyn_eduprovider') {
+            $args['post_type'] = 'estyn_eduprovider';
+        } elseif($params['postType'] === 'estyn_inspectionrpt') {
+            $args['post_type'] = 'estyn_inspectionrpt';
         }
     }
 
@@ -386,7 +392,34 @@ function estyn_resources_search(\WP_REST_Request $request) {
         $args['orderby'] = $params['sort'];
         if($params['sort'] == 'title') {
             $args['order'] = 'ASC';
+        } elseif($params['sort'] == 'type' && isset($params['postType']) && $params['postType'] == 'estyn_imp_resource') {
+            // We need to sort by the 'Improvement Resource Type' taxonomy
+            $args['orderby'] = 'tax_query';
         }
+    }
+
+    if(isset($params['localAuthority']) && term_exists($params['localAuthority']) ) {
+        $args['tax_query'] = [
+            [
+                'taxonomy' => 'local_authority',
+                'field' => 'slug',
+                'terms' => $params['localAuthority'],
+            ],
+        ];
+    }
+
+    if(isset($params['sector']) && term_exists($params['sector']) ){
+        $args['tax_query'] = [
+            [
+                'taxonomy' => 'sector',
+                'field' => 'slug',
+                'terms' => $params['sector'],
+            ],
+        ];
+    }
+
+    if(isset($params['tags'])) {
+        $args['tag'] = $params['tags'];
     }
 
     // Merge the request parameters into the query arguments
@@ -415,6 +448,18 @@ function estyn_resources_search(\WP_REST_Request $request) {
         $postTypeName = (get_post_type_object(get_post_type($post)))->labels->singular_name;
         if($postTypeName == 'Post') {
           $postTypeName = __('Blog post', 'sage');
+        } elseif(strtolower($postTypeName) == 'improvement resource') {
+          // In this case we use the 'Improvement Resource Type' taxonomy to get the type of resource
+            $terms = get_the_terms($post->ID, 'improvement_resource_type');
+            if($terms) {
+                foreach($terms as $index => $term) {
+                    if($index == 0) {
+                        $postTypeName = $term->name;
+                    } else {
+                        $postTypeName .= ', ' . $term->name;
+                    }
+                }
+            }
         }
 
         $postTypeName = ucfirst(strtolower($postTypeName));

@@ -27,6 +27,7 @@
   - Tags
   - Updated
   - Type (Thematic Report, Effective Practice, or Additional Resource)
+  - Year
 
 --}}
 
@@ -172,15 +173,9 @@
                   </h2>
                   <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
-                      <div class="form-check">
-                        <input class="form-check-input" type="radio" value="" id="flexCheckTags-any" checked>
-                        <label class="form-check-label" for="flexCheckTags-any">
-                          {{ __('Any tag', 'sage') }}
-                        </label>
-                      </div>
                       @foreach($tags as $tag)
                         <div class="form-check">
-                          <input class="form-check-input" type="radio" value="{{ $tag->slug }}" id="flexCheckTags-{{ $tag->slug }}">
+                          <input class="form-check-input" type="checkbox" value="{{ $tag->slug }}" name="tags[]">
                           <label class="form-check-label" for="flexCheckTags-{{ $tag->slug }}">
                             {{ $tag->name }}
                           </label>
@@ -219,6 +214,51 @@
           if(isset($_GET['s'])) {
             $searchArgs['s'] = trim($_GET['s']);
           }
+        } elseif($isImprovementResourcesSearch) {
+          $searchArgs = [
+            'post_type' => 'estyn_imp_resource',
+            'posts_per_page' => -1,
+            'orderby' => 'modified',
+          ];
+
+          // If there's a Wordpress search query in the URL then add it to the search args
+          if(isset($_GET['s'])) {
+            $searchArgs['s'] = trim($_GET['s']);
+          }
+
+          // Sectors
+          if(isset($_GET['sector']) && $_GET['sector'] != 'any') {
+            $searchArgs['tax_query'] = [
+              [
+                'taxonomy' => 'sector',
+                'field' => 'slug',
+                'terms' => $_GET['sector']
+              ]
+            ];
+          }
+
+          // Local authorities
+          if(isset($_GET['localAuthority']) && $_GET['localAuthority'] != 'Any') {
+            $searchArgs['tax_query'] = [
+              [
+                'taxonomy' => 'local_authority',
+                'field' => 'slug',
+                'terms' => $_GET['localAuthority']
+              ]
+            ];
+          }
+
+          // Tags
+          if(isset($_GET['tag']) && !empty($_GET['tag'])) {
+            $searchArgs['tax_query'] = [
+              [
+                'taxonomy' => 'post_tag',
+                'field' => 'slug',
+                'terms' => $_GET['tag']
+              ]
+            ];
+          }
+
         }
 
         if(!empty($searchArgs)) {
@@ -452,6 +492,9 @@
 				$("#sort-by").on("change", function() {
 					applyFilters();
 				});
+
+
+        applyFilters();
 			});
 
 			function applyFilters() {
@@ -501,14 +544,33 @@
 			}
       @elseif(isset($isInspectionReportsSearch) && $isInspectionReportsSearch)
       function getSearchFilters() {
-        
+        return {
+          sector: $("#flush-collapse-sector input:checked").val(),
+          localAuthority: $("#flush-collapseTwo input:checked").val(),
+          searchText: $("#search-box-container input[type='text']").val().trim(),
+          sort: $("#sort-by").val(),
+          tags: $("#flush-collapseThree input:checked").map(function() {
+            return $(this).val();
+          }).get()
+        };
       }
       @elseif(isset($isInspectionScheduleSearch) && $isInspectionScheduleSearch)
 
       @elseif(isset($isProviderSearch) && $isProviderSearch)
 
       @elseif(isset($isImprovementResourcesSearch) && $isImprovementResourcesSearch)
-
+      function getSearchFilters() {
+        return {
+          postType: "estyn_imp_resource",
+          sector: $("#flush-collapse-sector input:checked").val(),
+          localAuthority: $("#flush-collapseTwo input:checked").val(),
+          searchText: $("#search-box-container input[type='text']").val().trim(),
+          sort: $("#sort-by").val(),
+          tags: $("#flush-collapseThree input:checked").map(function() {
+            return $(this).val();
+          }).get()
+        };
+      }
       @endif
 
 			function hideSearchResultsLoadingIndicator() {
