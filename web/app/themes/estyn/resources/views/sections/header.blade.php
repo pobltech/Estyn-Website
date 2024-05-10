@@ -46,7 +46,7 @@
 														'iconClasses' => 'fa-solid fa-location-dot',
 														'title' => __('Provider map', 'sage'),
 														'description' => __('Find an education & training provider', 'sage'),
-														'linkURL' => 'https://www.google.co.uk',
+														'linkURL' => is_front_page() ? '/#home-map-search-section' : get_home_url() . '/#home-map-search-section',
 														'arrow' => true
 													])
 												</div>

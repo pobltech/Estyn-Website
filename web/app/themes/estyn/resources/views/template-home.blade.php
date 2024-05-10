@@ -163,6 +163,7 @@
 	</div>
 </div>
 --}}
+<div id="home-map-search-section">
   @include('partials.cta', [
     'ctaHeading' => __('Our education map of Wales', 'sage'),
     'ctaText' => __('Find providers across Wales using our handy map', 'sage'),
@@ -176,6 +177,7 @@
     'darkArc' => true,
     'ctaContainerExtraClasses' => 'ctaSearchMapContainer'
   ])
+</div>
 
   <div class="mt-5">
     @include('partials.slider', [
