@@ -1,16 +1,21 @@
-@import 'bootstrap/scss/bootstrap';
-@import 'common/fonts';
+:root {
+    --navbar-brand-margin-right: 1rem;
 
-// Define a variable called estyn-blue with value #DCEEFE
-$estyn-blue: #DCEEFE;
+    @media (max-width: 1280px) {
+        --navbar-brand-margin-right: 0.5rem;
+    }
 
-.bg-estyn-blue {
-  background-color: $estyn-blue;
+    --navbar-toggler-font-size: 1.5rem;
+
+    @media (max-width: 576px) {
+        --navbar-toggler-font-size: 0.85rem;
+    }
 }
 
 /** Main Colours **/
 $estyn-blue: #2A7AB0; /** Primary Estyn brand colour **/
 $estyn-green: #A2C83A; /** Secondary Estyn brand colour **/
+$estyn-lightgreen: #ECF4D7;
 $estyn-darkblue: #0E4163; /** Most typography and dark backgrounds **/
 $estyn-lightblue: #DCEEFE; /** For light backgrounds other than white **/
 $estyn-bluegrey: #AABCC8; /** For lines **/
@@ -18,8 +23,8 @@ $estyn-lightbluegrey: #F1F2F2; /** For lighter lines **/
 $estyn-footertext: #9DB2C0;
 $estyn-white: #FFFFFF;
 $border-radius-form: 4px;
-$border-radius-sm: 10px;
-$border-radius-lg: 29px;
+/* $border-radius-sm: 10px;
+$border-radius-lg: 29px; */
 
 /** 
 
@@ -43,6 +48,8 @@ $esytn-signpost-verylightbrown: #F6D5C3;
 $esytn-signpost-green: #C4EDBB;
 $esytn-signpost-green2: #D9EAAB;
 
+/** Override Bootstrap default border colour **/
+$border-color: $estyn-bluegrey;
 
 /** Bootstrap form inputs overrides **/
 $input-font-family: "PT Sans", sans-serif;
@@ -52,6 +59,33 @@ $input-color: $estyn-darkblue;
 $input-border-color: $estyn-bluegrey;
 $input-border-radius: $border-radius-form;
 $input-border-width: 1px;
+
+/** Bootstrap nav overrides **/
+$navbar-light-color: $estyn-blue;
+$navbar-toggler-font-size: var(--navbar-toggler-font-size);
+$navbar-light-toggler-border-color: transparent;
+/* Nav mobile burger menu icon */
+$navbar-light-toggler-icon-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='#{$estyn-blue}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+$navbar-toggler-padding-x: 0;
+$navbar-brand-margin-end: var(--navbar-brand-margin-right);
+$navbar-toggler-focus-width: 0;
+
+
+@import 'bootstrap/scss/bootstrap';
+@import 'common/fonts';
+
+.navbar-toggler {
+    /** Change the nav burger icon into an X. For some reason, using our own CSS variable didn't work **/
+    &:not(.collapsed) {
+        --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'><path stroke='%232A7AB0' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M7 7l16 16M23 7L7 23'/></svg>");
+    }
+}
+
+/* Define a variable called estyn-blue with value #DCEEFE
+$estyn-blue: #DCEEFE;
+*/
+
+
 
 /** Padding and margin (using Bootstrap stuff) **/
 $p-1: map-get($spacers, 1);
@@ -64,6 +98,24 @@ $m-2: $p-2;
 $m-3: $p-3;
 $m-4: $p-4;
 $m-5: $p-5;
+
+.colour-black {
+    color: black;
+}
+
+.wtimprove-spacer {
+    max-width: 60px;
+    width: 100%;
+}
+
+.pt-share-button-container {
+    .btn, .btn-outline-info {
+        @include media-breakpoint-down(sm) {
+            border: none;
+            padding: 0;
+        }
+    }
+}
 
 body {
     background-color: $estyn-white;
@@ -94,10 +146,43 @@ body {
     } */
 }
 
+
+
+.bg-estyn-blue {
+    background-color: $estyn-blue;
+}
 .bg-blue {background-color: $estyn-blue}
 .bg-darkblue {background-color: $estyn-darkblue}
 .bg-lightblue {background-color: $estyn-lightblue}
 .bg-white {background-color:$estyn-white}
+
+.bg-signpost-blue {background-color: $esytn-signpost-blue;}
+.bg-signpost-lightpink {background-color: $esytn-signpost-lightpink;}
+.bg-signpost-lightpink2 {background-color: $estyn-signpost-lightpink2;}
+.bg-signpost-darkpink {background-color: $esytn-signpost-darkpink;}
+.bg-signpost-lime {background-color: $esytn-signpost-lime;}
+.bg-signpost-verylightbrown {background-color: $esytn-signpost-verylightbrown;}
+.bg-signpost-green {background-color: $esytn-signpost-green;}
+.bg-signpost-green2 {background-color: $esytn-signpost-green2;}
+
+.border-white {
+    border-color: white !important;
+}
+
+.bg-transparent-even-when-active {
+    background-color: transparent !important;
+
+    &:active {
+        background-color: transparent !important;
+    }
+}
+
+pre {
+    code {
+        word-break: break-all;
+        text-wrap: wrap;
+    }
+}
 
 /** TYPOGRAPHY **/
 
@@ -134,10 +219,38 @@ p, li {
         font-weight: 400;
         font-style: normal;
     }
+
+    .rounded-circle {
+        background: $estyn-footertext;
+    
+        span {
+            color: $estyn-darkblue;
+            font-size: 18px;
+            line-height: 18px;
+    
+            a {
+                color: $estyn-darkblue;
+            }
+        }
+    }
 }
 
 
+.magic-responsive-image-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+    overflow: hidden;
 
+    img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
 
 
 h1 {
@@ -208,6 +321,14 @@ blockquote {
     position:relative;
     margin-bottom: 1.6rem;
 
+    p {
+        font-style: italic;
+    }
+
+    @include media-breakpoint-down(lg) {
+        padding-left: $p-4;
+    }
+
     &::before {
         content: '';
         position:absolute;
@@ -216,6 +337,10 @@ blockquote {
         bottom:0;
         width:2px;
         background-color: $estyn-blue;
+
+        @include media-breakpoint-down(lg) {
+            left: 0;
+        }
     }
 }
 
@@ -224,6 +349,7 @@ blockquote {
     border-radius: 500px;
     padding: 0.8rem 1.2rem;
 }
+
 .input-group {
     .btn {
         border-radius: $border-radius-sm;
@@ -325,10 +451,13 @@ blockquote {
     padding: 0;
     font-size: 18px;
     color: $estyn-white;
+    text-decoration: none;
 }
 .homeHero .btn-link.focus, .homeHero .btn-link:focus, .homeHero .btn-link:not(:disabled):not(.disabled):active, .homeHero .btn-link:hover {
     color: $estyn-lightblue;
 }
+
+
 
 hr {
     height: 1px;
@@ -336,7 +465,11 @@ hr {
     background-color: $estyn-bluegrey;
     opacity: 1;
 
-    margin: $m-5 0;
+    margin: $m-4 0;
+
+    @include media-breakpoint-down(sm) {
+        margin: $m-4 0;
+    }
 
     &:not([size]) {
         height: 1px;
@@ -346,6 +479,12 @@ hr {
         height: 4px;
         color: $estyn-green;
         background-color: $estyn-green;
+
+        margin: $m-4 0;
+
+        @include media-breakpoint-down(sm) {
+            margin: $m-3 0 $m-4 0;
+        }
     }
 
     &.hrnav{
@@ -395,6 +534,32 @@ hr {
             line-height: 18px;
         }
     }
+
+    .navbar-collapse {
+        
+        
+        transition: height ease-in 100ms;
+
+        @include media-breakpoint-down(xl) {
+            min-height: 100vh;
+        }
+
+        hr {
+            position: absolute;
+            top: 68px;
+            left: 0;
+
+            color: $estyn-lightblue;
+
+            @include media-breakpoint-down(xl) {
+                top: 94px;
+            }
+
+            @include media-breakpoint-down(sm) {
+                top: 72px;
+            }
+        }
+    }
 }
 .nav-item {
     &.dropdown {
@@ -409,6 +574,14 @@ hr {
     color: $estyn-blue;
     border-right: 1px solid $estyn-lightblue;
     margin-bottom: 0;
+
+    @include media-breakpoint-down(xl) {
+        border-right: none;
+    }
+
+    @include media-breakpoint-down(sm) {
+        font-size: 16px;
+    }
     
     &.nav-search, &.nav-language {
         border-right: none; /* Remove border lines to right */
@@ -418,6 +591,10 @@ hr {
         
         .nav-link {
             border-right: 1px solid $estyn-lightblue;
+
+            @include media-breakpoint-down(xl) {
+                border-right: none;
+            }
         }
     }
 
@@ -433,6 +610,13 @@ hr {
             font-style: normal; /* Add this line for sharp style */
             content: '\f107';
             font-weight: 900;
+
+            @media (max-width: 1280px) {
+                margin-left: 0.5em;
+            }
+            @include media-breakpoint-down(xl) {
+                display: none;
+            }
         }
     }
 }
@@ -440,11 +624,58 @@ hr {
 .nav-item-no-border {
     border-right: none; /* Remove border lines to right */
 }
+
+header {
+    .nav-link {
+        &.dropdown-toggle {
+            &.show {
+                /* On mobile, when one of the main nav's dropdowns is open,
+                    the toggler that was clicked changes to a 'Back' button,
+                    which needs to have no padding etc. */
+                @include media-breakpoint-down(xl) {
+                    padding: 0;
+                    margin: 0;
+                    line-height: normal;
+                }
+            }
+        }
+    }
+}
+
 .navbar-expand-xl {
     .navbar-nav {
         .nav-link {
             padding-right: 2rem;
             padding-left: 2rem;
+
+            @media (max-width: 1370px) {
+                padding-right: 0.9rem;
+                padding-left: 0.9rem;
+            }
+
+            @include media-breakpoint-down(sm) {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+
+        }
+
+        .nav-language {
+            .nav-link {
+                padding-right: 2rem;
+                padding-left: 2rem;
+    
+                @media (max-width: 1344px) {
+                    padding-right: 1.5rem;
+                    padding-left: 1.5rem;
+                }
+    
+                @include media-breakpoint-down(sm) {
+                    padding-left: 1.5rem;
+                    padding-right: 1.5rem;
+                }                
+            }
         }
     }
 }
@@ -465,6 +696,7 @@ hr {
     float:left;
     clear:both;
 }
+
 .nav-item-sub {
     font-size: 14px;
     line-height: 14px;
@@ -473,6 +705,9 @@ hr {
 }
 
 .dropdown-menu {
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+
     &.megaMenu {
         left:0;
         right:0;
@@ -493,6 +728,26 @@ hr {
         right:0;
         margin-top: 1px; /* to show border line */
     }
+
+    &.search-menu {
+        transition: height ease-in 100ms;
+        height: 0;
+
+        &.show {
+            position: fixed;
+            top: 110px;
+            height: auto;
+
+            @include media-breakpoint-down(xl) {
+                top: 98px;
+                height: 100%;
+            }
+
+            @include media-breakpoint-down(sm) {
+                top: 72px;
+            }
+        }
+    }
 }
 .megaMenuFeature {
     position:relative;
@@ -504,6 +759,11 @@ hr {
         right:0;
         bottom:0;
         border:1px solid $estyn-lightblue;
+
+        @include media-breakpoint-down(md) {
+            top: 100%;
+            width: 100%;
+        }
     }
 
     .sp-text {
@@ -554,10 +814,22 @@ hr {
 .insideHero, .homeHero {
     width:100%;
     height:700px;
+
+    @include media-breakpoint-down(sm) {
+        height: 505px;
+    }
+
     position:relative;
+    
 }
 .insideHeroContent, .homeHeroContent {
     margin-bottom:200px;
+
+    @include media-breakpoint-down(sm) {
+        margin-bottom: 50px;
+    }
+
+    color: $estyn-white;
 }
 .heroImage {
     z-index: -2;
@@ -595,7 +867,7 @@ hr {
     content: '';
     position: absolute;
     background-color:  $estyn-green;
-    bottom: -20px;
+    bottom: -30px;
     left:0;
     width:327px;
     height:4px;
@@ -610,8 +882,94 @@ hr {
             margin-bottom: $m-3;
         }
     }
+
+    .intro-image-container {
+        &.crop-portrait {
+            position: relative;
+            width: 100%;
+            /* padding-top: 133.33%; */ /* 3:4 aspect ratio */
+            padding-top: 119.33%;
+            /* padding-top: 100%; */
+            overflow: hidden;
+
+            @include media-breakpoint-down(md) {
+                padding-top: 300px;
+                width: 250px;
+            }
+
+            img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center top;
+            }
+        }
+
+        @include media-breakpoint-down(md) {
+            &:not(.crop-portrait) {
+                img {
+                    width: 250px;
+                }
+            }
+        }
+    }
 }
-.homeIntro {background-color: $estyn-blue;}
+.homeIntro {
+    background-color: $estyn-blue;
+
+    h2, p, .form-label {
+        color: $estyn-white;
+    }
+    
+    .form-label {
+        font-size: 20px;
+
+        @include media-breakpoint-down(lg) {
+            font-size: 18px;
+        }
+
+        @include media-breakpoint-down(sm) {
+            font-size: 16px;
+        }
+    }    
+
+    .form-control {
+        color: $estyn-darkblue;
+        background-color: #7EB1D6;
+        background-clip: padding-box;
+        border: 1px solid $estyn-lightbluegrey;
+        border-radius: $border-radius-sm;
+    }
+
+    .input-group {
+        .btn-secondary{
+            border: 1px solid $estyn-lightbluegrey;
+        }
+    }
+
+    .estyn-search-box {
+        .btn, .btn-secondary {
+            padding: 0.8rem 1.2rem;
+
+            @include media-breakpoint-down(md) {
+                padding: 0.5rem 1rem;
+                border-top-right-radius: 6px;
+                border-bottom-right-radius: 6px;
+            }
+        }
+
+        input[type="text"] {
+            @include media-breakpoint-down(md) {
+                border-top-left-radius: 6px;
+                border-bottom-left-radius: 6px;
+            }
+        }
+    }
+}
+
 .insideIntroArc, .homeIntroArc {margin-top: -71px;} /*Make this the same as the height of the SVG*/
 .insideIntroArc svg, .homeIntroArc svg {width:100%;}
 .insideIntro p {
@@ -619,27 +977,17 @@ hr {
     line-height: 33px;
     margin-bottom: 1.8rem;
 }
-.homeIntro h2, .homeIntro p, .homeIntro .form-label {color: $estyn-white;}
-.homeIntro .form-label {font-size: 20px;}
+
+
 .homeProviderCol {
     border-right: 1px solid #6AA2C8;
-}
-.homeIntro .form-control {
-    color: $estyn-darkblue;
-    background-color: #7EB1D6;
-    background-clip: padding-box;
-    border: 1px solid $estyn-lightbluegrey;
-    border-radius: $border-radius-sm;
-}
-.homeIntro .input-group .btn-secondary{
-    border: 1px solid $estyn-lightbluegrey;
 }
 
 /** Signposting **/
 .sp-icon-cont {
     width: 72px;
     height: 72px;
-    border-radius: $border-radius-sm;
+    border-radius: $border-radius-lg;
     background-color: $estyn-blue;
 
     i {
@@ -715,7 +1063,8 @@ p.sp-desc {
 .searchFilter .accordion-body {
     padding: 1rem 0;
 }
-.searchResourceType, .searchResourceDate {
+
+.searchResourceType, .searchResourceDate, .searchResourceExtra {
     font-family: "Source Sans 3", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
@@ -723,7 +1072,9 @@ p.sp-desc {
     font-size:12px;
 }
 .searchResourceType {font-weight: 600;}
-.searchResourceDate {font-weight: 400;}
+.searchResourceDate, .searchResourceExtra {font-weight: 400;}
+
+
 
 /** Full report **/
 .reportContents .list-group-item {
@@ -751,6 +1102,31 @@ p.sp-desc {
     margin-right: -50vw;
 }
 
+.ctaSearchMapContainer, .cta.ctaSearchMapContainer {
+    .card-body {
+        @include media-breakpoint-down(lg) {
+            margin-bottom: 0;
+        }
+    }
+
+    .input-group {
+        .btn {
+            @include media-breakpoint-down(sm) {
+                padding: 0.5rem 1rem;
+                border-top-right-radius: 6px;
+                border-bottom-right-radius: 6px;
+            }
+        }
+
+        input[type="text"] {
+            @include media-breakpoint-down(md) {
+                border-top-left-radius: 6px;
+                border-bottom-left-radius: 6px;
+            }
+        }
+    }
+}
+
 /** CTA **/
 .cta {
     width: 100vw;
@@ -761,29 +1137,26 @@ p.sp-desc {
     margin-right: -50vw;
 
     img {
-        position: absolute;
-        height: 100%;
-        left: 50%;
-        width: 100%;
-        transform: translate(-50%, 0);
         object-fit: contain;
+/*         &:not(.breakOut) {
+            position: absolute;
+            height: 100%;
+            left: 50%;
+            width: 100%;
+            transform: translate(-50%, 0);
+            object-fit: contain;
 
-        &:not(.breakOut) {
             @include media-breakpoint-down(md) {
                 position: static;
+                width: 300px;
                 max-width: 100%;
                 height: auto;
-                width: auto;
                 transform: none;
             }
-        }
+        } */
 
         &.breakOut {
-            position: static;
             max-width: 100%;
-            width: auto;
-            height: auto;
-            transform: none;
             
             margin-bottom: -25%;
             margin-top: -8%;
@@ -801,25 +1174,65 @@ p.sp-desc {
 
         &.ctaSearchMap {
             @include media-breakpoint-down(xxl) {
-                max-width: 80%;
+                /* max-width: 80%; */
             }
-            max-width: 61%;
+            /* max-width: 61%; */
+
+            margin-bottom: -19%;
+            height: 513px;
+
+            @include media-breakpoint-down(lg) {
+                margin-top: 0;
+                margin-bottom: -10%;
+            }
+
+            @include media-breakpoint-down(sm) {
+                height: auto;
+                width: min(100%, 277px);
+            }
         }
     }
 
     .cta-search-col {
         input {
             font-family: "PT Sans", sans-serif;
-            color: $estyn-blue;
+            color: $estyn-lightblue;
+            font-size: 24px;
+
+            @include media-breakpoint-down(sm) {
+                font-size: 16px;
+            }
             
             &::placeholder {
                 font-family: "PT Sans", sans-serif;
                 color: $estyn-blue;
             }
+
+            &[type="text"] {
+                border-color: $estyn-blue;
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+        }
+
+        .ctaSearchBoxContainer {
+            position: absolute;
+            top: 75%;
+            right: 0px;
+            width: 100%;
+
+            @include media-breakpoint-down(sm) {
+                padding-left: $card-spacer-x;
+                padding-right: $card-spacer-x;
+            }
         }
 
         .input-group {
-            width: 70%;
+            width: 100%;
+
+            @include media-breakpoint-down(lg) {
+                width: min(100%, 511px);
+            }
         }
     }
 }
@@ -829,7 +1242,12 @@ p.sp-desc {
     &.card-cta {
         background-color: $estyn-lightblue;
         
-        border-radius: $border-radius-lg;
+        border-radius: $border-radius-xxl;
+
+        @include media-breakpoint-down(sm) {
+            border-radius: $border-radius-lg;
+        }
+
         border: none;
         
 
@@ -861,10 +1279,25 @@ p.sp-desc {
 }
 
 .ctaArcMap {
-    top: 200px;
+    top: 24%;
+
+    @include media-breakpoint-down(md) {
+        top: 19%;
+    }
 
     svg {
         width: 100%;
+    }
+}
+
+.ctaArcMapBGFiller {
+    top: 38%;
+    z-index: -1;
+    height: 481px;
+
+    @include media-breakpoint-down(md) {
+        top: 33%;
+        height: 616px;
     }
 }
 
@@ -888,6 +1321,39 @@ p.sp-desc {
         display: block;
         width: auto;
     } */
+
+    .btn {
+        padding: 0.5rem 1.2rem;
+
+        @include media-breakpoint-down(sm) {
+            padding-top: 0;
+        }
+
+        &.pt-carousel-arrow {
+            font-size: 24px;
+
+            padding-top: 0;
+            padding-bottom: 0;
+
+            text-decoration: none;
+
+            @include media-breakpoint-down(sm) {
+                font-size: 18px;
+                padding-right: 0.3rem;
+            }
+        }
+    }
+
+    .btn-outline-primary {
+        line-height: normal;
+
+        @include media-breakpoint-down(sm) {
+            border: none;
+            text-decoration: underline;
+            padding-left: 0;
+        }
+    }
+
     .card {
         min-width: 456px;
         overflow: hidden;
@@ -971,7 +1437,7 @@ p.sp-desc {
     width: 100%;
     padding-top: 60%;
     position: relative;
-    border-radius: $border-radius-sm;
+    border-radius: $border-radius-lg;
     overflow: hidden;
 
     img {
@@ -1020,9 +1486,39 @@ p.sp-desc {
             color: $estyn-white;
         }
 
-        &:hover .searchResourceType, &:hover .searchResourceDate {
+        &:hover .searchResourceType, &:hover .searchResourceDate, &:hover .searchResourceExtra {
             color: $estyn-white;
         }
+
+        &.highlighted-vacancy {
+            background-color: $estyn-lightgreen;
+
+            .searchResourceType {
+                background-color: $estyn-green;
+                padding: $p-1 $p-2;
+                border-radius: $border-radius-lg;
+                margin-bottom: $m-2;
+            }
+        }
+    }
+}
+
+.resource-creator {
+    .resource-creator-circle-image {
+        width: 58px;
+        height: 58px;
+        object-fit: cover;
+
+        @include media-breakpoint-down(sm) {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    font-size: 16px;
+
+    @include media-breakpoint-down(sm) {
+        font-size: 14px;
     }
 }
 
@@ -1032,6 +1528,15 @@ p.sp-desc {
     border: 1px solid $estyn-darkblue;
     border-radius: $border-radius-form;
 } */
+
+.register-for-updates {
+    .form-control {
+        color: $estyn-darkblue;
+        background-color: $estyn-lightblue;
+        border: 1px solid $estyn-darkblue;
+        border-radius: $border-radius-form;
+    }
+}
 
 .footer {
     .list-group-item {
@@ -1087,16 +1592,17 @@ p.sp-desc {
     left: 0;
 }
 
-.rounded-circle {
-    background: $estyn-footertext;
-
-    span {
+.dot-link-arrow {
+    a, a:focus, a:visited, a:active {
         color: $estyn-darkblue;
-        font-size: 18px;
-        line-height: 18px;
+        text-decoration: none;
 
-        a {
-            color: $estyn-darkblue;
+        font-family: "museo", serif;
+        font-size: 18px;
+        font-weight: 700;
+
+        @include media-breakpoint-down(sm) {
+            font-size: 14px;
         }
     }
 }
@@ -1104,7 +1610,16 @@ p.sp-desc {
 .wp-block-file {
 
     font-size: inherit;
+
     margin-bottom: 0;
+
+    & + & {
+        margin-top: $m-1;
+
+        @include media-breakpoint-up(sm) {
+            margin-top: $m-3;
+        }
+    }
 
     &:not(.wp-element-button) {
         font-size: inherit;
@@ -1115,7 +1630,7 @@ p.sp-desc {
             Similar to .resourceList .list-group-item
         **/
         background-color: $estyn-lightblue;
-        margin: $m-3 0;
+        /* margin: $m-3 0; */
         padding: .8rem 1rem;
         border: none;
         border-radius: $border-radius-sm;
@@ -1138,20 +1653,34 @@ p.sp-desc {
         }
 
         @include media-breakpoint-down(lg) {
-            margin: .25rem 0;
+            /* margin: .25rem 0; */
             padding: .7rem 0.9rem;
             font-size: 15px;
             line-height: 23px;
         }
 
         @include media-breakpoint-down(sm) {
-            margin: .2rem 0;
-            padding: .6rem 0.8rem;
+            /* margin: .2rem 0; */
+            padding: .8rem 0.8rem;
             font-size: 14px;
             line-height: 22px;
         }
     }
 
+}
+
+.wp-block-image {
+    img {
+        aspect-ratio: auto !important;
+    }
+}
+
+.search-results-loading-indicator-container {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translate(-50%, 0);
+    overflow: hidden;
 }
 
 /** Rogue Media Queries **/
@@ -1166,12 +1695,12 @@ p.sp-desc {
 @media (max-width: 992px) {
     :root {
         /** Border Radius **/
-        --border-radius-lg: 16px;
+        /* --border-radius-lg: 16px; */
     }
 
-    .navbar-brand img {
+/*     .navbar-brand img {
         width: 160px;
-    }
+    } */
 
     p, li, .reportMain p, .insideIntro p, .card.card-cta p, .reportMain li, blockquote {
         font-size: 18px;
@@ -1276,12 +1805,13 @@ p.sp-desc {
 @media (max-width: 576px) {
     :root {
         /** Border Radius **/
-        --border-radius-sm: 8px;
-        --border-radius-lg: 10px;
+        /* --border-radius-sm: 8px;
+        --border-radius-lg: 10px; */
     }
 
     .navbar-brand img {
         width: 86px;
+        margin-top: 3px;
     }
 
     p, li, .reportMain p, .insideIntro p, .card.card-cta p, .reportMain li, blockquote {
@@ -1370,7 +1900,7 @@ p.sp-desc {
     }
 
     :root {
-        --border-radius-lg: 10px;
+       /*  --border-radius-lg: 10px; */
     }
 
     .slideMenu .card {

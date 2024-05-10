@@ -9,18 +9,18 @@
     <div class="container h-100 w-100 d-flex align-items-end mb-5 pb-5 px-md-4 px-xl-5">
       <div class="row flex-fill">
         <div class="col-12 col-md-10 col-lg-8 col-xl-6 homeHeroContent">
-          <h1>Placing learners at the heart of our work</h1>
-          <a class="btn btn-link mt-4">Read more about what we do <i class="fa-sharp fa-solid fa-arrow-right"></i></a>
+          <h1>{{ __('Placing learners at the heart of our work', 'sage') }}</h1>
+          <a class="btn btn-link mt-1">{{ __('Read more about what we do') }} <i class="fa-sharp fa-solid fa-arrow-right"></i></a>
         </div>
       </div>
     </div>
     <div class="heroImage">
-      <img src="https://annual-report.estyn.gov.wales/app/uploads/2023/12/attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg"/>
+      <img src="{{ asset('images/homeherofallback.png') }}"/>
     </div>
     <div class="heroOverlay"></div>
   </div>
   <!-- Arc for larger screens -->
-  <div class="insideIntroArc position-relative w-100 d-none d-md-block">
+  <div id="homeInsideIntroArcLarge" class="insideIntroArc position-relative w-100 d-none d-md-block">
     <svg width="1600" height="71" viewBox="0 0 1600 71" preserveAspectRatio="none">
       <path d=
       "M0,54.7C0,54.7,392,0,792,0s808,54.7,808,54.7v16.4H0V54.7z" 
@@ -35,17 +35,17 @@
       fill="#2A7AB0" />
     </svg>
   </div>
-  <div class="homeIntro position-relative w-100">
+  <div id="homeIntro" class="homeIntro position-relative w-100">
     <div class="container px-md-4 px-xl-5">
       <div class="row d-flex justify justify-content-center">
-        <div class="col-12 my-5">
+        <div class="col-12 my-4 my-sm-5">
           <div class="row">
-            <div class="col-12 col-md-6 homeProviderCol">
+            <div id="homeProviderCol" class="col-12 col-md-6 homeProviderCol">
               <div class="row">
                 <div class="col-12 col-md-10">
-                  <h2>Find a provider</h2>
-                  <label for="providerSearch" class="form-label">Search our education & training providers</label>
-                  <div class="input-group mb-3">
+                  <h2 class="mb-0 mb-sm-2">{{ __('Find a provider', 'sage') }}</h2>
+                  <label for="providerSearch" class="form-label mb-2 mb-md-4">{{ __('Search our education & training providers', 'sage') }}</label>
+                  <div class="input-group mb-3 estyn-search-box">
                     <input type="text" class="form-control" placeholder="" aria-label="providerSearch" aria-describedby="providerSearch">
                     <button class="btn btn-secondary" type="button" id="providerSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
                   </div>
@@ -53,11 +53,11 @@
               </div>
             </div>
             <div class="col-12 col-md-5 offset-md-1">
-              <h2>Estyn for you</h2>
-              <p>Search our education & training providers</p>
-              <div class="d-flex align-items-start flex-column flex-xxl-row">
-                <a class="btn btn-outline-light me-4 mb-3">Parents, carers & learners</a>
-                <a class="btn btn-outline-light me-4 mb-3">Education professionals</a>
+              <h2 class="d-none d-md-block mb-sm-2">{{ __('Estyn for you', 'sage') }}</h2>
+              <p class="d-none d-md-block mb-2 mb-md-4">{{ __('Search our education & training providers', 'sage') }}</p>
+              <div class="d-flex align-items-start flex-column flex-sm-row flex-md-column flex-xxl-row">
+                <a class="btn btn-outline-light me-4 mb-3">{{ __('Parents, carers & learners', 'sage') }}</a>
+                <a class="btn btn-outline-light me-4 mb-3">{{ __('Education professionals', 'sage') }}</a>
               </div>
             </div>
           </div>
@@ -65,14 +65,15 @@
       </div>
     </div>
   </div>
-  @include('partials.signposting')
+  @include('partials.home-page-signposting')
   @include('partials.cta', [
-    'ctaHeading' => 'Who are Estyn?',
-    'ctaText' => 'Estyn inspects education and training in Wales. Find out how and why we exist, and our vision for education in Wales',
-    'ctaButtonLinkURL' => '/about-us',
-    'ctaButtonText' => 'About Estyn',
+    'ctaHeading' => __('Who are Estyn?', 'sage'),
+    'ctaText' => __('Estyn inspects education and training in Wales. Find out how and why we exist, and our vision for education in Wales', 'sage'),
+    'ctaButtonLinkURL' => __('/about-us', 'sage'),
+    'ctaButtonText' => __('About Estyn', 'sage'),
     'ctaImageURL' => @asset('images/inspection1.png'),
-    'ctaImageAlt' => 'Estyn inspection'
+    'ctaImageAlt' => __('Estyn inspection', 'sage'),
+    'noPY' => true
   ])
 
   @php
@@ -102,14 +103,16 @@
     $sliderItems = array_merge($sliderItems, $sliderItems);
   @endphp
 
+<div class="mt-4 mt-sm-5">
   @include('partials.slider', [
     'carouselID' => 'estyn-home-carousel',
-    'carouselHeading' => 'Ways to improve',
-    'carouselDescription' => 'Our most recent resources to help you improve your setting',
-    'carouselButtonText' => 'All resources',
+    'carouselHeading' => __('Ways to improve', 'sage'),
+    'carouselDescription' => __('Our most recent resources to help you improve your setting', 'sage'),
+    'carouselButtonText' => __('All resources', 'sage'),
     'carouselItems' => $sliderItems,
     'doNotDoJavaScript' => false
   ])
+</div>
 
 {{-- 'Our work' section (old design) --}}
 {{--
@@ -160,27 +163,32 @@
 	</div>
 </div>
 --}}
+<div id="home-map-search-section">
   @include('partials.cta', [
-    'ctaHeading' => 'Our education map of Wales',
-    'ctaText' => 'Find providers across Wales using our handy map',
+    'ctaHeading' => __('Our education map of Wales', 'sage'),
+    'ctaText' => __('Find providers across Wales using our handy map', 'sage'),
     'ctaButtonLinkURL' => '/news',
-    'ctaButtonText' => 'Search the map',
+    'ctaButtonText' => __('Search the map', 'sage'),
     'ctaImageURL' => asset('images/map.svg'),
-    'ctaImageAlt' => 'Map of Wales',
+    'ctaImageAlt' => __('Map of Wales', 'sage'),
     'imageBreakOut' => true,
     'imageExtraClasses' => 'ctaSearchMap',
     'showSearchBox' => true,
-    'darkArc' => true
+    'darkArc' => true,
+    'ctaContainerExtraClasses' => 'ctaSearchMapContainer'
   ])
+</div>
 
-@include('partials.slider', [
-    'carouselID' => 'estyn-home-latest-news-carousel',
-    'carouselHeading' => 'Latest articles',
-    'carouselDescription' => 'Blog posts and news articles from Estyn',
-    'carouselButtonText' => 'All articles',
-    'carouselItems' => $sliderItems,
-    'doNotDoJavaScript' => false
-  ])
+  <div class="mt-5">
+    @include('partials.slider', [
+        'carouselID' => 'estyn-home-latest-news-carousel',
+        'carouselHeading' => __('Latest articles', 'sage'),
+        'carouselDescription' => __('Blog posts and news articles from Estyn', 'sage'),
+        'carouselButtonText' => __('All articles', 'sage'),
+        'carouselItems' => $sliderItems,
+        'doNotDoJavaScript' => false
+      ])
+  </div>
 
   @while(have_posts()) @php(the_post())
     {{-- @include('partials.content-page') --}}

@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import domReady from '@roots/sage/client/dom-ready';
 
 /**

@@ -34,7 +34,7 @@ export default async (app) => {
    */
   app
     .setUrl('http://127.0.0.1:3000')
-    .setProxyUrl('http://127.0.0.1:8012')
+    .setProxyUrl('http://127.0.0.1:8013')
     .watch(['resources/views', 'app']);
 
   /**

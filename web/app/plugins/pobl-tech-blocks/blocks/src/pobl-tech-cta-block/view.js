@@ -23,3 +23,16 @@
 /* eslint-disable no-console */
 //console.log( 'Hello World! (from create-block-pobl-tech-cta-block block)' );
 /* eslint-enable no-console */
+
+// Scale the image so it looks good in relation to the height of
+// the text content
+jQuery(document).ready(function($) {
+    $('.pt-cta-block').each(function() {
+        const elemID = $(this).attr('id');
+
+        const contentHeight = $('#' + elemID + ' .pt-cta-content').height();
+        const height = contentHeight * 1.25; // 125% of the text content's height
+
+        $('#' + elemID + ' .pt-cta-image:not(.breakOut)').css('height', height);
+    });
+});

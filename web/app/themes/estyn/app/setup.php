@@ -8,13 +8,23 @@ namespace App;
 
 use function Roots\bundle;
 
+// Output error_log() etc. to the terminal. TODO: Remove this in production.
+ini_set('error_log', 'php://stdout');
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 /**
  * Register the theme assets.
  *
  * @return void
  */
 add_action('wp_enqueue_scripts', function () {
-    bundle('app')->enqueue();
+    bundle('app')->enqueue()->localize('estyn', [
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'resources_search_rest_url' => rest_url('estyn/v1/resources_search/'),
+        'nonce' => wp_create_nonce('wp_rest'),
+    ]);
 }, 100);
 
 /**
@@ -126,7 +136,7 @@ add_action('widgets_init', function () {
 /**
  * Register 'estyn_thematic_report' post type.
  */
-add_action('init', function () {
+/* add_action('init', function () {
     register_post_type('estyn_thematicreport', [
         'labels' => [
             'name' => __('Thematic Reports', 'sage'),
@@ -139,7 +149,7 @@ add_action('init', function () {
         'rewrite' => ['slug' => 'thematic-reports'],
         'show_in_rest' => true, // Enable Gutenberg editor
     ]);
-});
+}); */
 
 /**
  * Register 'estyn_newsarticle' post type.
@@ -152,7 +162,7 @@ add_action('init', function () {
         ],
         'public' => true,
         'has_archive' => true,
-        'menu_icon' => 'dashicons-media-document',
+        'menu_icon' => 'dashicons-admin-site-alt',
         'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
         'rewrite' => ['slug' => 'news-articles'],
         'show_in_rest' => true, // Enable Gutenberg editor
@@ -170,11 +180,14 @@ add_action('init', function () {
         ],
         'public' => true,
         'has_archive' => true,
-        'menu_icon' => 'dashicons-media-document',
+        'menu_icon' => 'dashicons-hammer',
         'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
         'rewrite' => ['slug' => 'improvement-resources'],
         'show_in_rest' => true, // Enable Gutenberg editor
     ]);
+
+    // Add tag support
+    register_taxonomy_for_object_type('post_tag', 'estyn_imp_resource');
 });
 
 /**
@@ -214,3 +227,277 @@ function add_improvement_resource_types() {
     }
 }
 add_action('init', __NAMESPACE__ . '\\add_improvement_resource_types');
+
+/**
+ * Register 'estyn_eduprovider' post type.
+ */
+add_action('init', function () {
+    register_post_type('estyn_eduprovider', [
+        'labels' => [
+            'name' => __('Providers', 'sage'),
+            'singular_name' => __('Provider', 'sage'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-welcome-learn-more',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
+        'rewrite' => ['slug' => 'education-providers'],
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ]);
+});
+
+/**
+ * Register the Inspection Report post type.
+ */
+add_action('init', function () {
+    register_post_type('estyn_inspectionrpt', [
+        'labels' => [
+            'name' => __('Inspection Reports', 'sage'),
+            'singular_name' => __('Inspection Report', 'sage'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-clipboard',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
+        'rewrite' => ['slug' => 'inspection-reports'],
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ]);
+});
+
+/**
+ * Create the Sector taxonomy and the Local Authority taxonomy for the Education Providers post type.
+ */
+function create_eduprovider_taxonomies() {
+    $labels = array(
+        'name' => _x( 'Sectors', 'taxonomy general name', 'sage' ),
+        'singular_name' => _x( 'Sector', 'taxonomy singular name', 'sage' ),
+        'search_items' =>  __( 'Search Sectors', 'sage' ),
+        'all_items' => __( 'All Sectors', 'sage' ),
+        'edit_item' => __( 'Edit Sector', 'sage' ),
+        'update_item' => __( 'Update Sector', 'sage' ),
+        'add_new_item' => __( 'Add New Sector', 'sage' ),
+        'new_item_name' => __( 'New Sector Name', 'sage' ),
+        'menu_name' => __( 'Sectors', 'sage' ),
+    );
+
+    register_taxonomy('sector', array('estyn_eduprovider', 'estyn_imp_resource', 'estyn_inspectionrpt'), array(
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => 'sector' ),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+
+    $labels = array(
+        'name' => _x( 'Local Authorities', 'taxonomy general name', 'sage' ),
+        'singular_name' => _x( 'Local Authority', 'taxonomy singular name', 'sage' ),
+        'search_items' =>  __( 'Search Local Authorities', 'sage' ),
+        'all_items' => __( 'All Local Authorities', 'sage' ),
+        'edit_item' => __( 'Edit Local Authority', 'sage' ),
+        'update_item' => __( 'Update Local Authority', 'sage' ),
+        'add_new_item' => __( 'Add New Local Authority', 'sage' ),
+        'new_item_name' => __( 'New Local Authority Name', 'sage' ),
+        'menu_name' => __( 'Local Authorities', 'sage' ),
+    );
+
+    register_taxonomy('local_authority', array('estyn_eduprovider', 'estyn_imp_resource', 'estyn_inspectionrpt'), array(
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => 'local-authority' ),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+}
+add_action( 'init', __NAMESPACE__ . '\\create_eduprovider_taxonomies', 0 );
+
+/**
+ * Create the Status taxonomy for the Education Providers post type.
+ */
+function create_eduprovider_status_taxonomy() {
+    $labels = array(
+        'name' => _x( 'Statuses', 'taxonomy general name', 'sage' ),
+        'singular_name' => _x( 'Status', 'taxonomy singular name', 'sage' ),
+        'search_items' =>  __( 'Search Statuses', 'sage' ),
+        'all_items' => __( 'All Statuses', 'sage' ),
+        'edit_item' => __( 'Edit Status', 'sage' ),
+        'update_item' => __( 'Update Status', 'sage' ),
+        'add_new_item' => __( 'Add New Status', 'sage' ),
+        'new_item_name' => __( 'New Status Name', 'sage' ),
+        'menu_name' => __( 'Statuses', 'sage' ),
+    );
+
+    register_taxonomy('provider_status', array('estyn_eduprovider'), array(
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => 'provider-status' ),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+}
+add_action( 'init', __NAMESPACE__ . '\\create_eduprovider_status_taxonomy', 0 );
+
+/**
+ * Now for our own REST API endpoints
+ */
+add_action('rest_api_init', function () {
+    register_rest_route('estyn/v1', '/resources_search/', array(
+        'methods' => 'GET',
+        'callback' => __NAMESPACE__ . '\\estyn_resources_search',
+        'permission_callback' => function (\WP_REST_Request $request) {
+            $nonce = $request->get_header('X-WP-Nonce');
+            return wp_verify_nonce($nonce, 'wp_rest');
+        },
+    ));
+});
+  
+// For the 'News and blog' page search and filters update (ajax) requests
+function estyn_resources_search(\WP_REST_Request $request) {
+    $params = $request->get_params();
+    error_log(print_r($params, true));
+    
+    $args = [
+        'posts_per_page' => -1,
+        'post_type' => ['post', 'estyn_newsarticle'],
+    ];
+
+    if(isset($params['postType'])) {
+        if($params['postType'] === 'estyn_newsarticle') {
+            $args['post_type'] = 'estyn_newsarticle';
+        } elseif($params['postType'] === 'post') {
+            $args['post_type'] = 'post';
+        } elseif($params['postType'] === 'estyn_imp_resource') {
+            $args['post_type'] = 'estyn_imp_resource';
+        } elseif($params['postType'] === 'estyn_eduprovider') {
+            $args['post_type'] = 'estyn_eduprovider';
+        } elseif($params['postType'] === 'estyn_inspectionrpt') {
+            $args['post_type'] = 'estyn_inspectionrpt';
+        }
+    }
+
+    if(isset($params['year'])) {
+        if(is_numeric($params['year'])) {
+            $args['date_query'] = [
+                [
+                    'year' => $params['year'],
+                ],
+            ];
+        }
+    }
+
+    if(isset($params['searchText']) && !empty($params['searchText'])) {
+        $args['s'] = $params['searchText'];
+    }
+
+    if(isset($params['sort'])) {
+        $args['orderby'] = $params['sort'];
+        if($params['sort'] == 'title') {
+            $args['order'] = 'ASC';
+        } elseif($params['sort'] == 'type' && isset($params['postType']) && $params['postType'] == 'estyn_imp_resource') {
+            // We need to sort by the 'Improvement Resource Type' taxonomy
+            $args['orderby'] = 'tax_query';
+        }
+    }
+
+    if(isset($params['localAuthority']) && term_exists($params['localAuthority']) ) {
+        if(!isset($args['tax_query'])) {
+            $args['tax_query'] = [];
+        }
+        $args['tax_query'][] = [
+            [
+                'taxonomy' => 'local_authority',
+                'field' => 'slug',
+                'terms' => $params['localAuthority'],
+            ],
+        ];
+    }
+
+    if(isset($params['sector']) && term_exists($params['sector']) ){
+        if(!isset($args['tax_query'])) {
+            $args['tax_query'] = [];
+        }
+        $args['tax_query'][] = [
+            [
+                'taxonomy' => 'sector',
+                'field' => 'slug',
+                'terms' => $params['sector'],
+            ],
+        ];
+    }
+
+    // improvement_resource_type
+    if(isset($params['improvementResourceType']) && term_exists($params['improvementResourceType']) ){
+        if(!isset($args['tax_query'])) {
+            $args['tax_query'] = [];
+        }
+        $args['tax_query'][] = [
+            [
+                'taxonomy' => 'improvement_resource_type',
+                'field' => 'slug',
+                'terms' => $params['improvementResourceType'],
+            ],
+        ];
+    }
+
+    if(isset($params['tags'])) {
+        $args['tag'] = $params['tags'];
+    }
+
+    // Merge the request parameters into the query arguments
+    /* $args = array_merge($args, $params); */
+
+    $query = new \WP_Query($args);
+    
+    // Convert the posts to the format expected by the client
+    /* $posts = array_map(function($post) {
+        return [
+            'title' => ['rendered' => $post->post_title],
+            'content' => ['rendered' => $post->post_content],
+        ];
+    }, $posts);
+    return $posts; */
+
+    if($query->found_posts == 0) {
+        return ['html' => __('Sorry, no resources were found based on your search criteria.', 'sage'), 'totalPosts' => 0];
+    }
+
+    $posts = $query->posts;
+    
+    // We'll send the HTML, from the view, instead of the raw post data
+    $items = [];
+    foreach($posts as $post) {
+        $postTypeName = (get_post_type_object(get_post_type($post)))->labels->singular_name;
+        if($postTypeName == 'Post') {
+          $postTypeName = __('Blog post', 'sage');
+        } elseif(strtolower($postTypeName) == 'improvement resource') {
+          // In this case we use the 'Improvement Resource Type' taxonomy to get the type of resource
+            $terms = get_the_terms($post->ID, 'improvement_resource_type');
+            if($terms) {
+                foreach($terms as $index => $term) {
+                    if($index == 0) {
+                        $postTypeName = $term->name;
+                    } else {
+                        $postTypeName .= ', ' . $term->name;
+                    }
+                }
+            }
+        }
+
+        $postTypeName = ucfirst(strtolower($postTypeName));
+
+        $items[] = [
+            'linkURL' => get_permalink($post->ID),
+            'superText' => $postTypeName,
+            'superDate' => get_the_date('d/m/Y', $post->ID),
+            'title' => get_the_title($post->ID),
+        ];
+    }
+
+    $HTML = \Roots\view('components.resource-list', [
+        'items' => $items
+    ]);
+
+    return ['html' => $HTML->render(), 'totalPosts' => $query->found_posts];
+}

@@ -19,7 +19,7 @@
 		$ctaImageURL = $attributes['imageURL'];
 	} else {
 		// map.svg which is in the block's assets/images folder
-		$ctaImageURL = plugins_url('pobl-tech-cta-block/blocks/assets/images/map.svg');
+		$ctaImageURL = plugins_url('pobl-tech-blocks/blocks/assets/images/map.svg');
 		$imageBreakOut = true;
 		$imageExtraClasses = 'ctaSearchMap';
 
@@ -47,7 +47,9 @@
 				'ctaImageAlt' => $ctaImageAlt,
 				'imageBreakOut' => $imageBreakOut,
 				'imageExtraClasses' => $imageExtraClasses,
-				'showSearchBox' => $showSearchBox
+				'showSearchBox' => $showSearchBox,
+				'ctaContainerExtraClasses' => 'pt-cta-block',
+				'noJavaScript' => true
 			]);
 		} catch (InvalidArgumentException $e) {
 			$HTML = '<p>View not found</p>';

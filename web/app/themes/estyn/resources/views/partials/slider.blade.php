@@ -27,38 +27,57 @@
     the JavaScript to make the carousel/s work.
 
  --}}
-<section class="slideMenu py-5 {{ $carouselSectionClass ?? '' }}" id="{{ $carouselID }}">
-	<div class="container px-md-4 px-xl-5">
+<section class="slideMenu {{ $carouselSectionClass ?? '' }}" id="{{ $carouselID }}">
+	<div class="container px-md-4 px-xl-5 mb-4">
+        @if(isset($carouselHeading) && !empty($carouselHeading))
 		<div class="row">
 			<div class="col-12">
-				<h2 class="mb-3 mb-md-4">{{ $carouselHeading }}</h2>
+                @if(isset($carouselHeadingNumber) && !empty($carouselHeadingNumber))
+                    <h{{ $carouselHeadingNumber }}>{{ $carouselHeading }}</h{{ $carouselHeadingNumber }}>
+                @else
+				    <h2 class="mb-2 mb-sm-3">{{ $carouselHeading }}</h2>
+                @endif
 			</div>
 		</div>
-		<div class="row d-flex align-items-end">
-			<div class="col-12 col-md-6">
-				<p>{{ $carouselDescription }}</p>
+        @endif
+        @if(isset($carouselLeftButtons) && !empty($carouselLeftButtons))
+		    <div class="d-flex justify-content-end justify-content-md-between align-items-sm-center">
+        @else
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+        @endif
+			<div class="mb-4 mb-sm-0">
+                @if(isset($carouselDescription) && !empty($carouselDescription))
+				    <p class="mb-0">{{ $carouselDescription }}</p>
+                @endif
+                @if(isset($carouselLeftButtons) && !empty($carouselLeftButtons))
+                    @foreach($carouselLeftButtons as $carouselLeftButton)
+                        <a class="d-none d-md-inline-block btn btn-outline-primary {{ $loop->iteration > 1 ? 'ms-4' : '' }}" href="{{ $carouselLeftButton['link'] }}">{{ $carouselLeftButton['text'] }}</a>
+                    @endforeach
+                @endif
 			</div>
-		    <div class="col-12 col-md-6 d-flex justify-content-between justify-content-md-end mb-3">
-		    	<a class="btn btn-outline-primary">{{ $carouselButtonText }}</a>
+		    <div class="d-flex justify-content-between justify-content-md-end">
+                @if(isset($carouselButtonText) && !empty($carouselButtonText))
+		    	    <a class="btn btn-outline-primary rounded-pill me-sm-4" href="{{ $carouselButtonLink ?? '#' }}">{{ $carouselButtonText }}</a>
+                @endif
 		    	<div class="d-flex justify-content-end">
-				    <a id="{{ $carouselID }}-slideLeft" class="btn btn-link"><i class="fa-sharp fa-solid fa-arrow-left"></i></a>
-				    <a id="{{ $carouselID }}-slideRight" class="btn btn-link"><i class="fa-sharp fa-solid fa-arrow-right"></i></a>
-				  </div>
+				    <a id="{{ $carouselID }}-slideLeft" class="btn btn-link pt-carousel-arrow d-flex flex-column justify-content-center"><i class="fa-sharp fa-solid fa-arrow-left"></i></a>
+				    <a id="{{ $carouselID }}-slideRight" class="btn btn-link pe-0 pt-carousel-arrow d-flex flex-column justify-content-center"><i class="fa-sharp fa-solid fa-arrow-right"></i></a>
+				</div>
 		    </div>
 		</div>
 	</div>
-	<div class="{{ $carouselSliderWrapperClass ?? '' }} scrollCont w-100 overflow-auto my-3 pb-4 pb-md-5" id="{{ $carouselID }}-scrollCont">
+	<div class="{{ $carouselSliderWrapperClass ?? '' }} scrollCont w-100 overflow-auto" id="{{ $carouselID }}-scrollCont">
 	  <div class="container px-md-4 px-xl-5">
 	    <div class="row">
 	        <div class="d-flex flex-row flex-nowrap">
                 <?php foreach($carouselItems as $carouselItem) : ?>
-                    <div class="card me-4 h-100">
+                    <div class="card me-2 me-sm-4 h-100">
                         <div class="slideCardBody">
                             <img class="img-fluid" src="{{ $carouselItem['featured_image_src'] }}"/>
                         </div>
-                        <div class="card-footer py-4 px-0">
+                        <div class="card-footer py-sm-4 pb-0 px-0">
                             <h4 class="mb-0">{{ $carouselItem['title'] }}</h4>
-                            <p>{{ $carouselItem['excerpt'] }}</p>
+                            <p class="mb-0">{{ $carouselItem['excerpt'] }}</p>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -87,12 +106,30 @@
                 let buttonRight = carouselElement.querySelector('#' + carouselID + '-slideRight');
                 let buttonLeft = carouselElement.querySelector('#' + carouselID + '-slideLeft');
 
+                const scrollAmountDesktop = 500;
+                const scrollAmountMobile = 200;
+
+                let scrollAmount = scrollAmountDesktop;
+
+
                 buttonRight.onclick = function () {
-                    carouselSliderElement.scrollLeft += 500;
+                    if(window.innerWidth < 576) {
+                        scrollAmount = scrollAmountMobile;
+                    } else {
+                        scrollAmount = scrollAmountDesktop;
+                    }
+
+                    carouselSliderElement.scrollLeft += scrollAmount;
                 };
 
                 buttonLeft.onclick = function () {
-                    carouselSliderElement.scrollLeft -= 500;
+                    if(window.innerWidth < 576) {
+                        scrollAmount = scrollAmountMobile;
+                    } else {
+                        scrollAmount = scrollAmountDesktop;
+                    }
+
+                    carouselSliderElement.scrollLeft -= scrollAmount;
                 };
             });
         </script>
