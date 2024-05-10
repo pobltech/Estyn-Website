@@ -36,7 +36,7 @@
 														'iconClasses' => 'fa-solid fa-magnifying-glass',
 														'title' => __('Provider search', 'sage'),
 														'description' => __('Find an education & training provider', 'sage'),
-														'linkURL' => 'https://www.google.co.uk',
+														'linkURL' => is_front_page() ? '#homeInsideIntroArcLarge' : get_home_url() . '/#homeInsideIntroArcLarge',
 														'arrow' => true
 													])
 												</div>

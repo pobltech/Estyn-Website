@@ -20,7 +20,7 @@
     <div class="heroOverlay"></div>
   </div>
   <!-- Arc for larger screens -->
-  <div class="insideIntroArc position-relative w-100 d-none d-md-block">
+  <div id="homeInsideIntroArcLarge" class="insideIntroArc position-relative w-100 d-none d-md-block">
     <svg width="1600" height="71" viewBox="0 0 1600 71" preserveAspectRatio="none">
       <path d=
       "M0,54.7C0,54.7,392,0,792,0s808,54.7,808,54.7v16.4H0V54.7z" 
@@ -35,12 +35,12 @@
       fill="#2A7AB0" />
     </svg>
   </div>
-  <div class="homeIntro position-relative w-100">
+  <div id="homeIntro" class="homeIntro position-relative w-100">
     <div class="container px-md-4 px-xl-5">
       <div class="row d-flex justify justify-content-center">
         <div class="col-12 my-4 my-sm-5">
           <div class="row">
-            <div class="col-12 col-md-6 homeProviderCol">
+            <div id="homeProviderCol" class="col-12 col-md-6 homeProviderCol">
               <div class="row">
                 <div class="col-12 col-md-10">
                   <h2 class="mb-0 mb-sm-2">{{ __('Find a provider', 'sage') }}</h2>
