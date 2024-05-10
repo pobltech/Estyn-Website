@@ -1,7 +1,9 @@
 <div class="d-flex justify-content-start">
-    <div class="sp-icon-cont d-flex flex-shrink-0 justify-content-center align-items-center {{ $bgColourClass }}">
+    <div class="sp-icon-cont d-flex flex-shrink-0 justify-content-center align-items-center {{ $bgColourClass ?? '' }}" style="{{ isset($bgColour) ? 'background-color: ' . $bgColour : '' }}">
         @if(isset($svg) && !empty($svg))
             <img src="{{ $svg }}" alt="{{ $iconImageAlt ?? '' }}"/>
+        @elseif(isset($useEstynLogoAsIcon) && $useEstynLogoAsIcon === true)
+            <img src="{{ asset('images/estyn-logo-icon-only-darkblue.svg') }}" alt="{{ __('Estyn logo', 'sage') }}"/>
         @else
             <i class="{{ $iconClasses }}"></i>
         @endif

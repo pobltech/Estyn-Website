@@ -56,6 +56,12 @@ add_action('after_setup_theme', function () {
      */
     register_nav_menus([
         'primary_navigation' => __('Primary Navigation', 'sage'),
+        'main_nav_parents_carers_and_learners_signposts' => __('Signposts for "Parents, Carers, and Learners" - Main Nav', 'sage'),
+        'main_nav_parents_carers_and_learners_right_hand_side_links' => __('Links for "Parents, Carers and Learners" - Main Nav', 'sage'),
+        'main_nav_education_professionals_signposts' => __('Signposts for "Education Professionals" - Main Nav', 'sage'),
+        'main_nav_education_professionals_right_hand_side_links' => __('Education Professionals - Links - Main Nav', 'sage'),
+        'main_nav_about_estyn_signposts' => __('Signposts for "About Estyn" - Main Nav', 'sage'),
+        'main_nav_about_estyn_right_hand_side_links' => __('Links for "About Estyn" - Main Nav', 'sage'),
     ]);
 
     /**
@@ -150,6 +156,37 @@ add_action('widgets_init', function () {
         'show_in_rest' => true, // Enable Gutenberg editor
     ]);
 }); */
+
+/**
+ * Global Items
+ */
+add_action('init', function() { 
+    register_post_type( 'global' , [
+        'labels' => [
+            'name' => _x('Global Items', 'post type general name'),
+            'singular_name' => _x('Global Item', 'post type singular name'),
+            'add_new' => _x('Add New', 'Global Item'),
+            'add_new_item' => __('Add New Global Item'),
+            'edit_item' => __('Edit Global Item'),
+            'new_item' => __('New Global Item'),
+            'view_item' => __('View Global Item'),
+            'search_items' => __('Search Global Items'),
+            'not_found' =>  __('Nothing found'),
+            'not_found_in_trash' => __('Nothing found in Trash'),
+            'parent_item_colon' => ''
+        ],
+        'public' => true,
+        'publicly_queryable' => true,
+        'show_ui' => true,
+        'query_var' => true,
+        'menu_icon' => 'dashicons-admin-site-alt3',
+        'rewrite' => true,
+        'capability_type' => 'post',
+        'hierarchical' => false,
+        'menu_position' => null,
+        'supports' => ['title']
+    ]);
+});
 
 /**
  * Register 'estyn_newsarticle' post type.

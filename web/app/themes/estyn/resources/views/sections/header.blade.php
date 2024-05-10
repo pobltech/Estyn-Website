@@ -30,7 +30,28 @@
           				<div class="row w-100">
           					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
-												<div class="col-12 mb-4 position-relative">
+												@php
+													// Get the nav menu items from the nav menu that is assigned to the 'main_nav_parents_carers_and_learners_signposts' menu location
+													$navMenuLocations = get_nav_menu_locations();
+													$navMenuItems = wp_get_nav_menu_items($navMenuLocations['main_nav_parents_carers_and_learners_signposts']);
+												@endphp
+												@foreach($navMenuItems as $navMenuItem)
+													@php
+														$useEstynLogoAsIcon = get_field('use_estyn_logo_for_the_icon', $navMenuItem->ID) === 'true' ? true : false;
+													@endphp
+													<div class="col-12 mb-4 position-relative">
+														@include('components.signpost', [
+															'bgColour' => get_field('signpost_colour', $navMenuItem->ID),
+															'iconClasses' => 'fa-solid ' . get_field('icon_class', $navMenuItem->ID),
+															'useEstynLogoAsIcon' => $useEstynLogoAsIcon,
+															'title' => $navMenuItem->title,
+															'description' => get_field('description', $navMenuItem->ID),
+															'linkURL' => $navMenuItem->url,
+															'arrow' => true
+														])
+													</div>
+												@endforeach
+												{{--<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
 														'bgColourClass' => 'bg-signpost-lightpink2',
 														'iconClasses' => 'fa-solid fa-magnifying-glass',
@@ -49,18 +70,20 @@
 														'linkURL' => is_front_page() ? '/#home-map-search-section' : get_home_url() . '/#home-map-search-section',
 														'arrow' => true
 													])
-												</div>
+												</div>--}}
 											</div>
 					        	</div>
 						        <div class="col-12 col-md-6 megaMenuMain">
 						        	<div class="row mt-4 mt-md-0">
 						        		<div class="col-md-10 offset-md-2">
-								          <ul aria-labelledby="navbarProfessionalDropdownMenuLink">
-								            <li><a href="https://google.co.uk">{{ __('What Estyn does', 'sage') }}</a></li>
-								            <li><a href="#">{{ __('Parents and carers community', 'sage') }}</a></li>
+{{-- 								          <ul aria-labelledby="navbarProfessionalDropdownMenuLink">
+								            <li><a href="/about-us">{{ __('What Estyn does', 'sage') }}</a></li>
+								            <li><a href="/parents-and-care">{{ __('Parents and carers community', 'sage') }}</a></li>
 								            <li><a href="#">{{ __('What happens during an inspection?', 'sage') }}</a></li>
 											<li><a href="#">{{ __('How do I contact Estyn?', 'sage') }}</a></li>
-								          </ul>	
+								          </ul>	 --}}
+										  {{-- Insert our WordPress 'parents, carers, and learners right-hand-side nav' --}}
+										  {!! wp_nav_menu(['theme_location' => 'main_nav_parents_carers_and_learners_right_hand_side_links', 'menu_class' => '']) !!}
 								        </div>
 								      </div>
 						      	</div>
@@ -92,13 +115,33 @@
           				<div class="row w-100">
           					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
-												<div class="col-12 mb-4 position-relative">
+												@php
+													// Get the nav menu items from the nav menu that is assigned to the 'main_nav_education_professionals_signposts' menu location
+													$navMenuItems = wp_get_nav_menu_items($navMenuLocations['main_nav_education_professionals_signposts']);
+												@endphp
+												@foreach($navMenuItems as $navMenuItem)
+													@php
+														$useEstynLogoAsIcon = get_field('use_estyn_logo_for_the_icon', $navMenuItem->ID) === 'true' ? true : false;
+													@endphp
+													<div class="col-12 mb-4 position-relative">
+														@include('components.signpost', [
+															'bgColour' => get_field('signpost_colour', $navMenuItem->ID),
+															'iconClasses' => 'fa-solid ' . get_field('icon_class', $navMenuItem->ID),
+															'useEstynLogoAsIcon' => $useEstynLogoAsIcon,
+															'title' => $navMenuItem->title,
+															'description' => get_field('description', $navMenuItem->ID),
+															'linkURL' => $navMenuItem->url,
+															'arrow' => true
+														])
+													</div>
+												@endforeach
+												{{--<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
 														'bgColourClass' => 'bg-signpost-lightpink2',
 														'iconClasses' => 'fa-solid fa-file',
 														'title' => __('Improvement Resources', 'sage'),
 														'description' => __('Resources to help providers improve', 'sage'),
-														'linkURL' => 'https://www.google.co.uk',
+														'linkURL' => '#',
 														'arrow' => true
 													])
 												</div>
@@ -108,20 +151,21 @@
 														'iconClasses' => 'fa-solid fa-folder-open',
 														'title' => __('Inspection reports', 'sage'),
 														'description' => __('Search for an inspection report', 'sage'),
-														'linkURL' => 'https://www.google.co.uk',
+														'linkURL' => '/latest-inspection-reports',
 														'arrow' => true
 													])
-												</div>
+												</div>--}}
 								</div>
 					        </div>
 						        <div class="col-12 col-md-6 megaMenuMain">
 						        	<div class="row mt-4 mt-md-0">
 						        		<div class="col-12 col-md-10 offset-md-2">
-								          <ul aria-labelledby="navbarProfessionalDropdownMenuLink">
+											{!! wp_nav_menu(['theme_location' => 'main_nav_education_professionals_right_hand_side_links', 'menu_class' => '']) !!}
+								          {{--<ul aria-labelledby="navbarProfessionalDropdownMenuLink">
 								            <li><a href="https://google.co.uk">Action</a></li>
 								            <li><a href="#">Another action</a></li>
 								            <li><a href="#">Something else here</a></li>
-								          </ul>	
+								          </ul>--}}
 								        </div>
 								      </div>
 						      	</div>
@@ -131,7 +175,12 @@
 							    	<div class="col-12">
 							    		<h4 class="mb-3">{{ __('Find my sector', 'sage') }}</h4>
 												<div class="row">
-													<div class="col-12 col-lg-6 col-xl-4 mb-2">
+													@foreach($sectors as $sector)
+														<div class="col-12 col-lg-6 col-xl-4 mb-2">
+															<a href="{{ get_term_link($sector) }}" class="findmysector">{{ $sector->name }}</a>
+														</div>
+													@endforeach
+													{{--<div class="col-12 col-lg-6 col-xl-4 mb-2">
 														<a href="#" class="findmysector">Some stuff here</a>
 													</div>
 													<div class="col-12 col-lg-6 col-xl-4 mb-2">
@@ -181,7 +230,7 @@
 													</div>
 													<div class="col-12 col-lg-6 col-xl-4 mb-2">
 														<a href="#" class="findmysector">Some stuff here</a>
-													</div>
+													</div>--}}
 													
 												</div>
 
@@ -215,7 +264,27 @@
           				<div class="row w-100">
           					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
-												<div class="col-12 mb-4 position-relative">
+												@php
+													// Get the nav menu items from the nav menu that is assigned to the 'main_nav_about_estyn_signposts' menu location
+													$navMenuItems = wp_get_nav_menu_items($navMenuLocations['main_nav_about_estyn_signposts']);
+												@endphp
+												@foreach($navMenuItems as $navMenuItem)
+													@php
+														$useEstynLogoAsIcon = get_field('use_estyn_logo_for_the_icon', $navMenuItem->ID) === 'true' ? true : false;
+													@endphp
+													<div class="col-12 mb-4 position-relative">
+														@include('components.signpost', [
+															'bgColour' => get_field('signpost_colour', $navMenuItem->ID),
+															'iconClasses' => 'fa-solid ' . get_field('icon_class', $navMenuItem->ID),
+															'useEstynLogoAsIcon' => $useEstynLogoAsIcon,
+															'title' => $navMenuItem->title,
+															'description' => get_field('description', $navMenuItem->ID),
+															'linkURL' => $navMenuItem->url,
+															'arrow' => true
+														])
+													</div>
+												@endforeach
+												{{--<div class="col-12 mb-4 position-relative">
 													@include('components.signpost', [
 														'bgColourClass' => 'bg-signpost-lightpink2',
 														'svg' => asset('images/estyn-logo-icon-only-darkblue.svg'),
@@ -234,17 +303,18 @@
 														'linkURL' => 'https://www.google.co.uk',
 														'arrow' => true
 													])
-												</div>
+												</div>--}}
 											</div>
 					        	</div>
 						        <div class="col-12 col-md-6 megaMenuMain">
 						        	<div class="row mt-4 mt-md-0">
 						        		<div class="col-12 col-md-10 offset-md-2">
-								          <ul aria-labelledby="navbarProfessionalDropdownMenuLink">
+											{!! wp_nav_menu(['theme_location' => 'main_nav_about_estyn_right_hand_side_links', 'menu_class' => '']) !!}
+								          {{--<ul aria-labelledby="navbarProfessionalDropdownMenuLink">
 								            <li><a href="https://google.co.uk">Action</a></li>
 								            <li><a href="#">Another action</a></li>
 								            <li><a href="#">Something else here</a></li>
-								          </ul>	
+								          </ul>	--}}
 								        </div>
 								      </div>
 						      	</div>

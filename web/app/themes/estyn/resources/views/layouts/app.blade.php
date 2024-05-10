@@ -25,7 +25,12 @@
         {{ __('Skip to content') }}
       </a>
 
-      @include('sections.header')
+      @include('sections.header', [
+        'sectors' => isset($sectors) ? $sectors : get_terms([
+            'taxonomy' => 'sector',
+            'hide_empty' => false,
+          ])
+      ])
 
       <main id="main" class="main">
         @yield('content')
