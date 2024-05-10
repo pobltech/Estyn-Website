@@ -44,7 +44,7 @@
               <div class="row">
                 <div class="col-12 col-md-10">
                   <h2 class="mb-0 mb-sm-2">{{ __('Find a provider', 'sage') }}</h2>
-                  <label for="providerSearch" class="form-label mb-2 mb-md-4">Search our education & training providers</label>
+                  <label for="providerSearch" class="form-label mb-2 mb-md-4">{{ __('Search our education & training providers', 'sage') }}</label>
                   <div class="input-group mb-3 estyn-search-box">
                     <input type="text" class="form-control" placeholder="" aria-label="providerSearch" aria-describedby="providerSearch">
                     <button class="btn btn-secondary" type="button" id="providerSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
@@ -54,10 +54,10 @@
             </div>
             <div class="col-12 col-md-5 offset-md-1">
               <h2 class="d-none d-md-block mb-sm-2">{{ __('Estyn for you', 'sage') }}</h2>
-              <p class="d-none d-md-block mb-2 mb-md-4">Search our education & training providers</p>
+              <p class="d-none d-md-block mb-2 mb-md-4">{{ __('Search our education & training providers', 'sage') }}</p>
               <div class="d-flex align-items-start flex-column flex-sm-row flex-md-column flex-xxl-row">
-                <a class="btn btn-outline-light me-4 mb-3">Parents, carers & learners</a>
-                <a class="btn btn-outline-light me-4 mb-3">Education professionals</a>
+                <a class="btn btn-outline-light me-4 mb-3">{{ __('Parents, carers & learners', 'sage') }}</a>
+                <a class="btn btn-outline-light me-4 mb-3">{{ __('Education professionals', 'sage') }}</a>
               </div>
             </div>
           </div>
@@ -67,12 +67,12 @@
   </div>
   @include('partials.home-page-signposting')
   @include('partials.cta', [
-    'ctaHeading' => 'Who are Estyn?',
-    'ctaText' => 'Estyn inspects education and training in Wales. Find out how and why we exist, and our vision for education in Wales',
-    'ctaButtonLinkURL' => '/about-us',
-    'ctaButtonText' => 'About Estyn',
+    'ctaHeading' => __('Who are Estyn?', 'sage'),
+    'ctaText' => __('Estyn inspects education and training in Wales. Find out how and why we exist, and our vision for education in Wales', 'sage'),
+    'ctaButtonLinkURL' => __('/about-us', 'sage'),
+    'ctaButtonText' => __('About Estyn', 'sage'),
     'ctaImageURL' => @asset('images/inspection1.png'),
-    'ctaImageAlt' => 'Estyn inspection',
+    'ctaImageAlt' => __('Estyn inspection', 'sage'),
     'noPY' => true
   ])
 
@@ -106,9 +106,9 @@
 <div class="mt-4 mt-sm-5">
   @include('partials.slider', [
     'carouselID' => 'estyn-home-carousel',
-    'carouselHeading' => 'Ways to improve',
-    'carouselDescription' => 'Our most recent resources to help you improve your setting',
-    'carouselButtonText' => 'All resources',
+    'carouselHeading' => __('Ways to improve', 'sage'),
+    'carouselDescription' => __('Our most recent resources to help you improve your setting', 'sage'),
+    'carouselButtonText' => __('All resources', 'sage'),
     'carouselItems' => $sliderItems,
     'doNotDoJavaScript' => false
   ])
@@ -164,12 +164,12 @@
 </div>
 --}}
   @include('partials.cta', [
-    'ctaHeading' => 'Our education map of Wales',
-    'ctaText' => 'Find providers across Wales using our handy map',
+    'ctaHeading' => __('Our education map of Wales', 'sage'),
+    'ctaText' => __('Find providers across Wales using our handy map', 'sage'),
     'ctaButtonLinkURL' => '/news',
-    'ctaButtonText' => 'Search the map',
+    'ctaButtonText' => __('Search the map', 'sage'),
     'ctaImageURL' => asset('images/map.svg'),
-    'ctaImageAlt' => 'Map of Wales',
+    'ctaImageAlt' => __('Map of Wales', 'sage'),
     'imageBreakOut' => true,
     'imageExtraClasses' => 'ctaSearchMap',
     'showSearchBox' => true,
@@ -180,9 +180,9 @@
   <div class="mt-5">
     @include('partials.slider', [
         'carouselID' => 'estyn-home-latest-news-carousel',
-        'carouselHeading' => 'Latest articles',
-        'carouselDescription' => 'Blog posts and news articles from Estyn',
-        'carouselButtonText' => 'All articles',
+        'carouselHeading' => __('Latest articles', 'sage'),
+        'carouselDescription' => __('Blog posts and news articles from Estyn', 'sage'),
+        'carouselButtonText' => __('All articles', 'sage'),
         'carouselItems' => $sliderItems,
         'doNotDoJavaScript' => false
       ])
