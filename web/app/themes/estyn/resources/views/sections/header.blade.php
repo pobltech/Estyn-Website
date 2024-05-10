@@ -42,7 +42,7 @@
 													<div class="col-12 mb-4 position-relative">
 														@include('components.signpost', [
 															'bgColour' => get_field('signpost_colour', $navMenuItem->ID),
-															'iconClasses' => 'fa-solid ' . get_field('icon_class', $navMenuItem->ID),
+															'iconClasses' => 'fa-solid ' . get_field('icon', $navMenuItem->ID),
 															'useEstynLogoAsIcon' => $useEstynLogoAsIcon,
 															'title' => $navMenuItem->title,
 															'description' => get_field('description', $navMenuItem->ID),
@@ -126,7 +126,7 @@
 													<div class="col-12 mb-4 position-relative">
 														@include('components.signpost', [
 															'bgColour' => get_field('signpost_colour', $navMenuItem->ID),
-															'iconClasses' => 'fa-solid ' . get_field('icon_class', $navMenuItem->ID),
+															'iconClasses' => 'fa-solid ' . get_field('icon', $navMenuItem->ID),
 															'useEstynLogoAsIcon' => $useEstynLogoAsIcon,
 															'title' => $navMenuItem->title,
 															'description' => get_field('description', $navMenuItem->ID),
@@ -275,7 +275,7 @@
 													<div class="col-12 mb-4 position-relative">
 														@include('components.signpost', [
 															'bgColour' => get_field('signpost_colour', $navMenuItem->ID),
-															'iconClasses' => 'fa-solid ' . get_field('icon_class', $navMenuItem->ID),
+															'iconClasses' => 'fa-solid ' . get_field('icon', $navMenuItem->ID),
 															'useEstynLogoAsIcon' => $useEstynLogoAsIcon,
 															'title' => $navMenuItem->title,
 															'description' => get_field('description', $navMenuItem->ID),
