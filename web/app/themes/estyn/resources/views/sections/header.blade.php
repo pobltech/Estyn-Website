@@ -371,7 +371,16 @@
 		<ul class="d-flex flex-row navbar-nav">
 			<!-- Language -->
 			<li class="nav-item nav-language d-flex flex-column justify-content-center">
-				<a class="nav-link" href="#">Cymraeg</a>
+				{{-- Polylang language switcher --}}
+				@if(pll_current_language() === 'en')
+					@if(is_front_page())
+						<a class="nav-link" href="{{ get_bloginfo('url') }}/cy/">Cymraeg</a>
+					@else
+						<a class="nav-link" href="{{ pll_the_languages(array('raw' => 1))['cy']['url'] }}">Cymraeg</a>
+					@endif
+				@else
+					<a class="nav-link" href="{{ pll_the_languages(array('raw' => 1))['en']['url'] }}">English</a>
+				@endif
 			</li>
 			<!-- Search -->
 			<li class="nav-item d-flex flex-column justify-content-center nav-search dropdown">
