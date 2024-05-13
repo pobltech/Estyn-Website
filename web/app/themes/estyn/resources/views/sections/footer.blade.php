@@ -98,3 +98,76 @@
 	</div>
 </section>
 </footer>
+@push('scripts')
+	<script>
+		// Search boxes
+		(function($) {
+			$(document).ready(function() {
+				if (!$('.estyn-search-box').length) {
+					return;
+				}
+
+				let searchBoxTypingTimer = setTimeout(function() {}, 0);
+				const searchBoxTypingInterval = 500;
+
+				function processSearchBoxChange($elem) {
+					// If the user selects an option from the datalist, redirect to the URL
+					const $datalist = $elem.nextAll('datalist:first');
+					const $selectedOption = $datalist.find(`option[value="${$elem.val()}"]`);
+					if($selectedOption.length) {
+						window.location.href = $selectedOption.data('link');
+						return;
+					}
+					
+					// Otherwise, search for the text
+					clearTimeout(searchBoxTypingTimer);
+
+					searchBoxTypingTimer = setTimeout(function($elem) {
+						search($elem);						
+					}, searchBoxTypingInterval, $elem);
+				}
+
+				$('.estyn-search-box').on('change keyup', function() {
+					processSearchBoxChange($(this));
+				});
+
+				$('.estyn-search-box-button').on('click', function() {
+					processSearchBoxChange($(this).prev('input'));
+				});
+
+				function search($elem) {
+					if($elem.val().length < 3) {
+						return;
+					}
+
+					$.ajax({
+						url: estyn.all_search_rest_url,
+						type: 'GET',
+						data: {
+							searchText: $elem.val(),
+						},
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader('X-WP-Nonce', estyn.nonce);
+						},
+						success: function(response) {
+							//console.log(response);
+							// Find the next <datalist> element
+							const $datalist = $elem.nextAll('datalist:first');
+
+							// Clear the <datalist>
+							$datalist.empty();
+							// Add the new options (if the response is not an empty array)
+							if(!response.length) {
+								return;
+							}
+
+							response.forEach(function(item) {
+								$datalist.append(`<option value="${item.title}" data-link="${item.URL}">`);
+							});
+						},
+					});
+				}
+			});
+		})(jQuery);
+	</script>
+@endpush

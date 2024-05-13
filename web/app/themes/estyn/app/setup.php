@@ -23,6 +23,7 @@ add_action('wp_enqueue_scripts', function () {
     bundle('app')->enqueue()->localize('estyn', [
         'ajax_url' => admin_url('admin-ajax.php'),
         'resources_search_rest_url' => rest_url('estyn/v1/resources_search/'),
+        'all_search_rest_url' => rest_url('estyn/v1/all_search/'),
         'nonce' => wp_create_nonce('wp_rest'),
     ]);
 }, 100);
@@ -388,9 +389,45 @@ add_action('rest_api_init', function () {
             return wp_verify_nonce($nonce, 'wp_rest');
         },
     ));
+
+    register_rest_route('estyn/v1', '/all_search/', array(
+        'methods' => 'GET',
+        'callback' => __NAMESPACE__ . '\\estyn_all_search',
+        'permission_callback' => function (\WP_REST_Request $request) {
+            $nonce = $request->get_header('X-WP-Nonce');
+            return wp_verify_nonce($nonce, 'wp_rest');
+        },
+    ));
 });
+
+// For the typical 'search Estyn' boxes
+// Returns an array of items with the URL and title or an empty array if no results
+function estyn_all_search(\WP_REST_Request $request) {
+    $query = new \WP_Query([
+        'posts_per_page' => 20,
+        'post_type' => ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_eduprovider', 'estyn_inspectionrpt'],
+        's' => $request->get_param('searchText'),
+    ]);
+
+    $posts = $query->posts;
+
+    if($query->found_posts == 0) {
+        return [];
+    }
+
+    $items = [];
+    foreach($posts as $post) {
+        $items[] = [
+            'URL' => get_permalink($post->ID),
+            'title' => get_the_title($post->ID),
+        ];
+    }
+
+    return $items;
+}
   
 // For the 'News and blog' page search and filters update (ajax) requests
+// Returns the HTML for the list of resources
 function estyn_resources_search(\WP_REST_Request $request) {
     $params = $request->get_params();
     error_log(print_r($params, true));
