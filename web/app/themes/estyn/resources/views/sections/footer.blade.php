@@ -110,7 +110,14 @@
 				let searchBoxTypingTimer = setTimeout(function() {}, 0);
 				const searchBoxTypingInterval = 500;
 
+				let processSearchBoxChangeTimer = setTimeout(function() {}, 0);
+				const processSearchBoxChangeInterval = 500;
+
 				function processSearchBoxChange($elem) {
+					clearTimeout(processSearchBoxChangeTimer);
+
+					//console.log('processSearchBoxChange');
+					//console.log($elem.val());
 					// If the user selects an option from the datalist, redirect to the URL
 					const $datalist = $elem.nextAll('datalist:first');
 					const $selectedOption = $datalist.find(`option[value="${$elem.val()}"]`);
@@ -127,25 +134,46 @@
 					}, searchBoxTypingInterval, $elem);
 				}
 
-				$('.estyn-search-box').on('change keyup', function() {
-					processSearchBoxChange($(this));
+				$('.estyn-search-box').on('keyup', function() {
+					//console.log('change');
+					//console.log($(this).val());
+					
+					clearTimeout(processSearchBoxChangeTimer);
+					processSearchBoxChangeTimer = setTimeout(function($elem) {
+						processSearchBoxChange($elem);
+					}, processSearchBoxChangeInterval, $(this));
 				});
 
 				$('.estyn-search-box-button').on('click', function() {
-					processSearchBoxChange($(this).prev('input'));
+					//console.log('click');
+
+					clearTimeout(processSearchBoxChangeTimer);
+					processSearchBoxChangeTimer = setTimeout(function($elem) {
+						processSearchBoxChange($elem);
+					}, processSearchBoxChangeInterval, $(this).prev('input'));
 				});
 
 				function search($elem) {
+					//console.log('search');
+					//console.log($elem.val());
 					if($elem.val().length < 3) {
+						//console.log('Too short');
 						return;
+					}
+
+					let searchArgs = {
+						searchText: $elem.val(),
+					};
+					
+					if($elem.data('posttype')) {
+						console.log('Post type = ' + $elem.data('posttype'));
+						searchArgs.postType = [$elem.data('posttype')];
 					}
 
 					$.ajax({
 						url: estyn.all_search_rest_url,
 						type: 'GET',
-						data: {
-							searchText: $elem.val(),
-						},
+						data: searchArgs,
 						beforeSend: function(xhr) {
 							xhr.setRequestHeader('X-WP-Nonce', estyn.nonce);
 						},
@@ -158,6 +186,7 @@
 							$datalist.empty();
 							// Add the new options (if the response is not an empty array)
 							if(!response.length) {
+								//console.log('No results');
 								return;
 							}
 

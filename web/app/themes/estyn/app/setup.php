@@ -405,7 +405,7 @@ add_action('rest_api_init', function () {
 function estyn_all_search(\WP_REST_Request $request) {
     $query = new \WP_Query([
         'posts_per_page' => 20,
-        'post_type' => ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_eduprovider', 'estyn_inspectionrpt'],
+        'post_type' => $request->get_param('postType') != null ? $request->get_param('postType') : ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_eduprovider', 'estyn_inspectionrpt'],
         's' => $request->get_param('searchText'),
     ]);
 
