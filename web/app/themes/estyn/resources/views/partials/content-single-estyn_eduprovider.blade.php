@@ -97,7 +97,7 @@
         </div>
         <div class="row justify-content-between mb-5">
             <div class="col-12 pb-4 pb-md-0 col-md-6">
-                <img src="{{ asset('images/googlemapplaceholderimage.png') }}" alt="Google map placeholder" class="rounded-3 img-fluid"/>
+                <div id="map" class="provider-map rounded-2"></div>
             </div>
             <div class="col-12 col-md-5">
                 <h4>{{ __('Address', 'sage') }}</h4>
@@ -187,3 +187,39 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    <script>
+        (function($) {
+            $(document).ready(function() {
+                // Initialize the map
+                @if(!empty($providerData['latitude']) && !empty($providerData['longitude']))
+                    initMap({{ $providerData['latitude'] }}, {{ $providerData['longitude'] }});
+                @endif
+            });
+
+            // Initialize the map
+            function initMap(latitude, longitude) {
+                // Check if either latitude or longitude is null
+                if (latitude === "" || longitude === "") {
+                    // Display a message instead of the map
+                    document.getElementById('map').innerHTML = "{{ __('No map available for this provider', 'sage') }}";
+                } else {
+                    // Convert the latitude and longitude to numbers
+                    latitude = parseFloat(latitude);
+                    longitude = parseFloat(longitude);
+
+                    let location = [latitude, longitude];
+
+                    // Create a map centered at the property's location
+                    let map = L.map('map').setView(location, 15);
+
+                    // Set the map's tiles
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+                    // Create a marker at the property's location
+                    L.marker(location).addTo(map);
+                }
+            }
+        })(jQuery);
+    </script>
+@endpush
