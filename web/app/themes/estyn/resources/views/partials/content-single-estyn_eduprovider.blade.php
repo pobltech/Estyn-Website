@@ -21,7 +21,7 @@
             'description' => __('Contact details and location', 'sage')
         ],
         [
-            'url' => '#',
+            'url' => '#estyn-widget',
             'bgColourClass' => 'bg-signpost-lightpink',
             'iconClasses' => 'fas fa-calendar-alt',
             'title' => __('Estyn widget', 'sage'),
@@ -161,7 +161,7 @@
         </div>
     </div>
     <div class="container px-md-4 px-xl-5">
-        <div class="row">
+        <div class="row" id="estyn-widget">
             <div class="col-12">
                 <hr>
             </div>
@@ -175,7 +175,7 @@
         </div>
         <div class="row">
             <div class="col-12 col-md-6">
-                <p>{{ __('Display this providers Estyn widget on your website', 'sage') }}</p>
+                <p>{{ __('Display this provider\'s Estyn widget on your website', 'sage') }}</p>
                 <p>
                     <img class="img-fluid border rounded-2" src="{{ asset('images/estynwidgetplaceholder.png') }}" alt="Estyn widget example"/>
                 </p>
