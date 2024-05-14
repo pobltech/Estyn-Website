@@ -166,7 +166,7 @@
 					};
 					
 					if($elem.data('posttype')) {
-						console.log('Post type = ' + $elem.data('posttype'));
+						//console.log('Post type = ' + $elem.data('posttype'));
 						searchArgs.postType = [$elem.data('posttype')];
 					}
 
