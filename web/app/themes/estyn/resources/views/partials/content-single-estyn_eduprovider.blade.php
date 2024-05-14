@@ -100,16 +100,33 @@
                 <img src="{{ asset('images/googlemapplaceholderimage.png') }}" alt="Google map placeholder" class="rounded-3 img-fluid"/>
             </div>
             <div class="col-12 col-md-5">
-                <h4>Address</h4>
+                <h4>{{ __('Address', 'sage') }}</h4>
                 <p>
-                    Ysgol Gymraeg Ifor Hael<br/>
-                    Clos Meon<br/>
-                    Bettws<br/>
-                    NP20 7DU
+                    @if(!empty($providerData['address_line_1']))
+                        {{ $providerData['address_line_1'] }}<br>
+                    @endif
+                    @if(!empty($providerData['address_line_2']))
+                        {{ $providerData['address_line_2'] }}<br>
+                    @endif
+                    @if(!empty($providerData['address_line_3']))
+                        {{ $providerData['address_line_3'] }}<br>
+                    @endif
+                    @if(!empty($providerData['address_line_4']))
+                        {{ $providerData['address_line_4'] }}<br>
+                    @endif
+                    @if(!empty($providerData['town']))
+                        {{ $providerData['town'] }}<br>
+                    @endif
+                    @if(!empty($providerData['county']))
+                        {{ $providerData['county'] }}<br>
+                    @endif
+                    @if(!empty($providerData['postcode']))
+                        {{ $providerData['postcode'] }}<br>
+                    @endif
                 </p>
 
-                <h4>Telephone</h4>
-                <p class="mb-0">01633 123456</p>
+                <h4>{{ __('Telephone', 'sage') }}</h4>
+                <p class="mb-0">{{ !empty($providerData['phone']) ? $providerData['phone'] : '' }}</p>
             </div>
         </div>
     </div>
