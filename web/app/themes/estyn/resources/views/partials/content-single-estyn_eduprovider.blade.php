@@ -7,14 +7,14 @@
     'followUpStatusses' => get_the_terms(get_the_ID(), 'provider_status'),
     'insideIntroLinks' => [
         [
-            'url' => '#',
+            'url' => '#inspection-reports',
             'bgColourClass' => 'bg-signpost-blue',
             'iconClasses' => 'fas fa-graduation-cap',
             'title' => __('Inspection report', 'sage'),
             'description' => __('Read the latest report for this provider', 'sage')
         ],
         [
-            'url' => '#',
+            'url' => '#contact-details',
             'bgColourClass' => 'bg-signpost-verylightbrown',
             'iconClasses' => 'fas fa-book',
             'title' => __('Provider details', 'sage'),
@@ -31,7 +31,7 @@
 ])
 <div class="reportMain pb-5">
     <div class="container px-md-4 px-xl-5 mt-5 pt-md-5">
-        <div class="row">
+        <div class="row" id="inspection-reports">
             <div class="col-12">
                 <h2>{{ __('Inspections', 'sage') }}</h2>
             </div>
@@ -83,7 +83,7 @@
         </div>
     </div>
     <div class="container px-md-4 px-xl-5">
-        <div class="row">
+        <div class="row" id="contact-details">
             <div class="col-12">
                 <hr>
             </div>
@@ -124,9 +124,16 @@
                         {{ $providerData['postcode'] }}<br>
                     @endif
                 </p>
+                
+                @if(!empty($providerData['phone']))
+                    <h4>{{ __('Telephone', 'sage') }}</h4>
+                    <p {{ empty($providerData['email']) ? 'class="mb-0"' : '' }}>{{ $providerData['phone'] }}</p>
+                @endif
 
-                <h4>{{ __('Telephone', 'sage') }}</h4>
-                <p class="mb-0">{{ !empty($providerData['phone']) ? $providerData['phone'] : '' }}</p>
+                @if(!empty($providerData['email']))
+                    <h4>{{ __('Email', 'sage') }}</h4>
+                    <p class="mb-0"><a href="mailto:{{ $providerData['email'] }}">{{ $providerData['email'] }}</a></p>
+                @endif
             </div>
         </div>
     </div>
