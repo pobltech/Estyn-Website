@@ -74,6 +74,12 @@ $navbar-toggler-focus-width: 0;
 @import 'bootstrap/scss/bootstrap';
 @import 'common/fonts';
 
+/* Leaflet JS Maps */
+$fa-font-path: "~font-awesome/fonts";
+$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
+$leaflet-image-path: "~leaflet/dist/images/";
+@import 'leaflet/dist/leaflet';
+
 .navbar-toggler {
     /** Change the nav burger icon into an X. For some reason, using our own CSS variable didn't work **/
     &:not(.collapsed) {
