@@ -202,7 +202,7 @@ add_action('init', function () {
         'has_archive' => true,
         'menu_icon' => 'dashicons-admin-site-alt',
         'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
-        'rewrite' => ['slug' => 'news-articles'],
+        'rewrite' => ['slug' => 'news'],
         'show_in_rest' => true, // Enable Gutenberg editor
     ]);
 });
@@ -574,4 +574,15 @@ function estyn_resources_search(\WP_REST_Request $request) {
     ]);
 
     return ['html' => $HTML->render(), 'totalPosts' => $query->found_posts];
+}
+
+/**
+ * When a post is imported using WP All Import, ACF might not recognise it
+ * until it's been saved once. This hook will save the post after import.
+ */
+add_action('pmxi_saved_post', __NAMESPACE__ . '\\save_post_after_import', 10, 1);
+
+function save_post_after_import($post_id) {
+    $post = get_post($post_id);
+    wp_update_post($post);
 }

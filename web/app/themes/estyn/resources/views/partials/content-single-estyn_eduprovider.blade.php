@@ -38,29 +38,31 @@
         </div>
         <div class="row justify-content-center justify-content-md-between mb-5">
             <div class="col-12 col-md-6 mb-4 mb-md-0">
-                @include('components.resource-list', [
-                    'items' => [
-                        [
-                            'linkURL' => '#',
-                            'superDate' => '07/11/2021',
-                            'title' => __('Inspection report 2021', 'sage'),
-                            'dateOnRight' => true
+                @if($hasInspectionReports)
+                    @include('components.resource-list', [
+                        'items' => [
+                            [
+                                'linkURL' => '#',
+                                'superDate' => '07/11/2021',
+                                'title' => __('Inspection report 2021', 'sage'),
+                                'dateOnRight' => true
+                            ],
+                            [
+                                'linkURL' => '#',
+                                'superDate' => '02/03/2017',
+                                'title' => __('Inspection report 2017', 'sage'),
+                                'dateOnRight' => true
+                            ],
+                            [
+                                'linkURL' => '#',
+                                'superDate' => '22/11/2013',
+                                'title' => __('Inspection report 2013', 'sage'),
+                                'dateOnRight' => true
+                            ]
                         ],
-                        [
-                            'linkURL' => '#',
-                            'superDate' => '02/03/2017',
-                            'title' => __('Inspection report 2017', 'sage'),
-                            'dateOnRight' => true
-                        ],
-                        [
-                            'linkURL' => '#',
-                            'superDate' => '22/11/2013',
-                            'title' => __('Inspection report 2013', 'sage'),
-                            'dateOnRight' => true
-                        ]
-                    ],
-                    'noMarginBottom' => true
-                ])
+                        'noMarginBottom' => true
+                    ])
+                @endif
             </div>
             <div class="col-auto col-md-5">
                 <div class="mt-2 mb-4">
@@ -144,6 +146,7 @@
             </div>
         </div>
     </div>
+    @if($hasResources)
     <div class="container px-md-4 px-xl-5 mt-5">
         <div class="row">
             <div class="col-12">
@@ -160,6 +163,7 @@
             <div class="col-12 col-md-6"></div>
         </div>
     </div>
+    @endif
     <div class="container px-md-4 px-xl-5">
         <div class="row" id="estyn-widget">
             <div class="col-12">

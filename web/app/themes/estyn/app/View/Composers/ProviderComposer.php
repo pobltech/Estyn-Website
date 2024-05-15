@@ -13,7 +13,9 @@ class ProviderComposer extends Composer
     public function with()
     {
         return [
-            'providerData' => $this->providerData()
+            'providerData' => $this->providerData(),
+            'hasResources' => $this->hasResources(),
+            'hasInspectionReports' => $this->hasInspectionReports()
         ];
     }
 
@@ -28,5 +30,35 @@ class ProviderComposer extends Composer
         }
 
         return $data;
+    }
+
+    public function hasResources() {
+        $resources = get_posts(array(
+            'post_type' => 'estyn_imp_resource',
+            'meta_query' => array(
+                array(
+                    'key' => 'resource_creator',
+                    'value' => get_the_ID(),
+                    'compare' => 'LIKE'
+                )
+            )
+        ));
+        
+        return !empty($resources);
+    }
+
+    public function hasInspectionReports() {
+        $inspectionReports = get_posts(array(
+            'post_type' => 'estyn_inspectionrpt',
+            'meta_query' => array(
+                array(
+                    'key' => 'provider',
+                    'value' => get_the_ID(),
+                    'compare' => 'LIKE'
+                )
+            )
+        ));
+        
+        return !empty($inspectionReports);
     }
 }
