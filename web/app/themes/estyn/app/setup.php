@@ -403,10 +403,14 @@ add_action('rest_api_init', function () {
 // For the typical 'search Estyn' boxes
 // Returns an array of items with the URL and title or an empty array if no results
 function estyn_all_search(\WP_REST_Request $request) {
+    $params = $request->get_params();
+    $language = !empty($params['language']) ? $params['language'] : (function_exists('pll_current_language') ? pll_current_language() : 'en');
+
     $query = new \WP_Query([
         'posts_per_page' => 20,
         'post_type' => $request->get_param('postType') != null ? $request->get_param('postType') : ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_eduprovider', 'estyn_inspectionrpt'],
         's' => $request->get_param('searchText'),
+        'lang' => $language
     ]);
 
     $posts = $query->posts;
@@ -430,11 +434,15 @@ function estyn_all_search(\WP_REST_Request $request) {
 // Returns the HTML for the list of resources
 function estyn_resources_search(\WP_REST_Request $request) {
     $params = $request->get_params();
-    error_log(print_r($params, true));
+    //error_log(print_r($params, true));
+
+    $language = !empty($params['language']) ? $params['language'] : (function_exists('pll_current_language') ? pll_current_language() : 'en');
+    //error_log('Language: ' . $language);
     
     $args = [
         'posts_per_page' => -1,
         'post_type' => ['post', 'estyn_newsarticle'],
+        'lang' => $language,
     ];
 
     if(isset($params['postType'])) {

@@ -622,7 +622,11 @@
 				showSearchResultsLoadingIndicator();
 
 				$("#search-results").fadeOut(250, function() {
-					var searchFilters = getSearchFilters();
+					let searchFilters = getSearchFilters();
+          // Add a 'language' key and value to the searchFilters object
+          searchFilters.language = "{{ pll_current_language() }}";
+          //console.log('Language: ' + searchFilters.language);
+
 					$.ajax({
 						url: estyn.resources_search_rest_url,
 						type: "GET",
