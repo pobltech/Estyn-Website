@@ -29,6 +29,10 @@
   - Type (Thematic Report, Effective Practice, or Additional Resource)
   - Year
 
+  Provider search:
+  - Sector
+  - Local authority
+
 --}}
 
 <div class="searchHero mt-5">
@@ -57,13 +61,13 @@
             <hr class="d-md-none">
 
             <div class="search-filters collapse d-md-block pb-5" id="search-filters">
-              <h3>Filters</h3>
+              <h3>{{ __('Filters', 'sage') }}</h3>
               <div class="accordion accordion-flush" id="accordionFlushExample">
                 @if(isset($isNewsAndBlog) && $isNewsAndBlog)
                   <div class="accordion-item">
                       <h2 class="accordion-header" id="flush-headingOne">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                          Type
+                          {{ __('Type', 'sage') }}
                         </button>
                       </h2>
                       <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
@@ -165,7 +169,7 @@
                     </div>
                   </div>
                 </div>
-                @if(isset($tags) && !empty($tags))
+                @if(isset($isImprovementResourcesSearch) && $isImprovementResourcesSearch && isset($tags) && !empty($tags))
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="flush-headingThree">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
@@ -186,7 +190,7 @@
                   </div>
                 </div>
                 @endif
-                @if(isset($improvementResourceTypes) && !empty($improvementResourceTypes))
+                @if(isset($isImprovementResourcesSearch) && $isImprovementResourcesSearch && isset($improvementResourceTypes) && !empty($improvementResourceTypes))
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-headingFour">
                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
@@ -333,6 +337,45 @@
             ];
           }
 
+        } elseif($isInspectionReportsSearch) {
+          $searchArgs = [
+            'post_type' => 'estyn_inspectionrpt',
+            'posts_per_page' => -1,
+            'orderby' => 'modified',
+          ];
+
+          // If there's a Wordpress search query in the URL then add it to the search args
+          if(isset($_GET['s'])) {
+            $searchArgs['s'] = trim($_GET['s']);
+          }
+
+          // Sector
+          if(isset($_GET['sector']) && $_GET['sector'] != 'any') {
+            $searchArgs['tax_query'] = [
+              [
+                'taxonomy' => 'sector',
+                'field' => 'slug',
+                'terms' => $_GET['sector']
+              ]
+            ];
+          }
+
+          // Local authority
+          if(isset($_GET['localAuthority']) && $_GET['localAuthority'] != 'Any') {
+            $searchArgs['tax_query'] = [
+              [
+                'taxonomy' => 'local_authority',
+                'field' => 'slug',
+                'terms' => $_GET['localAuthority']
+              ]
+            ];
+          }
+        } elseif($isProviderSearch) {
+          $searchArgs = [
+            'post_type' => 'estyn_eduprovider',
+            'posts_per_page' => 50,
+            'orderby' => 'title',
+          ];
         }
 
         if(!empty($searchArgs)) {
@@ -345,14 +388,16 @@
 						<div class="d-flex align-items-center align-items-md-start justify-content-between">
 							<span><span class="search-results-number">{{ (!empty($searchQuery)) && $searchQuery->have_posts() ? $searchQuery->found_posts : '0' }}</span> {{ __('result/s', 'sage') }}</span>
               <span class="d-flex align-items-center">
-							<label class="text-nowrap me-3" for="sort-by">{{ __('Sort by', 'sage') }}</label>
-                <select id="sort-by" class="form-select">
+                @if(!isset($isProviderSearch) || !$isProviderSearch)
+                  <label class="text-nowrap me-3" for="sort-by">{{ __('Sort by', 'sage') }}</label>
+                  <select id="sort-by" class="form-select">
                     <option value="modified">{{ __('Latest updated', 'sage') }}</option>
                     <option value="title">{{ __('Title', 'sage') }}</option>
                     <option value="date">{{ __('Publication date', 'sage') }}</option>
                     <option value="type">{{ __('Type', 'sage') }}</option>
                   </select>
-                </span>
+                @endif
+              </span>
 						</div>
 						<hr class="hrGreen my-3">
 					</div>
@@ -631,7 +676,14 @@
       @elseif(isset($isInspectionScheduleSearch) && $isInspectionScheduleSearch)
 
       @elseif(isset($isProviderSearch) && $isProviderSearch)
-
+      function getSearchFilters() {
+        return {
+          postType: "estyn_eduprovider",
+          sector: $("#flush-collapse-sector input:checked").val(),
+          localAuthority: $("#flush-collapseTwo input:checked").val(),
+          searchText: $("#search-box-container input[type='text']").val().trim()
+        };
+      }
       @elseif(isset($isImprovementResourcesSearch) && $isImprovementResourcesSearch)
       function getSearchFilters() {
         return {

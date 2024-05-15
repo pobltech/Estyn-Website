@@ -76,7 +76,7 @@
                             <img class="img-fluid" src="{{ $carouselItem['featured_image_src'] }}"/>
                         </div>
                         <div class="card-footer py-sm-4 pb-0 px-0">
-                            <h4 class="mb-0">{{ $carouselItem['title'] }}</h4>
+                            <a class="stretched-link" href="{{ $carouselItem['link'] ?? '#' }}"><h4 class="mb-0">{{ $carouselItem['title'] }}</h4></a>
                             <p class="mb-0">{{ $carouselItem['excerpt'] }}</p>
                         </div>
                     </div>

@@ -81,8 +81,8 @@
 
   @php
     $query1 = new WP_Query([
-      'post_type' => 'post',
-      'posts_per_page' => 10,
+      'post_type' => ['post', 'estyn_newsarticle'],
+      'posts_per_page' => 20,
       'status' => 'publish'
     ]);
 
@@ -92,10 +92,15 @@
       while($query1->have_posts()) {
         $query1->the_post();
         // Do something with the post data
+        if(empty(get_the_post_thumbnail_url())) {
+          continue;
+        }
+
         $sliderItems[] = [
           'featured_image_src' => get_the_post_thumbnail_url(),
           'title' => get_the_title(),
-          'excerpt' => get_the_excerpt()
+          'excerpt' => get_the_excerpt(),
+          'link' => get_the_permalink()
         ];
       }
 
@@ -103,7 +108,7 @@
     }
 
     // For TESTING: Append a copy of $sliderItems to $sliderItems to make the carousel longer
-    $sliderItems = array_merge($sliderItems, $sliderItems);
+    //$sliderItems = array_merge($sliderItems, $sliderItems);
   @endphp
 
 <div class="mt-4 mt-sm-5">
@@ -170,7 +175,7 @@
   @include('partials.cta', [
     'ctaHeading' => __('Our education map of Wales', 'sage'),
     'ctaText' => __('Find providers across Wales using our handy map', 'sage'),
-    'ctaButtonLinkURL' => '/news',
+    'ctaButtonLinkURL' => '/news-and-blog',
     'ctaButtonText' => __('Search the map', 'sage'),
     'ctaImageURL' => asset('images/map.svg'),
     'ctaImageAlt' => __('Map of Wales', 'sage'),
@@ -189,6 +194,7 @@
         'carouselDescription' => __('Blog posts and news articles from Estyn', 'sage'),
         'carouselButtonText' => __('All articles', 'sage'),
         'carouselItems' => $sliderItems,
+        'carouselButtonLink' => '/news-and-blog',
         'doNotDoJavaScript' => false
       ])
   </div>

@@ -318,7 +318,7 @@ function create_eduprovider_taxonomies() {
         'menu_name' => __( 'Sectors', 'sage' ),
     );
 
-    register_taxonomy('sector', array('estyn_eduprovider', 'estyn_imp_resource', 'estyn_inspectionrpt'), array(
+    register_taxonomy('sector', array('estyn_eduprovider', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_newsarticle'), array(
         'labels' => $labels,
         'show_ui' => true,
         'show_admin_column' => true,
@@ -446,6 +446,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
             $args['post_type'] = 'estyn_imp_resource';
         } elseif($params['postType'] === 'estyn_eduprovider') {
             $args['post_type'] = 'estyn_eduprovider';
+            $args['posts_per_page'] = 50;
         } elseif($params['postType'] === 'estyn_inspectionrpt') {
             $args['post_type'] = 'estyn_inspectionrpt';
         }
@@ -564,7 +565,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
         $items[] = [
             'linkURL' => get_permalink($post->ID),
             'superText' => $postTypeName,
-            'superDate' => get_the_date('d/m/Y', $post->ID),
+            'superDate' => $args['post_type'] != 'estyn_eduprovider' ? get_the_date('d/m/Y', $post->ID) : null,
             'title' => get_the_title($post->ID),
         ];
     }
@@ -586,3 +587,8 @@ function save_post_after_import($post_id) {
     $post = get_post($post_id);
     wp_update_post($post);
 }
+
+/** 
+ * Stop ACF removing the 'Custom Fields' meta box from the post edit screen
+ */
+//add_filter('acf/settings/remove_wp_meta_box', '__return_false');
