@@ -587,7 +587,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
 
 /**
  * When a post is imported using WP All Import, ACF might not recognise it
- * until it's been saved once. This hook will save the post after import.
+ * until it's been saved once. For example, when using the ‘Post Object’/’Relationship’ fields, the search feature may not find the imported posts. This hook will save the post after import, circumventing this issue.
  */
 add_action('pmxi_saved_post', __NAMESPACE__ . '\\save_post_after_import', 10, 1);
 
