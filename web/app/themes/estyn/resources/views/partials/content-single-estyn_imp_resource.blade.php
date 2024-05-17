@@ -115,9 +115,11 @@
                     @endif
 
                   <hr>
-                  @include('partials.provider-resources-list',
-                    ['providerPost' => $providerPost]
-                  )
+                  @if($providerPost)
+                    @include('partials.provider-resources-list',
+                      ['providerPost' => $providerPost]
+                    )
+                  @endif
                 </div>
               </div>
         </div>

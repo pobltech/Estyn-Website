@@ -191,8 +191,12 @@ add_action('init', function() {
 
 /**
  * Register 'estyn_newsarticle' post type.
+ * 
+ * TODO: Remove hack to get custom post type URL slugs translations to work with Polylang (until we use Pro)
  */
 add_action('init', function () {
+    $news_slug = __('news', 'sage');
+    flush_rewrite_rules(); // Only use this once, not in any other actions added to init. It's part of the hack to get custom post type URL slugs translations to work with Polylang (until we use Pro
     register_post_type('estyn_newsarticle', [
         'labels' => [
             'name' => __('News Articles', 'sage'),
@@ -202,7 +206,7 @@ add_action('init', function () {
         'has_archive' => true,
         'menu_icon' => 'dashicons-admin-site-alt',
         'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
-        'rewrite' => ['slug' => 'news'],
+        'rewrite' => ['slug' => $news_slug, 'with_front' => false],
         'show_in_rest' => true, // Enable Gutenberg editor
     ]);
 });
@@ -211,6 +215,7 @@ add_action('init', function () {
  * Register Improvement Resource post type.
  */
 add_action('init', function () {
+    $improvementResourcesSlug = __('improvement-resources', 'sage');
     register_post_type('estyn_imp_resource', [
         'labels' => [
             'name' => __('Improvement Resources', 'sage'),
@@ -220,7 +225,7 @@ add_action('init', function () {
         'has_archive' => true,
         'menu_icon' => 'dashicons-hammer',
         'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
-        'rewrite' => ['slug' => 'improvement-resources'],
+        'rewrite' => ['slug' => $improvementResourcesSlug, 'with_front' => false],
         'show_in_rest' => true, // Enable Gutenberg editor
     ]);
 
@@ -244,12 +249,13 @@ function create_improvement_resource_type_taxonomy() {
         'menu_name' => __( 'Improvement Resource Types', 'sage' ),
     );
 
+    $improvementResourceTypeSlug = __('improvement-resource-type', 'sage');
     register_taxonomy('improvement_resource_type', array('estyn_imp_resource'), array(
         'labels' => $labels,
         'show_ui' => true,
         'show_admin_column' => true,
         'query_var' => true,
-        'rewrite' => array( 'slug' => 'improvement_resource_type' ),
+        'rewrite' => array( 'slug' => $improvementResourceTypeSlug ),
         'show_in_rest' => true, // Enable Gutenberg editor
         'meta_box_cb' => 'post_categories_meta_box',
     ));
@@ -270,6 +276,7 @@ add_action('init', __NAMESPACE__ . '\\add_improvement_resource_types');
  * Register 'estyn_eduprovider' post type.
  */
 add_action('init', function () {
+    $providersSlug = __('education-providers', 'sage');
     register_post_type('estyn_eduprovider', [
         'labels' => [
             'name' => __('Providers', 'sage'),
@@ -279,7 +286,7 @@ add_action('init', function () {
         'has_archive' => true,
         'menu_icon' => 'dashicons-welcome-learn-more',
         'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
-        'rewrite' => ['slug' => 'education-providers'],
+        'rewrite' => ['slug' => $providersSlug, 'with_front' => false],
         'show_in_rest' => true, // Enable Gutenberg editor
     ]);
 });
@@ -288,6 +295,7 @@ add_action('init', function () {
  * Register the Inspection Report post type.
  */
 add_action('init', function () {
+    $inspectionReportsSlug = __('inspection-reports', 'sage');
     register_post_type('estyn_inspectionrpt', [
         'labels' => [
             'name' => __('Inspection Reports', 'sage'),
@@ -297,7 +305,7 @@ add_action('init', function () {
         'has_archive' => true,
         'menu_icon' => 'dashicons-clipboard',
         'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
-        'rewrite' => ['slug' => 'inspection-reports'],
+        'rewrite' => ['slug' => $inspectionReportsSlug, 'with_front' => false],
         'show_in_rest' => true, // Enable Gutenberg editor
     ]);
 });
@@ -318,12 +326,13 @@ function create_eduprovider_taxonomies() {
         'menu_name' => __( 'Sectors', 'sage' ),
     );
 
+    $sectorSlug = __('sector', 'sage');
     register_taxonomy('sector', array('estyn_eduprovider', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_newsarticle'), array(
         'labels' => $labels,
         'show_ui' => true,
         'show_admin_column' => true,
         'query_var' => true,
-        'rewrite' => array( 'slug' => 'sector' ),
+        'rewrite' => array( 'slug' => $sectorSlug ),
         'show_in_rest' => true, // Enable Gutenberg editor
     ));
 
@@ -339,12 +348,13 @@ function create_eduprovider_taxonomies() {
         'menu_name' => __( 'Local Authorities', 'sage' ),
     );
 
+    $localAuthoritySlug = __('local-authority', 'sage');
     register_taxonomy('local_authority', array('estyn_eduprovider', 'estyn_imp_resource', 'estyn_inspectionrpt'), array(
         'labels' => $labels,
         'show_ui' => true,
         'show_admin_column' => true,
         'query_var' => true,
-        'rewrite' => array( 'slug' => 'local-authority' ),
+        'rewrite' => array( 'slug' => $localAuthoritySlug ),
         'show_in_rest' => true, // Enable Gutenberg editor
     ));
 }
@@ -366,16 +376,48 @@ function create_eduprovider_status_taxonomy() {
         'menu_name' => __( 'Statuses', 'sage' ),
     );
 
+    $providerStatusSlug = __('provider-status', 'sage');
     register_taxonomy('provider_status', array('estyn_eduprovider'), array(
         'labels' => $labels,
         'show_ui' => true,
         'show_admin_column' => true,
         'query_var' => true,
-        'rewrite' => array( 'slug' => 'provider-status' ),
+        'rewrite' => array( 'slug' => $providerStatusSlug ),
         'show_in_rest' => true, // Enable Gutenberg editor
     ));
 }
 add_action( 'init', __NAMESPACE__ . '\\create_eduprovider_status_taxonomy', 0 );
+
+// Part of the hack to get custom post type URL slugs translations to work with Polylang (until we use Pro)
+function correct_slug_in_language_switcher($url, $lang) {
+    global $post;
+
+    $translated_post_id = pll_get_post($post->ID, $lang);
+    $translated_post = get_post($translated_post_id);
+    $translated_post_name = $translated_post->post_name;
+
+    if($post->post_type == 'estyn_inspectionrpt') {
+        $slug = $lang == 'cy' ? 'adolygiadau' : 'inspection-reports';
+    } elseif ($post->post_type == 'estyn_newsarticle') {
+        $slug = $lang == 'cy' ? 'newyddion' : 'news';
+    } elseif ($post->post_type == 'estyn_imp_resource') {
+        $slug = $lang == 'cy' ? 'adnoddau-gwella' : 'improvement-resources';
+    } elseif ($post->post_type == 'estyn_eduprovider') {
+        $slug = $lang == 'cy' ? 'darparwyr-addysg' : 'education-providers';
+    } else {
+        return $url;
+    }
+    
+    if($lang == 'en') {
+        $url = '/' . $slug . '/' . $translated_post_name . '/';
+    } else {
+        $url = '/cy/' . $slug . '/' . $translated_post_name . '/';
+    }
+
+    return $url;
+}
+add_filter('pll_translation_url', __NAMESPACE__ . '\\correct_slug_in_language_switcher', 10, 2);
+
 
 /**
  * Now for our own REST API endpoints
@@ -600,3 +642,4 @@ function save_post_after_import($post_id) {
  * Stop ACF removing the 'Custom Fields' meta box from the post edit screen
  */
 //add_filter('acf/settings/remove_wp_meta_box', '__return_false');
+
