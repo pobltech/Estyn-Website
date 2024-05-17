@@ -194,7 +194,7 @@
         'carouselDescription' => __('Blog posts and news articles from Estyn', 'sage'),
         'carouselButtonText' => __('All articles', 'sage'),
         'carouselItems' => $sliderItems,
-        'carouselButtonLink' => '/news-and-blog',
+        'carouselButtonLink' => App\get_permalink_by_template('template-news-and-blog.blade.php') ?? (pll_current_language() == 'en' ? '/news-and-blog' : '/cy/newyddion-a-blog'),
         'doNotDoJavaScript' => false
       ])
   </div>

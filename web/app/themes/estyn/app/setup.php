@@ -497,6 +497,8 @@ function estyn_resources_search(\WP_REST_Request $request) {
         } elseif($params['postType'] === 'estyn_eduprovider') {
             $args['post_type'] = 'estyn_eduprovider';
             $args['posts_per_page'] = 50;
+            $args['orderby'] = 'title';
+            $args['order'] = 'ASC';
         } elseif($params['postType'] === 'estyn_inspectionrpt') {
             $args['post_type'] = 'estyn_inspectionrpt';
         }
@@ -520,9 +522,12 @@ function estyn_resources_search(\WP_REST_Request $request) {
         $args['orderby'] = $params['sort'];
         if($params['sort'] == 'title') {
             $args['order'] = 'ASC';
+        } elseif($params['sort'] == 'date' || $params['sort'] == 'modified') {
+            $args['order'] = 'DESC';
         } elseif($params['sort'] == 'type' && isset($params['postType']) && $params['postType'] == 'estyn_imp_resource') {
             // We need to sort by the 'Improvement Resource Type' taxonomy
             $args['orderby'] = 'tax_query';
+            $args['order'] = 'ASC';
         }
     }
 
@@ -612,10 +617,19 @@ function estyn_resources_search(\WP_REST_Request $request) {
 
         $postTypeName = ucfirst(strtolower($postTypeName));
 
+        $superDateText = null;
+        if(($args['post_type'] != 'estyn_eduprovider') && isset($args['orderby'])) {
+            if($args['orderby'] == 'modified') {
+                $superDateText = get_the_modified_date('d/m/Y', $post->ID);
+            } else {
+                $superDateText = get_the_date('d/m/Y', $post->ID);
+            }
+        }
+
         $items[] = [
             'linkURL' => get_permalink($post->ID),
             'superText' => $postTypeName,
-            'superDate' => $args['post_type'] != 'estyn_eduprovider' ? get_the_date('d/m/Y', $post->ID) : null,
+            'superDate' => $superDateText,
             'title' => get_the_title($post->ID),
         ];
     }
@@ -643,3 +657,24 @@ function save_post_after_import($post_id) {
  */
 //add_filter('acf/settings/remove_wp_meta_box', '__return_false');
 
+/**
+ * Get the permalink of a page that uses a specific template
+ * 
+ * @param string $template The template file name
+ * @return string|null The permalink of the page, or null if no pages were found
+ */
+function get_permalink_by_template($template) {
+    // Get all pages that use the specified template
+    $pages = get_pages(array(
+        'meta_key' => '_wp_page_template',
+        'meta_value' => $template
+    ));
+
+    // Check if any pages were found
+    if ($pages) {
+        // Return the permalink of the first page
+        return get_permalink($pages[0]->ID);
+    } else {
+        return null;
+    }
+}
