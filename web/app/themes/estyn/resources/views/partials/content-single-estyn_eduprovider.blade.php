@@ -131,6 +131,7 @@
             </div>
         </div>
     </div>
+    @if($hasResources)
     <div class="container px-md-4 px-xl-5">
         <div class="row">
             <div class="col-12">
@@ -138,7 +139,6 @@
             </div>
         </div>
     </div>
-    @if($hasResources)
     <div class="container px-md-4 px-xl-5 mt-5">
         <div class="row">
             <div class="col-12">
@@ -156,6 +156,7 @@
         </div>
     </div>
     @endif
+    {{--
     <div class="container px-md-4 px-xl-5">
         <div class="row" id="estyn-widget">
             <div class="col-12">
@@ -181,7 +182,7 @@
             </div>
             <div class="col-12 col-md-6"></div>
         </div>
-    </div>
+    </div>--}}
 </div>
 @push('scripts')
     <script>
