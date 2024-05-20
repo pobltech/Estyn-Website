@@ -9,21 +9,21 @@
         [
             'url' => '#inspection-reports',
             'bgColourClass' => 'bg-signpost-blue',
-            'iconClasses' => 'fas fa-graduation-cap',
+            'iconClasses' => 'fas fa-regular fa-folder-open',
             'title' => __('Inspection report', 'sage'),
             'description' => __('Read the latest report for this provider', 'sage')
         ],
         [
             'url' => '#contact-details',
             'bgColourClass' => 'bg-signpost-verylightbrown',
-            'iconClasses' => 'fas fa-book',
+            'iconClasses' => 'fas fa-regular fa-location-dot',
             'title' => __('Provider details', 'sage'),
             'description' => __('Contact details and location', 'sage')
         ],
         [
             'url' => '#estyn-widget',
             'bgColourClass' => 'bg-signpost-lightpink',
-            'iconClasses' => 'fas fa-calendar-alt',
+            'iconClasses' => 'fas fa-regular fa-badge-check',
             'title' => __('Estyn widget', 'sage'),
             'description' => __('Find out when your inspection is due', 'sage')
         ]
