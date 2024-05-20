@@ -270,7 +270,9 @@
           $searchArgs = [
             'post_type' => ['estyn_newsarticle', 'post'],
             'posts_per_page' => -1,
-            'orderby' => 'modified',
+            'orderby' => 'meta_value',
+            'meta_key' => 'last_updated',
+            'order' => 'DESC'
           ];
 
           // If there's a Wordpress search query in the URL then add it to the search args
@@ -281,7 +283,9 @@
           $searchArgs = [
             'post_type' => 'estyn_imp_resource',
             'posts_per_page' => -1,
-            'orderby' => 'modified',
+            'orderby' => 'meta_value',
+            'meta_key' => 'last_updated',
+            'order' => 'DESC'
           ];
 
           // If there's a Wordpress search query in the URL then add it to the search args
@@ -397,7 +401,7 @@
                   <label class="text-nowrap me-3" for="sort-by">{{ __('Sort by', 'sage') }}</label>
                   <select id="sort-by" class="form-select">
                     @if((!isset($isNewsAndBlog) || !$isNewsAndBlog) && (!isset($isProviderSearch) || !$isProviderSearch) && (!isset($isInspectionScheduleSearch) || !$isInspectionScheduleSearch) )
-                      <option value="modified">{{ __('Latest updated', 'sage') }}</option>
+                      <option value="lastUpdated">{{ __('Latest updated', 'sage') }}</option>
                     @endif
                     @if(!isset($isProviderSearch) || !$isProviderSearch)
                       <option value="date">{{ __('Publication date', 'sage') }}</option>

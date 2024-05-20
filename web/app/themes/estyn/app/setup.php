@@ -554,10 +554,16 @@ function estyn_resources_search(\WP_REST_Request $request) {
     }
 
     if(isset($params['sort'])) {
-        $args['orderby'] = $params['sort'];
+        if($params['sort'] == 'lastUpdated') {
+            $args['orderby'] = 'meta_value';
+            $args['meta_key'] = 'last_updated';
+        } else {
+            $args['orderby'] = $params['sort'];
+        }
+
         if($params['sort'] == 'title') {
             $args['order'] = 'ASC';
-        } elseif($params['sort'] == 'date' || $params['sort'] == 'modified') {
+        } elseif($params['sort'] == 'date' || $params['sort'] == 'lastUpdated') {
             $args['order'] = 'DESC';
         } elseif($params['sort'] == 'type' && isset($params['postType']) && $params['postType'] == 'estyn_imp_resource') {
             // We need to sort by the 'Improvement Resource Type' taxonomy
@@ -654,8 +660,8 @@ function estyn_resources_search(\WP_REST_Request $request) {
 
         $superDateText = null;
         if(($args['post_type'] != 'estyn_eduprovider') && isset($args['orderby'])) {
-            if($args['orderby'] == 'modified') {
-                $superDateText = get_the_modified_date('d/m/Y', $post->ID);
+            if($params['sort'] == 'lastUpdated') {
+                $superDateText = (new \DateTime(get_field('last_updated', $post->ID)))->format('d/m/Y');
             } else {
                 $superDateText = get_the_date('d/m/Y', $post->ID);
             }
