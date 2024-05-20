@@ -15,7 +15,10 @@ class ProviderComposer extends Composer
         return [
             'providerData' => $this->providerData(),
             'hasResources' => $this->hasResources(),
-            'hasInspectionReports' => $this->hasInspectionReports()
+            'hasInspectionReports' => $this->hasInspectionReports(),
+            'inspectionReports' => $this->getInspectionReports(),
+            'reportPublicationDate' => $this->reportPublicationDate(),
+            'nextInspectionDate' => $this->getNextInspectionDate()
         ];
     }
 
@@ -33,6 +36,12 @@ class ProviderComposer extends Composer
     }
 
     public function hasResources() {
+        $resources = $this->getResources();
+        
+        return !empty($resources);
+    }
+
+    public function getResources() {
         $resources = get_posts(array(
             'post_type' => 'estyn_imp_resource',
             'meta_query' => array(
@@ -44,21 +53,50 @@ class ProviderComposer extends Composer
             )
         ));
         
-        return !empty($resources);
+        return $resources;
     }
 
     public function hasInspectionReports() {
+        $inspectionReports = $this->getInspectionReports();
+        
+        return !empty($inspectionReports);
+    }
+
+    public function getInspectionReports() {
         $inspectionReports = get_posts(array(
             'post_type' => 'estyn_inspectionrpt',
             'meta_query' => array(
                 array(
-                    'key' => 'provider',
+                    'key' => 'inspected_provider',
                     'value' => get_the_ID(),
                     'compare' => 'LIKE'
                 )
-            )
+            ),
         ));
+
+        // Sort them by inspection date, descending
+        usort($inspectionReports, function($a, $b) {
+            $dateA = get_field('inspection_date', $a->ID);
+            $dateB = get_field('inspection_date', $b->ID);
+
+            return strtotime($dateB) - strtotime($dateA);
+        });
         
-        return !empty($inspectionReports);
+        return $inspectionReports;
+    }
+
+    // Get the date of the most recent inspection report, based on get_field('inspection_date')
+    public function reportPublicationDate() {
+        if(!$this->hasInspectionReports()) {
+            return false;
+        }
+
+        $reports = $this->getInspectionReports();
+
+        return get_field('inspection_date', $reports[0]->ID);     
+    }
+
+    public function getNextInspectionDate() {
+        return get_field('next_scheduled_inspection_date') ?? null;
     }
 }

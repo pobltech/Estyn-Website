@@ -39,27 +39,17 @@
         <div class="row justify-content-center justify-content-md-between mb-5">
             <div class="col-12 col-md-6 mb-4 mb-md-0">
                 @if($hasInspectionReports)
+                    @php($items = [])
+                    @foreach($inspectionReports as $inspectionReportPost)
+                        @php($items[] = [
+                            'linkURL' => get_permalink($inspectionReportPost->ID),
+                            'superDate' => (new \DateTime(get_field('inspection_date', $inspectionReportPost->ID)))->format('d/m/Y'),
+                            'title' => get_the_title($inspectionReportPost->ID),
+                            'dateOnRight' => true
+                        ])
+                    @endforeach
                     @include('components.resource-list', [
-                        'items' => [
-                            [
-                                'linkURL' => '#',
-                                'superDate' => '07/11/2021',
-                                'title' => __('Inspection report 2021', 'sage'),
-                                'dateOnRight' => true
-                            ],
-                            [
-                                'linkURL' => '#',
-                                'superDate' => '02/03/2017',
-                                'title' => __('Inspection report 2017', 'sage'),
-                                'dateOnRight' => true
-                            ],
-                            [
-                                'linkURL' => '#',
-                                'superDate' => '22/11/2013',
-                                'title' => __('Inspection report 2013', 'sage'),
-                                'dateOnRight' => true
-                            ]
-                        ],
+                        'items' => $items,
                         'noMarginBottom' => true
                     ])
                 @endif
@@ -68,18 +58,20 @@
                 <div class="mt-2 mb-4">
                     @include('components.dot-text-date', [
                         'text' => __('Next scheduled inspection/visit', 'sage'),
-                        'date' => '23 October 2023',
+                        'date' => !empty($nextInspectionDate) ? (new \DateTime($nextInspectionDate))->format('j F Y') : __('No details available', 'sage'),
                         'bgColourClass' => 'bg-signpost-blue',
                         'dontShrink' => true
                     ])
                 </div>
                 <div>
-                    @include('components.dot-text-date', [
-                        'text' => __('Report publication date', 'sage'),
-                        'date' => '28 December 2023',
-                        'bgColourClass' => 'bg-signpost-blue',
-                        'dontShrink' => true
-                    ])
+                    @if($hasInspectionReports)
+                        @include('components.dot-text-date', [
+                            'text' => __('Report publication date', 'sage'),
+                            'date' => (new \DateTime($reportPublicationDate))->format('j F Y'),
+                            'bgColourClass' => 'bg-signpost-blue',
+                            'dontShrink' => true
+                        ])
+                    @endif
                 </div>
             </div>
         </div>
