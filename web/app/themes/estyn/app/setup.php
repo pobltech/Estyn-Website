@@ -517,10 +517,14 @@ function estyn_resources_search(\WP_REST_Request $request) {
     //error_log('Language: ' . $language);
     
     $args = [
-        'posts_per_page' => -1,
+        'posts_per_page' => 10,
         'post_type' => ['post', 'estyn_newsarticle'],
         'lang' => $language,
     ];
+
+    if(isset($params['paged'])) {
+        $args['paged'] = $params['paged'];
+    }
 
     if(isset($params['postType'])) {
         if($params['postType'] === 'estyn_newsarticle') {
@@ -679,7 +683,14 @@ function estyn_resources_search(\WP_REST_Request $request) {
         'items' => $items
     ]);
 
-    return ['html' => $HTML->render(), 'totalPosts' => $query->found_posts];
+    return [
+        'html' => $HTML->render(),
+        'totalPosts' => $query->found_posts,
+        'maxPages' => $query->max_num_pages,
+        'currentPage' => $args['paged'],
+        'nextPage' => $query->max_num_pages > $args['paged'] ? $args['paged'] + 1 : null,
+        'prevPage' => $args['paged'] > 1 ? $args['paged'] - 1 : null,
+    ];
 }
 
 /**

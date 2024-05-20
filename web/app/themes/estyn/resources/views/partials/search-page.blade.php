@@ -266,10 +266,14 @@
         $searchQuery = null;
         $searchArgs = null;
 
+        if(isset($_GET['paged'])) {
+          $searchArgs['paged'] = intval($_GET['paged']);
+        }
+
         if($isNewsAndBlog) {
           $searchArgs = [
             'post_type' => ['estyn_newsarticle', 'post'],
-            'posts_per_page' => -1,
+            'posts_per_page' => 10,
             'orderby' => 'meta_value',
             'meta_key' => 'last_updated',
             'order' => 'DESC'
@@ -282,7 +286,7 @@
         } elseif($isImprovementResourcesSearch) {
           $searchArgs = [
             'post_type' => 'estyn_imp_resource',
-            'posts_per_page' => -1,
+            'posts_per_page' => 10,
             'orderby' => 'meta_value',
             'meta_key' => 'last_updated',
             'order' => 'DESC'
@@ -422,165 +426,171 @@
                 <span class="visually-hidden">Loading...</span>
               </div>
             </div>
-            <div id="search-results">
-              <div class="list-group list-group-flush resourceList">
-                @if(!empty($searchQuery))
-                  @php
-                    $items = [];
-                  @endphp
-                  @if($searchQuery->have_posts())
-                    @while($searchQuery->have_posts())
-                      @php
-                        $searchQuery->the_post();
-
-                        $postTypeName = (get_post_type_object(get_post_type()))->labels->singular_name;
-                        if($postTypeName == 'Post') {
-                          $postTypeName = __('Blog post', 'sage');
-                        }
-
-                        $postTypeName = ucfirst(strtolower($postTypeName));
-
-                        $items[] = [
-                          'linkURL' => get_the_permalink(),
-                          'superText' => $postTypeName,
-                          'superDate' => get_the_date('d/m/Y'),
-                          'title' => get_the_title()
-                        ];
-                      @endphp
-                    @endwhile
-
+            <div id="search-results-container">
+              <div id="search-results">
+                <div class="list-group list-group-flush resourceList">
+                  @if(!empty($searchQuery))
                     @php
-                      wp_reset_postdata();
+                      $items = [];
                     @endphp
-                  @endif
+                    @if($searchQuery->have_posts())
+                      @while($searchQuery->have_posts())
+                        @php
+                          $searchQuery->the_post();
 
-                  @if(!empty($items))
-                    @include('components.resource-list', [
-                      'items' => $items
-                    ])
+                          $postTypeName = (get_post_type_object(get_post_type()))->labels->singular_name;
+                          if($postTypeName == 'Post') {
+                            $postTypeName = __('Blog post', 'sage');
+                          }
+
+                          $postTypeName = ucfirst(strtolower($postTypeName));
+
+                          $items[] = [
+                            'linkURL' => get_the_permalink(),
+                            'superText' => $postTypeName,
+                            'superDate' => get_the_date('d/m/Y'),
+                            'title' => get_the_title()
+                          ];
+                        @endphp
+                      @endwhile
+
+                      @php
+                        wp_reset_postdata();
+                      @endphp
+                    @endif
+
+                    @if(!empty($items))
+                      @include('components.resource-list', [
+                        'items' => $items
+                      ])
+                    @else
+                      <p>{{ __('No results found', 'sage') }}</p>
+                    @endif
                   @else
-                    <p>{{ __('No results found', 'sage') }}</p>
-                  @endif
-                @else
-                @if(isset($isNewsAndBlog) && $isNewsAndBlog)
+                  @if(isset($isNewsAndBlog) && $isNewsAndBlog)
+                                    @include('components.resource-list', [
+                                        'items' => [
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'News article',
+                                                'superDate' => '24/01/2024',
+                                                'title' => 'Improving teaching through an emphasis on professional learning'
+                                            ],
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'News article',
+                                                'superDate' => '24/01/2024',
+                                                'title' => 'Improving attendance in secondary schools'
+                                            ],
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'News article',
+                                                'superDate' => '24/01/2024',
+                                                'title' => 'Improving attendance in secondary schools - training materials'
+                                            ],
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'News article',
+                                                'superDate' => '24/01/2024',
+                                                'title' => 'Developing early communication skills with predominantly pre verbal pupils'
+                                            ],
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'News article',
+                                                'superDate' => '24/01/2024',
+                                                'title' => 'Motivating pupils to speak Welsh'
+                                            ],
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'News article',
+                                                'superDate' => '24/01/2024',
+                                                'title' => 'Developing a programme to provide targeted support for vulnerable learners to improve their attendance'
+                                            ]
+                                        ]
+                                    ])
+                                @elseif(isset($isInspectionReportsSearch) && $isInspectionReportsSearch)
+                                    @include('components.resource-list', [
+                                        'items' => [
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'Inspection report',
+                                                'superDate' => '24/01/2024',
+                                                'title' => 'Cardiff High School'
+                                            ],
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'Inspection report',
+                                                'superDate' => '21/03/2023',
+                                                'title' => 'Cwmbran High School'
+                                            ]
+                                        ]
+                                    ])
+                                @elseif(isset($isInspectionScheduleSearch) && $isInspectionScheduleSearch)
                                   @include('components.resource-list', [
-                                      'items' => [
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'News article',
-                                              'superDate' => '24/01/2024',
-                                              'title' => 'Improving teaching through an emphasis on professional learning'
-                                          ],
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'News article',
-                                              'superDate' => '24/01/2024',
-                                              'title' => 'Improving attendance in secondary schools'
-                                          ],
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'News article',
-                                              'superDate' => '24/01/2024',
-                                              'title' => 'Improving attendance in secondary schools - training materials'
-                                          ],
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'News article',
-                                              'superDate' => '24/01/2024',
-                                              'title' => 'Developing early communication skills with predominantly pre verbal pupils'
-                                          ],
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'News article',
-                                              'superDate' => '24/01/2024',
-                                              'title' => 'Motivating pupils to speak Welsh'
-                                          ],
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'News article',
-                                              'superDate' => '24/01/2024',
-                                              'title' => 'Developing a programme to provide targeted support for vulnerable learners to improve their attendance'
-                                          ]
+                                    'items' => [
+                                      [
+                                        'linkURL' => '#',
+                                        'superText' => 'Upcoming inspection',
+                                        'superDate' => '05/11/2024',
+                                        'title' => 'Cardiff High School'
+                                      ],
+                                      [
+                                        'linkURL' => '#',
+                                        'superText' => 'Upcoming inspection',
+                                        'superDate' => '15/12/2024',
+                                        'title' => 'Cwmbran High School'
                                       ]
-                                  ])
-                              @elseif(isset($isInspectionReportsSearch) && $isInspectionReportsSearch)
-                                  @include('components.resource-list', [
-                                      'items' => [
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'Inspection report',
-                                              'superDate' => '24/01/2024',
-                                              'title' => 'Cardiff High School'
-                                          ],
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'Inspection report',
-                                              'superDate' => '21/03/2023',
-                                              'title' => 'Cwmbran High School'
-                                          ]
-                                      ]
-                                  ])
-                              @elseif(isset($isInspectionScheduleSearch) && $isInspectionScheduleSearch)
-                                @include('components.resource-list', [
-                                  'items' => [
-                                    [
-                                      'linkURL' => '#',
-                                      'superText' => 'Upcoming inspection',
-                                      'superDate' => '05/11/2024',
-                                      'title' => 'Cardiff High School'
-                                    ],
-                                    [
-                                      'linkURL' => '#',
-                                      'superText' => 'Upcoming inspection',
-                                      'superDate' => '15/12/2024',
-                                      'title' => 'Cwmbran High School'
                                     ]
-                                  ]
+                                  ])
+                                @else
+                                @include('components.resource-list', [
+                                    'items' => [
+                                        [
+                                            'linkURL' => '#',
+                                            'superText' => 'Effective practice',
+                                            'superDate' => '24/01/2024',
+                                            'title' => 'Improving teaching through an emphasis on professional learning'
+                                        ],
+                                        [
+                                            'linkURL' => '#',
+                                            'superText' => 'Effective practice',
+                                            'superDate' => '24/01/2024',
+                                            'title' => 'Improving attendance in secondary schools'
+                                        ],
+                                        [
+                                            'linkURL' => '#',
+                                            'superText' => 'Effective practice',
+                                            'superDate' => '24/01/2024',
+                                            'title' => 'Improving attendance in secondary schools - training materials'
+                                        ],
+                                        [
+                                            'linkURL' => '#',
+                                            'superText' => 'Effective practice',
+                                            'superDate' => '24/01/2024',
+                                            'title' => 'Developing early communication skills with predominantly pre verbal pupils'
+                                        ],
+                                        [
+                                            'linkURL' => '#',
+                                            'superText' => 'Effective practice',
+                                            'superDate' => '24/01/2024',
+                                            'title' => 'Motivating pupils to speak Welsh'
+                                        ],
+                                        [
+                                            'linkURL' => '#',
+                                            'superText' => 'Effective practice',
+                                            'superDate' => '24/01/2024',
+                                            'title' => 'Developing a programme to provide targeted support for vulnerable learners to improve their attendance'
+                                        ]
+                                    ]
                                 ])
-                              @else
-                              @include('components.resource-list', [
-                                  'items' => [
-                                      [
-                                          'linkURL' => '#',
-                                          'superText' => 'Effective practice',
-                                          'superDate' => '24/01/2024',
-                                          'title' => 'Improving teaching through an emphasis on professional learning'
-                                      ],
-                                      [
-                                          'linkURL' => '#',
-                                          'superText' => 'Effective practice',
-                                          'superDate' => '24/01/2024',
-                                          'title' => 'Improving attendance in secondary schools'
-                                      ],
-                                      [
-                                          'linkURL' => '#',
-                                          'superText' => 'Effective practice',
-                                          'superDate' => '24/01/2024',
-                                          'title' => 'Improving attendance in secondary schools - training materials'
-                                      ],
-                                      [
-                                          'linkURL' => '#',
-                                          'superText' => 'Effective practice',
-                                          'superDate' => '24/01/2024',
-                                          'title' => 'Developing early communication skills with predominantly pre verbal pupils'
-                                      ],
-                                      [
-                                          'linkURL' => '#',
-                                          'superText' => 'Effective practice',
-                                          'superDate' => '24/01/2024',
-                                          'title' => 'Motivating pupils to speak Welsh'
-                                      ],
-                                      [
-                                          'linkURL' => '#',
-                                          'superText' => 'Effective practice',
-                                          'superDate' => '24/01/2024',
-                                          'title' => 'Developing a programme to provide targeted support for vulnerable learners to improve their attendance'
-                                      ]
-                                  ]
-                              ])
+                                @endif
                               @endif
-                            @endif
+                </div>
               </div>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+              <button class="search-results-prev-button btn btn-outline-primary">{{ __('Previous', 'sage') }}</button>
+              <button class="search-results-next-button btn btn-outline-primary">{{ __('Next', 'sage') }}</button>
             </div>
 					</div>
 				</div>
@@ -593,11 +603,13 @@
 		(function($) {
 			let searchBoxTypingTimer = setTimeout(function() {}, 0);
 			const searchBoxTypingInterval = 500;
+      let currentPage = 1;
 
 			$(document).ready(function() {
 				hideSearchResultsLoadingIndicator();
 
 				$(".search-filters input:not([type='text'])").on("change", function() {
+          currentPage = 1;
 					applyFilters();
 				});
 
@@ -615,11 +627,13 @@
 					clearTimeout(searchBoxTypingTimer);
 
 					searchBoxTypingTimer = setTimeout(function() {
+            currentPage = 1;
 						applyFilters();
 					}, searchBoxTypingInterval);
 				});
 
 				$("#search-box-container button").on("click", function() {
+          currentPage = 1;
 					applyFilters();
 				});
 
@@ -628,19 +642,26 @@
 				});
 
         @if(!empty($searchArgs))
-          applyFilters();
+          applyFilters(true);
         @endif
 			});
 
-			function applyFilters() {
+			function applyFilters(firstApply = false) {
 				clearTimeout(searchBoxTypingTimer);
 				showSearchResultsLoadingIndicator();
+
+        if(!firstApply) {
+          // Set the height of the search results container to the current height of the search results,
+          // to help prevent the page from jumping/flashing
+          $("#search-results-container").css('height', $("#search-results").height() + 'px');
+        }
 
 				$("#search-results").fadeOut(250, function() {
 					let searchFilters = getSearchFilters();
           // Add a 'language' key and value to the searchFilters object
           searchFilters.language = "{{ pll_current_language() }}";
           //console.log('Language: ' + searchFilters.language);
+          searchFilters.paged = currentPage;
 
 					$.ajax({
 						url: estyn.resources_search_rest_url,
@@ -653,8 +674,27 @@
 							//console.log(response);
 							
 								$("#search-results").html(response.html);
-								$("#search-results").fadeIn(250);
+								$("#search-results").fadeIn(250, function() {
+                  $("#search-results-container").css('height', 'auto');
+                });
 								$(".search-results-number").text(response.totalPosts);
+
+                $(".search-results-prev-button, .search-results-next-button").off("click").hide();
+                if(response.totalPosts > 10) {
+                  if(response.prevPage) {
+                    $(".search-results-prev-button").on("click", function() {
+                      currentPage = response.prevPage;
+                      applyFilters();
+                    }).show();
+                  }
+                  if(response.nextPage) {
+                    $(".search-results-next-button").on("click", function() {
+                      currentPage = response.nextPage;
+                      applyFilters();
+                    }).show();
+                  }
+                }
+
 							
 							
 							hideSearchResultsLoadingIndicator();
