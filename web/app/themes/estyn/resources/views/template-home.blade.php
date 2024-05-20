@@ -100,7 +100,8 @@
           'featured_image_src' => get_the_post_thumbnail_url(),
           'title' => get_the_title(),
           'excerpt' => get_the_excerpt(),
-          'link' => get_the_permalink()
+          'link' => get_the_permalink(),
+          'date' => get_the_date('d F Y'),
         ];
       }
 
@@ -187,7 +188,36 @@
   ])
 </div>
 
-  <div class="mt-5">
+  <div class="pt-md-5 mt-5 pb-md-5">
+    @php
+      $query1 = new WP_Query([
+        'post_type' => ['post', 'estyn_newsarticle'],
+        'posts_per_page' => 20,
+        'status' => 'publish'
+      ]);
+
+      $sliderItems = [];
+
+      if($query1->have_posts()) {
+        while($query1->have_posts()) {
+          $query1->the_post();
+          // Do something with the post data
+          if(empty(get_the_post_thumbnail_url())) {
+            continue;
+          }
+
+          $sliderItems[] = [
+            'featured_image_src' => get_the_post_thumbnail_url(),
+            'title' => get_the_title(),
+            'link' => get_the_permalink(),
+            'date' => get_the_date('d F Y'),
+          ];
+        }
+
+        wp_reset_postdata();
+      }
+    @endphp
+
     @include('partials.slider', [
         'carouselID' => 'estyn-home-latest-news-carousel',
         'carouselHeading' => __('Latest articles', 'sage'),

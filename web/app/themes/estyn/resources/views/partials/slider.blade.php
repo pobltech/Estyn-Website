@@ -76,8 +76,13 @@
                             <img class="img-fluid" src="{{ $carouselItem['featured_image_src'] }}"/>
                         </div>
                         <div class="card-footer py-sm-4 pb-0 px-0">
+                            @if(!empty($carouselItem['date']))
+                                <p class="slider-item-date mb-0">{{ $carouselItem['date'] }}</p>
+                            @endif
                             <a class="stretched-link" href="{{ $carouselItem['link'] ?? '#' }}"><h4 class="mb-0">{{ $carouselItem['title'] }}</h4></a>
-                            <p class="mb-0">{{ $carouselItem['excerpt'] }}</p>
+                            @if(!empty($carouselItem['excerpt']))
+                                <p class="mb-0">{{ $carouselItem['excerpt'] }}</p>
+                            @endif
                         </div>
                     </div>
                 <?php endforeach; ?>
