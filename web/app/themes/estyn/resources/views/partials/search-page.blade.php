@@ -12,7 +12,7 @@
   News/blog posts:
   - Type (news/blog)(News Articles is a CPT, blog posts are Posts)
   - Dates (year)
-  - Tags (blog posts only)
+  - [Tags? (blog posts only)]
   - Sort: Publication date, title, type
 
   Inspection reports:
