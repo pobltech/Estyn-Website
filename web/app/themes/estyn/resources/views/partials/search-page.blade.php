@@ -355,7 +355,7 @@
             'post_type' => 'estyn_inspectionrpt',
             'posts_per_page' => 10,
             'orderby' => 'meta_value',
-            'meta_key' => 'last_updated',
+            'meta_key' => 'inspection_date',
           ];
 
           // If there's a Wordpress search query in the URL then add it to the search args
@@ -392,9 +392,9 @@
           ];
         }
 
-        if(!empty($searchArgs)) {
+        /*if(!empty($searchArgs)) {
           $searchQuery = new WP_Query($searchArgs);
-        }
+        }*/
       @endphp
 			<div class="searchResultsMain col-12 col-md-8">
 				<div class="row">
@@ -405,11 +405,14 @@
                 @if(!isset($isProviderSearch) || !$isProviderSearch)
                   <label class="text-nowrap me-3" for="sort-by">{{ __('Sort by', 'sage') }}</label>
                   <select id="sort-by" class="form-select">
-                    @if((!isset($isNewsAndBlog) || !$isNewsAndBlog) && (!isset($isProviderSearch) || !$isProviderSearch) && (!isset($isInspectionScheduleSearch) || !$isInspectionScheduleSearch) )
+                    @if((!isset($isNewsAndBlog) || !$isNewsAndBlog) && (!isset($isProviderSearch) || !$isProviderSearch) && (!isset($isInspectionScheduleSearch) || !$isInspectionScheduleSearch) && !(isset($isInspectionReportsSearch)) )
                       <option value="lastUpdated">{{ __('Latest updated', 'sage') }}</option>
                     @endif
                     @if(!isset($isProviderSearch) || !$isProviderSearch)
                       <option value="date">{{ __('Publication date', 'sage') }}</option>
+                    @endif
+                    @if(isset($isInspectionReportsSearch) && $isInspectionReportsSearch)
+                      <option value="lastUpdated">{{ __('Latest updated', 'sage') }}</option>
                     @endif
                     <option value="title">{{ __('Title', 'sage') }}</option>
                     @if((isset($isImprovementResourcesSearch) && $isImprovementResourcesSearch) || (isset($isNewsAndBlog) && $isNewsAndBlog))
@@ -526,7 +529,7 @@
                       <p>{{ __('No results found', 'sage') }}</p>
                     @endif
                   @else
-                  @if(isset($isNewsAndBlog) && $isNewsAndBlog)
+                  {{--@if(isset($isNewsAndBlog) && $isNewsAndBlog)
                                     @include('components.resource-list', [
                                         'items' => [
                                             [
@@ -642,7 +645,7 @@
                                         ]
                                     ]
                                 ])
-                                @endif
+                                @endif--}}
                               @endif
                 </div>
               </div>
