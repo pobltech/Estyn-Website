@@ -439,19 +439,42 @@
                         @php
                           $searchQuery->the_post();
 
-                          $firstPDFAttachment = null; // Used for inspection reports
+                          $reportFile = null;//$firstPDFAttachment = null; // Used for inspection reports
 
                           // If the post type is 'estyn_inspectionrpt',
                           // and the post doesn't have any attachments that is/are PDFs,
                           // then skip this post
                           if(get_post_type() == 'estyn_inspectionrpt') {
-                            $attachments = get_posts([
+                            /*$attachments = get_posts([
                               'post_type' => 'attachment',
                               'post_parent' => get_the_ID(),
                               'posts_per_page' => -1,
-                            ]);
+                            ]);*/
 
-                            $hasPDF = false;
+                            // We use get_field('report_file') to get the PDF attachment.
+                            // If that returns null, then we'll try the 'report_file_from_old_site' custom field (using get_post_meta()),
+                            // prepending the value with the uploads directory path + '/estyn_old_files/'
+                            $reportFile = get_field('report_file');
+                            if(!$reportFile) {
+                              $reportFile = get_post_meta(get_the_ID(), 'report_file_from_old_site', true);
+                              if($reportFile) {
+                                // report_file_from_old_site is the filename of the PDF prepended with the old fold structure, either 'private/files' or just 'files'
+                                // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
+                                // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
+                                $uploads = wp_upload_dir();
+                                $reportFile = $uploads['baseurl'] . '/estyn_old_files/' . $reportFile;
+                                // Now we have to deal with the fact that some of the filenames literally have "%20" in them!
+                                $reportFile = explode('/', $reportFile);
+                                $reportFilename = array_pop($reportFile);
+                                $reportFile = implode('/', $reportFile) . '/' . rawurlencode($reportFilename);
+                              } else {
+                                continue; // Skip this post because there's no report file
+                              }
+                            } else {
+                              $reportFile = $reportFile['url'];
+                            }
+
+                            /*$hasPDF = false;
                             foreach($attachments as $attachment) {
                               if($attachment->post_mime_type == 'application/pdf') {
                                 $hasPDF = true;
@@ -462,7 +485,7 @@
 
                             if(!$hasPDF) {
                               continue;
-                            }
+                            }*/
                           }
 
                           $postTypeName = (get_post_type_object(get_post_type()))->labels->singular_name;
@@ -474,7 +497,7 @@
 
                           if($isInspectionReportsSearch) {
                             $items[] = [
-                              'linkURL' => wp_get_attachment_url($firstPDFAttachment->ID), // We will have skipped this post if there are no PDF attachments
+                              'linkURL' => $reportFile, //wp_get_attachment_url($firstPDFAttachment->ID), // We will have skipped this post if there are no PDF attachments
                               'superText' => __('Inspection report', 'sage'),
                               'superDate' => get_the_date('d/m/Y'),
                               'title' => get_the_title(),

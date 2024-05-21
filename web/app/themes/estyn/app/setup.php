@@ -643,21 +643,45 @@ function estyn_resources_search(\WP_REST_Request $request) {
     // We'll send the HTML, from the view, instead of the raw post data
     $items = [];
     foreach($posts as $post) {
-        $firstPDFAttachment = null; // Used for inspection reports
+        $reportFile = null;//$firstPDFAttachment = null; // Used for inspection reports
 
         if($args['post_type'] == 'estyn_inspectionrpt') {
-            $attachments = get_posts([
+/*             $attachments = get_posts([
                 'post_type' => 'attachment',
                 'posts_per_page' => 1,
                 'post_parent' => $post->ID,
                 'post_mime_type' => 'application/pdf',
-            ]);
+            ]); */
 
-            if($attachments) {
+            // We use get_field('report_file') to get the PDF attachment.
+            // If that returns null, then we'll try the 'report_file_from_old_site' custom field (using get_post_meta()),
+            // prepending the value with the uploads directory path + '/estyn_old_files/'
+            $reportFile = get_field('report_file', $post->ID);
+            if(!$reportFile) {
+                $reportFile = get_post_meta($post->ID, 'report_file_from_old_site', true);
+                if($reportFile) {
+                    // report_file_from_old_site is the filename of the PDF prepended with the old fold structure, either 'private/files' or just 'files'
+                    // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
+                    // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
+                    $uploads = wp_upload_dir();
+                    $reportFile = $uploads['baseurl'] . '/estyn_old_files/' . $reportFile;
+                    // Now we have to deal with the fact that some of the filenames literally have "%20" in them!
+                    $reportFile = explode('/', $reportFile);
+                    $reportFilename = array_pop($reportFile);
+                    $reportFile = implode('/', $reportFile) . '/' . rawurlencode($reportFilename);
+                } else {
+                    continue; // We skip this inspection report if there's no PDF attachment
+                }
+            } else {
+                $reportFile = $reportFile['url'];
+            }
+
+
+            /* if($attachments) {
                 $firstPDFAttachment = $attachments[0];
             } else {
                 continue; // We don't want to show inspection reports without a PDF attachment
-            }
+            } */
         }        
         
         $postTypeName = (get_post_type_object(get_post_type($post)))->labels->singular_name;
@@ -690,7 +714,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
 
         if($args['post_type'] == 'estyn_inspectionrpt') {
             $items[] = [
-                'linkURL' => wp_get_attachment_url($firstPDFAttachment->ID),
+                'linkURL' => $reportFile, //wp_get_attachment_url($firstPDFAttachment->ID),
                 'superText' => $postTypeName,
                 'superDate' => $superDateText,
                 'title' => html_entity_decode(get_the_title($post->ID), ENT_QUOTES, 'UTF-8')
