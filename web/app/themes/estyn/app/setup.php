@@ -507,7 +507,7 @@ function estyn_all_search(\WP_REST_Request $request) {
     return $items;
 }
   
-// For the 'News and blog' page search and filters update (ajax) requests
+// For the search pages (ajax) requests
 // Returns the HTML for the list of resources
 function estyn_resources_search(\WP_REST_Request $request) {
     $params = $request->get_params();
@@ -643,6 +643,23 @@ function estyn_resources_search(\WP_REST_Request $request) {
     // We'll send the HTML, from the view, instead of the raw post data
     $items = [];
     foreach($posts as $post) {
+        $firstPDFAttachment = null; // Used for inspection reports
+
+        if($args['post_type'] == 'estyn_inspectionrpt') {
+            $attachments = get_posts([
+                'post_type' => 'attachment',
+                'posts_per_page' => 1,
+                'post_parent' => $post->ID,
+                'post_mime_type' => 'application/pdf',
+            ]);
+
+            if($attachments) {
+                $firstPDFAttachment = $attachments[0];
+            } else {
+                continue; // We don't want to show inspection reports without a PDF attachment
+            }
+        }        
+        
         $postTypeName = (get_post_type_object(get_post_type($post)))->labels->singular_name;
         if($postTypeName == 'Post') {
           $postTypeName = __('Blog post', 'sage');
@@ -671,12 +688,21 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
         }
 
-        $items[] = [
-            'linkURL' => get_permalink($post->ID),
-            'superText' => $postTypeName,
-            'superDate' => $superDateText,
-            'title' => get_the_title($post->ID),
-        ];
+        if($args['post_type'] == 'estyn_inspectionrpt') {
+            $items[] = [
+                'linkURL' => wp_get_attachment_url($firstPDFAttachment->ID),
+                'superText' => $postTypeName,
+                'superDate' => $superDateText,
+                'title' => html_entity_decode(get_the_title($post->ID), ENT_QUOTES, 'UTF-8')
+            ];
+        } else {
+            $items[] = [
+                'linkURL' => get_permalink($post->ID),
+                'superText' => $postTypeName,
+                'superDate' => $superDateText,
+                'title' => html_entity_decode(get_the_title($post->ID), ENT_QUOTES, 'UTF-8')
+            ];
+        }
     }
 
     $HTML = \Roots\view('components.resource-list', [
@@ -684,7 +710,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
     ]);
 
     return [
-        'html' => $HTML->render(),
+        'html' => $HTML->render(), // We use the Blade template view function to render the HTML
         'totalPosts' => $query->found_posts,
         'maxPages' => $query->max_num_pages,
         'currentPage' => $args['paged'],
@@ -707,7 +733,7 @@ function save_post_after_import($post_id) {
 /** 
  * Stop ACF removing the 'Custom Fields' meta box from the post edit screen
  */
-//add_filter('acf/settings/remove_wp_meta_box', '__return_false');
+add_filter('acf/settings/remove_wp_meta_box', '__return_false');
 
 /**
  * Get the permalink of a page that uses a specific template

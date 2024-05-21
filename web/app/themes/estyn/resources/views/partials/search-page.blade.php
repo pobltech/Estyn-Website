@@ -353,8 +353,9 @@
         } elseif($isInspectionReportsSearch) {
           $searchArgs = [
             'post_type' => 'estyn_inspectionrpt',
-            'posts_per_page' => -1,
-            'orderby' => 'modified',
+            'posts_per_page' => 10,
+            'orderby' => 'meta_value',
+            'meta_key' => 'last_updated',
           ];
 
           // If there's a Wordpress search query in the URL then add it to the search args
@@ -386,7 +387,7 @@
         } elseif($isProviderSearch) {
           $searchArgs = [
             'post_type' => 'estyn_eduprovider',
-            'posts_per_page' => 50,
+            'posts_per_page' => 10,
             'orderby' => 'title',
           ];
         }
@@ -423,7 +424,7 @@
 					<div class="col-12 position-relative">
             <div class="search-results-loading-indicator-container d-flex justify-content-center">
               <div class="search-results-loading-indicator spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden">{{ __('Loading', 'sage') }}...</span>
               </div>
             </div>
             <div id="search-results-container">
@@ -438,19 +439,54 @@
                         @php
                           $searchQuery->the_post();
 
+                          $firstPDFAttachment = null; // Used for inspection reports
+
+                          // If the post type is 'estyn_inspectionrpt',
+                          // and the post doesn't have any attachments that is/are PDFs,
+                          // then skip this post
+                          if(get_post_type() == 'estyn_inspectionrpt') {
+                            $attachments = get_posts([
+                              'post_type' => 'attachment',
+                              'post_parent' => get_the_ID(),
+                              'posts_per_page' => -1,
+                            ]);
+
+                            $hasPDF = false;
+                            foreach($attachments as $attachment) {
+                              if($attachment->post_mime_type == 'application/pdf') {
+                                $hasPDF = true;
+                                $firstPDFAttachment = $attachment;
+                                break;
+                              }
+                            }
+
+                            if(!$hasPDF) {
+                              continue;
+                            }
+                          }
+
                           $postTypeName = (get_post_type_object(get_post_type()))->labels->singular_name;
-                          if($postTypeName == 'Post') {
+                          if($postTypeName == __('Post', 'sage')) {
                             $postTypeName = __('Blog post', 'sage');
                           }
 
                           $postTypeName = ucfirst(strtolower($postTypeName));
 
-                          $items[] = [
-                            'linkURL' => get_the_permalink(),
-                            'superText' => $postTypeName,
-                            'superDate' => get_the_date('d/m/Y'),
-                            'title' => get_the_title()
-                          ];
+                          if($isInspectionReportsSearch) {
+                            $items[] = [
+                              'linkURL' => wp_get_attachment_url($firstPDFAttachment->ID), // We will have skipped this post if there are no PDF attachments
+                              'superText' => __('Inspection report', 'sage'),
+                              'superDate' => get_the_date('d/m/Y'),
+                              'title' => get_the_title(),
+                            ];
+                          } else {
+                            $items[] = [
+                              'linkURL' => get_the_permalink(),
+                              'superText' => $postTypeName,
+                              'superDate' => get_the_date('d/m/Y'),
+                              'title' => get_the_title()
+                            ];
+                          }
                         @endphp
                       @endwhile
 
