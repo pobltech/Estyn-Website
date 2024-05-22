@@ -461,7 +461,7 @@
                             if(!$reportFile) {
                               $reportFile = get_post_meta(get_the_ID(), 'report_file_from_old_site', true);
                               if($reportFile) {
-                                // report_file_from_old_site is the filename of the PDF prepended with the old fold structure, either 'private/files' or just 'files'
+                                // report_file_from_old_site is the filename of the PDF prepended with the old folder structure, either 'private/files' or just 'files'
                                 // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
                                 // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
                                 $uploads = wp_upload_dir();
