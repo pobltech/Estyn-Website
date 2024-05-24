@@ -1,4 +1,4 @@
-<article @php(post_class('h-entry'))>
+<article @php(post_class('h-entry pb-5'))>
 <?php
     $pageHeaderArgs = [
         'title' => $title ?? get_the_title(),
@@ -8,26 +8,12 @@
         'date' => $date ?? null
     ];
 
-    $providerPost = get_field('resource_creator');
-
-    if($providerPost) {
-        $providerPost = $providerPost[0]; // Get the first one; there should only be one
-        $providerName = get_the_title($providerPost->ID);
-        $providerIconImage = get_field('icon_image', $providerPost->ID) ? get_field('icon_image', $providerPost->ID) : null;
-        $providerNumPupils = get_field('number_of_pupils', $providerPost->ID) ? get_field('number_of_pupils', $providerPost->ID) : null;
-        $providerAgeRange = get_field('age_range', $providerPost->ID) ? get_field('age_range', $providerPost->ID) : null;
-
-        $pageHeaderArgs['providerDetails'] = [
-            'name' => $providerName,
-            'icon_image' => $providerIconImage,
-            'number_of_pupils' => $providerNumPupils,
-            'age_range' => $providerAgeRange
-        ];
-    }
-
     $resourceTypes = get_the_terms(get_the_ID(), 'improvement_resource_type');
     
     $isThematicReport = false;
+    $isEffectivePractice = false;
+    $isAnnualReport = false;
+    $isAdditionalResource = false;
 
     if($resourceTypes) {
         $resourceTypeString = '';
@@ -44,10 +30,43 @@
               $pageHeaderArgs['fullWidth'] = true;
 
               $isThematicReport = true;
+            } elseif ($resourceType->slug == 'effective-practice') {
+              $isEffectivePractice = true;
+            } elseif ($resourceType->slug == 'annual-report') {
+              $isAnnualReport = true;
+            } elseif ($resourceType->slug == 'additional-resource') {
+              $isAdditionalResource = true;
             }
         }
 
         $pageHeaderArgs['subtitle'] = $resourceTypeString;
+    }
+
+    $providerPostID = null;
+
+    if($isThematicReport) {
+
+    }
+    elseif($isEffectivePractice) {
+        $providerPost = get_field('resource_creator');
+
+        if($providerPost) {
+          $providerPostID = $providerPost->ID;
+        }
+    }
+
+    if($providerPostID) {
+        $providerName = get_the_title($providerPostID);
+        $providerIconImage = get_field('icon_image', $providerPostID) ? get_field('icon_image', $providerPostID) : null;
+        $providerNumPupils = get_field('number_of_pupils', $providerPostID) ? get_field('number_of_pupils', $providerPostID) : null;
+        $providerAgeRange = get_field('age_range', $providerPostID) ? get_field('age_range', $providerPostID) : null;
+
+        $pageHeaderArgs['providerDetails'] = [
+            'name' => $providerName,
+            'icon_image' => $providerIconImage,
+            'number_of_pupils' => $providerNumPupils,
+            'age_range' => $providerAgeRange
+        ];
     }
 ?>
 @include('partials.page-header', $pageHeaderArgs)
@@ -115,9 +134,12 @@
                     @endif
 
                   <hr>
-                  @if($providerPost)
+                  @if($providerPostID)
                     @include('partials.provider-resources-list',
-                      ['providerPost' => $providerPost]
+                      [
+                        'providerPostID' => $providerPostID,
+                        'excludeResource' => get_the_ID(),
+                      ]
                     )
                   @endif
                 </div>

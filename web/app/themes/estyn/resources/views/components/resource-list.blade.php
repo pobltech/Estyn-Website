@@ -5,7 +5,7 @@
             'superText' => $item['superText'] ?? null,
             'superDate' => $item['superDate'] ?? null,
             'dateOnRight' => $item['dateOnRight'] ?? null,
-            'title' => $item['title'],
+            'title' => html_entity_decode($item['title'], ENT_QUOTES, 'UTF-8'),
             'extraText' => $item['extraText'] ?? null,
             'greenVersion' => $item['greenVersion'] ?? null
         ])

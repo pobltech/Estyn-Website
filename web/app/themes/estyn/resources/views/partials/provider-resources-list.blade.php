@@ -1,10 +1,11 @@
 @php
     $resources = get_posts(array(
         'post_type' => 'estyn_imp_resource',
+        'post__not_in' => !empty($excludeResource) ? [$excludeResource] : [],
         'meta_query' => array(
             array(
                 'key' => 'resource_creator',
-                'value' => $providerPost->ID,
+                'value' => !empty($providerPost) ? $providerPost->ID : $providerPostID,
                 'compare' => 'LIKE'
             )
         )

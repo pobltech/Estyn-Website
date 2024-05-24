@@ -721,14 +721,14 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 'linkURL' => $reportFile, //wp_get_attachment_url($firstPDFAttachment->ID),
                 'superText' => $postTypeName,
                 'superDate' => $superDateText,
-                'title' => html_entity_decode(get_the_title($post->ID), ENT_QUOTES, 'UTF-8')
+                'title' => get_the_title($post->ID),
             ];
         } else {
             $items[] = [
                 'linkURL' => get_permalink($post->ID),
                 'superText' => $postTypeName,
                 'superDate' => $superDateText,
-                'title' => html_entity_decode(get_the_title($post->ID), ENT_QUOTES, 'UTF-8')
+                'title' => get_the_title($post->ID),
             ];
         }
     }
