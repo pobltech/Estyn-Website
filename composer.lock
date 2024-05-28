@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "75ed73b050b2dae3ca51bf599af70cd8",
+    "content-hash": "232d56e8119e9fdd3c1a07c6ac661c91",
     "packages": [
         {
             "name": "brick/math",
@@ -6491,6 +6491,24 @@
                 }
             ],
             "time": "2022-03-08T17:03:00+00:00"
+        },
+        {
+            "name": "wpackagist-plugin/admin-taxonomy-filter",
+            "version": "1.0.3",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/admin-taxonomy-filter/",
+                "reference": "tags/1.0.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/admin-taxonomy-filter.1.0.3.zip"
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/admin-taxonomy-filter/"
         },
         {
             "name": "wpackagist-plugin/advanced-custom-fields-font-awesome",
