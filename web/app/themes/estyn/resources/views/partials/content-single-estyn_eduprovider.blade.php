@@ -19,14 +19,14 @@
             'iconClasses' => 'fas fa-regular fa-location-dot',
             'title' => __('Provider details', 'sage'),
             'description' => __('Contact details and location', 'sage')
-        ],
+        ]/*,
         [
             'url' => '#estyn-widget',
             'bgColourClass' => 'bg-signpost-lightpink',
             'iconClasses' => 'fas fa-regular fa-badge-check',
             'title' => __('Estyn widget', 'sage'),
             'description' => __('Find out when your inspection is due', 'sage')
-        ]
+        ]*/
     ]
 ])
 <div class="reportMain pb-5">
@@ -42,7 +42,7 @@
                     @php($items = [])
                     @foreach($inspectionReports as $inspectionReportPost)
                         @php($items[] = [
-                            'linkURL' => get_permalink($inspectionReportPost->ID),
+                            'linkURL' => $inspectionReportPost->report_file_url, // See ProviderComposer.php
                             'superDate' => (new \DateTime(get_field('inspection_date', $inspectionReportPost->ID)))->format('d/m/Y'),
                             'title' => get_the_title($inspectionReportPost->ID),
                             'dateOnRight' => true

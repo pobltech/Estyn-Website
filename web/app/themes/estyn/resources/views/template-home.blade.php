@@ -57,10 +57,15 @@
             </div>
             <div class="col-12 col-md-5 offset-md-1">
               <h2 class="d-none d-md-block mb-sm-2">{{ __('Estyn for you', 'sage') }}</h2>
-              <p class="d-none d-md-block mb-2 mb-md-4">{{ __('Search our education & training providers', 'sage') }}</p>
+              <p class="d-none d-md-block mb-2 mb-md-4">{{ __('Sub text explaining more detail', 'sage') }}</p>
               <div class="d-flex align-items-start flex-column flex-sm-row flex-md-column flex-xxl-row">
-                <a class="btn btn-outline-light me-4 mb-3">{{ __('Parents, carers & learners', 'sage') }}</a>
-                <a class="btn btn-outline-light me-4 mb-3">{{ __('Education professionals', 'sage') }}</a>
+                @if(!empty($homeData['intro_buttons']))
+                  @foreach($homeData['intro_buttons'] as $button)
+                    <a class="btn btn-outline-light me-4 mb-3" href="{{ $button['url'] }}">{{ $button['text'] }}</a>
+                  @endforeach
+                @endif                
+                {{--<a class="btn btn-outline-light me-4 mb-3">{{ __('Parents, carers & learners', 'sage') }}</a>
+                <a class="btn btn-outline-light me-4 mb-3">{{ __('Education professionals', 'sage') }}</a>--}}
               </div>
             </div>
           </div>

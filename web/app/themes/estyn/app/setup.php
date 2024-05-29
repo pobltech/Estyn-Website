@@ -643,7 +643,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
     // We'll send the HTML, from the view, instead of the raw post data
     $items = [];
     foreach($posts as $post) {
-        $reportFile = null;//$firstPDFAttachment = null; // Used for inspection reports
+        $reportFile = null;//$firstPDFAttachment = null; // Used for inspection reports and annual reports
 
         $isAnnualReport = false;
         if($args['post_type'] == 'estyn_imp_resource') {
