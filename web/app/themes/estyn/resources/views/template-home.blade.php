@@ -9,13 +9,18 @@
     <div class="container h-100 w-100 d-flex align-items-end mb-5 pb-5 px-md-4 px-xl-5">
       <div class="row flex-fill">
         <div class="col-12 col-md-10 col-lg-8 col-xl-6 homeHeroContent">
-          <h1>{{ __('Placing learners at the heart of our work', 'sage') }}</h1>
-          <a class="btn btn-link mt-1">{{ __('Read more about what we do') }} <i class="fa-sharp fa-solid fa-arrow-right"></i></a>
+          <h1>{{ get_field('home_hero_heading') }}</h1>
+          <a href="{{ get_permalink(get_field('home_hero_subheading_text_page_to_link_to')) }}" class="btn btn-link mt-1">{{ get_field('home_hero_subheading_text') }} <i class="fa-sharp fa-solid fa-arrow-right"></i></a>
         </div>
       </div>
     </div>
     <div class="heroImage">
-      <img src="{{ asset('images/homeherofallback.png') }}"/>
+      {{-- If there's a featured image, we'll use Wordpress' function, otherwise we use asset('images/homeherofallback.png') --}}
+      @if(has_post_thumbnail())
+        {!! the_post_thumbnail('full') !!}
+      @else
+        <img src="{{ asset('images/homeherofallback.png') }}" alt="{{ __('Several children in a bright, Chemistry classroom') }}" />
+      @endif
     </div>
     <div class="heroOverlay"></div>
   </div>
