@@ -29,7 +29,7 @@
   - Local authority
   - Tags
   - Updated??
-  - Type (Thematic Report, Effective Practice, or Additional Resource)
+  - Type (Thematic Report, Effective Practice, Annual Report, or Additional Resource)
   - Year
   - Sort: Latest updated, publication date, title, type
 

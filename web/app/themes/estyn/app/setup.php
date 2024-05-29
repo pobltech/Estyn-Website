@@ -281,7 +281,7 @@ function create_improvement_resource_type_taxonomy() {
 add_action( 'init', __NAMESPACE__ . '\\create_improvement_resource_type_taxonomy', 0 );
 
 function add_improvement_resource_types() {
-    $types = array('Thematic Report', 'Effective Practice', 'Additional Resource');
+    $types = array('Thematic Report', 'Effective Practice', 'Additional Resource', 'Annual Report');
     foreach($types as $type) {
         if(!term_exists($type, 'improvement_resource_type')) {
             wp_insert_term($type, 'improvement_resource_type');
@@ -645,7 +645,20 @@ function estyn_resources_search(\WP_REST_Request $request) {
     foreach($posts as $post) {
         $reportFile = null;//$firstPDFAttachment = null; // Used for inspection reports
 
-        if($args['post_type'] == 'estyn_inspectionrpt') {
+        $isAnnualReport = false;
+        if($args['post_type'] == 'estyn_imp_resource') {
+            $terms = get_the_terms($post->ID, 'improvement_resource_type');
+            if($terms) {
+                foreach($terms as $term) {
+                    if($term->name == __('Annual Report', 'sage')) {
+                        $isAnnualReport = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport) {
 /*             $attachments = get_posts([
                 'post_type' => 'attachment',
                 'posts_per_page' => 1,
@@ -715,7 +728,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
         }
 
-        if($args['post_type'] == 'estyn_inspectionrpt') {
+        if(($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport) && $reportFile) {
             $items[] = [
                 'linkURL' => $reportFile, //wp_get_attachment_url($firstPDFAttachment->ID),
                 'superText' => $postTypeName,
