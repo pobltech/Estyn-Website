@@ -26,15 +26,15 @@
             }
 
             // If this is a Thematic Report then we want full width
-            if($resourceType->slug == 'thematic-report') {
+            if($resourceType->slug == __('thematic-report', 'sage')) {
               //$pageHeaderArgs['fullWidth'] = true;
 
               $isThematicReport = true;
-            } elseif ($resourceType->slug == 'effective-practice') {
+            } elseif ($resourceType->slug == __('effective-practice', 'sage')) {
               $isEffectivePractice = true;
-            } elseif ($resourceType->slug == 'annual-report') {
+            } elseif ($resourceType->slug == __('annual-report', 'sage')) {
               $isAnnualReport = true;
-            } elseif ($resourceType->slug == 'additional-resource') {
+            } elseif ($resourceType->slug == __('additional-resource', 'sage')) {
               $isAdditionalResource = true;
             }
         }
@@ -301,7 +301,41 @@
                       @php(the_post_thumbnail(null, ['class' => 'img-fluid rounded-3 mb-4']))
                     @endif
 
-                    @php(the_content())
+                    @if($isAdditionalResource)
+                      <?php
+                        if (get_the_excerpt() && !preg_match('/\[\.\.\.\]$/', get_the_excerpt())) {
+                          the_excerpt();
+                        
+                          if(!empty(get_the_content())) {
+                            echo '<hr>';
+                          }
+                        }
+
+                        if(!empty(get_the_content())) {
+                          the_content();
+                        }
+                      ?>
+                    @else
+                      @php(the_content())
+                    @endif
+
+                    @if($isAdditionalResource)
+                      @if(!empty(get_field('resources')))
+                        <hr>
+                        <h3>{{ __('Resources', 'sage') }}</h3>
+                        <?php
+                          $items = [];
+                          $resourcePosts = get_field('resources');
+                          foreach($resourcePosts as $resourcePost) {
+                            $items[] = [
+                              'linkURL' => get_permalink($resourcePost->ID),
+                              'title' => $resourcePost->post_title
+                            ];
+                          }
+                        ?>
+                        @include('components.resource-list', ['items' => $items])
+                      @endif
+                    @endif
 
                     @if ($pagination)
                       <footer>
