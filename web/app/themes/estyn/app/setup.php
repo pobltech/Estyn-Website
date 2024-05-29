@@ -663,8 +663,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
                     // report_file_from_old_site is the filename of the PDF prepended with the old folder structure, either 'private/files' or just 'files'
                     // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
                     // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
-                    $uploads = wp_upload_dir();
-                    $reportFile = $uploads['baseurl'] . '/estyn_old_files/' . $reportFile;
+                    $reportFile = ESTYN_OLD_FILES_URL . $reportFile;
                     // Now we have to deal with the fact that some of the filenames literally have "%20" in them!
                     $reportFile = explode('/', $reportFile);
                     $reportFilename = array_pop($reportFile);

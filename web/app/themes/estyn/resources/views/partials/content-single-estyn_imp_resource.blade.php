@@ -51,7 +51,7 @@
       $reportResources = get_field('report_resources');
 
       $pageHeaderArgs['extraButtons'] = [
-          ['text' => __('Download report', 'sage'), 'url' => '#download-full-report', 'iconClasses' => 'fa-sharp fa-solid fa-file-arrow-down']
+          ['text' => __('Download report', 'sage'), 'url' => $thematicReportData['fullReportDownloadURL'] ?? '#', 'iconClasses' => 'fa-sharp fa-solid fa-file-arrow-down']
       ];
 
       if($reportResources) {
@@ -188,6 +188,14 @@
                       'title' => $provider->post_title
                     ];
                   }
+
+                  // Order by title
+                  usort($items, function($a, $b) {
+                    return $a['title'] <=> $b['title'];
+                  });
+
+                  // Remove duplicates
+                  $items = array_map("unserialize", array_unique(array_map("serialize", $items)));
                 ?>
                 @include('components.resource-list', ['items' => $items])
               @endif
@@ -238,7 +246,7 @@
 		'noArc' => true,
 		'ctaUniqueID' => 'download-full-report',
 		'ctaHeading' => __('Download the full report', 'sage'),
-		'ctaButtonLinkURL' => '#',
+		'ctaButtonLinkURL' => $thematicReportData['fullReportDownloadURL'] ?? '#',
 		'ctaButtonText' => __('Download the full report', 'sage'),
 		'ctaButtonIconClasses' => 'fa-sharp fa-solid fa-file-arrow-down',
 		'ctaContainerExtraClasses' => 'pb-md-5',
