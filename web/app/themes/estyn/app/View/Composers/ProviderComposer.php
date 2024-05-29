@@ -120,7 +120,7 @@ class ProviderComposer extends Composer
             return false;
         }
 
-        $reports = $this->getInspectionReports();
+        $reports = $this->getInspectionReports(); // Note: Already sorted by inspection date, descending
 
         return get_field('inspection_date', $reports[0]->ID);     
     }
