@@ -76,7 +76,21 @@
 					<div class="row d-flex justify-content-center">
 						<div class="col-12 col-sm-10 col-xl-8">
 							<div class="row">
-								<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								@php
+									$sectors = isset($sectors) ? $sectors : get_terms([
+										'taxonomy' => 'sector',
+										'hide_empty' => false,
+									]);
+								@endphp
+								@foreach($sectors as $sector)
+								    @if($loop->iteration > 12) {{-- Only show the first 12 items --}}
+										@continue
+									@endif
+									<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+										<a href="{{ get_term_link($sector) }}" class="ctaMapLink">{{ $sector->name }} <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></a>
+									</div>
+								@endforeach
+								{{--<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
 									<a href="#" class="ctaMapLink">Non-maintained <span class="text-nowrap">nurseries <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 								</div>
 								<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
@@ -93,10 +107,18 @@
 								</div>
 								<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
 									<a href="#" class="ctaMapLink"><span class="text-nowrap">Primary <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
-								</div>
+								</div>--}}
 							</div>
 							<div class="row collapse" id="{{ $ctaUniqueID }}-collapseSectors">
-								<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								@foreach($sectors as $sector)
+									@if($loop->iteration < 13) {{-- Only show the 13th item onwards --}}
+										@continue
+									@endif
+									<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+										<a href="{{ get_term_link($sector) }}" class="ctaMapLink">{{ $sector->name }} <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></a>
+									</div>
+								@endforeach
+								{{--<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
 									<a href="#" class="ctaMapLink"><span class="text-nowrap">Secondary <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 								</div>
 								<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
@@ -113,7 +135,7 @@
 								</div>
 								<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
 									<a href="#" class="ctaMapLink"><span class="text-nowrap">All-age <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
-								</div>
+								</div>--}}
 							</div>
 							<div class="row">
 								<div class="col-12 d-flex justify-content-center mt-4">
