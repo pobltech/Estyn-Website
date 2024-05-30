@@ -29,6 +29,20 @@ class HomeComposer extends Composer
             'button_text' => get_field('home_cta_button_text'),
             'button_link' => get_permalink(get_field('home_cta_button_content_to_link_to_post'))
         ];
+
+        $waysToImproveCarouselItems = get_field('home_ways_to_improve_carousel_items');
+        if(!empty($waysToImproveCarouselItems)) {
+            $homeData['ways_to_improve_carousel_items'] = [];
+            foreach($waysToImproveCarouselItems as $item) {
+                $homeData['ways_to_improve_carousel_items'][] = [
+                    'featured_image_src' => $item['image']['url'],
+                    'featured_image_alt' => $item['image']['alt'],
+                    'title' => $item['heading'],
+                    'excerpt' => $item['subheading'],
+                    'link' => empty($item['custom_link']) ? get_permalink($item['content_to_link_to_post']) : $item['custom_link']
+                ];
+            }
+        }
         
         return $homeData;
     }

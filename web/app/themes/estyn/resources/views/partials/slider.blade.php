@@ -73,7 +73,7 @@
                 <?php foreach($carouselItems as $carouselItem) : ?>
                     <div class="card me-2 me-sm-4 h-100">
                         <div class="slideCardBody">
-                            <img class="img-fluid" src="{{ $carouselItem['featured_image_src'] }}"/>
+                            <img class="img-fluid" src="{{ $carouselItem['featured_image_src'] }}" alt="{{ $carouselItem['featured_image_alt'] ?? '' }}" />
                         </div>
                         <div class="card-footer py-sm-4 pb-0 px-0">
                             @if(!empty($carouselItem['date']))

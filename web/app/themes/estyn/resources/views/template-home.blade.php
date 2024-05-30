@@ -123,14 +123,16 @@
   @endphp
 
 <div class="mt-4 mt-sm-5">
-  @include('partials.slider', [
-    'carouselID' => 'estyn-home-carousel',
-    'carouselHeading' => __('Ways to improve', 'sage'),
-    'carouselDescription' => __('Our most recent resources to help you improve your setting', 'sage'),
-    'carouselButtonText' => __('All resources', 'sage'),
-    'carouselItems' => $sliderItems,
-    'doNotDoJavaScript' => false
-  ])
+  @if(!empty($homeData['ways_to_improve_carousel_items']))
+    @include('partials.slider', [
+      'carouselID' => 'estyn-home-carousel',
+      'carouselHeading' => __('Ways to improve', 'sage'),
+      'carouselDescription' => __('Our most recent resources to help you improve your setting', 'sage'),
+      'carouselButtonText' => __('All resources', 'sage'),
+      'carouselItems' => $homeData['ways_to_improve_carousel_items'],
+      'doNotDoJavaScript' => false
+    ])
+  @endif
 </div>
 
 {{-- 'Our work' section (old design) --}}
