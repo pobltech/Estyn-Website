@@ -186,7 +186,7 @@
   @include('partials.cta', [
     'ctaHeading' => __('Our education map of Wales', 'sage'),
     'ctaText' => __('Find providers across Wales using our handy map', 'sage'),
-    'ctaButtonLinkURL' => '/news-and-blog',
+    'ctaButtonLinkURL' => App\get_permalink_by_template('provider-search.blade.php'),
     'ctaButtonText' => __('Search the map', 'sage'),
     'ctaImageURL' => asset('images/map.svg'),
     'ctaImageAlt' => __('Map of Wales', 'sage'),
