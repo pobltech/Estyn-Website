@@ -185,7 +185,7 @@
                     <div class="accordion-body">
                       @foreach($tags as $tag)
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="{{ $tag->slug }}" name="tags[]">
+                          <input class="form-check-input" type="checkbox" value="{{ $tag->slug }}" name="tags[]" {{ (!empty($_GET['tag'])) && (strtolower($_GET['tag']) == strtolower($tag->name)) ? 'checked' : '' }}>
                           <label class="form-check-label" for="flexCheckTags-{{ $tag->slug }}">
                             {{ $tag->name }}
                           </label>
