@@ -36,9 +36,12 @@
 								@endif
 								@if(isset($showSearchBox) && ($showSearchBox === true))
 									<div class="d-flex justify-content-center justify-content-lg-end ctaSearchBoxContainer">
-										<div class="input-group mb-3 shadow rounded">
-											<input type="text" class="form-control" placeholder="Primary schools" aria-label="Primary schools" aria-describedby="button-addon2">
-											<button class="btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+										<div class="estyn-search-container input-group mb-3 shadow rounded">
+											<input type="text" class="form-control estyn-search-box" data-posttype="estyn_eduprovider" list="{{ $ctaUniqueID }}-search-datalist-options" placeholder="Primary schools" aria-label="Primary schools" aria-describedby="button-addon2">
+											<button class="estyn-search-box-button btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+											<datalist class="search-datalist" id="{{ $ctaUniqueID }}-search-datalist-options">
+
+                    						</datalist>
 										</div>
 									</div>
 								@endif
