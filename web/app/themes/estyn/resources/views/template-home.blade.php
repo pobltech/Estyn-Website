@@ -80,12 +80,12 @@
   </div>
   @include('partials.home-page-signposting')
   @include('partials.cta', [
-    'ctaHeading' => __('Who are Estyn?', 'sage'),
-    'ctaText' => __('Estyn inspects education and training in Wales. Find out how and why we exist, and our vision for education in Wales', 'sage'),
-    'ctaButtonLinkURL' => __('/about-us', 'sage'),
-    'ctaButtonText' => __('About Estyn', 'sage'),
-    'ctaImageURL' => @asset('images/inspection1.png'),
-    'ctaImageAlt' => __('Estyn inspection', 'sage'),
+    'ctaHeading' => $homeData['cta']['heading'],
+    'ctaText' => $homeData['cta']['text'],
+    'ctaButtonLinkURL' => $homeData['cta']['button_link'],
+    'ctaButtonText' =>  $homeData['cta']['button_text'],
+    'ctaImageURL' => $homeData['cta']['image_url'],
+    'ctaImageAlt' => $homeData['cta']['image_alt'],
     'noPY' => true
   ])
 

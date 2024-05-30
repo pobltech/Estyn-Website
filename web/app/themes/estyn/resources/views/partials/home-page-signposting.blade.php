@@ -20,7 +20,7 @@
 			'iconClasses' => 'fa-regular fa-calendar-days',
 			'title' => __('View the inspection schedule', 'sage'),
 			'description' => __('Details on when we\'ll be visiting providers', 'sage'),
-			'linkURL' => 'https://www.google.co.uk'
+			'linkURL' => App\get_permalink_by_template('template-inspection-schedule-search-page.blade.php')
 		],
 		[
 			'bgColourClass' => 'bg-signpost-lightpink',
@@ -34,7 +34,7 @@
 			'iconClasses' => 'fa-solid fa-clipboard-list-check',
 			'title' => __('What to expect ahead of an inspection', 'sage'),
 			'description' => __('Help and support for providers', 'sage'),
-			'linkURL' => 'https://www.google.co.uk'
+			'linkURL' => App\get_permalink_by_template('template-inspections.blade.php')
 		],
 		[
 			'bgColourClass' => 'bg-signpost-green',
