@@ -3,16 +3,44 @@
 @section('content')
     @php
         $term = get_queried_object();
+
+        $heroImage = get_field('hero_image', $term);
+        $heroImageID = null;
+        $heroImageSrc = null;
+        if(empty($heroImage)) {
+            $heroImageSrc = asset('images/sectordefaulthero.jpg');
+            $heroImageAlt = __('Education in the ' . $term->name . ' sector', 'sage');
+        } else {
+            $heroImageID = $heroImage['ID'];
+            $heroImageSrc = $heroImage['url'];
+            $heroImageAlt = $heroImage['alt'];
+        }
+
+        $introImage = get_field('intro_image', $term);
+        $introImageID = null;
+        $introImageSrc = null;
+        if(empty($introImage)) {
+            $introImageSrc = asset('images/sectordefaulthero.jpg');
+            $introImageAlt = __('Education in the ' . $term->name . ' sector', 'sage');
+        } else {
+            $introImageID = $introImage['ID'];
+            $introImageSrc = $introImage['url'];
+            $introImageAlt = $introImage['alt'];
+        }
+
+
     @endphp
     @include('partials.inside-hero', [
         'title' => $term->name,
         'super' => __('Education Sector', 'sage'),
-        'heroImageSrc' => get_field('hero_image', $term) ?? asset('images/sectordefaulthero.jpg'),
-        'heroImageAlt' => get_field('hero_image_alt', $term) ?? $term->name,
+        'heroImageSrc' => $heroImageSrc,
+        'heroImageAlt' => $heroImageAlt,
+        'heroImageID' => $heroImageID,
         'secondHeading' => __('Education in the ' . $term->name . ' sector', 'sage'),
         'introContent' => get_field('intro_summary', $term) ?? __('Find out what Estyn can do to help providers in the ' . $term->name . ' sector.', 'sage'),
-        'introImageSrc' => get_field('intro_image', $term) ?? asset('images/sectordefaultintro.jpg'),
-        'introImageAlt' => get_field('intro_image_alt', $term) ?? __('Education in the ' . $term->name . ' sector', 'sage'),
+        'introImageSrc' => $introImageSrc,
+        'introImageAlt' => $introImageAlt,
+        'introImageID' => $introImageID,
         'cropIntroImagePortrait' => true
     ])
 

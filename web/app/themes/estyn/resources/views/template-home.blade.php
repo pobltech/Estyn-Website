@@ -132,6 +132,7 @@
       'carouselHeading' => __('Ways to improve', 'sage'),
       'carouselDescription' => __('Our most recent resources to help you improve your setting', 'sage'),
       'carouselButtonText' => __('All resources', 'sage'),
+      'carouselButtonLink' => App\get_permalink_by_template('template-search.blade.php'),
       'carouselItems' => $homeData['ways_to_improve_carousel_items'],
       'doNotDoJavaScript' => false
     ])

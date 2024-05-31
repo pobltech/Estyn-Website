@@ -35,9 +35,11 @@
 		</div>
 	</div>
 	<div class="heroImage">
-		@if(isset($heroImageSrc))
+		@if(!empty($heroImageID))
+			{!! wp_get_attachment_image($heroImageID, 'full', false, ['class' => 'img-fluid']) !!}
+		@elseif(!empty($heroImageSrc))
 			<img src="{{ $heroImageSrc }}" alt="{{ $heroImageAlt }}" />
-		@elseif(isset($heroImageImgTag))
+		@elseif(!empty($heroImageImgTag))
 			{!! $heroImageImgTag !!}
 		@endif
 	</div>
@@ -100,10 +102,12 @@
 							<div class="ps-lg-5">
 								<div class="d-flex justify-content-center px-me-5 px-md-0">
 									<div class="intro-image-container {{ isset($cropIntroImagePortrait) && $cropIntroImagePortrait == true ? 'crop-portrait' : '' }}">
-										@if(isset($introImageSrc))
-											<img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" class="rounded-2 img-fluid" />
-										@elseif(isset($introImageID))
+										@if(!empty($introImageID))
 											{!! wp_get_attachment_image($introImageID, 'full', false, ['class' => 'rounded-2 img-fluid']) !!}
+										@elseif(!empty($introImageSrc))
+											<img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" class="rounded-2 img-fluid" />
+										@elseif(!empty($introImageImgTag))
+											{!! $introImageImgTag !!}					
 										@endif
 									</div>
 								</div>
