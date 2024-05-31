@@ -2,7 +2,7 @@
 
 @section('content')
     @php
-        $term = get_queried_object();
+        $term = $term ?? get_queried_object();
 
         $heroImage = get_field('hero_image', $term);
         $heroImageID = null;
@@ -37,7 +37,7 @@
         'heroImageAlt' => $heroImageAlt,
         'heroImageID' => $heroImageID,
         'secondHeading' => __('Education in the ' . $term->name . ' sector', 'sage'),
-        'introContent' => get_field('intro_summary', $term) ?? __('Find out what Estyn can do to help providers in the ' . $term->name . ' sector.', 'sage'),
+        'introContent' => (!empty(get_field('intro_summary', $term))) ? get_field('intro_summary', $term) : '<p>' . __('Information about the ' . $term->name . ' sector in Wales.') . '</p><p>' . __('Find out more about what Estyn can do to help ' . strtolower($term->name) . ' providers, and where to find guidance and news', 'sage') . '</p>',
         'introImageSrc' => $introImageSrc,
         'introImageAlt' => $introImageAlt,
         'introImageID' => $introImageID,
@@ -47,7 +47,7 @@
     <div class="container px-md-4 px-xl-5 mt-5 pt-4 pt-sm-5">
         <div class="row">
             <div class="col-12">
-                @include('partials.ways-to-improve')
+                @include('partials.ways-to-improve', ['term' => $term, 'wtpTags' => $wtpTags, 'wtpTagLinkDotColours' => $wtpTagLinkDotColours])
                 @include('partials.slider', [
                     'carouselID' => 'sector-resources-carousel',
                     'carouselHeading' => __('Featured ' . $term->name . ' resources', 'sage'),

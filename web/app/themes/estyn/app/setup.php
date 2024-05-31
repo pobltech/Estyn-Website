@@ -457,6 +457,17 @@ function correct_slug_in_language_switcher($url, $lang) {
 }
 add_filter('pll_translation_url', __NAMESPACE__ . '\\correct_slug_in_language_switcher', 10, 2);
 
+/**
+ * Change the rewrite rule for tags so they don't have "/blog/" in the URL
+ */
+function change_tag_rewrite_args($args, $taxonomy) {
+    if ('post_tag' === $taxonomy) {
+        $args['rewrite'] = array('slug' => 'tag', 'with_front' => false);
+    }
+    return $args;
+}
+add_filter('register_taxonomy_args', __NAMESPACE__ . '\\change_tag_rewrite_args', 10, 2);
+
 
 /**
  * Now for our own REST API endpoints
