@@ -79,6 +79,8 @@
     </div>
   </div>
   @include('partials.home-page-signposting')
+
+  <div class="pb-md-5">
   @include('partials.cta', [
     'ctaHeading' => $homeData['cta']['heading'],
     'ctaText' => $homeData['cta']['text'],
@@ -88,6 +90,7 @@
     'ctaImageAlt' => $homeData['cta']['image_alt'],
     'noPY' => true
   ])
+  </div>
 
   @php
     $query1 = new WP_Query([
@@ -122,7 +125,7 @@
     //$sliderItems = array_merge($sliderItems, $sliderItems);
   @endphp
 
-<div class="mt-4 mt-sm-5">
+<div class="mt-4 mt-sm-5 pb-md-5">
   @if(!empty($homeData['ways_to_improve_carousel_items']))
     @include('partials.slider', [
       'carouselID' => 'estyn-home-carousel',
@@ -184,7 +187,7 @@
 	</div>
 </div>
 --}}
-<div id="home-map-search-section">
+<div id="home-map-search-section" class="pt-md-5">
   @include('partials.cta', [
     'ctaHeading' => __('Our education map of Wales', 'sage'),
     'ctaText' => __('Find providers across Wales using our handy map', 'sage'),
@@ -230,6 +233,7 @@
       }
     @endphp
 
+    <div class="pb-md-5">
     @include('partials.slider', [
         'carouselID' => 'estyn-home-latest-news-carousel',
         'carouselHeading' => __('Latest articles', 'sage'),
@@ -239,6 +243,7 @@
         'carouselButtonLink' => App\get_permalink_by_template('template-news-and-blog.blade.php') ?? (pll_current_language() == 'en' ? '/news-and-blog' : '/cy/newyddion-a-blog'),
         'doNotDoJavaScript' => false
       ])
+    </div>
   </div>
 
   @while(have_posts()) @php(the_post())

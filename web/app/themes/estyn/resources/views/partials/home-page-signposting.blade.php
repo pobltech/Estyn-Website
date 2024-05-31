@@ -43,5 +43,6 @@
 			'description' => __('Our current vacancies and opportunities', 'sage'),
 			'linkURL' => App\get_permalink_by_template('template-vacancies.blade.php')
 		]
-	]
+	],
+	'sectionClasses' => 'pt-md-5'
 ])

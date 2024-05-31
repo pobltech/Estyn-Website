@@ -1,4 +1,4 @@
-<section class="signposting">
+<section class="signposting {{ $sectionClasses ?? '' }}">
 	<div class="container py-5 px-md-4 px-xl-5">
 		<div class="row">
 			<div class="col-12">
