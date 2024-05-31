@@ -37,7 +37,7 @@
         'heroImageAlt' => $heroImageAlt,
         'heroImageID' => $heroImageID,
         'secondHeading' => __('Education in the ' . $term->name . ' sector', 'sage'),
-        'introContent' => (!empty(get_field('intro_summary', $term))) ? get_field('intro_summary', $term) : '<p>' . __('Information about the ' . $term->name . ' sector in Wales.') . '</p><p>' . __('Find out more about what Estyn can do to help ' . strtolower($term->name) . ' providers, and where to find guidance and news', 'sage') . '</p>',
+        'introContent' => (!empty(get_field('intro_summary', $term))) ? get_field('intro_summary', $term) : '<p>' . __('Information about the ' . $term->name . ' sector in Wales.') . '</p><p>' . __('Find out more about what Estyn can do to help ' . $term->name . ' sector providers, and where to find guidance and news', 'sage') . '</p>',
         'introImageSrc' => $introImageSrc,
         'introImageAlt' => $introImageAlt,
         'introImageID' => $introImageID,

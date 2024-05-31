@@ -6,7 +6,7 @@
 </div>
 <div class="row justify-content-between">
     <div class="col-12 col-md-6 col-lg-4">
-        <p>{{ !empty(get_field('ways_to_improve_section_intro_text', $term)) ? get_field('ways_to_improve_section_intro_text', $term) : __('Estyn are here to help you improve your ' . strtolower($term->name) . ' school/setting. Explore our vast wealth of improvement resources') . '.' }}</p>
+        <p>{{ !empty(get_field('ways_to_improve_section_intro_text', $term)) ? get_field('ways_to_improve_section_intro_text', $term) : __('Estyn are here to help you improve your ' . $term->name . ' sector school/setting. Explore our vast wealth of improvement resources') . '.' }}</p>
     </div>
     <div class="col-12 col-lg-8 col-xl-7">
         <div class="d-md-flex justify-content-lg-end">
