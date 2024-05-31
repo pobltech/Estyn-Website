@@ -86,8 +86,17 @@
 								    @if($loop->iteration > 12) {{-- Only show the first 12 items --}}
 										@continue
 									@endif
+									@php
+										// We want the last word of the sector name to be contained within a span (with class no-wrap)
+										// and next to it we want the arrow icon
+										$sectorNameParts = explode(' ', $sector->name);
+										$sectorNamePartsCount = count($sectorNameParts);
+										$sectorNameLastWord = $sectorNameParts[$sectorNamePartsCount - 1];
+										$sectorNameParts[$sectorNamePartsCount - 1] = '<span class="text-nowrap">' . $sectorNameLastWord . ' <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span>';
+										$sectorName = implode(' ', $sectorNameParts);
+									@endphp
 									<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
-										<a href="{{ get_term_link($sector) }}" class="ctaMapLink">{{ $sector->name }} <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></a>
+										<a href="{{ get_term_link($sector) }}" class="ctaMapLink">{!! $sectorName !!}</a>
 									</div>
 								@endforeach
 								{{--<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
