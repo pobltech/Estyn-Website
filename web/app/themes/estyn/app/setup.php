@@ -277,7 +277,7 @@ function create_improvement_resource_type_taxonomy() {
         'show_ui' => true,
         'show_admin_column' => true,
         'query_var' => true,
-        'rewrite' => array( 'slug' => $improvementResourceTypeSlug ),
+        'rewrite' => array( 'slug' => $improvementResourceTypeSlug, 'with_front' => false),
         'show_in_rest' => true, // Enable Gutenberg editor
         'meta_box_cb' => 'post_categories_meta_box',
     ));
@@ -371,7 +371,7 @@ function create_eduprovider_taxonomies() {
         'show_ui' => true,
         'show_admin_column' => true,
         'query_var' => true,
-        'rewrite' => array( 'slug' => $sectorSlug ),
+        'rewrite' => array( 'slug' => $sectorSlug, 'with_front' => false),
         'show_in_rest' => true, // Enable Gutenberg editor
     ));
 
@@ -393,7 +393,7 @@ function create_eduprovider_taxonomies() {
         'show_ui' => true,
         'show_admin_column' => true,
         'query_var' => true,
-        'rewrite' => array( 'slug' => $localAuthoritySlug ),
+        'rewrite' => array( 'slug' => $localAuthoritySlug, 'with_front' => false),
         'show_in_rest' => true, // Enable Gutenberg editor
     ));
 }
@@ -421,7 +421,7 @@ function create_eduprovider_status_taxonomy() {
         'show_ui' => true,
         'show_admin_column' => true,
         'query_var' => true,
-        'rewrite' => array( 'slug' => $providerStatusSlug ),
+        'rewrite' => array( 'slug' => $providerStatusSlug, 'with_front' => false),
         'show_in_rest' => true, // Enable Gutenberg editor
     ));
 }
