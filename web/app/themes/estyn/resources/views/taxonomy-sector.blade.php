@@ -48,9 +48,24 @@
         <div class="row">
             <div class="col-12">
                 @include('partials.ways-to-improve', ['term' => $term, 'wtpTags' => $wtpTags, 'wtpTagLinkDotColours' => $wtpTagLinkDotColours])
-                @include('partials.slider', [
+                @if(!empty($sectorResourcesCarouselItems))
+                    @include('partials.slider', [
+                        'carouselID' => 'sector-resources-carousel',
+                        'carouselHeading' => __('Featured ' . $term->name . ' resources', 'sage'),
+                        'carouselHeadingNumber' => 3,
+                        'carouselDescription' => __('The latest resources for the ' . $term->name . ' sector.', 'sage'),
+                        'carouselButtonText' => __('All resources', 'sage'),
+                        'carouselButtonLink' => App\get_permalink_by_template('template-search.blade.php') . '?sector=' . rawurlencode($term->name),
+                        'carouselSectionClass' => 'pobl-tech-carousel-block mt-5 mb-5',
+                        'carouselSliderWrapperClass' => 'pobl-tech-carousel-block-slider',
+                        'carouselItems' => $sectorResourcesCarouselItems,
+                        'doNotDoJavaScript' => false
+                    ])
+                @endif
+                {{--@include('partials.slider', [
                     'carouselID' => 'sector-resources-carousel',
                     'carouselHeading' => __('Featured ' . $term->name . ' resources', 'sage'),
+                    'carouselHeadingNumber' => 3,
                     'carouselDescription' => __('The latest resources for the ' . $term->name . ' sector.', 'sage'),
                     'carouselButtonText' => __('All resources', 'sage'),
                     'carouselSectionClass' => 'pobl-tech-carousel-block mt-5 mb-5',
@@ -98,7 +113,7 @@
                         ]
                     ],
                     'doNotDoJavaScript' => false
-                ])
+                ])--}}
 
                 @include('partials.cta', [
                     'ctaHeading' => get_field('cta_heading', $term) ?? __('What to expect ahead of an inspection', 'sage'),

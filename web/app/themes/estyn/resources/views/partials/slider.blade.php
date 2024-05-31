@@ -79,9 +79,9 @@
                             @if(!empty($carouselItem['date']))
                                 <p class="slider-item-date mb-0">{{ $carouselItem['date'] }}</p>
                             @endif
-                            <a class="stretched-link" href="{{ $carouselItem['link'] ?? '#' }}"><h4 class="mb-0">{{ $carouselItem['title'] }}</h4></a>
+                            <a class="stretched-link" href="{{ $carouselItem['link'] ?? '#' }}"><h4 class="mb-0 {{ !empty($carouselItem['excerpt']) ? 'mb-2' : '' }}">{{ $carouselItem['title'] }}</h4></a>
                             @if(!empty($carouselItem['excerpt']))
-                                <p class="mb-0">{{ $carouselItem['excerpt'] }}</p>
+                                <p class="mb-0">{{ wp_strip_all_tags($carouselItem['excerpt']) }}</p>
                             @endif
                         </div>
                     </div>
