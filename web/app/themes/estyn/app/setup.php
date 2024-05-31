@@ -63,6 +63,10 @@ add_action('after_setup_theme', function () {
         'main_nav_education_professionals_right_hand_side_links' => __('Education Professionals - Links - Main Nav', 'sage'),
         'main_nav_about_estyn_signposts' => __('Signposts for "About Estyn" - Main Nav', 'sage'),
         'main_nav_about_estyn_right_hand_side_links' => __('Links for "About Estyn" - Main Nav', 'sage'),
+        'footer_nav_1' => __('Footer Navigation Menu 1', 'sage'),
+        'footer_nav_2' => __('Footer Navigation Menu 2', 'sage'),
+        'footer_nav_3' => __('Footer Navigation Menu 3', 'sage'),
+        'footer_bottom_nav' => __('Footer Bottom Navigation Menu', 'sage')
     ]);
 
     /**

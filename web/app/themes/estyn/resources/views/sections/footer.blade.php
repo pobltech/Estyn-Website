@@ -50,49 +50,64 @@
 				</div>
 			</div>
 			<div class="col-12 col-md-4 col-lg-3 mb-4">
-				<h5 class="my-3">Popular</h5>
+				<h5 class="mt-3 mb-4">{{ __('Popular', 'sage') }}</h5>
 				<div class="list-group list-group-flush">
-				  <a href="#" class="list-group-item list-group-item-action">
+				  {{-- Nav location for footer_nav_1 --}}
+				  @if (has_nav_menu('footer_nav_1'))
+				    {!! wp_nav_menu(['theme_location' => 'footer_nav_1', 'menu_class' => 'list-group list-group-flush']) !!}
+				  @endif
+				  {{--<a href="#" class="list-group-item list-group-item-action">
 				    The current link item
 				  </a>
 				  <a href="#" class="list-group-item list-group-item-action">A second link item</a>
 				  <a href="#" class="list-group-item list-group-item-action">A third link item</a>
-				  <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
+				  <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>--}}
 				</div>
 			</div>
 			<div class="col-12 col-md-4 col-lg-3 mb-4">
-				<h5 class="my-3">Publications and policies</h5>
+				<h5 class="mt-3 mb-4">{{ __('Publications and policies', 'sage') }}</h5>
 				<div class="list-group list-group-flush">
-				  <a href="#" class="list-group-item list-group-item-action">
+				  {{-- Nav location for footer_nav_2 --}}
+				  @if (has_nav_menu('footer_nav_2'))
+				    {!! wp_nav_menu(['theme_location' => 'footer_nav_2', 'menu_class' => 'list-group list-group-flush']) !!}
+				  @endif
+				  {{--<a href="#" class="list-group-item list-group-item-action">
 				    The current link item
 				  </a>
 				  <a href="#" class="list-group-item list-group-item-action">A second link item</a>
 				  <a href="#" class="list-group-item list-group-item-action">A third link item</a>
-				  <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
+				  <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>--}}
 				</div>
 			</div>
 			<div class="col-12 col-md-4 col-lg-3 mb-4">
-				<h5 class="my-3">Key inspection documentation</h5>
+				<h5 class="mt-3 mb-4">{{ __('Key inspection documentation', 'sage') }}</h5>
 				<div class="list-group list-group-flush">
-				  <a href="#" class="list-group-item list-group-item-action">
+				  {{-- Nav location for footer_nav_3 --}}
+				  @if (has_nav_menu('footer_nav_3'))
+				    {!! wp_nav_menu(['theme_location' => 'footer_nav_3', 'menu_class' => 'list-group list-group-flush']) !!}
+				  @endif				  
+				  {{--<a href="#" class="list-group-item list-group-item-action">
 				    The current link item
 				  </a>
 				  <a href="#" class="list-group-item list-group-item-action">A second link item</a>
 				  <a href="#" class="list-group-item list-group-item-action">A third link item</a>
-				  <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
+				  <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>--}}
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="w-100 py-4 bg-blue">
 		<div class="container px-md-4 px-xl-5 py-4">
-			<nav class="nav flex-column flex-sm-row">
+			@if (has_nav_menu('footer_bottom_nav'))
+				{!! wp_nav_menu(['theme_location' => 'footer_bottom_nav', 'menu_class' => 'nav footer-bottom-nav flex-column flex-sm-row']) !!}
+			@endif
+			{{--<nav class="nav flex-column flex-sm-row">
 			  <a class="nav-link active" aria-current="page" href="#">Contact us</a>
 			  <a class="nav-link" href="#">Privacy policy</a>
 			  <a class="nav-link" href="#">Accessibility</a>
 			  <a class="nav-link" href="#">Terms of use</a>
 			  <a class="nav-link" href="#">Sitemap</a>
-			</nav>
+			</nav>--}}
 			<span class="nav-link text-white">© Estyn {{ __('All rights reserved', 'sage') }}</span>
 		</div>
 	</div>

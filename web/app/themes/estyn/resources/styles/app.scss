@@ -250,7 +250,77 @@ p, li {
                 color: $estyn-darkblue;
             }
         }
+
+        &:hover {
+            background: $estyn-white;
+        }
     }
+    
+    li {
+        list-style-type: none;
+
+        margin-bottom: 0.8rem;
+    }
+
+    .list-group-item, .list-group a {
+        padding: .5rem 0;
+        color: $estyn-footertext;
+        background-color: transparent;
+        border: none;
+
+        text-decoration: none;
+
+        &:hover {
+            color: $estyn-white;
+        }
+    }
+
+    .nav-link {
+        display: block;
+        padding: .5rem 2rem .5rem 0;
+        color: $estyn-white;
+
+        &:hover {
+            color: $estyn-darkblue;
+        }
+    }
+
+    .fa-ul {
+        margin-left: 2em;
+
+        li {
+            margin-bottom: 0.5rem;
+
+            a {
+                color: $estyn-footertext;
+                text-decoration: none;
+
+                &:hover {
+                    color: $estyn-white;
+                }
+            }
+        }
+    }
+
+    .footer-bottom-nav {
+        li {
+            padding: 0.5rem 0;
+
+            a {
+                color: $estyn-white;
+
+                display: block;
+                padding: .5rem 2rem .5rem 0;
+
+                text-decoration: none;
+
+                &:hover {
+                    color: $estyn-darkblue;
+                }
+            }
+        }
+    }
+    
 }
 
 
@@ -1561,41 +1631,6 @@ p.sp-desc {
         background-color: $estyn-lightblue;
         border: 1px solid $estyn-darkblue;
         border-radius: $border-radius-form;
-    }
-}
-
-.footer {
-    .list-group-item {
-        padding: .5rem 0;
-        color: $estyn-footertext;
-        background-color: transparent;
-        border: none;
-
-        &:hover {
-            color: $estyn-white;
-        }
-    }
-
-    .nav-link {
-        display: block;
-        padding: .5rem 2rem .5rem 0;
-        color: $estyn-white;
-
-        &:hover {
-            color: $estyn-darkblue;
-        }
-    }
-
-    .fa-ul {
-        margin-left: 2em;
-
-        li {
-            margin-bottom: 0.5rem;
-
-            a {
-                color: $estyn-footertext;
-            }
-        }
     }
 }
 
