@@ -119,7 +119,7 @@
                 @include('partials.cta', [
                     'ctaHeading' => get_field('cta_heading', $term) ?? __('What to expect ahead of an inspection', 'sage'),
                     'ctaText' => get_field('cta_text', $term) ?? __('Our guide on what to expect during an inspection of your setting.', 'sage'),
-                    'ctaButtonLinkURL' => get_field('cta_button_link', $term) ?? '#',
+                    'ctaButtonLinkURL' => (!empty(get_field('cta_button_link', $term))) ? get_field('cta_button_link', $term) : App\get_permalink_by_template('template-inspections.blade.php'),
                     'ctaButtonText' => get_field('cta_button_text', $term) ?? __('My inspection guide', 'sage'),
                     'ctaImageURL' => get_field('cta_image', $term) ?? asset('images/inspection1.png'),
                     'ctaImageAlt' => get_field('cta_image_alt', $term) ?? __('Education in the ' . $term->name . ' sector', 'sage')
