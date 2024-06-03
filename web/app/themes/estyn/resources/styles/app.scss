@@ -603,8 +603,32 @@ hr {
     }
     
     .form-control {
-        border: 1px solid $estyn-blue;
-        border-radius: $border-radius-sm;
+        /* border: 1px solid $estyn-blue;
+        border-radius: $border-radius-sm; */
+    }
+
+    input[type="text"] {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+        color:$estyn-darkblue;
+        background-color: rgba(red($estyn-blue), green($estyn-blue), blue($estyn-blue), 0.14);
+        background-clip: padding-box;
+        border: none;
+    }
+
+    .estyn-search-container {
+        .btn, .btn-secondary {
+            padding: 0.8rem 1.2rem 0.5rem 1.2rem;
+            border-color: transparent;
+            border-top-right-radius: 10px !important;
+            border-bottom-right-radius: 10px !important;
+            font-size: 24px;
+            font-family: "museo", serif;
+            font-weight: 700;
+            font-style: normal;
+            background-color: $estyn-blue;
+            color: $estyn-white;
+        }
     }
 
     .sp-icon-cont {
@@ -738,8 +762,16 @@ header {
 .navbar-expand-xl {
     .navbar-nav {
         .nav-link {
-            padding-right: 2rem;
-            padding-left: 2rem;
+            /* padding-right: 2rem;
+            padding-left: 2rem; */
+
+            padding-left: 2.6rem;
+            padding-right: 2.6rem;
+
+            @media (max-width: 1414px) {
+                padding-right: 2rem;
+                padding-left: 2rem;
+            }
 
             @media (max-width: 1370px) {
                 padding-right: 0.9rem;
