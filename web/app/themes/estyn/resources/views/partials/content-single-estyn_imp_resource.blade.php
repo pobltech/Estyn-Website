@@ -129,6 +129,10 @@
                  *    full_report_file (ACF File field)
                  */
 
+                /*if (has_post_thumbnail()) {
+                  the_post_thumbnail(null, ['class' => 'w-100 img-fluid rounded-3 mb-4']);
+                }*/
+
                 // If there's an explicitly defined excerpt, show it, else show the content
                 if (get_the_excerpt() && !preg_match('/\[\.\.\.\]$/', get_the_excerpt())) {
                   the_excerpt();
@@ -298,7 +302,7 @@
               <div class="row">
                 <div class="col-12">
                     @if (has_post_thumbnail())
-                      @php(the_post_thumbnail(null, ['class' => 'img-fluid rounded-3 mb-4']))
+                      @php(the_post_thumbnail(null, ['class' => 'w-100 img-fluid rounded-3 mb-4']))
                     @endif
 
                     @if($isAdditionalResource)
