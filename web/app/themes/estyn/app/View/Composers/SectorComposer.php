@@ -45,9 +45,19 @@ class SectorComposer extends Composer
             ];
         }, $wtpTags);
 
-        /**
-         * "Featured Resources" carousel items
-         */
+        return [
+            'term' => $term,
+            'wtpTags' => $wtpTags,
+            'wtpTagLinkDotColours' => $wtpTagLinkDotColours,
+            'sectorResourcesCarouselItems' => $this->getSectorResourcesCarouselItems($term),
+            'sectorLatestArticlesCarouselItems' => $this->sectorLatestArticlesCarouselItems($term)
+        ];
+    }
+
+    /**
+     * "Featured Resources" carousel items
+     */
+    private function getSectorResourcesCarouselItems($term) {
         $sectorResourcesCarouselItems = get_field('sector_resources_carousel_items', $term);
 
         if(empty($sectorResourcesCarouselItems)) {
@@ -189,11 +199,53 @@ class SectorComposer extends Composer
             $sectorResourcesCarouselItems = array_filter($sectorResourcesCarouselItems);
         }
 
-        return [
-            'term' => $term,
-            'wtpTags' => $wtpTags,
-            'wtpTagLinkDotColours' => $wtpTagLinkDotColours,
-            'sectorResourcesCarouselItems' => $sectorResourcesCarouselItems
-        ];
+        return $sectorResourcesCarouselItems;
+    }
+
+    /**
+     * "Latest Articles" carousel items (posts and news posts tagged with the sector)
+     */
+    private function sectorLatestArticlesCarouselItems($term) {
+        // There's no ACF for this one. Just get the latest 10 posts and blog posts that are tagged with the sector and have featured images.
+        $sectorArticles = get_posts([
+            'posts_per_page' => -1,
+            'post_type' => ['post', 'estyn_newsarticle'],
+            'tax_query' => [
+                [
+                    'taxonomy' => 'sector',
+                    'field' => 'term_id',
+                    'terms' => $term->term_id
+                ]
+            ],
+            'meta_query' => [
+                [
+                    'key' => '_thumbnail_id',
+                    'compare' => 'EXISTS' // this line tells WordPress to only get posts where the '_thumbnail_id' meta key exists
+                ],
+            ],
+        ]);
+
+/*         if(count($sectorArticles) < 5) {
+            return null; // We need at least 5 items for the slider
+        } */
+
+        $sectorArticles = array_map(function($article) {
+            $image = get_the_post_thumbnail_url($article, 'full');
+            $imageAlt = get_the_post_thumbnail_caption($article);
+            $articleLink = get_permalink($article);
+
+            return [
+                'title' => $article->post_title,
+                'excerpt' => wp_trim_words($article->post_excerpt, 20, '...'),
+                'link' => $articleLink,
+                'featured_image_src' => $image,
+                'featured_image_alt' => $imageAlt,
+            ];
+        }, $sectorArticles);
+
+        // Cut it down to maximum of 10 items
+        $sectorArticles = array_slice($sectorArticles, 0, 10);
+
+        return $sectorArticles;
     }
 }

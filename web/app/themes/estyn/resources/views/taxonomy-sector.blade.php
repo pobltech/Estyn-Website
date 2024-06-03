@@ -124,7 +124,21 @@
                     'ctaImageAlt' => get_field('cta_image_alt', $term) ?? __('Education in the ' . $term->name . ' sector', 'sage')
                 ])
 
-                @include('partials.slider', [
+                @if(!empty($sectorLatestArticlesCarouselItems))
+                    @include('partials.slider', [
+                        'carouselID' => 'sector-articles-carousel',
+                        'carouselHeading' => __('Latest articles', 'sage'),
+                        'carouselDescription' => __('Blog posts and news articles relating to the ' . $term->name . ' sector.', 'sage'),
+                        'carouselButtonText' => __('All articles', 'sage'),
+                        'carouselButtonLink' => App\get_permalink_by_template('template-news-and-blog.blade.php') . '?sector=' . rawurlencode($term->name),
+                        'carouselSectionClass' => 'pobl-tech-carousel-block',
+                        'carouselSliderWrapperClass' => 'pobl-tech-carousel-block-slider',
+                        'carouselItems' => $sectorLatestArticlesCarouselItems,
+                        'doNotDoJavaScript' => false
+                    ])
+                @endif
+
+                {{--@include('partials.slider', [
                     'carouselID' => 'sector-articles-carousel',
                     'carouselHeading' => __('Latest articles', 'sage'),
                     'carouselDescription' => __('Blog posts and news articles relating to the ' . $term->name . ' sector.', 'sage'),
@@ -174,7 +188,7 @@
                         ]
                     ],
                     'doNotDoJavaScript' => false
-                ])
+                ])--}}
                 
                 @include('partials.cta', [
                     'ctaHeading' => 'Our education map of Wales',

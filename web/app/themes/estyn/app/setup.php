@@ -366,7 +366,7 @@ function create_eduprovider_taxonomies() {
     );
 
     $sectorSlug = __('sector', 'sage');
-    register_taxonomy('sector', array('estyn_eduprovider', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_newsarticle'), array(
+    register_taxonomy('sector', array('estyn_eduprovider', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_newsarticle', 'post'), array(
         'labels' => $labels,
         'show_ui' => true,
         'show_admin_column' => true,
