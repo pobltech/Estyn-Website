@@ -203,7 +203,11 @@
                 ])
                 <div class="reportMain">
                     <div class="container px-md-4 px-xl-5">
-                        @include('partials.inspection-and-report-schedule')
+                        @if(!empty($sectorLatestInspectionReports))
+                            @include('partials.inspection-and-report-schedule', [
+                                'inspectionReports' => $sectorLatestInspectionReports,
+                            ])
+                        @endif
                     </div>
                 </div>
             </div>

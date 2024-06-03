@@ -811,3 +811,52 @@ function get_permalink_by_template($template) {
         return null;
     }
 }
+
+/**
+ * For an inspection report, retrieve the corresponding report file, from either the ACF field
+ * or the custom field 'report_file_from_old_site'
+ */
+function getInspectionReportFileURL($post) {
+    /*$attachments = get_posts([
+        'post_type' => 'attachment',
+        'post_parent' => get_the_ID(),
+        'posts_per_page' => -1,
+    ]);*/
+
+    // We use get_field('report_file') to get the PDF attachment.
+    // If that returns null, then we'll try the 'report_file_from_old_site' custom field (using get_post_meta()),
+    // prepending the value with the uploads directory path + '/estyn_old_files/'
+    $reportFile = get_field('report_file', $post);
+    if(!$reportFile) {
+        $reportFile = get_post_meta($post->ID, 'report_file_from_old_site', true);
+        if($reportFile) {
+            // report_file_from_old_site is the filename of the PDF prepended with the old folder structure, either 'private/files' or just 'files'
+            // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
+            // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
+            $reportFile = ESTYN_OLD_FILES_URL . $reportFile;
+            // Now we have to deal with the fact that some of the filenames literally have "%20" in them!
+            $reportFile = explode('/', $reportFile);
+            $reportFilename = array_pop($reportFile);
+            $reportFile = implode('/', $reportFile) . '/' . rawurlencode($reportFilename);
+        } else {
+            return null;
+        }
+    } else {
+        $reportFile = $reportFile['url'];
+    }
+
+    /*$hasPDF = false;
+    foreach($attachments as $attachment) {
+        if($attachment->post_mime_type == 'application/pdf') {
+        $hasPDF = true;
+        $firstPDFAttachment = $attachment;
+        break;
+        }
+    }
+
+    if(!$hasPDF) {
+        continue;
+    }*/
+    
+    return $reportFile;
+}

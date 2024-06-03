@@ -50,7 +50,8 @@ class SectorComposer extends Composer
             'wtpTags' => $wtpTags,
             'wtpTagLinkDotColours' => $wtpTagLinkDotColours,
             'sectorResourcesCarouselItems' => $this->getSectorResourcesCarouselItems($term),
-            'sectorLatestArticlesCarouselItems' => $this->sectorLatestArticlesCarouselItems($term)
+            'sectorLatestArticlesCarouselItems' => $this->sectorLatestArticlesCarouselItems($term),
+            'sectorLatestInspectionReports' => $this->getSectorLatestInspectionReportsResourceListItems($term),
         ];
     }
 
@@ -247,5 +248,47 @@ class SectorComposer extends Composer
         $sectorArticles = array_slice($sectorArticles, 0, 10);
 
         return $sectorArticles;
+    }
+
+    /**
+     * "Latest inspection reports" resources list items
+     */
+    private function getSectorLatestInspectionReportsResourceListItems($term) {
+        $sectorInspectionReports = get_posts([
+            'post_type' => 'estyn_inspectionrpt',
+            'posts_per_page' => -1,
+            'orderby' => 'meta_value',
+            'meta_key' => 'inspection_date',
+            'tax_query' => [
+                [
+                    'taxonomy' => 'sector',
+                    'field' => 'term_id',
+                    'terms' => $term->term_id
+                ]
+            ]
+        ]);
+
+        $sectorInspectionReports = array_map(function($report) {
+            $reportURL = \App\getInspectionReportFileURL($report);
+
+            if(empty($reportURL)) {
+                return null;
+            }
+
+            return [
+                'linkURL' => $reportURL,
+                'title' => $report->post_title,
+                'superDate' => empty(get_field('inspection_date', $report)) ? get_the_date('', $report) : get_field('inspection_date', $report),
+                'superText' => (!empty(get_the_terms($report, 'local_authority'))) ? get_the_terms($report, 'local_authority')[0]->name : null,
+            ];
+        }, $sectorInspectionReports);
+
+        // If there are any null items, we remove them
+        $sectorInspectionReports = array_filter($sectorInspectionReports);
+
+        // Cut it down to maximum of 6 items
+        $sectorInspectionReports = array_slice($sectorInspectionReports, 0, 6);
+
+        return $sectorInspectionReports;
     }
 }
