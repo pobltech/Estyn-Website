@@ -53,7 +53,7 @@
                         'carouselID' => 'sector-resources-carousel',
                         'carouselHeading' => __('Featured ' . $term->name . ' resources', 'sage'),
                         'carouselHeadingNumber' => 3,
-                        'carouselDescription' => __('The latest resources for the ' . $term->name . ' sector.', 'sage'),
+                        /*'carouselDescription' => __('The latest resources for the ' . $term->name . ' sector.', 'sage'),*/
                         'carouselButtonText' => __('All resources', 'sage'),
                         'carouselButtonLink' => App\get_permalink_by_template('template-search.blade.php') . '?sector=' . rawurlencode($term->name),
                         'carouselSectionClass' => 'pobl-tech-carousel-block mt-5 mb-5',

@@ -32,10 +32,12 @@
         @if(isset($carouselHeading) && !empty($carouselHeading))
 		<div class="row">
 			<div class="col-12">
-                @if(isset($carouselHeadingNumber) && !empty($carouselHeadingNumber))
-                    <h{{ $carouselHeadingNumber }}>{{ $carouselHeading }}</h{{ $carouselHeadingNumber }}>
-                @else
-				    <h2 class="mb-2 mb-sm-3">{{ $carouselHeading }}</h2>
+                @if(isset($carouselDescription) && !empty($carouselDescription))
+                    @if(isset($carouselHeadingNumber) && !empty($carouselHeadingNumber))
+                        <h{{ $carouselHeadingNumber }} class="mb-2 mb-sm-3">{{ $carouselHeading }}</h{{ $carouselHeadingNumber }}>
+                    @else
+                        <h2 class="mb-2 mb-sm-3">{{ $carouselHeading }}</h2>
+                    @endif
                 @endif
 			</div>
 		</div>
@@ -48,6 +50,12 @@
 			<div class="mb-4 mb-sm-0">
                 @if(isset($carouselDescription) && !empty($carouselDescription))
 				    <p class="mb-0">{{ $carouselDescription }}</p>
+                @else
+                    @if(isset($carouselHeadingNumber) && !empty($carouselHeadingNumber))
+                        <h{{ $carouselHeadingNumber }} class="mb-0">{{ $carouselHeading }}</h{{ $carouselHeadingNumber }}>
+                    @else
+                        <h2 class="mb-0">{{ $carouselHeading }}</h2>
+                    @endif
                 @endif
                 @if(isset($carouselLeftButtons) && !empty($carouselLeftButtons))
                     @foreach($carouselLeftButtons as $carouselLeftButton)
