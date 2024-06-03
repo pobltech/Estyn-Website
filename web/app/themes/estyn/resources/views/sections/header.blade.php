@@ -108,10 +108,10 @@
 			</div>
           </a>
           <div class="megaMenu dropdown-menu w-100 bg-white">
-          	<div class="container my-4">
+          	<div class="container my-5">
           		<div class="row d-flex justify-content-center">
           			<div class="col-12 px-0 col-lg-8">
-          				<h3 class="mb-4">{{ __('Educational professionals', 'sage') }}</h3>
+          				<h3 class="mb-4">{{ __('Education professionals', 'sage') }}</h3>
           				<div class="row w-100 pb-5">
           					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
@@ -257,7 +257,7 @@
 			</div>
           </a>
           <div class="megaMenu dropdown-menu w-100 bg-white">
-          	<div class="container my-4">
+          	<div class="container my-5">
           		<div class="row d-flex justify-content-center">
           			<div class="col-12 px-0 col-lg-8">
           				<h3 class="mb-4">{{ __('About Estyn', 'sage') }}</h3>
