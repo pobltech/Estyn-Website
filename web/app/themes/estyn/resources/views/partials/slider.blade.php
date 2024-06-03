@@ -32,10 +32,12 @@
         @if(isset($carouselHeading) && !empty($carouselHeading))
 		<div class="row">
 			<div class="col-12">
-                @if(isset($carouselHeadingNumber) && !empty($carouselHeadingNumber))
-                    <h{{ $carouselHeadingNumber }}>{{ $carouselHeading }}</h{{ $carouselHeadingNumber }}>
-                @else
-				    <h2 class="mb-2 mb-sm-3">{{ $carouselHeading }}</h2>
+                @if(isset($carouselDescription) && !empty($carouselDescription))
+                    @if(isset($carouselHeadingNumber) && !empty($carouselHeadingNumber))
+                        <h{{ $carouselHeadingNumber }} class="mb-2 mb-sm-3">{{ $carouselHeading }}</h{{ $carouselHeadingNumber }}>
+                    @else
+                        <h2 class="mb-2 mb-sm-3">{{ $carouselHeading }}</h2>
+                    @endif
                 @endif
 			</div>
 		</div>
@@ -48,6 +50,12 @@
 			<div class="mb-4 mb-sm-0">
                 @if(isset($carouselDescription) && !empty($carouselDescription))
 				    <p class="mb-0">{{ $carouselDescription }}</p>
+                @else
+                    @if(isset($carouselHeadingNumber) && !empty($carouselHeadingNumber))
+                        <h{{ $carouselHeadingNumber }} class="mb-0">{{ $carouselHeading }}</h{{ $carouselHeadingNumber }}>
+                    @else
+                        <h2 class="mb-0">{{ $carouselHeading }}</h2>
+                    @endif
                 @endif
                 @if(isset($carouselLeftButtons) && !empty($carouselLeftButtons))
                     @foreach($carouselLeftButtons as $carouselLeftButton)
@@ -73,11 +81,16 @@
                 <?php foreach($carouselItems as $carouselItem) : ?>
                     <div class="card me-2 me-sm-4 h-100">
                         <div class="slideCardBody">
-                            <img class="img-fluid" src="{{ $carouselItem['featured_image_src'] }}"/>
+                            <img class="img-fluid" src="{{ $carouselItem['featured_image_src'] }}" alt="{{ $carouselItem['featured_image_alt'] ?? '' }}" />
                         </div>
                         <div class="card-footer py-sm-4 pb-0 px-0">
-                            <h4 class="mb-0">{{ $carouselItem['title'] }}</h4>
-                            <p class="mb-0">{{ $carouselItem['excerpt'] }}</p>
+                            @if(!empty($carouselItem['date']))
+                                <p class="slider-item-date mb-0">{{ $carouselItem['date'] }}</p>
+                            @endif
+                            <a class="stretched-link" href="{{ $carouselItem['link'] ?? '#' }}"><h4 class="mb-0 {{ !empty($carouselItem['excerpt']) ? 'mb-2' : '' }}">{{ $carouselItem['title'] }}</h4></a>
+                            @if(!empty($carouselItem['excerpt']))
+                                <p class="mb-0">{{ wp_strip_all_tags($carouselItem['excerpt']) }}</p>
+                            @endif
                         </div>
                     </div>
                 <?php endforeach; ?>

@@ -26,7 +26,7 @@
     </li>
     <li>In plugins/pobl-tech-blocks/ directory:
       <ul>
-        <li>npm install (necessary to install "wp-scripts" package/command)</li>
+        <li>npm install (necessary to install "wp-scripts" package/command) - NOTE: Your server needs at least 4GB RAM!</li>
         <li>npm run build</li>
       </ul>
     </li>

@@ -36,9 +36,12 @@
 								@endif
 								@if(isset($showSearchBox) && ($showSearchBox === true))
 									<div class="d-flex justify-content-center justify-content-lg-end ctaSearchBoxContainer">
-										<div class="input-group mb-3 shadow rounded">
-											<input type="text" class="form-control" placeholder="Primary schools" aria-label="Primary schools" aria-describedby="button-addon2">
-											<button class="btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+										<div class="estyn-search-container input-group mb-3 shadow rounded">
+											<input type="text" class="form-control estyn-search-box" data-posttype="estyn_eduprovider" list="{{ $ctaUniqueID }}-search-datalist-options" placeholder="Primary schools" aria-label="Primary schools" aria-describedby="button-addon2">
+											<button class="estyn-search-box-button btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+											<datalist class="search-datalist" id="{{ $ctaUniqueID }}-search-datalist-options">
+
+                    						</datalist>
 										</div>
 									</div>
 								@endif
@@ -73,7 +76,30 @@
 					<div class="row d-flex justify-content-center">
 						<div class="col-12 col-sm-10 col-xl-8">
 							<div class="row">
-								<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								@php
+									$sectors = isset($sectors) ? $sectors : get_terms([
+										'taxonomy' => 'sector',
+										'hide_empty' => false,
+									]);
+								@endphp
+								@foreach($sectors as $sector)
+								    @if($loop->iteration > 12) {{-- Only show the first 12 items --}}
+										@continue
+									@endif
+									@php
+										// We want the last word of the sector name to be contained within a span (with class no-wrap)
+										// and next to it we want the arrow icon
+										$sectorNameParts = explode(' ', $sector->name);
+										$sectorNamePartsCount = count($sectorNameParts);
+										$sectorNameLastWord = $sectorNameParts[$sectorNamePartsCount - 1];
+										$sectorNameParts[$sectorNamePartsCount - 1] = '<span class="text-nowrap">' . $sectorNameLastWord . ' <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span>';
+										$sectorName = implode(' ', $sectorNameParts);
+									@endphp
+									<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+										<a href="{{ get_term_link($sector) }}" class="ctaMapLink">{!! $sectorName !!}</a>
+									</div>
+								@endforeach
+								{{--<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
 									<a href="#" class="ctaMapLink">Non-maintained <span class="text-nowrap">nurseries <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 								</div>
 								<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
@@ -90,10 +116,18 @@
 								</div>
 								<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
 									<a href="#" class="ctaMapLink"><span class="text-nowrap">Primary <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
-								</div>
+								</div>--}}
 							</div>
 							<div class="row collapse" id="{{ $ctaUniqueID }}-collapseSectors">
-								<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+								@foreach($sectors as $sector)
+									@if($loop->iteration < 13) {{-- Only show the 13th item onwards --}}
+										@continue
+									@endif
+									<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
+										<a href="{{ get_term_link($sector) }}" class="ctaMapLink">{{ $sector->name }} <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></a>
+									</div>
+								@endforeach
+								{{--<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
 									<a href="#" class="ctaMapLink"><span class="text-nowrap">Secondary <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
 								</div>
 								<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
@@ -110,7 +144,7 @@
 								</div>
 								<div class="col-12 text-center text-lg-start col-sm-6 col-lg-4 mb-3">
 									<a href="#" class="ctaMapLink"><span class="text-nowrap">All-age <i class="fa-sharp fa-regular fa-arrow-up-right text-decoration-underline"></i></span></a>
-								</div>
+								</div>--}}
 							</div>
 							<div class="row">
 								<div class="col-12 d-flex justify-content-center mt-4">

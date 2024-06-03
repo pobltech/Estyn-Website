@@ -2,27 +2,70 @@
 
 @section('content')
     @php
-        $term = get_queried_object();
+        $term = $term ?? get_queried_object();
+
+        $heroImage = get_field('hero_image', $term);
+        $heroImageID = null;
+        $heroImageSrc = null;
+        if(empty($heroImage)) {
+            $heroImageSrc = asset('images/sectordefaulthero.jpg');
+            $heroImageAlt = __('Education in the ' . $term->name . ' sector', 'sage');
+        } else {
+            $heroImageID = $heroImage['ID'];
+            $heroImageSrc = $heroImage['url'];
+            $heroImageAlt = $heroImage['alt'];
+        }
+
+        $introImage = get_field('intro_image', $term);
+        $introImageID = null;
+        $introImageSrc = null;
+        if(empty($introImage)) {
+            $introImageSrc = asset('images/sectordefaulthero.jpg');
+            $introImageAlt = __('Education in the ' . $term->name . ' sector', 'sage');
+        } else {
+            $introImageID = $introImage['ID'];
+            $introImageSrc = $introImage['url'];
+            $introImageAlt = $introImage['alt'];
+        }
+
+
     @endphp
     @include('partials.inside-hero', [
         'title' => $term->name,
         'super' => __('Education Sector', 'sage'),
-        'heroImageSrc' => get_field('hero_image', $term) ?? asset('images/sectordefaulthero.jpg'),
-        'heroImageAlt' => get_field('hero_image_alt', $term) ?? $term->name,
+        'heroImageSrc' => $heroImageSrc,
+        'heroImageAlt' => $heroImageAlt,
+        'heroImageID' => $heroImageID,
         'secondHeading' => __('Education in the ' . $term->name . ' sector', 'sage'),
-        'introContent' => get_field('intro_summary', $term) ?? __('Find out what Estyn can do to help providers in the ' . $term->name . ' sector.', 'sage'),
-        'introImageSrc' => get_field('intro_image', $term) ?? asset('images/sectordefaultintro.jpg'),
-        'introImageAlt' => get_field('intro_image_alt', $term) ?? __('Education in the ' . $term->name . ' sector', 'sage'),
+        'introContent' => (!empty(get_field('intro_summary', $term))) ? get_field('intro_summary', $term) : '<p>' . __('Information about the ' . $term->name . ' sector in Wales.') . '</p><p>' . __('Find out more about what Estyn can do to help ' . $term->name . ' sector providers, and where to find guidance and news', 'sage') . '</p>',
+        'introImageSrc' => $introImageSrc,
+        'introImageAlt' => $introImageAlt,
+        'introImageID' => $introImageID,
         'cropIntroImagePortrait' => true
     ])
 
     <div class="container px-md-4 px-xl-5 mt-5 pt-4 pt-sm-5">
         <div class="row">
             <div class="col-12">
-                @include('partials.ways-to-improve')
-                @include('partials.slider', [
+                @include('partials.ways-to-improve', ['term' => $term, 'wtpTags' => $wtpTags, 'wtpTagLinkDotColours' => $wtpTagLinkDotColours])
+                @if(!empty($sectorResourcesCarouselItems))
+                    @include('partials.slider', [
+                        'carouselID' => 'sector-resources-carousel',
+                        'carouselHeading' => __('Featured ' . $term->name . ' resources', 'sage'),
+                        'carouselHeadingNumber' => 3,
+                        /*'carouselDescription' => __('The latest resources for the ' . $term->name . ' sector.', 'sage'),*/
+                        'carouselButtonText' => __('All resources', 'sage'),
+                        'carouselButtonLink' => App\get_permalink_by_template('template-search.blade.php') . '?sector=' . rawurlencode($term->name),
+                        'carouselSectionClass' => 'pobl-tech-carousel-block mt-5 mb-5',
+                        'carouselSliderWrapperClass' => 'pobl-tech-carousel-block-slider',
+                        'carouselItems' => $sectorResourcesCarouselItems,
+                        'doNotDoJavaScript' => false
+                    ])
+                @endif
+                {{--@include('partials.slider', [
                     'carouselID' => 'sector-resources-carousel',
                     'carouselHeading' => __('Featured ' . $term->name . ' resources', 'sage'),
+                    'carouselHeadingNumber' => 3,
                     'carouselDescription' => __('The latest resources for the ' . $term->name . ' sector.', 'sage'),
                     'carouselButtonText' => __('All resources', 'sage'),
                     'carouselSectionClass' => 'pobl-tech-carousel-block mt-5 mb-5',
@@ -70,7 +113,7 @@
                         ]
                     ],
                     'doNotDoJavaScript' => false
-                ])
+                ])--}}
 
                 @include('partials.cta', [
                     'ctaHeading' => get_field('cta_heading', $term) ?? __('What to expect ahead of an inspection', 'sage'),
@@ -81,7 +124,21 @@
                     'ctaImageAlt' => get_field('cta_image_alt', $term) ?? __('Education in the ' . $term->name . ' sector', 'sage')
                 ])
 
-                @include('partials.slider', [
+                @if(!empty($sectorLatestArticlesCarouselItems))
+                    @include('partials.slider', [
+                        'carouselID' => 'sector-articles-carousel',
+                        'carouselHeading' => __('Latest articles', 'sage'),
+                        'carouselDescription' => __('Blog posts and news articles relating to the ' . $term->name . ' sector.', 'sage'),
+                        'carouselButtonText' => __('All articles', 'sage'),
+                        'carouselButtonLink' => App\get_permalink_by_template('template-news-and-blog.blade.php') . '?sector=' . rawurlencode($term->name),
+                        'carouselSectionClass' => 'pobl-tech-carousel-block',
+                        'carouselSliderWrapperClass' => 'pobl-tech-carousel-block-slider',
+                        'carouselItems' => $sectorLatestArticlesCarouselItems,
+                        'doNotDoJavaScript' => false
+                    ])
+                @endif
+
+                {{--@include('partials.slider', [
                     'carouselID' => 'sector-articles-carousel',
                     'carouselHeading' => __('Latest articles', 'sage'),
                     'carouselDescription' => __('Blog posts and news articles relating to the ' . $term->name . ' sector.', 'sage'),
@@ -131,22 +188,27 @@
                         ]
                     ],
                     'doNotDoJavaScript' => false
-                ])
+                ])--}}
                 
                 @include('partials.cta', [
-                    'ctaHeading' => 'Our education map of Wales',
-                    'ctaText' => 'Find providers across Wales using our handy map',
-                    'ctaButtonLinkURL' => '#',
-                    'ctaButtonText' => 'Search the map',
+                    'ctaHeading' => __('Our education map of Wales', 'sage'),
+                    'ctaText' => __('Find providers across Wales using our handy map', 'sage'),
+                    'ctaButtonLinkURL' => App\get_permalink_by_template('provider-search.blade.php'),
+                    'ctaButtonText' => __('Search the map', 'sage'),
                     'ctaImageURL' => asset('images/map.svg'),
-                    'ctaImageAlt' => 'Map of Wales',
+                    'ctaImageAlt' => __('Map of Wales', 'sage'),
                     'imageBreakOut' => true,
                     'imageExtraClasses' => 'ctaSearchMap',
-                    'showSearchBox' => true
+                    'showSearchBox' => true,
+                    'ctaContainerExtraClasses' => 'ctaSearchMapContainer'
                 ])
                 <div class="reportMain">
                     <div class="container px-md-4 px-xl-5">
-                        @include('partials.inspection-and-report-schedule')
+                        @if(!empty($sectorLatestInspectionReports))
+                            @include('partials.inspection-and-report-schedule', [
+                                'inspectionReports' => $sectorLatestInspectionReports,
+                            ])
+                        @endif
                     </div>
                 </div>
             </div>

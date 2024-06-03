@@ -1,10 +1,10 @@
 {{--
-	Template name: Latest Inspection Reports page
+	Template name: Providers Search Page
  --}}
 @extends('layouts.app')
 
 @section('content')
 	@include('partials.search-page', [
-		'isInspectionReportsSearch' => true
+		'isProviderSearch' => true
 	])
 @endsection

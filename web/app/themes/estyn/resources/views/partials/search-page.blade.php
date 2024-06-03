@@ -12,10 +12,13 @@
   News/blog posts:
   - Type (news/blog)(News Articles is a CPT, blog posts are Posts)
   - Dates (year)
+  - [Tags? (blog posts only)]
+  - Sort: Publication date, title, type
 
   Inspection reports:
   - Sector
   - Local authority
+  - Sort: Latest updated, publication date, title
 
   Inspection schedule:
   - Sector
@@ -26,8 +29,14 @@
   - Local authority
   - Tags
   - Updated??
-  - Type (Thematic Report, Effective Practice, or Additional Resource)
+  - Type (Thematic Report, Effective Practice, Annual Report, or Additional Resource)
   - Year
+  - Sort: Latest updated, publication date, title, type
+
+  Provider search:
+  - Sector
+  - Local authority
+  - Sort: Title
 
 --}}
 
@@ -57,13 +66,13 @@
             <hr class="d-md-none">
 
             <div class="search-filters collapse d-md-block pb-5" id="search-filters">
-              <h3>Filters</h3>
+              <h3>{{ __('Filters', 'sage') }}</h3>
               <div class="accordion accordion-flush" id="accordionFlushExample">
                 @if(isset($isNewsAndBlog) && $isNewsAndBlog)
                   <div class="accordion-item">
                       <h2 class="accordion-header" id="flush-headingOne">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                          Type
+                          {{ __('Type', 'sage') }}
                         </button>
                       </h2>
                       <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
@@ -165,7 +174,7 @@
                     </div>
                   </div>
                 </div>
-                @if(isset($tags) && !empty($tags))
+                @if(isset($isImprovementResourcesSearch) && $isImprovementResourcesSearch && isset($tags) && !empty($tags))
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="flush-headingThree">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
@@ -176,7 +185,7 @@
                     <div class="accordion-body">
                       @foreach($tags as $tag)
                         <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="{{ $tag->slug }}" name="tags[]">
+                          <input class="form-check-input" type="checkbox" value="{{ $tag->slug }}" name="tags[]" {{ (!empty($_GET['tag'])) && (strtolower($_GET['tag']) == strtolower($tag->name)) ? 'checked' : '' }}>
                           <label class="form-check-label" for="flexCheckTags-{{ $tag->slug }}">
                             {{ $tag->name }}
                           </label>
@@ -186,7 +195,7 @@
                   </div>
                 </div>
                 @endif
-                @if(isset($improvementResourceTypes) && !empty($improvementResourceTypes))
+                @if(isset($isImprovementResourcesSearch) && $isImprovementResourcesSearch && isset($improvementResourceTypes) && !empty($improvementResourceTypes))
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-headingFour">
                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
@@ -257,11 +266,17 @@
         $searchQuery = null;
         $searchArgs = null;
 
+        if(isset($_GET['paged'])) {
+          $searchArgs['paged'] = intval($_GET['paged']);
+        }
+
         if($isNewsAndBlog) {
           $searchArgs = [
             'post_type' => ['estyn_newsarticle', 'post'],
-            'posts_per_page' => -1,
-            'orderby' => 'modified',
+            'posts_per_page' => 10,
+            'orderby' => 'meta_value',
+            'meta_key' => 'last_updated',
+            'order' => 'DESC'
           ];
 
           // If there's a Wordpress search query in the URL then add it to the search args
@@ -271,8 +286,10 @@
         } elseif($isImprovementResourcesSearch) {
           $searchArgs = [
             'post_type' => 'estyn_imp_resource',
-            'posts_per_page' => -1,
-            'orderby' => 'modified',
+            'posts_per_page' => 10,
+            'orderby' => 'meta_value',
+            'meta_key' => 'last_updated',
+            'order' => 'DESC'
           ];
 
           // If there's a Wordpress search query in the URL then add it to the search args
@@ -333,11 +350,51 @@
             ];
           }
 
+        } elseif($isInspectionReportsSearch) {
+          $searchArgs = [
+            'post_type' => 'estyn_inspectionrpt',
+            'posts_per_page' => 10,
+            'orderby' => 'meta_value',
+            'meta_key' => 'inspection_date',
+          ];
+
+          // If there's a Wordpress search query in the URL then add it to the search args
+          if(isset($_GET['s'])) {
+            $searchArgs['s'] = trim($_GET['s']);
+          }
+
+          // Sector
+          if(isset($_GET['sector']) && $_GET['sector'] != 'any') {
+            $searchArgs['tax_query'] = [
+              [
+                'taxonomy' => 'sector',
+                'field' => 'slug',
+                'terms' => $_GET['sector']
+              ]
+            ];
+          }
+
+          // Local authority
+          if(isset($_GET['localAuthority']) && $_GET['localAuthority'] != 'Any') {
+            $searchArgs['tax_query'] = [
+              [
+                'taxonomy' => 'local_authority',
+                'field' => 'slug',
+                'terms' => $_GET['localAuthority']
+              ]
+            ];
+          }
+        } elseif($isProviderSearch) {
+          $searchArgs = [
+            'post_type' => 'estyn_eduprovider',
+            'posts_per_page' => 10,
+            'orderby' => 'title',
+          ];
         }
 
-        if(!empty($searchArgs)) {
+        /*if(!empty($searchArgs)) {
           $searchQuery = new WP_Query($searchArgs);
-        }
+        }*/
       @endphp
 			<div class="searchResultsMain col-12 col-md-8">
 				<div class="row">
@@ -345,182 +402,222 @@
 						<div class="d-flex align-items-center align-items-md-start justify-content-between">
 							<span><span class="search-results-number">{{ (!empty($searchQuery)) && $searchQuery->have_posts() ? $searchQuery->found_posts : '0' }}</span> {{ __('result/s', 'sage') }}</span>
               <span class="d-flex align-items-center">
-							<label class="text-nowrap me-3" for="sort-by">{{ __('Sort by', 'sage') }}</label>
-                <select id="sort-by" class="form-select">
-                    <option value="modified">{{ __('Latest updated', 'sage') }}</option>
+                @if(!isset($isProviderSearch) || !$isProviderSearch)
+                  <label class="text-nowrap me-3" for="sort-by">{{ __('Sort by', 'sage') }}</label>
+                  <select id="sort-by" class="form-select">
+                    @if((!isset($isNewsAndBlog) || !$isNewsAndBlog) && (!isset($isProviderSearch) || !$isProviderSearch) && (!isset($isInspectionScheduleSearch) || !$isInspectionScheduleSearch) && !(isset($isInspectionReportsSearch)) )
+                      <option value="lastUpdated">{{ __('Latest updated', 'sage') }}</option>
+                    @endif
+                    @if(!isset($isProviderSearch) || !$isProviderSearch)
+                      <option value="date">{{ __('Publication date', 'sage') }}</option>
+                    @endif
+                    @if(isset($isInspectionReportsSearch) && $isInspectionReportsSearch)
+                      <option value="lastUpdated">{{ __('Latest updated', 'sage') }}</option>
+                    @endif
                     <option value="title">{{ __('Title', 'sage') }}</option>
-                    <option value="date">{{ __('Publication date', 'sage') }}</option>
-                    <option value="type">{{ __('Type', 'sage') }}</option>
+                    @if((isset($isImprovementResourcesSearch) && $isImprovementResourcesSearch) || (isset($isNewsAndBlog) && $isNewsAndBlog))
+                      <option value="type">{{ __('Type', 'sage') }}</option>
+                    @endif
                   </select>
-                </span>
+                @endif
+              </span>
 						</div>
 						<hr class="hrGreen my-3">
 					</div>
 					<div class="col-12 position-relative">
             <div class="search-results-loading-indicator-container d-flex justify-content-center">
               <div class="search-results-loading-indicator spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden">{{ __('Loading', 'sage') }}...</span>
               </div>
             </div>
-            <div id="search-results">
-              <div class="list-group list-group-flush resourceList">
-                @if(!empty($searchQuery))
-                  @php
-                    $items = [];
-                  @endphp
-                  @if($searchQuery->have_posts())
-                    @while($searchQuery->have_posts())
-                      @php
-                        $searchQuery->the_post();
-
-                        $postTypeName = (get_post_type_object(get_post_type()))->labels->singular_name;
-                        if($postTypeName == 'Post') {
-                          $postTypeName = __('Blog post', 'sage');
-                        }
-
-                        $postTypeName = ucfirst(strtolower($postTypeName));
-
-                        $items[] = [
-                          'linkURL' => get_the_permalink(),
-                          'superText' => $postTypeName,
-                          'superDate' => get_the_date('d/m/Y'),
-                          'title' => get_the_title()
-                        ];
-                      @endphp
-                    @endwhile
-
+            <div id="search-results-container">
+              <div id="search-results">
+                <div class="list-group list-group-flush resourceList">
+                  @if(!empty($searchQuery))
                     @php
-                      wp_reset_postdata();
+                      $items = [];
                     @endphp
-                  @endif
+                    @if($searchQuery->have_posts())
+                      @while($searchQuery->have_posts())
+                        @php
+                          $searchQuery->the_post();
 
-                  @if(!empty($items))
-                    @include('components.resource-list', [
-                      'items' => $items
-                    ])
+                          $reportFileURL = null;//$firstPDFAttachment = null; // Used for inspection reports
+
+                          // If the post type is 'estyn_inspectionrpt',
+                          // and the post doesn't have any attachments that is/are PDFs,
+                          // then skip this post
+                          if(get_post_type() == 'estyn_inspectionrpt') {
+                            global $post;
+                            $reportFileURL = App\getInspectionReportFileURL($post);
+
+                            if(empty($reportFileURL)) {
+                              continue; // Skip this post
+                            }
+                          }
+
+                          $postTypeName = (get_post_type_object(get_post_type()))->labels->singular_name;
+                          if($postTypeName == __('Post', 'sage')) {
+                            $postTypeName = __('Blog post', 'sage');
+                          }
+
+                          $postTypeName = ucfirst(strtolower($postTypeName));
+
+                          if($isInspectionReportsSearch) {
+                            $items[] = [
+                              'linkURL' => $reportFileURL, //wp_get_attachment_url($firstPDFAttachment->ID), // We will have skipped this post if there are no PDF attachments
+                              'superText' => __('Inspection report', 'sage'),
+                              'superDate' => get_the_date('d/m/Y'),
+                              'title' => get_the_title(),
+                            ];
+                          } else {
+                            $items[] = [
+                              'linkURL' => get_the_permalink(),
+                              'superText' => $postTypeName,
+                              'superDate' => get_the_date('d/m/Y'),
+                              'title' => get_the_title()
+                            ];
+                          }
+                        @endphp
+                      @endwhile
+
+                      @php
+                        wp_reset_postdata();
+                      @endphp
+                    @endif
+
+                    @if(!empty($items))
+                      @include('components.resource-list', [
+                        'items' => $items
+                      ])
+                    @else
+                      <p>{{ __('No results found', 'sage') }}</p>
+                    @endif
                   @else
-                    <p>{{ __('No results found', 'sage') }}</p>
-                  @endif
-                @else
-                @if(isset($isNewsAndBlog) && $isNewsAndBlog)
+                  {{--@if(isset($isNewsAndBlog) && $isNewsAndBlog)
+                                    @include('components.resource-list', [
+                                        'items' => [
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'News article',
+                                                'superDate' => '24/01/2024',
+                                                'title' => 'Improving teaching through an emphasis on professional learning'
+                                            ],
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'News article',
+                                                'superDate' => '24/01/2024',
+                                                'title' => 'Improving attendance in secondary schools'
+                                            ],
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'News article',
+                                                'superDate' => '24/01/2024',
+                                                'title' => 'Improving attendance in secondary schools - training materials'
+                                            ],
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'News article',
+                                                'superDate' => '24/01/2024',
+                                                'title' => 'Developing early communication skills with predominantly pre verbal pupils'
+                                            ],
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'News article',
+                                                'superDate' => '24/01/2024',
+                                                'title' => 'Motivating pupils to speak Welsh'
+                                            ],
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'News article',
+                                                'superDate' => '24/01/2024',
+                                                'title' => 'Developing a programme to provide targeted support for vulnerable learners to improve their attendance'
+                                            ]
+                                        ]
+                                    ])
+                                @elseif(isset($isInspectionReportsSearch) && $isInspectionReportsSearch)
+                                    @include('components.resource-list', [
+                                        'items' => [
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'Inspection report',
+                                                'superDate' => '24/01/2024',
+                                                'title' => 'Cardiff High School'
+                                            ],
+                                            [
+                                                'linkURL' => '#',
+                                                'superText' => 'Inspection report',
+                                                'superDate' => '21/03/2023',
+                                                'title' => 'Cwmbran High School'
+                                            ]
+                                        ]
+                                    ])
+                                @elseif(isset($isInspectionScheduleSearch) && $isInspectionScheduleSearch)
                                   @include('components.resource-list', [
-                                      'items' => [
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'News article',
-                                              'superDate' => '24/01/2024',
-                                              'title' => 'Improving teaching through an emphasis on professional learning'
-                                          ],
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'News article',
-                                              'superDate' => '24/01/2024',
-                                              'title' => 'Improving attendance in secondary schools'
-                                          ],
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'News article',
-                                              'superDate' => '24/01/2024',
-                                              'title' => 'Improving attendance in secondary schools - training materials'
-                                          ],
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'News article',
-                                              'superDate' => '24/01/2024',
-                                              'title' => 'Developing early communication skills with predominantly pre verbal pupils'
-                                          ],
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'News article',
-                                              'superDate' => '24/01/2024',
-                                              'title' => 'Motivating pupils to speak Welsh'
-                                          ],
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'News article',
-                                              'superDate' => '24/01/2024',
-                                              'title' => 'Developing a programme to provide targeted support for vulnerable learners to improve their attendance'
-                                          ]
+                                    'items' => [
+                                      [
+                                        'linkURL' => '#',
+                                        'superText' => 'Upcoming inspection',
+                                        'superDate' => '05/11/2024',
+                                        'title' => 'Cardiff High School'
+                                      ],
+                                      [
+                                        'linkURL' => '#',
+                                        'superText' => 'Upcoming inspection',
+                                        'superDate' => '15/12/2024',
+                                        'title' => 'Cwmbran High School'
                                       ]
-                                  ])
-                              @elseif(isset($isInspectionReportsSearch) && $isInspectionReportsSearch)
-                                  @include('components.resource-list', [
-                                      'items' => [
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'Inspection report',
-                                              'superDate' => '24/01/2024',
-                                              'title' => 'Cardiff High School'
-                                          ],
-                                          [
-                                              'linkURL' => '#',
-                                              'superText' => 'Inspection report',
-                                              'superDate' => '21/03/2023',
-                                              'title' => 'Cwmbran High School'
-                                          ]
-                                      ]
-                                  ])
-                              @elseif(isset($isInspectionScheduleSearch) && $isInspectionScheduleSearch)
-                                @include('components.resource-list', [
-                                  'items' => [
-                                    [
-                                      'linkURL' => '#',
-                                      'superText' => 'Upcoming inspection',
-                                      'superDate' => '05/11/2024',
-                                      'title' => 'Cardiff High School'
-                                    ],
-                                    [
-                                      'linkURL' => '#',
-                                      'superText' => 'Upcoming inspection',
-                                      'superDate' => '15/12/2024',
-                                      'title' => 'Cwmbran High School'
                                     ]
-                                  ]
+                                  ])
+                                @else
+                                @include('components.resource-list', [
+                                    'items' => [
+                                        [
+                                            'linkURL' => '#',
+                                            'superText' => 'Effective practice',
+                                            'superDate' => '24/01/2024',
+                                            'title' => 'Improving teaching through an emphasis on professional learning'
+                                        ],
+                                        [
+                                            'linkURL' => '#',
+                                            'superText' => 'Effective practice',
+                                            'superDate' => '24/01/2024',
+                                            'title' => 'Improving attendance in secondary schools'
+                                        ],
+                                        [
+                                            'linkURL' => '#',
+                                            'superText' => 'Effective practice',
+                                            'superDate' => '24/01/2024',
+                                            'title' => 'Improving attendance in secondary schools - training materials'
+                                        ],
+                                        [
+                                            'linkURL' => '#',
+                                            'superText' => 'Effective practice',
+                                            'superDate' => '24/01/2024',
+                                            'title' => 'Developing early communication skills with predominantly pre verbal pupils'
+                                        ],
+                                        [
+                                            'linkURL' => '#',
+                                            'superText' => 'Effective practice',
+                                            'superDate' => '24/01/2024',
+                                            'title' => 'Motivating pupils to speak Welsh'
+                                        ],
+                                        [
+                                            'linkURL' => '#',
+                                            'superText' => 'Effective practice',
+                                            'superDate' => '24/01/2024',
+                                            'title' => 'Developing a programme to provide targeted support for vulnerable learners to improve their attendance'
+                                        ]
+                                    ]
                                 ])
-                              @else
-                              @include('components.resource-list', [
-                                  'items' => [
-                                      [
-                                          'linkURL' => '#',
-                                          'superText' => 'Effective practice',
-                                          'superDate' => '24/01/2024',
-                                          'title' => 'Improving teaching through an emphasis on professional learning'
-                                      ],
-                                      [
-                                          'linkURL' => '#',
-                                          'superText' => 'Effective practice',
-                                          'superDate' => '24/01/2024',
-                                          'title' => 'Improving attendance in secondary schools'
-                                      ],
-                                      [
-                                          'linkURL' => '#',
-                                          'superText' => 'Effective practice',
-                                          'superDate' => '24/01/2024',
-                                          'title' => 'Improving attendance in secondary schools - training materials'
-                                      ],
-                                      [
-                                          'linkURL' => '#',
-                                          'superText' => 'Effective practice',
-                                          'superDate' => '24/01/2024',
-                                          'title' => 'Developing early communication skills with predominantly pre verbal pupils'
-                                      ],
-                                      [
-                                          'linkURL' => '#',
-                                          'superText' => 'Effective practice',
-                                          'superDate' => '24/01/2024',
-                                          'title' => 'Motivating pupils to speak Welsh'
-                                      ],
-                                      [
-                                          'linkURL' => '#',
-                                          'superText' => 'Effective practice',
-                                          'superDate' => '24/01/2024',
-                                          'title' => 'Developing a programme to provide targeted support for vulnerable learners to improve their attendance'
-                                      ]
-                                  ]
-                              ])
+                                @endif--}}
                               @endif
-                            @endif
+                </div>
               </div>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+              <button class="search-results-prev-button btn btn-outline-primary">{{ __('Previous', 'sage') }}</button>
+              <button class="search-results-next-button btn btn-outline-primary">{{ __('Next', 'sage') }}</button>
             </div>
 					</div>
 				</div>
@@ -533,11 +630,13 @@
 		(function($) {
 			let searchBoxTypingTimer = setTimeout(function() {}, 0);
 			const searchBoxTypingInterval = 500;
+      let currentPage = 1;
 
 			$(document).ready(function() {
 				hideSearchResultsLoadingIndicator();
 
 				$(".search-filters input:not([type='text'])").on("change", function() {
+          currentPage = 1;
 					applyFilters();
 				});
 
@@ -555,11 +654,13 @@
 					clearTimeout(searchBoxTypingTimer);
 
 					searchBoxTypingTimer = setTimeout(function() {
+            currentPage = 1;
 						applyFilters();
 					}, searchBoxTypingInterval);
 				});
 
 				$("#search-box-container button").on("click", function() {
+          currentPage = 1;
 					applyFilters();
 				});
 
@@ -568,16 +669,27 @@
 				});
 
         @if(!empty($searchArgs))
-          applyFilters();
+          applyFilters(true);
         @endif
 			});
 
-			function applyFilters() {
+			function applyFilters(firstApply = false) {
 				clearTimeout(searchBoxTypingTimer);
 				showSearchResultsLoadingIndicator();
 
+        if(!firstApply) {
+          // Set the height of the search results container to the current height of the search results,
+          // to help prevent the page from jumping/flashing
+          $("#search-results-container").css('height', $("#search-results").height() + 'px');
+        }
+
 				$("#search-results").fadeOut(250, function() {
-					var searchFilters = getSearchFilters();
+					let searchFilters = getSearchFilters();
+          // Add a 'language' key and value to the searchFilters object
+          searchFilters.language = "{{ pll_current_language() }}";
+          //console.log('Language: ' + searchFilters.language);
+          searchFilters.paged = currentPage;
+
 					$.ajax({
 						url: estyn.resources_search_rest_url,
 						type: "GET",
@@ -589,8 +701,27 @@
 							//console.log(response);
 							
 								$("#search-results").html(response.html);
-								$("#search-results").fadeIn(250);
+								$("#search-results").fadeIn(250, function() {
+                  $("#search-results-container").css('height', 'auto');
+                });
 								$(".search-results-number").text(response.totalPosts);
+
+                $(".search-results-prev-button, .search-results-next-button").off("click").hide();
+                if(response.totalPosts > 10) {
+                  if(response.prevPage) {
+                    $(".search-results-prev-button").on("click", function() {
+                      currentPage = response.prevPage;
+                      applyFilters();
+                    }).show();
+                  }
+                  if(response.nextPage) {
+                    $(".search-results-next-button").on("click", function() {
+                      currentPage = response.nextPage;
+                      applyFilters();
+                    }).show();
+                  }
+                }
+
 							
 							
 							hideSearchResultsLoadingIndicator();
@@ -631,7 +762,14 @@
       @elseif(isset($isInspectionScheduleSearch) && $isInspectionScheduleSearch)
 
       @elseif(isset($isProviderSearch) && $isProviderSearch)
-
+      function getSearchFilters() {
+        return {
+          postType: "estyn_eduprovider",
+          sector: $("#flush-collapse-sector input:checked").val(),
+          localAuthority: $("#flush-collapseTwo input:checked").val(),
+          searchText: $("#search-box-container input[type='text']").val().trim()
+        };
+      }
       @elseif(isset($isImprovementResourcesSearch) && $isImprovementResourcesSearch)
       function getSearchFilters() {
         return {

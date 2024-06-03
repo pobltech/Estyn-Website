@@ -7,83 +7,77 @@
     'followUpStatusses' => get_the_terms(get_the_ID(), 'provider_status'),
     'insideIntroLinks' => [
         [
-            'url' => '#',
+            'url' => '#inspection-reports',
             'bgColourClass' => 'bg-signpost-blue',
-            'iconClasses' => 'fas fa-graduation-cap',
+            'iconClasses' => 'fas fa-regular fa-folder-open',
             'title' => __('Inspection report', 'sage'),
             'description' => __('Read the latest report for this provider', 'sage')
         ],
         [
-            'url' => '#',
+            'url' => '#contact-details',
             'bgColourClass' => 'bg-signpost-verylightbrown',
-            'iconClasses' => 'fas fa-book',
+            'iconClasses' => 'fas fa-regular fa-location-dot',
             'title' => __('Provider details', 'sage'),
             'description' => __('Contact details and location', 'sage')
-        ],
+        ]/*,
         [
-            'url' => '#',
+            'url' => '#estyn-widget',
             'bgColourClass' => 'bg-signpost-lightpink',
-            'iconClasses' => 'fas fa-calendar-alt',
+            'iconClasses' => 'fas fa-regular fa-badge-check',
             'title' => __('Estyn widget', 'sage'),
             'description' => __('Find out when your inspection is due', 'sage')
-        ]
+        ]*/
     ]
 ])
 <div class="reportMain pb-5">
     <div class="container px-md-4 px-xl-5 mt-5 pt-md-5">
-        <div class="row">
+        <div class="row" id="inspection-reports">
             <div class="col-12">
                 <h2>{{ __('Inspections', 'sage') }}</h2>
             </div>
         </div>
         <div class="row justify-content-center justify-content-md-between mb-5">
             <div class="col-12 col-md-6 mb-4 mb-md-0">
-                @include('components.resource-list', [
-                    'items' => [
-                        [
-                            'linkURL' => '#',
-                            'superDate' => '07/11/2021',
-                            'title' => __('Inspection report 2021', 'sage'),
+                @if($hasInspectionReports)
+                    @php($items = [])
+                    @foreach($inspectionReports as $inspectionReportPost)
+                        @php($items[] = [
+                            'linkURL' => $inspectionReportPost->report_file_url, // See ProviderComposer.php
+                            'superDate' => (new \DateTime(get_field('inspection_date', $inspectionReportPost->ID)))->format('d/m/Y'),
+                            'title' => get_the_title($inspectionReportPost->ID),
                             'dateOnRight' => true
-                        ],
-                        [
-                            'linkURL' => '#',
-                            'superDate' => '02/03/2017',
-                            'title' => __('Inspection report 2017', 'sage'),
-                            'dateOnRight' => true
-                        ],
-                        [
-                            'linkURL' => '#',
-                            'superDate' => '22/11/2013',
-                            'title' => __('Inspection report 2013', 'sage'),
-                            'dateOnRight' => true
-                        ]
-                    ],
-                    'noMarginBottom' => true
-                ])
+                        ])
+                    @endforeach
+                    @include('components.resource-list', [
+                        'items' => $items,
+                        'noMarginBottom' => true
+                    ])
+                @endif
             </div>
             <div class="col-auto col-md-5">
                 <div class="mt-2 mb-4">
                     @include('components.dot-text-date', [
                         'text' => __('Next scheduled inspection/visit', 'sage'),
-                        'date' => '23 October 2023',
+                        'date' => !empty($nextInspectionDate) ? (new \DateTime($nextInspectionDate))->format('j F Y') : __('No details available', 'sage'),
                         'bgColourClass' => 'bg-signpost-blue',
                         'dontShrink' => true
                     ])
                 </div>
                 <div>
-                    @include('components.dot-text-date', [
-                        'text' => __('Report publication date', 'sage'),
-                        'date' => '28 December 2023',
-                        'bgColourClass' => 'bg-signpost-blue',
-                        'dontShrink' => true
-                    ])
+                    @if($hasInspectionReports)
+                        @include('components.dot-text-date', [
+                            'text' => __('Report publication date', 'sage'),
+                            'date' => (new \DateTime($reportPublicationDate))->format('j F Y'),
+                            'bgColourClass' => 'bg-signpost-blue',
+                            'dontShrink' => true
+                        ])
+                    @endif
                 </div>
             </div>
         </div>
     </div>
     <div class="container px-md-4 px-xl-5">
-        <div class="row">
+        <div class="row" id="contact-details">
             <div class="col-12">
                 <hr>
             </div>
@@ -97,22 +91,47 @@
         </div>
         <div class="row justify-content-between mb-5">
             <div class="col-12 pb-4 pb-md-0 col-md-6">
-                <img src="{{ asset('images/googlemapplaceholderimage.png') }}" alt="Google map placeholder" class="rounded-3 img-fluid"/>
+                <div id="map" class="provider-map rounded-2"></div>
             </div>
             <div class="col-12 col-md-5">
-                <h4>Address</h4>
+                <h4>{{ __('Address', 'sage') }}</h4>
                 <p>
-                    Ysgol Gymraeg Ifor Hael<br/>
-                    Clos Meon<br/>
-                    Bettws<br/>
-                    NP20 7DU
+                    @if(!empty($providerData['address_line_1']))
+                        {{ $providerData['address_line_1'] }}<br>
+                    @endif
+                    @if(!empty($providerData['address_line_2']))
+                        {{ $providerData['address_line_2'] }}<br>
+                    @endif
+                    @if(!empty($providerData['address_line_3']))
+                        {{ $providerData['address_line_3'] }}<br>
+                    @endif
+                    @if(!empty($providerData['address_line_4']))
+                        {{ $providerData['address_line_4'] }}<br>
+                    @endif
+                    @if(!empty($providerData['town']))
+                        {{ $providerData['town'] }}<br>
+                    @endif
+                    @if(!empty($providerData['county']))
+                        {{ $providerData['county'] }}<br>
+                    @endif
+                    @if(!empty($providerData['postcode']))
+                        {{ $providerData['postcode'] }}<br>
+                    @endif
                 </p>
+                
+                @if(!empty($providerData['phone']))
+                    <h4>{{ __('Telephone', 'sage') }}</h4>
+                    <p {{ empty($providerData['email']) ? 'class="mb-0"' : '' }}>{{ $providerData['phone'] }}</p>
+                @endif
 
-                <h4>Telephone</h4>
-                <p class="mb-0">01633 123456</p>
+                @if(!empty($providerData['email']))
+                    <h4>{{ __('Email', 'sage') }}</h4>
+                    <p class="mb-0"><a href="mailto:{{ $providerData['email'] }}">{{ $providerData['email'] }}</a></p>
+                @endif
             </div>
         </div>
     </div>
+    @if($hasResources)
     <div class="container px-md-4 px-xl-5">
         <div class="row">
             <div class="col-12">
@@ -136,8 +155,10 @@
             <div class="col-12 col-md-6"></div>
         </div>
     </div>
+    @endif
+    {{--
     <div class="container px-md-4 px-xl-5">
-        <div class="row">
+        <div class="row" id="estyn-widget">
             <div class="col-12">
                 <hr>
             </div>
@@ -151,7 +172,7 @@
         </div>
         <div class="row">
             <div class="col-12 col-md-6">
-                <p>{{ __('Display this providers Estyn widget on your website', 'sage') }}</p>
+                <p>{{ __('Display this provider\'s Estyn widget on your website', 'sage') }}</p>
                 <p>
                     <img class="img-fluid border rounded-2" src="{{ asset('images/estynwidgetplaceholder.png') }}" alt="Estyn widget example"/>
                 </p>
@@ -161,5 +182,41 @@
             </div>
             <div class="col-12 col-md-6"></div>
         </div>
-    </div>
+    </div>--}}
 </div>
+@push('scripts')
+    <script>
+        (function($) {
+            $(document).ready(function() {
+                // Initialize the map
+                @if(!empty($providerData['latitude']) && !empty($providerData['longitude']))
+                    initMap({{ $providerData['latitude'] }}, {{ $providerData['longitude'] }});
+                @endif
+            });
+
+            // Initialize the map
+            function initMap(latitude, longitude) {
+                // Check if either latitude or longitude is null
+                if (latitude === "" || longitude === "") {
+                    // Display a message instead of the map
+                    document.getElementById('map').innerHTML = "{{ __('No map available for this provider', 'sage') }}";
+                } else {
+                    // Convert the latitude and longitude to numbers
+                    latitude = parseFloat(latitude);
+                    longitude = parseFloat(longitude);
+
+                    let location = [latitude, longitude];
+
+                    // Create a map centered at the property's location
+                    let map = L.map('map').setView(location, 15);
+
+                    // Set the map's tiles
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+                    // Create a marker at the property's location
+                    //L.marker(location).addTo(map);
+                }
+            }
+        })(jQuery);
+    </script>
+@endpush

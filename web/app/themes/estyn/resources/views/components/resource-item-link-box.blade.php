@@ -5,7 +5,7 @@
 				{{ $title }}
 			</div>
 			<div>
-				@if(isset($superText))
+				@if(!empty($superText))
 					<span class="searchResourceDate me-2"><strong>{{ $superText }}</strong></span>
 				@endif
 				<span class="searchResourceDate">{{ $superDate }}</span>
@@ -13,7 +13,9 @@
 		</div>
 	@else
 		<div class="d-flex w-100 justify-content-start">
-			<span class="searchResourceType me-2">{{ $superText }}</span>
+			@if(!empty($superText))
+				<span class="searchResourceType me-2">{{ $superText }}</span>
+			@endif
 			@if((!isset($greenVersion)) || $greenVersion === false)
 				<span class="searchResourceDate me-2">{{ $superDate }}</span>
 			@endif

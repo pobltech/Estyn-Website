@@ -9,13 +9,18 @@
     <div class="container h-100 w-100 d-flex align-items-end mb-5 pb-5 px-md-4 px-xl-5">
       <div class="row flex-fill">
         <div class="col-12 col-md-10 col-lg-8 col-xl-6 homeHeroContent">
-          <h1>{{ __('Placing learners at the heart of our work', 'sage') }}</h1>
-          <a class="btn btn-link mt-1">{{ __('Read more about what we do') }} <i class="fa-sharp fa-solid fa-arrow-right"></i></a>
+          <h1>{{ get_field('home_hero_heading') }}</h1>
+          <a href="{{ get_permalink(get_field('home_hero_subheading_text_page_to_link_to')) }}" class="btn btn-link mt-1">{{ get_field('home_hero_subheading_text') }} <i class="fa-sharp fa-solid fa-arrow-right"></i></a>
         </div>
       </div>
     </div>
     <div class="heroImage">
-      <img src="{{ asset('images/homeherofallback.png') }}"/>
+      {{-- If there's a featured image, we'll use Wordpress' function, otherwise we use asset('images/homeherofallback.png') --}}
+      @if(has_post_thumbnail())
+        {!! the_post_thumbnail('full') !!}
+      @else
+        <img src="{{ asset('images/homeherofallback.png') }}" alt="{{ __('Several children in a bright, Chemistry classroom') }}" />
+      @endif
     </div>
     <div class="heroOverlay"></div>
   </div>
@@ -45,19 +50,27 @@
                 <div class="col-12 col-md-10">
                   <h2 class="mb-0 mb-sm-2">{{ __('Find a provider', 'sage') }}</h2>
                   <label for="providerSearch" class="form-label mb-2 mb-md-4">{{ __('Search our education & training providers', 'sage') }}</label>
-                  <div class="input-group mb-3 estyn-search-box">
-                    <input type="text" class="form-control" placeholder="" aria-label="providerSearch" aria-describedby="providerSearch">
-                    <button class="btn btn-secondary" type="button" id="providerSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+                  <div class="estyn-search-container input-group mb-3">
+                    <input type="text" list="home-provider-search-datalist-options" class="estyn-search-box form-control" data-posttype="estyn_eduprovider" placeholder="" aria-label="providerSearch" aria-describedby="providerSearch">
+                    <button class="estyn-search-box-button btn btn-secondary" type="button" id="providerSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+                    <datalist class="search-datalist" id="home-provider-search-datalist-options">
+
+                    </datalist>
                   </div>
                 </div>
               </div>
             </div>
             <div class="col-12 col-md-5 offset-md-1">
               <h2 class="d-none d-md-block mb-sm-2">{{ __('Estyn for you', 'sage') }}</h2>
-              <p class="d-none d-md-block mb-2 mb-md-4">{{ __('Search our education & training providers', 'sage') }}</p>
+              <p class="d-none d-md-block mb-2 mb-md-4">{{ __('Sub text explaining more detail', 'sage') }}</p>
               <div class="d-flex align-items-start flex-column flex-sm-row flex-md-column flex-xxl-row">
-                <a class="btn btn-outline-light me-4 mb-3">{{ __('Parents, carers & learners', 'sage') }}</a>
-                <a class="btn btn-outline-light me-4 mb-3">{{ __('Education professionals', 'sage') }}</a>
+                @if(!empty($homeData['intro_buttons']))
+                  @foreach($homeData['intro_buttons'] as $button)
+                    <a class="btn btn-outline-light me-4 mb-3" href="{{ $button['url'] }}">{{ $button['text'] }}</a>
+                  @endforeach
+                @endif                
+                {{--<a class="btn btn-outline-light me-4 mb-3">{{ __('Parents, carers & learners', 'sage') }}</a>
+                <a class="btn btn-outline-light me-4 mb-3">{{ __('Education professionals', 'sage') }}</a>--}}
               </div>
             </div>
           </div>
@@ -66,20 +79,23 @@
     </div>
   </div>
   @include('partials.home-page-signposting')
+
+  <div class="pb-md-5">
   @include('partials.cta', [
-    'ctaHeading' => __('Who are Estyn?', 'sage'),
-    'ctaText' => __('Estyn inspects education and training in Wales. Find out how and why we exist, and our vision for education in Wales', 'sage'),
-    'ctaButtonLinkURL' => __('/about-us', 'sage'),
-    'ctaButtonText' => __('About Estyn', 'sage'),
-    'ctaImageURL' => @asset('images/inspection1.png'),
-    'ctaImageAlt' => __('Estyn inspection', 'sage'),
+    'ctaHeading' => $homeData['cta']['heading'],
+    'ctaText' => $homeData['cta']['text'],
+    'ctaButtonLinkURL' => $homeData['cta']['button_link'],
+    'ctaButtonText' =>  $homeData['cta']['button_text'],
+    'ctaImageURL' => $homeData['cta']['image_url'],
+    'ctaImageAlt' => $homeData['cta']['image_alt'],
     'noPY' => true
   ])
+  </div>
 
   @php
     $query1 = new WP_Query([
-      'post_type' => 'post',
-      'posts_per_page' => 10,
+      'post_type' => ['post', 'estyn_newsarticle'],
+      'posts_per_page' => 20,
       'status' => 'publish'
     ]);
 
@@ -89,10 +105,16 @@
       while($query1->have_posts()) {
         $query1->the_post();
         // Do something with the post data
+        if(empty(get_the_post_thumbnail_url())) {
+          continue;
+        }
+
         $sliderItems[] = [
           'featured_image_src' => get_the_post_thumbnail_url(),
           'title' => get_the_title(),
-          'excerpt' => get_the_excerpt()
+          'excerpt' => get_the_excerpt(),
+          'link' => get_the_permalink(),
+          'date' => get_the_date('d F Y'),
         ];
       }
 
@@ -100,18 +122,21 @@
     }
 
     // For TESTING: Append a copy of $sliderItems to $sliderItems to make the carousel longer
-    $sliderItems = array_merge($sliderItems, $sliderItems);
+    //$sliderItems = array_merge($sliderItems, $sliderItems);
   @endphp
 
-<div class="mt-4 mt-sm-5">
-  @include('partials.slider', [
-    'carouselID' => 'estyn-home-carousel',
-    'carouselHeading' => __('Ways to improve', 'sage'),
-    'carouselDescription' => __('Our most recent resources to help you improve your setting', 'sage'),
-    'carouselButtonText' => __('All resources', 'sage'),
-    'carouselItems' => $sliderItems,
-    'doNotDoJavaScript' => false
-  ])
+<div class="mt-4 mt-sm-5 pb-md-5">
+  @if(!empty($homeData['ways_to_improve_carousel_items']))
+    @include('partials.slider', [
+      'carouselID' => 'estyn-home-carousel',
+      'carouselHeading' => __('Ways to improve', 'sage'),
+      'carouselDescription' => __('Our most recent resources to help you improve your setting', 'sage'),
+      'carouselButtonText' => __('All resources', 'sage'),
+      'carouselButtonLink' => App\get_permalink_by_template('template-search.blade.php'),
+      'carouselItems' => $homeData['ways_to_improve_carousel_items'],
+      'doNotDoJavaScript' => false
+    ])
+  @endif
 </div>
 
 {{-- 'Our work' section (old design) --}}
@@ -163,11 +188,11 @@
 	</div>
 </div>
 --}}
-<div id="home-map-search-section">
+<div id="home-map-search-section" class="pt-md-5">
   @include('partials.cta', [
     'ctaHeading' => __('Our education map of Wales', 'sage'),
     'ctaText' => __('Find providers across Wales using our handy map', 'sage'),
-    'ctaButtonLinkURL' => '/news',
+    'ctaButtonLinkURL' => App\get_permalink_by_template('provider-search.blade.php'),
     'ctaButtonText' => __('Search the map', 'sage'),
     'ctaImageURL' => asset('images/map.svg'),
     'ctaImageAlt' => __('Map of Wales', 'sage'),
@@ -179,15 +204,47 @@
   ])
 </div>
 
-  <div class="mt-5">
+  <div class="pt-md-5 mt-5 pb-md-5">
+    @php
+      $query1 = new WP_Query([
+        'post_type' => ['post', 'estyn_newsarticle'],
+        'posts_per_page' => 20,
+        'status' => 'publish'
+      ]);
+
+      $sliderItems = [];
+
+      if($query1->have_posts()) {
+        while($query1->have_posts()) {
+          $query1->the_post();
+          // Do something with the post data
+          if(empty(get_the_post_thumbnail_url())) {
+            continue;
+          }
+
+          $sliderItems[] = [
+            'featured_image_src' => get_the_post_thumbnail_url(),
+            'title' => get_the_title(),
+            'link' => get_the_permalink(),
+            'date' => get_the_date('d F Y'),
+          ];
+        }
+
+        wp_reset_postdata();
+      }
+    @endphp
+
+    <div class="pb-md-5">
     @include('partials.slider', [
         'carouselID' => 'estyn-home-latest-news-carousel',
         'carouselHeading' => __('Latest articles', 'sage'),
         'carouselDescription' => __('Blog posts and news articles from Estyn', 'sage'),
         'carouselButtonText' => __('All articles', 'sage'),
         'carouselItems' => $sliderItems,
+        'carouselButtonLink' => App\get_permalink_by_template('template-news-and-blog.blade.php') ?? (pll_current_language() == 'en' ? '/news-and-blog' : '/cy/newyddion-a-blog'),
         'doNotDoJavaScript' => false
       ])
+    </div>
   </div>
 
   @while(have_posts()) @php(the_post())

@@ -1,10 +1,10 @@
 {{--
-	Template name: Latest Inspection Reports page
+	Template name: Annual Reports Archive Page
  --}}
 @extends('layouts.app')
 
 @section('content')
 	@include('partials.search-page', [
-		'isInspectionReportsSearch' => true
+		'isAnnualReportsSearch' => true
 	])
 @endsection

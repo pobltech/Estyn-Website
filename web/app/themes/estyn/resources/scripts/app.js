@@ -16,3 +16,5 @@ if (import.meta.webpackHot) import.meta.webpackHot.accept(console.error);
 // Import Bootstrap
 import 'bootstrap';
 
+// Import Leaflet for maps
+import L from 'leaflet';

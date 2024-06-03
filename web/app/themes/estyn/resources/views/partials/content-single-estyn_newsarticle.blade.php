@@ -12,7 +12,7 @@
             <div class="row">
               <div class="col-12">
                   @if (has_post_thumbnail())
-                    @php(the_post_thumbnail(null, ['class' => 'img-fluid rounded-3 mb-4']))
+                    @php(the_post_thumbnail(null, ['class' => 'w-100 img-fluid rounded-3 mb-4']))
                   @endif
 
                   @php(the_content())
