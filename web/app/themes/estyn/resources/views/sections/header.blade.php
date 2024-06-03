@@ -23,11 +23,11 @@
 			</div>
           </a>
           <div class="megaMenu dropdown-menu w-100 bg-white">
-          	<div class="container my-4">
+          	<div class="container my-5">
           		<div class="row d-flex justify-content-center">
           			<div class="col-12 px-0 col-lg-8">
           				<h3 class="mb-4">{{ __('Parents, carers & learners', 'sage') }}</h3>
-          				<div class="row w-100">
+          				<div class="row w-100 pb-5">
           					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
 												@php
@@ -39,7 +39,7 @@
 													@php
 														$useEstynLogoAsIcon = get_field('use_estyn_logo_for_the_icon', $navMenuItem->ID) === 'true' ? true : false;
 													@endphp
-													<div class="col-12 mb-4 position-relative">
+													<div class="col-12 {{ $loop->last ? '' : 'mb-4' }} position-relative">
 														@include('components.signpost', [
 															'bgColour' => get_field('signpost_colour', $navMenuItem->ID),
 															'iconClasses' => 'fa-solid ' . get_field('icon', $navMenuItem->ID),
@@ -108,11 +108,11 @@
 			</div>
           </a>
           <div class="megaMenu dropdown-menu w-100 bg-white">
-          	<div class="container my-4">
+          	<div class="container my-5">
           		<div class="row d-flex justify-content-center">
           			<div class="col-12 px-0 col-lg-8">
-          				<h3 class="mb-4">{{ __('Educational professionals', 'sage') }}</h3>
-          				<div class="row w-100">
+          				<h3 class="mb-4">{{ __('Education professionals', 'sage') }}</h3>
+          				<div class="row w-100 pb-5">
           					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
 												@php
@@ -123,7 +123,7 @@
 													@php
 														$useEstynLogoAsIcon = get_field('use_estyn_logo_for_the_icon', $navMenuItem->ID) === 'true' ? true : false;
 													@endphp
-													<div class="col-12 mb-4 position-relative">
+													<div class="col-12 {{ $loop->last ? '' : 'mb-4' }} position-relative">
 														@include('components.signpost', [
 															'bgColour' => get_field('signpost_colour', $navMenuItem->ID),
 															'iconClasses' => 'fa-solid ' . get_field('icon', $navMenuItem->ID),
@@ -257,11 +257,11 @@
 			</div>
           </a>
           <div class="megaMenu dropdown-menu w-100 bg-white">
-          	<div class="container my-4">
+          	<div class="container my-5">
           		<div class="row d-flex justify-content-center">
           			<div class="col-12 px-0 col-lg-8">
           				<h3 class="mb-4">{{ __('About Estyn', 'sage') }}</h3>
-          				<div class="row w-100">
+          				<div class="row w-100 pb-5">
           					<div class="col-12 col-md-6 megaMenuFeature">
           						<div class="row">
 												@php
@@ -272,7 +272,7 @@
 													@php
 														$useEstynLogoAsIcon = get_field('use_estyn_logo_for_the_icon', $navMenuItem->ID) === 'true' ? true : false;
 													@endphp
-													<div class="col-12 mb-4 position-relative">
+													<div class="col-12 {{ $loop->last ? '' : 'mb-4' }} position-relative">
 														@include('components.signpost', [
 															'bgColour' => get_field('signpost_colour', $navMenuItem->ID),
 															'iconClasses' => 'fa-solid ' . get_field('icon', $navMenuItem->ID),
@@ -386,7 +386,7 @@
 			<li class="nav-item d-flex flex-column justify-content-center nav-search dropdown">
 				<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
 				<div class="megaMenu dropdown-menu w-100 bg-white search-menu">
-					<div class="container my-4">
+					<div class="container my-5">
 						<div class="row d-flex justify-content-center">
 							<div class="col-12 col-md-10">
 								<div class="row">
@@ -409,11 +409,12 @@
 										<div class="row">
 											<div class="col-md-10 offset-md-2">
 												<h3 class="mb-4">{{ __('Popular', 'sage') }}</h3>
-												<ul aria-labelledby="navbarProfessionalDropdownMenuLink">
+													{!! wp_nav_menu(['theme_location' => 'main_nav_search_popular_links', 'menu_class' => '']) !!}
+{{-- 												<ul aria-labelledby="navbarProfessionalDropdownMenuLink">
 													<li><a href="https://google.co.uk">Popular search term 1</a></li>
 													<li><a href="#">Popular search term 2</a></li>
 													<li><a href="#">Popular search term 3</a></li>
-												</ul>	
+												</ul>	 --}}
 											</div>
 										</div>
 									</div>

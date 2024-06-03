@@ -45,7 +45,7 @@
     ])
 
     <div class="container px-md-4 px-xl-5 mt-5 pt-4 pt-sm-5">
-        <div class="row">
+        <div class="row pt-md-5">
             <div class="col-12">
                 @include('partials.ways-to-improve', ['term' => $term, 'wtpTags' => $wtpTags, 'wtpTagLinkDotColours' => $wtpTagLinkDotColours])
                 @if(!empty($sectorResourcesCarouselItems))
@@ -115,16 +115,19 @@
                     'doNotDoJavaScript' => false
                 ])--}}
 
+                <div class="pt-md-5 pb-5">
                 @include('partials.cta', [
                     'ctaHeading' => get_field('cta_heading', $term) ?? __('What to expect ahead of an inspection', 'sage'),
                     'ctaText' => get_field('cta_text', $term) ?? __('Our guide on what to expect during an inspection of your setting.', 'sage'),
-                    'ctaButtonLinkURL' => get_field('cta_button_link', $term) ?? '#',
+                    'ctaButtonLinkURL' => (!empty(get_field('cta_button_link', $term))) ? get_field('cta_button_link', $term) : App\get_permalink_by_template('template-inspections.blade.php'),
                     'ctaButtonText' => get_field('cta_button_text', $term) ?? __('My inspection guide', 'sage'),
                     'ctaImageURL' => get_field('cta_image', $term) ?? asset('images/inspection1.png'),
                     'ctaImageAlt' => get_field('cta_image_alt', $term) ?? __('Education in the ' . $term->name . ' sector', 'sage')
                 ])
+                </div>
 
                 @if(!empty($sectorLatestArticlesCarouselItems))
+                    <div class="pt-md-5">
                     @include('partials.slider', [
                         'carouselID' => 'sector-articles-carousel',
                         'carouselHeading' => __('Latest articles', 'sage'),
@@ -136,6 +139,7 @@
                         'carouselItems' => $sectorLatestArticlesCarouselItems,
                         'doNotDoJavaScript' => false
                     ])
+                    </div>
                 @endif
 
                 {{--@include('partials.slider', [
@@ -190,6 +194,7 @@
                     'doNotDoJavaScript' => false
                 ])--}}
                 
+                <div class="pb-5">
                 @include('partials.cta', [
                     'ctaHeading' => __('Our education map of Wales', 'sage'),
                     'ctaText' => __('Find providers across Wales using our handy map', 'sage'),
@@ -202,8 +207,9 @@
                     'showSearchBox' => true,
                     'ctaContainerExtraClasses' => 'ctaSearchMapContainer'
                 ])
-                <div class="reportMain">
-                    <div class="container px-md-4 px-xl-5">
+                </div>
+                <div class="reportMain pt-md-5 pb-5">
+                    <div class="container px-md-4 px-xl-5 pb-md-5">
                         @if(!empty($sectorLatestInspectionReports))
                             @include('partials.inspection-and-report-schedule', [
                                 'inspectionReports' => $sectorLatestInspectionReports,

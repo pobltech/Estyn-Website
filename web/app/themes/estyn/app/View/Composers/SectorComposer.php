@@ -97,8 +97,7 @@ class SectorComposer extends Composer
                     }
 
                     // If the post has our custom taxonomy 'improvement_resource_type' and it's set to 'annual-report'
-                    // then we need to link to the resource file (e.g. the PDF) using the post's 'report_file' ACF file field,
-                    // or an attached PDF or PPTX file
+                    // then we need to link to the resource file (e.g. the PDF) using the post's 'report_file' ACF file field
                     $reportFile = null;
                     if(has_term('annual-report', 'improvement_resource_type', $resource)) {
                         $reportFile = get_field('report_file', $resource);
@@ -106,13 +105,13 @@ class SectorComposer extends Composer
 
                     if(!empty($reportFile)) {
                         $resourceLink = $reportFile['url'];
-                    } else {
+                    }/*  else {
                         // If the post has an attached PDF or PPTX file, we use that instead
                         $attachedFiles = get_attached_media('application/pdf', $resource);
                         if(!empty($attachedFiles)) {
                             $resourceLink = wp_get_attachment_url(array_values($attachedFiles)[0]->ID);
                         }
-                    }
+                    } */
 
                     return [
                         'title' => $resource->post_title,
@@ -122,6 +121,9 @@ class SectorComposer extends Composer
                         'featured_image_alt' => $imageAlt,
                     ];
                 }, $sectorResources);
+
+                // Get rid of any null items
+                $sectorResourcesCarouselItems = array_filter($sectorResourcesCarouselItems);
 
                 // If there are less than 5 items, just set it to null, else the slider will look rubbish. (If they've actually chosen the items then it's up to them).
                 if(count($sectorResourcesCarouselItems) < 5) {
@@ -237,7 +239,7 @@ class SectorComposer extends Composer
 
             return [
                 'title' => $article->post_title,
-                'excerpt' => wp_trim_words($article->post_excerpt, 20, '...'),
+                /* 'excerpt' => wp_trim_words($article->post_excerpt, 20, '...'), */
                 'link' => $articleLink,
                 'featured_image_src' => $image,
                 'featured_image_alt' => $imageAlt,

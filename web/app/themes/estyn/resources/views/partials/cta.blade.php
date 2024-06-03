@@ -3,7 +3,7 @@
 @endphp
 <section class="cta my-5 position-relative {{ isset($ctaContainerExtraClasses) ? $ctaContainerExtraClasses : '' }}" id="{{ $ctaUniqueID }}">
 	<div class="container {{ isset($noPY) && $noPY === false ? 'py-5' : '' }} px-md-4 px-xl-5">
-		<div class="row justify justify-content-center">
+		<div class="row px-md-5 justify justify-content-center">
 			<div class="col-12 col-md-10">
 				<div class="card card-cta">
 					@if(isset($imageBreakOut) && $imageBreakOut === true)
@@ -71,7 +71,7 @@
 				</svg>
 			</div>
 			<div class="ctaArcMapBGFiller position-absolute w-100 bg-blue"></div>
-			<div class="w-100 bg-blue pt-md-5">
+			<div class="w-100 bg-blue pt-md-5 pb-md-5">
 				<div class="container py-5 px-md-4 px-xl-5">
 					<div class="row d-flex justify-content-center">
 						<div class="col-12 col-sm-10 col-xl-8">
@@ -148,7 +148,7 @@
 							</div>
 							<div class="row">
 								<div class="col-12 d-flex justify-content-center mt-4">
-									<a id="{{ $ctaUniqueID }}-toggle-show-more" class="btn btn-outline-primary px-5 text-white bg-transparent-even-when-active border-white rounded-3 cta-toggle-more-less" data-bs-toggle="collapse" href="#{{ $ctaUniqueID }}-collapseSectors" role="button" aria-expanded="false" aria-controls="{{ $ctaUniqueID }}-collapseSectors">{{ __('See more') }}</a>
+									<a id="{{ $ctaUniqueID }}-toggle-show-more" class="btn btn-outline-primary px-5 text-white bg-transparent-even-when-active border-white rounded-5 cta-toggle-more-less" data-bs-toggle="collapse" href="#{{ $ctaUniqueID }}-collapseSectors" role="button" aria-expanded="false" aria-controls="{{ $ctaUniqueID }}-collapseSectors">{{ __('See more') }}</a>
 								</div>
 							</div>
 						</div>
