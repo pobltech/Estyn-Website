@@ -191,15 +191,16 @@
                 ])--}}
                 
                 @include('partials.cta', [
-                    'ctaHeading' => 'Our education map of Wales',
-                    'ctaText' => 'Find providers across Wales using our handy map',
-                    'ctaButtonLinkURL' => '#',
-                    'ctaButtonText' => 'Search the map',
+                    'ctaHeading' => __('Our education map of Wales', 'sage'),
+                    'ctaText' => __('Find providers across Wales using our handy map', 'sage'),
+                    'ctaButtonLinkURL' => App\get_permalink_by_template('provider-search.blade.php'),
+                    'ctaButtonText' => __('Search the map', 'sage'),
                     'ctaImageURL' => asset('images/map.svg'),
-                    'ctaImageAlt' => 'Map of Wales',
+                    'ctaImageAlt' => __('Map of Wales', 'sage'),
                     'imageBreakOut' => true,
                     'imageExtraClasses' => 'ctaSearchMap',
-                    'showSearchBox' => true
+                    'showSearchBox' => true,
+                    'ctaContainerExtraClasses' => 'ctaSearchMapContainer'
                 ])
                 <div class="reportMain">
                     <div class="container px-md-4 px-xl-5">
