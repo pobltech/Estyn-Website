@@ -6,7 +6,8 @@ Thumbs.db
 # vendor folders anywhere in the repository, but not files named vendor
 vendor/
 /web/app/plugins/*
-/web/app/mu-plugins/
+# Ignore all files in the mu-plugins directory, but push the directory itself
+/web/app/mu-plugins/*
 # BUT we want to include constants.php
 !/web/app/mu-plugins/constants.php
 /web/app/languages/*
