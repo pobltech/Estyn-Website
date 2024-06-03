@@ -239,7 +239,7 @@ class SectorComposer extends Composer
 
             return [
                 'title' => $article->post_title,
-                'excerpt' => wp_trim_words($article->post_excerpt, 20, '...'),
+                /* 'excerpt' => wp_trim_words($article->post_excerpt, 20, '...'), */
                 'link' => $articleLink,
                 'featured_image_src' => $image,
                 'featured_image_alt' => $imageAlt,

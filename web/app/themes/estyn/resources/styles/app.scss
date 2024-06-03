@@ -20,6 +20,7 @@ $estyn-darkblue: #0E4163; /** Most typography and dark backgrounds **/
 $estyn-lightblue: #DCEEFE; /** For light backgrounds other than white **/
 $estyn-bluegrey: #AABCC8; /** For lines **/
 $estyn-lightbluegrey: #F1F2F2; /** For lighter lines **/
+$estyn-anotherlightblue: #6AA2C8; /** Map CTA search box and home intro provider search box **/
 $estyn-footertext: #9DB2C0;
 $estyn-white: #FFFFFF;
 $border-radius-form: 4px;
@@ -923,6 +924,9 @@ header {
 
     color: $estyn-white;
 }
+.homeHeroContent {
+    margin-bottom: 100px;
+}
 .heroImage {
     z-index: -2;
     position:absolute;
@@ -1030,21 +1034,26 @@ header {
 
     .form-control {
         color: $estyn-darkblue;
-        background-color: #7EB1D6;
+        background-color: $estyn-anotherlightblue; /* #7EB1D6;*/
         background-clip: padding-box;
-        border: 1px solid $estyn-lightbluegrey;
+        border: none;/* 1px solid $estyn-lightbluegrey; */
         border-radius: $border-radius-sm;
     }
 
     .input-group {
         .btn-secondary{
-            border: 1px solid $estyn-lightbluegrey;
+            border: none; /* 1px solid $estyn-lightbluegrey; */
         }
     }
 
-    .estyn-search-box {
+    .estyn-search-container {
         .btn, .btn-secondary {
-            padding: 0.8rem 1.2rem;
+            padding: 0.8rem 1.2rem 0.5rem 1.2rem;/* padding: 0.8rem 1.2rem; */
+
+            border-top-right-radius: 10px !important;
+            border-bottom-right-radius: 10px !important;
+
+            font-size: 24px;
 
             @include media-breakpoint-down(md) {
                 padding: 0.5rem 1rem;
@@ -1054,6 +1063,9 @@ header {
         }
 
         input[type="text"] {
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+
             @include media-breakpoint-down(md) {
                 border-top-left-radius: 6px;
                 border-bottom-left-radius: 6px;
@@ -1288,8 +1300,8 @@ p.sp-desc {
     .cta-search-col {
         input {
             font-family: "PT Sans", sans-serif;
-            color: $estyn-lightblue;
-            font-size: 24px;
+            color: $estyn-anotherlightblue;
+            font-size: 28px;
 
             @include media-breakpoint-down(sm) {
                 font-size: 16px;
@@ -1297,15 +1309,17 @@ p.sp-desc {
             
             &::placeholder {
                 font-family: "PT Sans", sans-serif;
-                color: $estyn-blue;
+                color: $estyn-anotherlightblue;
             }
 
             &[type="text"] {
-                border-color: $estyn-blue;
+                border-color: $estyn-anotherlightblue;
                 border-top-left-radius: 10px;
                 border-bottom-left-radius: 10px;
             }
         }
+
+
 
         .ctaSearchBoxContainer {
             position: absolute;
@@ -1316,6 +1330,21 @@ p.sp-desc {
             @include media-breakpoint-down(sm) {
                 padding-left: $card-spacer-x;
                 padding-right: $card-spacer-x;
+            }
+
+            .btn {
+                padding: 0.8rem 1.2rem 0.5rem 1.2rem;
+            }
+
+            .btn-primary {
+                font-size: 24px;
+                border-top-right-radius: 10px !important;
+                border-bottom-right-radius: 10px !important;
+            }
+    
+            .form-control {
+                padding-left: 1.15rem;
+                padding-right: 1.15rem;
             }
         }
 
