@@ -27,6 +27,7 @@
         @if(!empty($latestInspectionReportsResourceListItems))
             @include('partials.inspection-and-report-schedule', [
                 'inspectionReports' => $latestInspectionReportsResourceListItems,
+                'inspectionsScheduleListItems' => $inspectionScheduleResourceListItems,
             ])
         @endif
         <div class="mt-5 pt-5">

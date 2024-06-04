@@ -13,7 +13,8 @@ class InspectionsComposer extends Composer
     public function with()
     {
         return [
-            'latestInspectionReportsResourceListItems' => $this->getLatestInspectionReportsResourceListItems()
+            'latestInspectionReportsResourceListItems' => $this->getLatestInspectionReportsResourceListItems(),
+            'inspectionScheduleResourceListItems' => $this->getInspectionScheduleResourceListItems(),
         ];
     }
 
@@ -49,5 +50,63 @@ class InspectionsComposer extends Composer
         
 
         return $latestInspectionReportsResourceListItems;
+    }
+
+    private function getInspectionScheduleResourceListItems() {
+        /**
+         * Get all Providers (estyn_eduprovider) that have ACF field
+         * 'next_scheduled_inspection_date' that's not empty or,
+         *  'next_visit_date_old_db' custom meta field that's not empty
+         */
+        $providers = get_posts([
+            'post_type' => 'estyn_eduprovider',
+            'posts_per_page' => -1,
+            'meta_query' => [
+                'relation' => 'OR',
+                [
+                    'key' => 'next_scheduled_inspection_date',
+                    'value' => '',
+                    'compare' => '!=',
+                ],
+                [
+                    'key' => 'next_visit_date_old_db',
+                    'value' => '',
+                    'compare' => '!=',
+                ],
+            ],
+        ]);
+
+        $inspectionScheduleResourceListItems = array_map(function($provider) {
+            $nextScheduledInspectionDate = get_field('next_scheduled_inspection_date', $provider);
+            $nextVisitDateOldDB = get_post_meta($provider->ID, 'next_visit_date_old_db', true);
+
+            // If the date has past, return null
+            if(!empty($nextScheduledInspectionDate) && strtotime($nextScheduledInspectionDate) < time()) {
+                return null;
+            }
+            if(!empty($nextVisitDateOldDB) && strtotime($nextVisitDateOldDB) < time()) {
+                return null;
+            }
+
+            return [
+                'linkURL' => get_permalink($provider),
+                'title' => $provider->post_title,
+                'superDate' => $nextScheduledInspectionDate ?? $nextVisitDateOldDB,
+                'superText' => (!empty(get_the_terms($provider, 'sector'))) ? get_the_terms($provider, 'sector')[0]->name : null,
+            ];
+        }, $providers);
+
+        // Remove any null items
+        $inspectionScheduleResourceListItems = array_filter($inspectionScheduleResourceListItems);
+
+        // Sort by date
+        usort($inspectionScheduleResourceListItems, function($a, $b) {
+            return strtotime($a['superDate']) - strtotime($b['superDate']);
+        });
+
+        // Cut it down to maximum of 6 items
+        $inspectionScheduleResourceListItems = array_slice($inspectionScheduleResourceListItems, 0, 6);
+
+        return $inspectionScheduleResourceListItems;
     }
 }
