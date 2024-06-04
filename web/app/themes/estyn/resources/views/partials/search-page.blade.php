@@ -390,6 +390,34 @@
             'posts_per_page' => 10,
             'orderby' => 'title',
           ];
+        } elseif($isInspectionScheduleSearch) {
+          // In this case we need to get all the providers (eduproviders),
+          // for which the get_field('next_scheduled_inspection_date')
+          // or get_post_meta(get_the_ID(), 'next_visit_date_old_db', true)
+          // is not empty and is a date that's today or later,
+          // and order them by the next scheduled inspection date
+          $searchArgs = [
+            'post_type' => 'estyn_eduprovider',
+            'posts_per_page' => 10,
+            'meta_query' => [
+              'relation' => 'OR',
+              [
+                'key' => 'next_scheduled_inspection_date',
+                'value' => date('Y-m-d'),
+                'compare' => '>=',
+                'type' => 'DATE'
+              ],
+              [
+                'key' => 'next_visit_date_old_db',
+                'value' => date('Y-m-d'),
+                'compare' => '>=',
+                'type' => 'DATE'
+              ]
+            ],
+            'orderby' => 'meta_value',
+            'meta_key' => 'next_scheduled_inspection_date',
+            'order' => 'ASC'
+          ];
         }
 
         /*if(!empty($searchArgs)) {
@@ -402,7 +430,7 @@
 						<div class="d-flex align-items-center align-items-md-start justify-content-between">
 							<span><span class="search-results-number">{{ (!empty($searchQuery)) && $searchQuery->have_posts() ? $searchQuery->found_posts : '0' }}</span> {{ __('result/s', 'sage') }}</span>
               <span class="d-flex align-items-center">
-                @if(!isset($isProviderSearch) || !$isProviderSearch)
+                @if(empty($isProviderSearch) && empty($isInspectionScheduleSearch))
                   <label class="text-nowrap me-3" for="sort-by">{{ __('Sort by', 'sage') }}</label>
                   <select id="sort-by" class="form-select">
                     @if((!isset($isNewsAndBlog) || !$isNewsAndBlog) && (!isset($isProviderSearch) || !$isProviderSearch) && (!isset($isInspectionScheduleSearch) || !$isInspectionScheduleSearch) && !(isset($isInspectionReportsSearch)) )
@@ -469,6 +497,13 @@
                               'superText' => __('Inspection report', 'sage'),
                               'superDate' => get_the_date('d/m/Y'),
                               'title' => get_the_title(),
+                            ];
+                          }elseif($isInspectionScheduleSearch) {
+                            $items[] = [ // Provider stuff
+                              'linkURL' => get_the_permalink(),
+                              'superText' => __('Upcoming inspection', 'sage'),
+                              'superDate' => get_field('next_scheduled_inspection_date') ? get_field('next_scheduled_inspection_date') : get_post_meta(get_the_ID(), 'next_visit_date_old_db', true),
+                              'title' => get_the_title()
                             ];
                           } else {
                             $items[] = [
@@ -760,6 +795,15 @@
       }
 
       @elseif(isset($isInspectionScheduleSearch) && $isInspectionScheduleSearch)
+      function getSearchFilters() {
+        return {
+          postType: "estyn_eduprovider",
+          sector: $("#flush-collapse-sector input:checked").val(),
+          localAuthority: $("#flush-collapseTwo input:checked").val(),
+          searchText: $("#search-box-container input[type='text']").val().trim(),
+          inspectionSchedule: true
+        };
+      }
 
       @elseif(isset($isProviderSearch) && $isProviderSearch)
       function getSearchFilters() {

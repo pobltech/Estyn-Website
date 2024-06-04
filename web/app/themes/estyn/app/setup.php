@@ -550,10 +550,33 @@ function estyn_resources_search(\WP_REST_Request $request) {
         } elseif($params['postType'] === 'estyn_imp_resource') {
             $args['post_type'] = 'estyn_imp_resource';
         } elseif($params['postType'] === 'estyn_eduprovider') {
-            $args['post_type'] = 'estyn_eduprovider';
-            $args['posts_per_page'] = 50;
-            $args['orderby'] = 'title';
-            $args['order'] = 'ASC';
+            if(empty($params['inspectionSchedule'])) {
+                $args['post_type'] = 'estyn_eduprovider';
+                $args['posts_per_page'] = 50;
+                $args['orderby'] = 'title';
+                $args['order'] = 'ASC';
+            } else {
+                $args['post_type'] = 'estyn_eduprovider';
+                $args['meta_query'] = [
+                  'relation' => 'OR',
+                  [
+                    'key' => 'next_scheduled_inspection_date',
+                    'value' => date('Y-m-d'),
+                    'compare' => '>=',
+                    'type' => 'DATE'
+                  ],
+                  [
+                    'key' => 'next_visit_date_old_db',
+                    'value' => date('Y-m-d'),
+                    'compare' => '>=',
+                    'type' => 'DATE'
+                  ]
+                ];
+
+                $args['orderby'] = 'meta_value';
+                $args['meta_key'] = 'next_scheduled_inspection_date';
+                $args['order'] = 'ASC';
+            }
         } elseif($params['postType'] === 'estyn_inspectionrpt') {
             $args['post_type'] = 'estyn_inspectionrpt';
         }
@@ -573,7 +596,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
         $args['s'] = $params['searchText'];
     }
 
-    if(isset($params['sort'])) {
+    if(isset($params['sort']) && empty($params['inspectionSchedule'])) {
         if($params['sort'] == 'lastUpdated') {
             $args['orderby'] = 'meta_value';
             $args['meta_key'] = 'last_updated';
@@ -591,7 +614,9 @@ function estyn_resources_search(\WP_REST_Request $request) {
             $args['order'] = 'ASC';
         }
     }
-
+    
+    // TODO: We need to look at the associated providers' LAs and sectors too, not just
+    // rely on the actual post being assigned the LAs and sectors
     if(isset($params['localAuthority']) && term_exists($params['localAuthority']) ) {
         if(!isset($args['tax_query'])) {
             $args['tax_query'] = [];
@@ -732,7 +757,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
         $postTypeName = ucfirst(strtolower($postTypeName));
 
         $superDateText = null;
-        if(($args['post_type'] != 'estyn_eduprovider') && isset($args['orderby'])) {
+        if(($args['post_type'] != 'estyn_eduprovider') && isset($args['orderby']) && empty($params['inspectionSchedule'])) {
             if($params['sort'] == 'lastUpdated') {
                 $superDateText = get_field('last_updated', $post->ID) ? (new \DateTime(get_field('last_updated', $post->ID)))->format('d/m/Y') : get_the_date('d/m/Y', $post->ID);
             } else {
@@ -749,6 +774,13 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 'linkURL' => $reportFile, //wp_get_attachment_url($firstPDFAttachment->ID),
                 'superText' => $postTypeName,
                 'superDate' => $superDateText,
+                'title' => get_the_title($post->ID),
+            ];
+        } elseif(!empty($params['inspectionSchedule'])) {
+            $items[] = [
+                'linkURL' => get_permalink($post->ID),
+                'superText' => __('Upcoming inspection', 'sage'),
+                'superDate' => !empty(get_field('next_scheduled_inspection_date', $post->ID)) ? (new \DateTime(get_field('next_scheduled_inspection_date', $post->ID)))->format('d/m/Y') : (new \DateTime(get_post_meta('next_visit_date_old_db', get_the_ID(), true)))->format('d/m/Y'),
                 'title' => get_the_title($post->ID),
             ];
         } else {
