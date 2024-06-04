@@ -24,7 +24,11 @@
     ])
 <div class="reportMain">
 	<div class="container px-md-4 px-xl-5 pt-md-5">
-        @include('partials.inspection-and-report-schedule')
+        @if(!empty($latestInspectionReportsResourceListItems))
+            @include('partials.inspection-and-report-schedule', [
+                'inspectionReports' => $latestInspectionReportsResourceListItems,
+            ])
+        @endif
         <div class="mt-5 pt-5">
         @include('partials.slider', [
             'carouselID' => 'inspections-page-carousel',
