@@ -114,18 +114,51 @@ class ProviderComposer extends Composer
         return $reportFile;
     }
 
-    // Get the date of the most recent inspection report, based on get_field('inspection_date')
+    // Get the date of the next inspection report publication date,
+    // or the most recent inspection report's date,
+    // based on get_field('next_report_publication_date'),
+    // get_post_meta('report_publication_date_old_db'),
+    // or the most recent inspection report's get_field('inspection_date')
     public function reportPublicationDate() {
-        if(!$this->hasInspectionReports()) {
-            return false;
+        $nextReportPublicationDate = get_field('next_report_publication_date');
+        if(!empty($nextReportPublicationDate)) {
+            // Only return it if the date is today or in the future
+            $nextReportPublicationDate = get_field('next_report_publication_date');
+            if(strtotime($nextReportPublicationDate) >= strtotime('today')) {
+                return $nextReportPublicationDate;
+            }
+        }
+
+        $nextReportPublicationDate = get_post_meta(get_the_ID(), 'report_publication_date_old_db', true);
+        if(!empty($nextReportPublicationDate)) {
+            // Only return it if the date is today or in the future
+            if(strtotime($nextReportPublicationDate) >= strtotime('today')) {
+                return $nextReportPublicationDate;
+            }
+        }
+        
+        // If we want to use the most recent inspection report's date
+        // then uncomment all this
+/*         if(!$this->hasInspectionReports()) {
+            return null;
         }
 
         $reports = $this->getInspectionReports(); // Note: Already sorted by inspection date, descending
 
-        return get_field('inspection_date', $reports[0]->ID);     
+        return get_field('inspection_date', $reports[0]->ID);    */ 
+        
+        return null;
     }
 
     public function getNextInspectionDate() {
-        return get_field('next_scheduled_inspection_date') ?? null;
+        if(!empty(get_field('next_scheduled_inspection_date'))) {
+            return get_field('next_scheduled_inspection_date');
+        }
+
+        if(!empty(get_post_meta(get_the_ID(), 'next_visit_date_old_db', true))) {
+            return get_post_meta(get_the_ID(), 'next_visit_date_old_db', true);
+        }
+
+        return null;
     }
 }
