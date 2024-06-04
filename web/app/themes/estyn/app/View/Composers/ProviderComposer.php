@@ -48,7 +48,7 @@ class ProviderComposer extends Composer
                 array(
                     'key' => 'resource_creator',
                     'value' => get_the_ID(),
-                    'compare' => 'LIKE'
+                    'compare' => '='
                 )
             )
         ));
@@ -69,7 +69,7 @@ class ProviderComposer extends Composer
                 array(
                     'key' => 'inspected_provider',
                     'value' => get_the_ID(),
-                    'compare' => 'LIKE'
+                    'compare' => '='
                 )
             ),
         ));
