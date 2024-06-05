@@ -86,7 +86,7 @@
 								<h2 class="pe-xl-5">{{ $secondHeading }}</h2>
 								<div class="inside-intro-content">
 									{!! $introContent !!}
-									@if(isset($introLinks))
+									@if(!empty($introLinks))
 										<div class="row">
 										@foreach($introLinks as $introLink)
 											<div class="col-12">

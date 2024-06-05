@@ -6,7 +6,7 @@
             array(
                 'key' => 'resource_creator',
                 'value' => !empty($providerPost) ? $providerPost->ID : $providerPostID,
-                'compare' => 'LIKE'
+                'compare' => '='
             )
         )
     ));
