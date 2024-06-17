@@ -1019,3 +1019,7 @@ add_action('init', function () {
 
 
 });
+
+function getInspectionGuidancePostPlaceholderImageURL($post) {
+    return asset('images/inspection-guidance-placeholder.jpg');
+}

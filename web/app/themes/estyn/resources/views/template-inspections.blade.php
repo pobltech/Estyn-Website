@@ -31,7 +31,20 @@
             ])
         @endif
         <div class="mt-5 pt-5">
-        @include('partials.slider', [
+        @if(!empty($inspectionGuidancePostsCarouselItems))
+            @include('partials.slider', [
+                'carouselID' => 'inspections-page-carousel',
+                'carouselHeading' => __('Guidance & frameworks', 'sage'),
+                'carouselDescription' => __('Access all our guidance and frameworks', 'sage'),
+                'carouselButtonText' => __('All guidance & frameworks', 'sage'),
+                'carouselButtonLink' => App\get_permalink_by_template('template-inspection-guidance-search-page.blade.php'),
+                'doNotDoJavaScript' => false,
+                'carouselSectionClass' => 'pobl-tech-carousel-block',
+                'carouselSliderWrapperClass' => 'pobl-tech-carousel-block-slider',
+                'carouselItems' => $inspectionGuidancePostsCarouselItems
+            ])
+        @endif
+        {{--@include('partials.slider', [
             'carouselID' => 'inspections-page-carousel',
             'carouselHeading' => __('Guidance & frameworks', 'sage'),
             'carouselDescription' => __('Access all our guidance and frameworks', 'sage'),
@@ -81,7 +94,7 @@
                     'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
                 ]
             ]
-        ])
+        ])--}}
         </div>
 
         <div class="mt-5 pt-md-5 pb-md-5">
