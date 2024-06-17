@@ -38,6 +38,11 @@
   - Local authority
   - Sort: Title
 
+  Inspection Guidance & Frameworks search:
+  - Sector
+  - Tags
+  - Type ('What and How We Inspect', 'Supplementary Guidance', 'Follow-up', 'Nominee handbook')
+
 --}}
 
 <div class="searchHero mt-5">

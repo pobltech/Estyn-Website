@@ -893,3 +893,66 @@ function getInspectionReportFileURL($post) {
     
     return $reportFile;
 }
+
+/**
+ * Register 'estyn_inspection_guidance' post type,
+ * and 'estyn_inspection_guidance_type' taxonomy.
+ * 
+ * The post type supports the Sectors taxonomy and tags
+ */
+add_action('init', function () {
+    $inspectionGuidanceSlug = __('inspection-guidance', 'sage');
+    register_post_type('estyn_inspguidance', [
+        'labels' => [
+            'name' => __('Inspection Guidance', 'sage'),
+            'singular_name' => __('Inspection Guidance', 'sage'),
+            'add_new' => __('Add New', 'sage'),
+            'add_new_item' => __('Add New Inspection Guidance', 'sage'),
+            'edit_item' => __('Edit Inspection Guidance', 'sage'),
+            'new_item' => __('New Inspection Guidance', 'sage'),
+            'view_item' => __('View Inspection Guidance', 'sage'),
+            'search_items' => __('Search Inspection Guidance', 'sage'),
+            'not_found' => __('No inspection guidance found', 'sage'),
+            'not_found_in_trash' => __('No inspection guidance found in Trash', 'sage'),
+            'all_items' => __('All Inspection Guidance', 'sage'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-clipboard',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
+        'rewrite' => ['slug' => $inspectionGuidanceSlug, 'with_front' => false],
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ]);
+
+    // Add tag support
+    register_taxonomy_for_object_type('post_tag', 'estyn_inspguidance');
+
+    // Add the 'estyn_inspection_guidance_type' taxonomy
+    $labels = array(
+        'name' => _x( 'Inspection Guidance Types', 'taxonomy general name', 'sage' ),
+        'singular_name' => _x( 'Inspection Guidance Type', 'taxonomy singular name', 'sage' ),
+        'search_items' =>  __( 'Search Inspection Guidance Types', 'sage' ),
+        'all_items' => __( 'All Inspection Guidance Types', 'sage' ),
+        'edit_item' => __( 'Edit Inspection Guidance Type', 'sage' ),
+        'update_item' => __( 'Update Inspection Guidance Type', 'sage' ),
+        'add_new_item' => __( 'Add New Inspection Guidance Type', 'sage' ),
+        'new_item_name' => __( 'New Inspection Guidance Type Name', 'sage' ),
+        'menu_name' => __( 'Inspection Guidance Types', 'sage' ),
+    );
+
+    $inspectionGuidanceTypeSlug = __('inspection-guidance-type', 'sage');
+
+    register_taxonomy('inspection_guidance_type', array('estyn_inspguidance'), array(
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => $inspectionGuidanceTypeSlug, 'with_front' => false),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+
+    // Add the 'sector' taxonomy
+    register_taxonomy_for_object_type('sector', 'estyn_inspguidance');
+
+
+});
