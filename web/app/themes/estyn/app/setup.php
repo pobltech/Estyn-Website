@@ -1023,3 +1023,65 @@ add_action('init', function () {
 function getInspectionGuidancePostPlaceholderImageURL($post) {
     return asset('images/inspection-guidance-placeholder.jpg');
 }
+
+/**
+ * Register 'estyn_insp_qu' post type (Inspection Questionnaires),
+ * and 'estyn_inspection_questionnaire_category' taxonomy.
+ * 
+ * The post type supports the Sectors taxonomy and tags
+ */
+add_action('init', function () {
+    $inspectionQuestionnaireSlug = __('inspection-questionnaire', 'sage');
+    register_post_type('estyn_insp_qu', [
+        'labels' => [
+            'name' => __('Inspection Questionnaires', 'sage'),
+            'singular_name' => __('Inspection Questionnaire', 'sage'),
+            'add_new' => __('Add New', 'sage'),
+            'add_new_item' => __('Add New Inspection Questionnaire', 'sage'),
+            'edit_item' => __('Edit Inspection Questionnaire', 'sage'),
+            'new_item' => __('New Inspection Questionnaire', 'sage'),
+            'view_item' => __('View Inspection Questionnaire', 'sage'),
+            'search_items' => __('Search Inspection Questionnaires', 'sage'),
+            'not_found' => __('No inspection questionnaires found', 'sage'),
+            'not_found_in_trash' => __('No inspection questionnaires found in Trash', 'sage'),
+            'all_items' => __('All Inspection Questionnaires', 'sage'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-clipboard',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
+        'rewrite' => ['slug' => $inspectionQuestionnaireSlug, 'with_front' => false],
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ]);
+
+    // Add tag support
+    register_taxonomy_for_object_type('post_tag', 'estyn_insp_qu');
+
+    // Add the 'estyn_inspection_questionnaire_category' taxonomy
+    $labels = array(
+        'name' => _x( 'Inspection Questionnaire Categories', 'taxonomy general name', 'sage' ),
+        'singular_name' => _x( 'Inspection Questionnaire Category', 'taxonomy singular name', 'sage' ),
+        'search_items' =>  __( 'Search Inspection Questionnaire Categories', 'sage' ),
+        'all_items' => __( 'All Inspection Questionnaire Categories', 'sage' ),
+        'edit_item' => __( 'Edit Inspection Questionnaire Category', 'sage' ),
+        'update_item' => __( 'Update Inspection Questionnaire Category', 'sage' ),
+        'add_new_item' => __( 'Add New Inspection Questionnaire Category', 'sage' ),
+        'new_item_name' => __( 'New Inspection Questionnaire Category Name', 'sage' ),
+        'menu_name' => __( 'Inspection Questionnaire Categories', 'sage' ),
+    );
+
+    $inspectionQuestionnaireCategorySlug = __('inspection-questionnaire-category', 'sage');
+
+    register_taxonomy('inspection_questionnaire_cat', array('estyn_insp_qu'), array(
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => $inspectionQuestionnaireCategorySlug, 'with_front' => false),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+
+    // Add the 'sector' taxonomy
+    register_taxonomy_for_object_type('sector', 'estyn_insp_qu');
+
+});
