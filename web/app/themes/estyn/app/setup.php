@@ -581,6 +581,8 @@ function estyn_resources_search(\WP_REST_Request $request) {
             $args['post_type'] = 'estyn_inspectionrpt';
         } elseif($params['postType'] === 'estyn_inspguidance') {
             $args['post_type'] = 'estyn_inspguidance';
+        } elseif($params['postType'] === 'estyn_insp_qu') {
+            $args['post_type'] = 'estyn_insp_qu';
         }
     }
 
@@ -660,7 +662,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
     }
 
     // inspection_guidance_type
-    if(isset($params['inspectionGuidanceType']) && term_exists($params['inspectionGuidanceType']) ){
+    if(isset($params['inspectionGuidanceType']) && term_exists($params['inspectionGuidanceType']) ) {
         if(!isset($args['tax_query'])) {
             $args['tax_query'] = [];
         }
@@ -669,6 +671,20 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 'taxonomy' => 'inspection_guidance_type',
                 'field' => 'slug',
                 'terms' => $params['inspectionGuidanceType'],
+            ],
+        ];
+    }
+
+    // Inspection Questionnaire Category
+    if(isset($params['inspectionQuestionnaireCategory']) && term_exists($params['inspectionQuestionnaireCategory']) ) {
+        if(!isset($args['tax_query'])) {
+            $args['tax_query'] = [];
+        }
+        $args['tax_query'][] = [
+            [
+                'taxonomy' => 'inspection_questionnaire_cat',
+                'field' => 'slug',
+                'terms' => $params['inspectionQuestionnaireCategory'],
             ],
         ];
     }
@@ -715,7 +731,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
         }
 
-        if($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport || $args['post_type'] == 'estyn_inspguidance') {
+        if($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport || $args['post_type'] == 'estyn_inspguidance' || $args['post_type'] == 'estyn_insp_qu') {
 /*             $attachments = get_posts([
                 'post_type' => 'attachment',
                 'posts_per_page' => 1,
@@ -725,6 +741,8 @@ function estyn_resources_search(\WP_REST_Request $request) {
             
             if($args['post_type'] == 'estyn_inspguidance') {
                 $reportFile = getInspectionGuidanceFileURL($post);
+            } elseif($args['post_type'] == 'estyn_insp_qu') {
+                $reportFile = getInspectionQuestionnaireFileURL($post);
             } else {
                 // We use get_field('report_file') to get the PDF attachment.
                 // If that returns null, then we'll try the 'report_file_from_old_site' custom field (using get_post_meta()),
@@ -783,6 +801,18 @@ function estyn_resources_search(\WP_REST_Request $request) {
                     }
                 }
             }
+        } elseif(strtolower($postTypeName) == 'inspection questionnaire') { // TODO: Don't rely on the post type name. Same for other lines in this file
+            // In this case we use the 'Inspection Questionnaire Category' taxonomy to get the type of questionnaire
+            $terms = get_the_terms($post->ID, 'inspection_questionnaire_cat');
+            if($terms) {
+                foreach($terms as $index => $term) {
+                    if($index == 0) {
+                        $postTypeName = $term->name;
+                    } else {
+                        $postTypeName .= ', ' . $term->name;
+                    }
+                }
+            }
         }
 
         $postTypeName = ucfirst(strtolower($postTypeName));
@@ -800,7 +830,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
         }
 
-        if(($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport || $args['post_type'] == 'estyn_inspguidance') && $reportFile) {
+        if(($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport || $args['post_type'] == 'estyn_inspguidance' || $args['post_type'] == 'estyn_insp_qu') && (!empty($reportFile))) {
             $items[] = [
                 'linkURL' => $reportFile, //wp_get_attachment_url($firstPDFAttachment->ID),
                 'superText' => $postTypeName,
@@ -931,7 +961,7 @@ function getInspectionReportFileURL($post) {
  * or the custom field 'guidance_file_from_old_site'
  */
 function getInspectionGuidanceFileURL($post) {
-    $guidanceFile = get_field('guidance_file', $post);
+    $guidanceFile = get_field('inspection_guidance_file', $post);
 
     if(!$guidanceFile) {
         $guidanceFile = get_post_meta($post->ID, 'guidance_file_from_old_site', true);
@@ -953,6 +983,30 @@ function getInspectionGuidanceFileURL($post) {
 
     return $guidanceFile;
 
+}
+
+function getInspectionQuestionnaireFileURL($post) {
+    $questionnaireFile = get_field('inspection_questionnaire_file', $post);
+
+    if(!$questionnaireFile) {
+        $questionnaireFile = get_post_meta($post->ID, 'guidance_file_from_old_site', true); // Yes, I forgot to change the field name during import
+        if($questionnaireFile) {
+            // guidance_file_from_old_site is the filename of the PDF prepended with the old folder structure, either 'private/files' or just 'files'
+            // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
+            // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
+            $questionnaireFile = ESTYN_OLD_FILES_URL . $questionnaireFile;
+            // Now we have to deal with the fact that some of the filenames literally have "%20" in them!
+            $questionnaireFile = explode('/', $questionnaireFile);
+            $questionnaireFilename = array_pop($questionnaireFile);
+            $questionnaireFile = implode('/', $questionnaireFile) . '/' . rawurlencode($questionnaireFilename);
+        } else {
+            return null;
+        }
+    } else {
+        $questionnaireFile = $questionnaireFile['url'];
+    }
+
+    return $questionnaireFile;
 }
 
 
@@ -1021,6 +1075,10 @@ add_action('init', function () {
 });
 
 function getInspectionGuidancePostPlaceholderImageURL($post) {
+    return asset('images/inspection-guidance-placeholder.jpg');
+}
+
+function getInspectionQuestionnairePostPlaceholderImageURL($post) {
     return asset('images/inspection-guidance-placeholder.jpg');
 }
 

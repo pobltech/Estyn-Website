@@ -101,7 +101,7 @@
         @include('partials.cta', [
             'ctaHeading' => __('Inspection Questionnaires', 'sage'),
             'ctaText' => __('Been asked to fill out an inspection questionnaire?', 'sage'),
-            'ctaButtonLinkURL' => App\get_permalink_by_template('template-inspection-questionnaires-search.blade.php'),
+            'ctaButtonLinkURL' => App\get_permalink_by_template('template-inspection-questionnaire-search-page.blade.php'),
             'ctaButtonText' => __('View questionnaires', 'sage'),
             'ctaImageURL' => asset('images/cta-example.png'),
             'ctaImageAlt' => __('A cartoon hand is holding a phone or tablet which is displaying some questionnaire data, while some cheerful people are pointing at it and discussing it.', 'sage')

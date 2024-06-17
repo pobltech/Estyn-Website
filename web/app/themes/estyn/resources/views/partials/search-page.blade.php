@@ -45,6 +45,12 @@
   - Type ('What and How We Inspect', 'Supplementary Guidance', 'Follow-up', 'Nominee handbook' in English.
          'Beth a sut rydym ni’n ei arolygu', 'Canllawiau atodol', 'Gweithgarwch dilynol', 'Llawlyfr enwebeion' in Welsh)
          (Taxonomy = inspection_guidance_type)
+  
+  Inspection Questionnaires search:
+  (post type = estyn_insp_qu)
+  - Sector
+  - Tags
+  - Categories (taxonomy = inspection_questionnaire_cat)
          
 --}}
 
@@ -157,7 +163,7 @@
                     </div>
                   </div>
                 </div>
-                @if(empty($isInspectionGuidanceSearch))
+                @if(empty($isInspectionGuidanceSearch) && empty($isInspectionQuestionnairesSearch))
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="flush-headingTwo">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
@@ -309,6 +315,58 @@
                       </div>
                   </div>
                 @endif
+                @if( (!empty($isInspectionQuestionnairesSearch)) && (!empty($inspectionQuestionnaireCategories)) )
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingFour">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                        {{ __('Category', 'sage') }}
+                      </button>
+                    </h2>
+                    <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
+                      <div class="accordion-body">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="inspection_questionnaire_cat" value="any" id="flexCheckCategory-any" checked>
+                          <label class="form-check-label" for="flexCheckCategory-any">
+                            {{ __('Any category', 'sage') }}
+                          </label>
+                        </div>
+                        @foreach($inspectionQuestionnaireCategories as $inspectionQuestionnaireCategory)
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="inspection_questionnaire_cat" value="{{ $inspectionQuestionnaireCategory->slug }}" id="flexCheckCategory-{{ $inspectionQuestionnaireCategory->slug }}">
+                            <label class="form-check-label" for="flexCheckCategory-{{ $inspectionQuestionnaireCategory->slug }}">
+                              {{ $inspectionQuestionnaireCategory->name }}
+                            </label>
+                          </div>
+                        @endforeach
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="flush-headingFive">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+                          {{ __('Year', 'sage') }}
+                        </button>
+                      </h2>
+                      <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="year" id="flexCheckYearDefault" checked>
+                            <label class="form-check-label" for="flexCheckYearDefault">
+                              {{ __('Any year', 'sage') }}
+                            </label>
+                          </div>
+                          @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="year" value="{{ $i }}" id="flexCheckYear{{ $i }}">
+                              <label class="form-check-label" for="flexCheckYear{{ $i }}">
+                                {{ $i }}
+                              </label>
+                            </div>
+                          @endfor
+                        </div>
+                      </div>
+                  </div>
+                @endif
                 @endif
               </div>
             </div>
@@ -326,6 +384,8 @@
         $isImprovementResourcesSearch = isset($isImprovementResourcesSearch) ? $isImprovementResourcesSearch : false;
 
         $isInspectionGuidanceSearch = isset($isInspectionGuidanceSearch) ? $isInspectionGuidanceSearch : false;
+
+        $isInspectionQuestionnairesSearch = isset($isInspectionQuestionnairesSearch) ? $isInspectionQuestionnairesSearch : false;
 
         $searchQuery = null;
         $searchArgs = null;
@@ -455,6 +515,50 @@
                 'taxonomy' => 'inspection_guidance_type',
                 'field' => 'slug',
                 'terms' => $_GET['inspection_guidance_type']
+              ]
+            ];
+          }
+        } elseif($isInspectionQuestionnairesSearch) {
+          $searchArgs = [
+            'post_type' => 'estyn_insp_qu',
+            'posts_per_page' => 10,
+            'order' => 'DESC'
+          ];
+
+          // If there's a Wordpress search query in the URL then add it to the search args
+          if(isset($_GET['s'])) {
+            $searchArgs['s'] = trim($_GET['s']);
+          }
+
+          // Sector
+          if(isset($_GET['sector']) && $_GET['sector'] != 'any') {
+            $searchArgs['tax_query'] = [
+              [
+                'taxonomy' => 'sector',
+                'field' => 'slug',
+                'terms' => $_GET['sector']
+              ]
+            ];
+          }
+
+          // Tags
+          if(isset($_GET['tag']) && !empty($_GET['tag'])) {
+            $searchArgs['tax_query'] = [
+              [
+                'taxonomy' => 'post_tag',
+                'field' => 'slug',
+                'terms' => $_GET['tag']
+              ]
+            ];
+          }
+
+          // Categories
+          if(isset($_GET['inspection_questionnaire_cat']) && $_GET['inspection_questionnaire_cat'] != 'any') {
+            $searchArgs['tax_query'] = [
+              [
+                'taxonomy' => 'inspection_questionnaire_cat',
+                'field' => 'slug',
+                'terms' => $_GET['inspection_questionnaire_cat']
               ]
             ];
           }
@@ -924,6 +1028,20 @@
             return $(this).val();
           }).get(),
           inspectionGuidanceType: $("#flush-collapseFour input:checked").val()
+        };
+      }
+
+      @elseif(isset($isInspectionQuestionnairesSearch) && $isInspectionQuestionnairesSearch)
+      function getSearchFilters() {
+        return {
+          postType: "estyn_insp_qu",
+          sector: $("#flush-collapse-sector input:checked").val(),
+          searchText: $("#search-box-container input[type='text']").val().trim(),
+          sort: $("#sort-by").val(),
+          tags: $("#flush-collapseThree input:checked").map(function() {
+            return $(this).val();
+          }).get(),
+          inspectionQuestionnaireCategory: $("#flush-collapseFour input:checked").val()
         };
       }
 

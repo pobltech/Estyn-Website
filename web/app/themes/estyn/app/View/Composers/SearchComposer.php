@@ -17,7 +17,8 @@ class SearchComposer extends Composer
             'localAuthorities' => $this->localAuthorities(),
             'tags' => $this->tags(),
             'improvementResourceTypes' => $this->improvementResourceTypes(),
-            'inspectionGuidanceTypes' => $this->inspectionGuidanceTypes()
+            'inspectionGuidanceTypes' => $this->inspectionGuidanceTypes(),
+            'inspectionQuestionnaireCategories' => $this->inspectionQuestionnaireCategories(),
         ];
     }
 
@@ -68,5 +69,14 @@ class SearchComposer extends Composer
         ]);
 
         return $inspectionGuidanceTypes;
+    }
+
+    public function inspectionQuestionnaireCategories() {
+        $inspectionQuestionnaireCategories = get_terms([
+            'taxonomy' => 'inspection_questionnaire_cat',
+            'hide_empty' => false,
+        ]);
+
+        return $inspectionQuestionnaireCategories;
     }
 }
