@@ -579,6 +579,8 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
         } elseif($params['postType'] === 'estyn_inspectionrpt') {
             $args['post_type'] = 'estyn_inspectionrpt';
+        } elseif($params['postType'] === 'estyn_inspguidance') {
+            $args['post_type'] = 'estyn_inspguidance';
         }
     }
 
@@ -657,6 +659,20 @@ function estyn_resources_search(\WP_REST_Request $request) {
         ];
     }
 
+    // inspection_guidance_type
+    if(isset($params['inspectionGuidanceType']) && term_exists($params['inspectionGuidanceType']) ){
+        if(!isset($args['tax_query'])) {
+            $args['tax_query'] = [];
+        }
+        $args['tax_query'][] = [
+            [
+                'taxonomy' => 'inspection_guidance_type',
+                'field' => 'slug',
+                'terms' => $params['inspectionGuidanceType'],
+            ],
+        ];
+    }
+
     if(isset($params['tags'])) {
         $args['tag'] = $params['tags'];
     }
@@ -684,7 +700,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
     // We'll send the HTML, from the view, instead of the raw post data
     $items = [];
     foreach($posts as $post) {
-        $reportFile = null;//$firstPDFAttachment = null; // Used for inspection reports and annual reports
+        $reportFile = null;//$firstPDFAttachment = null; // Used for inspection reports and annual reports and inspection guidance
 
         $isAnnualReport = false;
         if($args['post_type'] == 'estyn_imp_resource') {
@@ -699,36 +715,39 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
         }
 
-        if($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport) {
+        if($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport || $args['post_type'] == 'estyn_inspguidance') {
 /*             $attachments = get_posts([
                 'post_type' => 'attachment',
                 'posts_per_page' => 1,
                 'post_parent' => $post->ID,
                 'post_mime_type' => 'application/pdf',
             ]); */
-
-            // We use get_field('report_file') to get the PDF attachment.
-            // If that returns null, then we'll try the 'report_file_from_old_site' custom field (using get_post_meta()),
-            // prepending the value with the uploads directory path + '/estyn_old_files/'
-            $reportFile = get_field('report_file', $post->ID);
-            if(!$reportFile) {
-                $reportFile = get_post_meta($post->ID, 'report_file_from_old_site', true);
-                if($reportFile) {
-                    // report_file_from_old_site is the filename of the PDF prepended with the old folder structure, either 'private/files' or just 'files'
-                    // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
-                    // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
-                    $reportFile = ESTYN_OLD_FILES_URL . $reportFile;
-                    // Now we have to deal with the fact that some of the filenames literally have "%20" in them!
-                    $reportFile = explode('/', $reportFile);
-                    $reportFilename = array_pop($reportFile);
-                    $reportFile = implode('/', $reportFile) . '/' . rawurlencode($reportFilename);
-                } else {
-                    continue; // We skip this inspection report if there's no PDF attachment
-                }
+            
+            if($args['post_type'] == 'estyn_inspguidance') {
+                $reportFile = getInspectionGuidanceFileURL($post);
             } else {
-                $reportFile = $reportFile['url'];
+                // We use get_field('report_file') to get the PDF attachment.
+                // If that returns null, then we'll try the 'report_file_from_old_site' custom field (using get_post_meta()),
+                // prepending the value with the uploads directory path + '/estyn_old_files/'
+                $reportFile = get_field('report_file', $post->ID);
+                if(!$reportFile) {
+                    $reportFile = get_post_meta($post->ID, 'report_file_from_old_site', true);
+                    if($reportFile) {
+                        // report_file_from_old_site is the filename of the PDF prepended with the old folder structure, either 'private/files' or just 'files'
+                        // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
+                        // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
+                        $reportFile = ESTYN_OLD_FILES_URL . $reportFile;
+                        // Now we have to deal with the fact that some of the filenames literally have "%20" in them!
+                        $reportFile = explode('/', $reportFile);
+                        $reportFilename = array_pop($reportFile);
+                        $reportFile = implode('/', $reportFile) . '/' . rawurlencode($reportFilename);
+                    } else {
+                        continue; // We skip this inspection report if there's no PDF attachment
+                    }
+                } else {
+                    $reportFile = $reportFile['url'];
+                }
             }
-
 
             /* if($attachments) {
                 $firstPDFAttachment = $attachments[0];
@@ -743,6 +762,18 @@ function estyn_resources_search(\WP_REST_Request $request) {
         } elseif(strtolower($postTypeName) == 'improvement resource') {
           // In this case we use the 'Improvement Resource Type' taxonomy to get the type of resource
             $terms = get_the_terms($post->ID, 'improvement_resource_type');
+            if($terms) {
+                foreach($terms as $index => $term) {
+                    if($index == 0) {
+                        $postTypeName = $term->name;
+                    } else {
+                        $postTypeName .= ', ' . $term->name;
+                    }
+                }
+            }
+        } elseif(strtolower($postTypeName) == 'inspection guidance') {
+            // In this case we use the 'Inspection Guidance Type' taxonomy to get the type of guidance
+            $terms = get_the_terms($post->ID, 'inspection_guidance_type');
             if($terms) {
                 foreach($terms as $index => $term) {
                     if($index == 0) {
@@ -769,7 +800,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
         }
 
-        if(($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport) && $reportFile) {
+        if(($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport || $args['post_type'] == 'estyn_inspguidance') && $reportFile) {
             $items[] = [
                 'linkURL' => $reportFile, //wp_get_attachment_url($firstPDFAttachment->ID),
                 'superText' => $postTypeName,
@@ -892,7 +923,39 @@ function getInspectionReportFileURL($post) {
     }*/
     
     return $reportFile;
+
 }
+
+/**
+ * For an inspection guidance, retrieve the corresponding file, from either the ACF field
+ * or the custom field 'guidance_file_from_old_site'
+ */
+function getInspectionGuidanceFileURL($post) {
+    $guidanceFile = get_field('guidance_file', $post);
+
+    if(!$guidanceFile) {
+        $guidanceFile = get_post_meta($post->ID, 'guidance_file_from_old_site', true);
+        if($guidanceFile) {
+            // guidance_file_from_old_site is the filename of the PDF prepended with the old folder structure, either 'private/files' or just 'files'
+            // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
+            // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
+            $guidanceFile = ESTYN_OLD_FILES_URL . $guidanceFile;
+            // Now we have to deal with the fact that some of the filenames literally have "%20" in them!
+            $guidanceFile = explode('/', $guidanceFile);
+            $guidanceFilename = array_pop($guidanceFile);
+            $guidanceFile = implode('/', $guidanceFile) . '/' . rawurlencode($guidanceFilename);
+        } else {
+            return null;
+        }
+    } else {
+        $guidanceFile = $guidanceFile['url'];
+    }
+
+    return $guidanceFile;
+
+}
+
+
 
 /**
  * Register 'estyn_inspection_guidance' post type,
