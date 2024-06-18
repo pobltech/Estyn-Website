@@ -28,6 +28,22 @@
             'carouselHeading' => __('Meet the team', 'sage'),
             'carouselHeadingNumber' => 3,
             'carouselDescription' => null,
+            'carouselLeftButtons' => array_map(function($teamMemberCategory) {
+                return [
+                    'link' => '#',
+                    'text' => $teamMemberCategory->name
+                ];
+            }, $teamMemberCategories),
+            'doNotDoJavaScript' => false,
+            'carouselSectionClass' => 'pobl-tech-carousel-block pb-5',
+            'carouselSliderWrapperClass' => 'pobl-tech-carousel-block-slider',
+            'carouselItems' => $teamMembersCarouselItems
+        ])
+        {{--@include('partials.slider', [
+            'carouselID' => 'estyn-meet-the-team-carousel',
+            'carouselHeading' => __('Meet the team', 'sage'),
+            'carouselHeadingNumber' => 3,
+            'carouselDescription' => null,
             'carouselLeftButtons' => [
                 [
                     'link' => '#',
@@ -87,7 +103,7 @@
                     'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
                 ]
             ]
-        ])
+        ])--}}
     </div>
     @include('partials.our-work')
   @php
