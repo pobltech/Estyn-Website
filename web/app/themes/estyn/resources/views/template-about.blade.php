@@ -122,7 +122,8 @@
         $sliderItems[] = [
           'featured_image_src' => get_the_post_thumbnail_url(),
           'title' => get_the_title(),
-          'excerpt' => get_the_excerpt()
+          'excerpt' => get_the_excerpt(),
+            'link' => get_the_permalink()
         ];
       }
 
@@ -130,13 +131,14 @@
     }
 
     // For TESTING: Append a copy of $sliderItems to $sliderItems to make the carousel longer
-    $sliderItems = array_merge($sliderItems, $sliderItems);
+    //$sliderItems = array_merge($sliderItems, $sliderItems);
   @endphp
   @include('partials.slider', [
     'carouselID' => 'estyn-home-latest-news-carousel',
-    'carouselHeading' => 'Latest articles',
-    'carouselDescription' => 'Blog posts and news articles from Estyn',
-    'carouselButtonText' => 'All articles',
+    'carouselHeading' => __('Latest articles', 'sage'),
+    'carouselDescription' => __('Blog posts and news articles from Estyn', 'sage'),
+    'carouselButtonText' => __('All articles', 'sage'),
+    'carouselButtonLink' => \App\get_permalink_by_template('template-news-and-blog.blade.php'),
     'carouselItems' => $sliderItems,
     'doNotDoJavaScript' => false,
     'carouselSectionClass' => 'pobl-tech-carousel-block py-md-5',
@@ -149,7 +151,7 @@
         @include('partials.cta', [
             'ctaHeading' => __('Working for us', 'sage'),
             'ctaText' => __('Our staff include corporate services, HMI and contracted trained inspectors.', 'sage'),
-            'ctaButtonLinkURL' => '#',
+            'ctaButtonLinkURL' => \App\get_permalink_by_template('template-vacancies.blade.php'),
             'ctaButtonText' => __('Vacancies', 'sage'),
             'ctaImageURL' => asset('images/cta-example.png'),
             'ctaImageAlt' => 'CTA example'
