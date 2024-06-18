@@ -51,8 +51,8 @@
                 @if(isset($carouselDescription) && !empty($carouselDescription))
 				    <p class="mb-0">{{ $carouselDescription }}</p>
                 @else
-                    @if(isset($carouselHeadingNumber) && !empty($carouselHeadingNumber))
-                        <h{{ $carouselHeadingNumber }} class="mb-0">{{ $carouselHeading }}</h{{ $carouselHeadingNumber }}>
+                    @if(!empty($carouselHeadingNumber))
+                        <h{{ $carouselHeadingNumber }} class="mb-2 mb-sm-3">{{ $carouselHeading }}</h{{ $carouselHeadingNumber }}>
                     @else
                         <h2 class="mb-0">{{ $carouselHeading }}</h2>
                     @endif
