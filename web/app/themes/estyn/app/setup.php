@@ -1143,3 +1143,56 @@ add_action('init', function () {
     register_taxonomy_for_object_type('sector', 'estyn_insp_qu');
 
 });
+
+/**
+ * Register 'estyn_team_member' post type with 'team_member_category' taxonomy
+ */
+add_action('init', function () {
+    $teamMemberSlug = __('team-member', 'sage');
+    register_post_type('estyn_team_member', [
+        'labels' => [
+            'name' => __('Team Members', 'sage'),
+            'singular_name' => __('Team Member', 'sage'),
+            'add_new' => __('Add New', 'sage'),
+            'add_new_item' => __('Add New Team Member', 'sage'),
+            'edit_item' => __('Edit Team Member', 'sage'),
+            'new_item' => __('New Team Member', 'sage'),
+            'view_item' => __('View Team Member', 'sage'),
+            'search_items' => __('Search Team Members', 'sage'),
+            'not_found' => __('No team members found', 'sage'),
+            'not_found_in_trash' => __('No team members found in Trash', 'sage'),
+            'all_items' => __('All Team Members', 'sage'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-groups',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
+        'rewrite' => ['slug' => $teamMemberSlug, 'with_front' => false],
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ]);
+
+    // Add the 'team_member_category' taxonomy
+    $labels = array(
+        'name' => _x( 'Team Member Categories', 'taxonomy general name', 'sage' ),
+        'singular_name' => _x( 'Team Member Category', 'taxonomy singular name', 'sage' ),
+        'search_items' =>  __( 'Search Team Member Categories', 'sage' ),
+        'all_items' => __( 'All Team Member Categories', 'sage' ),
+        'edit_item' => __( 'Edit Team Member Category', 'sage' ),
+        'update_item' => __( 'Update Team Member Category', 'sage' ),
+        'add_new_item' => __( 'Add New Team Member Category', 'sage' ),
+        'new_item_name' => __( 'New Team Member Category Name', 'sage' ),
+        'menu_name' => __( 'Team Member Categories', 'sage' ),
+    );
+
+    $teamMemberCategorySlug = __('team-member-category', 'sage');
+
+    register_taxonomy('team_member_category', array('estyn_team_member'), array(
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => $teamMemberCategorySlug, 'with_front' => false),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+
+});
