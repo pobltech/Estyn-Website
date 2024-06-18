@@ -3,7 +3,8 @@
 --}}
 @extends('layouts.app')
 @section('content')
-    @include('partials.inside-hero', [
+    @include('partials.inside-hero', $insideHeroPartialArgs)
+    {{--@include('partials.inside-hero', [
         'title' => get_the_title(),
         'heroImageImgTag' => get_the_post_thumbnail(),
         'secondHeading' => __('Working for Estyn', 'sage'),
@@ -22,7 +23,7 @@
             ]
         
         ]
-    ])
+    ])--}}
 <div class="reportMain pt-5">
 	<div class="container px-md-4 px-xl-5 mt-5 mb-md-5">
         <div class="row justify-content-lg-between pb-md-5">
