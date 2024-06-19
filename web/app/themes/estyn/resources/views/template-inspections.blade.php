@@ -99,20 +99,34 @@
 
         <div class="mt-5 pt-md-5 pb-md-5">
         @include('partials.cta', [
-            'ctaHeading' => __('Inspection Questionnaires', 'sage'),
-            'ctaText' => __('Been asked to fill out an inspection questionnaire?', 'sage'),
-            'ctaButtonLinkURL' => App\get_permalink_by_template('template-inspection-questionnaire-search-page.blade.php'),
-            'ctaButtonText' => __('View questionnaires', 'sage'),
-            'ctaImageURL' => asset('images/cta-example.png'),
-            'ctaImageAlt' => __('A cartoon hand is holding a phone or tablet which is displaying some questionnaire data, while some cheerful people are pointing at it and discussing it.', 'sage')
+            'ctaHeading' => get_field('inspections_cta_heading'),
+            'ctaContent' => get_field('inspections_cta_text'),
+            /*'ctaButtonLinkURL' => \App\get_permalink_by_template('template-vacancies.blade.php'),
+            'ctaButtonText' => __('Vacancies', 'sage'),*/
+            'ctaImageURL' => get_field('inspections_cta_image')['url'],
+            'ctaImageAlt' => get_field('inspections_cta_image')['alt'],
+            'ctaButtons' => array_map(function($button) {
+                return [
+                    // NOTE: external_link is a text field, link is post object (from ACF relationship field with max 1 post allowed)
+                    'link' => empty($button['external_link']) ? get_permalink($button['link'][0]->ID) : $button['external_link'],
+                    'text' => $button['label']
+                ];
+            }, get_field('inspections_cta_buttons'))
         ])
         </div>
 
         <div class="row mt-5 pb-5 mb-5">
             <div class="col-12 col-sm-6">
-                <h2>{{ __('Feedback', 'sage') }}</h2>
+                <h2>{{ get_field('inspections_bottom_content_heading') }}</h2>
+                {!! get_field('inspections_bottom_content_text') !!}
+                @if(get_field('inspections_bottom_content_buttons'))
+                    @foreach(get_field('inspections_bottom_content_buttons') as $button)
+                        <a class="btn btn-outline-primary mb-3 me-3" href="{{ empty($button['external_link']) ? get_permalink($button['link'][0]->ID) : $button['external_link'] }}">{{ $button['label'] }}</a>
+                    @endforeach
+                @endif
+                {{--<h2>{{ __('Feedback', 'sage') }}</h2>
                 <p>{{ __('Have something to share? Your suggestions, compliments and complaints help us to improve.', 'sage') }}</p>
-                <a class="btn btn-outline-primary" href="{!! App\get_permalink_by_template('template-inspection-schedule-search-page.blade.php') !!}">{{ __('View the full inspection schedule', 'sage') }}</a>
+                <a class="btn btn-outline-primary" href="{!! App\get_permalink_by_template('template-inspection-schedule-search-page.blade.php') !!}">{{ __('View the full inspection schedule', 'sage') }}</a>--}}
             </div>
         </div>
     </div>

@@ -145,9 +145,6 @@
     'carouselSectionClass' => 'pobl-tech-carousel-block py-md-5',
   ])
     <div class="container px-md-4 px-xl-5 pt-5">
-        <?php
-            // TODO: Multiple buttons in CTA
-        ?>
         <div class="mb-md-5">
         @include('partials.cta', [
             'ctaHeading' => get_field('about_cta_heading'),
