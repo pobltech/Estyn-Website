@@ -168,11 +168,17 @@
 
         <div class="row pt-md-5 pb-5">
             <div class="col-12 col-sm-4">
-                <h2>{{ __('Get in touch', 'sage') }}</h2>
-                <p>{{ __('Whatever you need, get in touch', 'sage') }}.</p>
-                <a class="btn btn-outline-primary me-3 mb-3" href="#">{{ __('General inquiries', 'sage') }}</a>
+                <h2>{{ get_field('about_bottom_content_heading') }}</h2>
+                {!! get_field('about_bottom_content_text') !!}
+                @if(get_field('about_bottom_content_buttons'))
+                    @foreach(get_field('about_bottom_content_buttons') as $button)
+                        <a class="btn btn-outline-primary mb-3 me-3" href="{{ empty($button['external_link']) ? get_permalink($button['link'][0]->ID) : $button['external_link'] }}">{{ $button['label'] }}</a>
+                    @endforeach
+                @endif
+
+                {{--<a class="btn btn-outline-primary me-3 mb-3" href="#">{{ __('General inquiries', 'sage') }}</a>
                 <a class="btn btn-outline-primary mb-3" href="#">{{ __('Feedback', 'sage') }}</a>
-                <a class="btn btn-outline-primary" href="#">{{ __('Contact the press office', 'sage') }}</a>
+                <a class="btn btn-outline-primary" href="#">{{ __('Contact the press office', 'sage') }}</a>--}}
             </div>
         </div>
     </div>
