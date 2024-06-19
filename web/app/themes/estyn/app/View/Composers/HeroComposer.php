@@ -10,6 +10,7 @@ class HeroComposer extends Composer
         'template-about',
         'template-events',
         'template-vacancies',
+        'template-annual-report',
     ];
 
     public function with()
