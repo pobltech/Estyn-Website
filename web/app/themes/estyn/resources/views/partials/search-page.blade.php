@@ -228,7 +228,7 @@
                         </div>
                         @foreach($improvementResourceTypes as $improvementResourceType)
                           <div class="form-check">
-                            <input class="form-check-input" type="radio" name="improvement_resource_type" value="{{ $improvementResourceType->slug }}" id="flexCheckType-{{ $improvementResourceType->slug }}">
+                            <input class="form-check-input" type="radio" name="improvement_resource_type" value="{{ $improvementResourceType->slug }}" id="flexCheckType-{{ $improvementResourceType->slug }}" {{ (!empty($_GET['type'])) && (strtolower($_GET['type']) == strtolower($improvementResourceType->name)) ? 'checked' : '' }}>
                             <label class="form-check-label" for="flexCheckType-{{ $improvementResourceType->slug }}">
                               {{ $improvementResourceType->name }}
                             </label>
