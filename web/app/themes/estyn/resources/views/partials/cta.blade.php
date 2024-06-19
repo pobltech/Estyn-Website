@@ -19,15 +19,25 @@
 							@endif
 								<div class="pt-cta-content">
 									<h2 class="mb-3 mb-md-4">{{ $ctaHeading }}</h2>
-									@if(isset($ctaText))
+									@if(!empty($ctaContent))
+										{!! $ctaContent !!}
+									@elseif(isset($ctaText))
 										<p>{{ $ctaText }}</p>
 									@endif
-									<a class="btn btn-primary" href="{{ $ctaButtonLinkURL }}">
-										{{ $ctaButtonText }}
-										@if(isset($ctaButtonIconClasses))
-											<i class="{{ $ctaButtonIconClasses }}"></i>
-										@endif
-									</a>
+									@if(!empty($ctaButtons))
+										@foreach($ctaButtons as $ctaButton)
+											<a class="btn btn-primary me-3 mb-3" href="{{ $ctaButton['link'] }}">
+												{{ $ctaButton['text'] }}
+											</a>
+										@endforeach
+									@else
+										<a class="btn btn-primary" href="{{ $ctaButtonLinkURL }}">
+											{{ $ctaButtonText }}
+											@if(isset($ctaButtonIconClasses))
+												<i class="{{ $ctaButtonIconClasses }}"></i>
+											@endif
+										</a>
+									@endif
 								</div>
 							</div>
 							<div class="col-12 col-lg-6 offset-xl-1 position-relative px-5 px-md-0 text-center text-lg-end {{ isset($showSearchBox) && ($showSearchBox === true) ? 'cta-search-col' : '' }}">

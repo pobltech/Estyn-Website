@@ -19,9 +19,10 @@
     ])--}}
 <div class="reportMain pt-md-5">
 	<div class="container px-md-4 px-xl-5 mt-5">
-        <h2>{{ __('Who are we?', 'sage') }}</h2>
+        {{--<h2>{{ __('Who are we?', 'sage') }}</h2>
         <p>{{ __('We\'re the Education and Training Inspectorate for Wales.', 'sage') }}<br/>
-        {{ __('Meet the Chief Inspector and his team.', 'sage') }}</p>
+        {{ __('Meet the Chief Inspector and his team.', 'sage') }}</p>--}}
+        {!! get_the_content() !!}
 
         @include('partials.slider', [
             'carouselID' => 'estyn-meet-the-team-carousel',
@@ -149,12 +150,19 @@
         ?>
         <div class="mb-md-5">
         @include('partials.cta', [
-            'ctaHeading' => __('Working for us', 'sage'),
-            'ctaText' => __('Our staff include corporate services, HMI and contracted trained inspectors.', 'sage'),
-            'ctaButtonLinkURL' => \App\get_permalink_by_template('template-vacancies.blade.php'),
-            'ctaButtonText' => __('Vacancies', 'sage'),
-            'ctaImageURL' => asset('images/cta-example.png'),
-            'ctaImageAlt' => 'CTA example'
+            'ctaHeading' => get_field('about_cta_heading'),
+            'ctaContent' => get_field('about_cta_text'),
+            /*'ctaButtonLinkURL' => \App\get_permalink_by_template('template-vacancies.blade.php'),
+            'ctaButtonText' => __('Vacancies', 'sage'),*/
+            'ctaImageURL' => get_field('about_cta_image')['url'],
+            'ctaImageAlt' => get_field('about_cta_image')['alt'],
+            'ctaButtons' => array_map(function($button) {
+                return [
+                    // NOTE: external_link is a text field, link is post object (from ACF relationship field with max 1 post allowed)
+                    'link' => empty($button['external_link']) ? get_permalink($button['link'][0]->ID) : $button['external_link'],
+                    'text' => $button['label']
+                ];
+            }, get_field('about_cta_buttons'))
         ])
         </div>
 
