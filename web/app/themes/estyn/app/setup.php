@@ -1196,3 +1196,31 @@ add_action('init', function () {
     ));
 
 });
+
+/**
+ * Add a 'estyn_job_vacancy' post type
+ */
+add_action('init', function () {
+    $jobVacancySlug = __('job-vacancy', 'sage');
+    register_post_type('estyn_job_vacancy', [
+        'labels' => [
+            'name' => __('Job Vacancies', 'sage'),
+            'singular_name' => __('Job Vacancy', 'sage'),
+            'add_new' => __('Add New', 'sage'),
+            'add_new_item' => __('Add New Job Vacancy', 'sage'),
+            'edit_item' => __('Edit Job Vacancy', 'sage'),
+            'new_item' => __('New Job Vacancy', 'sage'),
+            'view_item' => __('View Job Vacancy', 'sage'),
+            'search_items' => __('Search Job Vacancies', 'sage'),
+            'not_found' => __('No job vacancies found', 'sage'),
+            'not_found_in_trash' => __('No job vacancies found in Trash', 'sage'),
+            'all_items' => __('All Job Vacancies', 'sage'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-businessman',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
+        'rewrite' => ['slug' => $jobVacancySlug, 'with_front' => false],
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ]);
+});
