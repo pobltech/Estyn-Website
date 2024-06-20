@@ -54,11 +54,22 @@
         <div class="container py-5 px-md-4 px-xl-5">
             <div class="row mb-md-4">
                 <div class="col-12">
-                    <h2>{{ __('Enquiries', 'sage') }}</h2>
+                    <h2>{{ get_field('jobs_page_enquires_section_heading') }}</h2>
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-6 mb-4 mb-md-0">
+                @if(have_rows('jobs_page_enquiries_info_boxes'))
+                    @while(have_rows('jobs_page_enquiries_info_boxes')) @php(the_row())
+                        <div class="col-12 col-md-6 mb-4 mb-md-0">
+                            <div class="card card-body p-md-5 rounded-3 h-100 bg-white">
+                                <h3>{{ get_sub_field('heading') }}</h3>
+                                {!! get_sub_field('content') !!}
+                            </div>
+                        </div>
+                    @endwhile
+                @endif
+
+                {{--<div class="col-12 col-md-6 mb-4 mb-md-0">
                     <div class="card card-body p-md-5 rounded-3 h-100 bg-white">
                         <h3>{{ __('Human Resources', 'sage') }}</h3>
                         <p>{{ __('For general enquiries about working for us, contact:', 'sage') }}</p>
@@ -73,12 +84,10 @@
                         <a href="#">02920 446510</a>
                         <a href="#">events@estyn.gov.wales</a>
                     </div>
-                </div>
+                </div>--}}
             </div>
         </div>
     </div>
 </div>
-@php
-    $footerNoMT = true;
-@endphp
+@php($footerNoMT = true)
 @endsection
