@@ -403,6 +403,11 @@ h5 {
     margin-bottom: $m-4;
 }
 
+h2 a, h3 a, h4 a, h5 a {
+    text-decoration: none;
+    color: $estyn-darkblue;
+}
+
 blockquote {
     color: $estyn-darkblue;
     font-family: "Source Sans 3", sans-serif;
