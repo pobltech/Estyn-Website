@@ -32,6 +32,11 @@ class EventsComposer extends Composer
         $items = [];
 
         foreach($events as $event) {
+            // If the date has passed, skip this event
+            if(strtotime(get_field('event_date', $event)) < time()) {
+                continue;
+            }
+
             $args = [
                 'title' => get_the_title($event),
                 'date' => get_field('event_date', $event),
