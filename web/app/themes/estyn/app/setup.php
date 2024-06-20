@@ -1224,3 +1224,59 @@ add_action('init', function () {
         'show_in_rest' => true, // Enable Gutenberg editor
     ]);
 });
+
+/**
+ * Add a 'estyn_event' post type. Also add a taxonomy called 'event tag'
+ */
+add_action('init', function () {
+    $eventSlug = __('event', 'sage');
+    register_post_type('estyn_event', [
+        'labels' => [
+            'name' => __('Events', 'sage'),
+            'singular_name' => __('Event', 'sage'),
+            'add_new' => __('Add New', 'sage'),
+            'add_new_item' => __('Add New Event', 'sage'),
+            'edit_item' => __('Edit Event', 'sage'),
+            'new_item' => __('New Event', 'sage'),
+            'view_item' => __('View Event', 'sage'),
+            'search_items' => __('Search Events', 'sage'),
+            'not_found' => __('No events found', 'sage'),
+            'not_found_in_trash' => __('No events found in Trash', 'sage'),
+            'all_items' => __('All Events', 'sage'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-calendar-alt',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
+        'rewrite' => ['slug' => $eventSlug, 'with_front' => false],
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ]);
+
+    // Add tag support
+    //register_taxonomy_for_object_type('post_tag', 'estyn_event');
+
+    // Add the 'event_tag' taxonomy
+    $labels = array(
+        'name' => _x( 'Event Tags', 'taxonomy general name', 'sage' ),
+        'singular_name' => _x( 'Event Tag', 'taxonomy singular name', 'sage' ),
+        'search_items' =>  __( 'Search Event Tags', 'sage' ),
+        'all_items' => __( 'All Event Tags', 'sage' ),
+        'edit_item' => __( 'Edit Event Tag', 'sage' ),
+        'update_item' => __( 'Update Event Tag', 'sage' ),
+        'add_new_item' => __( 'Add New Event Tag', 'sage' ),
+        'new_item_name' => __( 'New Event Tag Name', 'sage' ),
+        'menu_name' => __( 'Event Tags', 'sage' ),
+    );
+
+    $eventTagSlug = __('event-tag', 'sage');
+
+    register_taxonomy('event_tag', array('estyn_event'), array(
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => $eventTagSlug, 'with_front' => false),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+
+});

@@ -1814,6 +1814,15 @@ p.sp-desc {
     overflow: hidden;
 }
 
+.carousel-item-tag {
+    z-index: 100;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border-radius: 4px;
+    background-color: $estyn-darkblue;
+}
+
 /** Rogue Media Queries **/
 @media (max-width: 1800px) {
 
