@@ -13,10 +13,13 @@
                 <h1 class="p-name mb-4">{!! $title !!}</h1>
               </div>
                 <div class="col-12 col-md-4">
-                  <span class="d-block">Find a provider</span>
-										<div class="input-group mb-3 rounded">
-											<input type="text" class="form-control" placeholder="Primary schools" aria-label="Primary schools" aria-describedby="button-addon2">
-											<button class="btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                  <span class="d-block"> {{ __('Find a provider', 'sage') }}</span>
+										<div class="estyn-search-container input-group mb-3 rounded">
+											<input type="text" list="page-header-provider-search-datalist-options" class="estyn-search-box form-control" data-posttype="estyn_eduprovider" placeholder="{{ __('Primary schools', 'sage') }}" aria-label="{{ __('Primary schools', 'sage') }}" aria-describedby="button-addon2">
+											<button class="estyn-search-box-button btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                      <datalist class="search-datalist" id="page-header-provider-search-datalist-options">
+
+                      </datalist>
 										</div>
                 </div>
               @else
