@@ -31,7 +31,7 @@
 												{{ $ctaButton['text'] }}
 											</a>
 										@endforeach
-									@else
+									@elseif(!empty($ctaButtonText) && !empty($ctaButtonLinkURL))
 										<a class="btn btn-primary" href="{{ $ctaButtonLinkURL }}">
 											{{ $ctaButtonText }}
 											@if(isset($ctaButtonIconClasses))
@@ -61,29 +61,37 @@
 						@else
 						<div class="row cta-carousel">
 							<div class="col-12 col-md-4">
+								<h2 class="mb-3 mb-md-4">{{ $ctaHeading }}</h2>
 								<!-- Carousel Indicators and Captions -->
-								<ol class="carousel-indicators">
+								{{--<ol class="carousel-indicators">
 									@for($i = 0; $i < count($ctaCarouselItems); $i++)
 										<li data-target="#carouselExampleIndicators" data-slide-to="{{ $i }}" class="{{ $i == 0 ? 'active' : '' }}"></li>
 									@endfor
-								</ol>
+								</ol>--}}
 								<div class="carousel-captions">
 									@for($i = 0; $i < count($ctaCarouselItems); $i++)
-										<div class="carousel-caption {{ $i != 0 ? 'd-none' : '' }}" id="caption-{{ $i }}">{{ $ctaCarouselItems[$i]['caption'] }}</div>
+										<div class="carousel-caption {{ $i != 0 ? 'd-none' : '' }}" id="caption-{{ $i }}">{!! $ctaCarouselItems[$i]['caption'] !!}</div>
 									@endfor
 								</div>
 							</div>
-							<div class="col-12 col-md-8">
-								<!-- Carousel Images -->
-								<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-									<div class="carousel-inner">
-										@foreach($ctaCarouselItems as $i => $carouselItem)
-											<div class="carousel-item {{ $i == 0 ? 'active' : '' }}">
-												<img class="d-block w-100" src="{{ $carouselItem['image'] }}" alt="{{ $carouselItem['alt'] }}">
-											</div>
-										@endforeach
+							<div class="col-12 col-md-8 position-relative">
+									<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+										<div class="carousel-inner">
+											@foreach($ctaCarouselItems as $i => $carouselItem)
+												<div class="carousel-item {{ $i == 0 ? 'active' : '' }}">
+													<img class="d-block w-100 img-fluid object-fit-cover" src="{{ $carouselItem['image'] }}" alt="{{ $carouselItem['alt'] }}">
+												</div>
+											@endforeach
+										</div>
 									</div>
-								</div>
+									<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+										<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+										<span class="visually-hidden">Previous</span>
+									</button>
+									<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+										<span class="carousel-control-next-icon" aria-hidden="true"></span>
+										<span class="visually-hidden">Next</span>
+									</button>
 							</div>
 						</div>
 						@endif

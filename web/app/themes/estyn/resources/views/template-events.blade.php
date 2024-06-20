@@ -27,32 +27,8 @@
 
         <div class="mb-md-5">
         @include('partials.cta', [
-            'ctaHeading' => __('Past events', 'sage'),
-            'ctaCarouselItems' => [
-                [
-                    'image' => asset('images/sectordefaulthero.jpg'),
-                    'alt' => 'Sector default hero',
-                    'caption' => 'Annual report launch',
-                ],
-                [
-                    'image' => asset('images/sectordefaultintro.jpg'),
-                    'alt' => 'Sector default intro',
-                    'caption' => 'Testing 134',
-                ],
-                [
-                    'image' => asset('images/homeherofallback.png'),
-                    'alt' => 'Home default hero',
-                    'caption' => 'Testing 3993',
-                ]
-            ]
-        ])
-        @include('partials.cta', [
-            'ctaHeading' => __('Past events', 'sage'),
-            'ctaText' => __('Annual report launch. We recently held the launch event for our 2022-23 annual report.', 'sage'),
-            'ctaButtonLinkURL' => '#',
-            'ctaButtonText' => __('Annual report 2022-23', 'sage'),
-            'ctaImageURL' => asset('images/cta-example.png'),
-            'ctaImageAlt' => 'CTA example'
+            'ctaHeading' => get_field('past_events_cta_heading'),
+            'ctaCarouselItems' => $pastEventsCTACarouselItems,
         ])
         </div>
     </div>
