@@ -11,6 +11,7 @@
 					@else
 						<div class="card-body my-2 mx-0 my-sm-5 mx-sm-4 my-lg-5 mx-lg-4">
 					@endif
+						@if(empty($ctaCarouselItems))
 						<div class="row">
 							@if(isset($ctaImageURL))
 							<div class="col-12 col-lg-6 col-xl-5 col-xxl-4 mb-4 mb-md-0 pb-md-5">
@@ -57,6 +58,35 @@
 								@endif
 							</div>
 						</div>
+						@else
+						<div class="row cta-carousel">
+							<div class="col-12 col-md-4">
+								<!-- Carousel Indicators and Captions -->
+								<ol class="carousel-indicators">
+									@for($i = 0; $i < count($ctaCarouselItems); $i++)
+										<li data-target="#carouselExampleIndicators" data-slide-to="{{ $i }}" class="{{ $i == 0 ? 'active' : '' }}"></li>
+									@endfor
+								</ol>
+								<div class="carousel-captions">
+									@for($i = 0; $i < count($ctaCarouselItems); $i++)
+										<div class="carousel-caption {{ $i != 0 ? 'd-none' : '' }}" id="caption-{{ $i }}">{{ $ctaCarouselItems[$i]['caption'] }}</div>
+									@endfor
+								</div>
+							</div>
+							<div class="col-12 col-md-8">
+								<!-- Carousel Images -->
+								<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+									<div class="carousel-inner">
+										@foreach($ctaCarouselItems as $i => $carouselItem)
+											<div class="carousel-item {{ $i == 0 ? 'active' : '' }}">
+												<img class="d-block w-100" src="{{ $carouselItem['image'] }}" alt="{{ $carouselItem['alt'] }}">
+											</div>
+										@endforeach
+									</div>
+								</div>
+							</div>
+						</div>
+						@endif
 					</div>
 				</div>
 			</div>
@@ -220,6 +250,18 @@
 				const contentHeight = $('#{{ $ctaUniqueID }} .pt-cta-content').height();
 				const height = contentHeight * 1.25; // 125% of the text content's height
 				$('#{{ $ctaUniqueID }} .pt-cta-image:not(.breakOut)').css('height', height);
+
+				// Code for managing captions with the carousel
+				if($('#carouselExampleIndicators').length > 0) {
+					$('#carouselExampleIndicators').on('slide.bs.carousel', function (e) {
+						// Hide all captions
+						$('.carousel-caption').addClass('d-none');
+						
+						// Show the caption corresponding to the next slide
+						var nextSlideIndex = e.to;
+						$('#caption-' + nextSlideIndex).removeClass('d-none');
+					});
+				}
 			});
 		</script>
 	@endif

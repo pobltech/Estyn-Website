@@ -1823,6 +1823,13 @@ p.sp-desc {
     background-color: $estyn-darkblue;
 }
 
+.cta-carousel .carousel-caption {
+    position: static;
+    padding: 0;
+    color: inherit;
+    text-align: left;
+}
+
 /** Rogue Media Queries **/
 @media (max-width: 1800px) {
 
