@@ -1830,6 +1830,35 @@ p.sp-desc {
     text-align: left;
 }
 
+.cta-carousel-item-container {
+    min-width: 660px;
+    max-width: 660px;
+    overflow: hidden;
+    position: relative;
+    background: transparent;
+    border: none;
+
+    .cta-carousel-item-image-container {
+        width: 100%;
+        overflow: hidden;
+        padding-top: 75%;
+        position: relative;
+
+        .cta-carousel-image {
+            bottom: 0;
+            height: 100%;
+            left: 0;
+            -o-object-fit: cover;
+            object-fit: cover;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100%;
+            border-radius: 0.25rem;
+        }
+    }
+}
+
 /** Rogue Media Queries **/
 @media (max-width: 1800px) {
 

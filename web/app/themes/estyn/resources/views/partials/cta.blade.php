@@ -79,7 +79,11 @@
 										<div class="carousel-inner">
 											@foreach($ctaCarouselItems as $i => $carouselItem)
 												<div class="carousel-item {{ $i == 0 ? 'active' : '' }}">
-													<img class="d-block w-100 img-fluid object-fit-cover" src="{{ $carouselItem['image'] }}" alt="{{ $carouselItem['alt'] }}">
+													<div class="cta-carousel-item-container">
+														<div class="cta-carousel-item-image-container">
+															<img class="cta-carousel-image img-fluid" src="{{ $carouselItem['image'] }}" alt="{{ $carouselItem['alt'] }}">
+														</div>
+													</div>
 												</div>
 											@endforeach
 										</div>
