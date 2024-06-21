@@ -221,6 +221,7 @@ p, li {
 }
 
 
+
 .footer {
     p, li {
         color: $estyn-footertext;
@@ -1695,13 +1696,26 @@ p.sp-desc {
     border-radius: $border-radius-form;
 } */
 
-.register-for-updates {
+.cf7-container {
     .form-control {
         color: $estyn-darkblue;
         background-color: $estyn-lightblue;
         border: 1px solid $estyn-darkblue;
         border-radius: $border-radius-form;
+        padding: 0.775rem 0.75rem;
     }
+
+    .checkbox {
+        margin-bottom: 0.6rem;
+    }
+
+    input[type="checkbox"], input[type="radio"] {
+        margin-right: 0.5rem;
+    }
+}
+
+.wpcf7-response-output {
+    margin-top: 2rem;
 }
 
 .mainNum {
