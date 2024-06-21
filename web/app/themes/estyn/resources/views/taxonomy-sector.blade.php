@@ -140,6 +140,20 @@
                         'doNotDoJavaScript' => false
                     ])
                     </div>
+                @else
+                    <div class="pt-md-5">
+                    @include('partials.slider', [
+                        'carouselID' => 'sector-articles-carousel',
+                        'carouselHeading' => __('Latest articles', 'sage'),
+                        'carouselDescription' => __('Our latest news and blog posts', 'sage'),
+                        'carouselButtonText' => __('All articles', 'sage'),
+                        'carouselButtonLink' => App\get_permalink_by_template('template-news-and-blog.blade.php'),
+                        'carouselSectionClass' => 'pobl-tech-carousel-block',
+                        'carouselSliderWrapperClass' => 'pobl-tech-carousel-block-slider',
+                        'carouselItems' => $latestNewsAndBlogPostsCarouselItems,
+                        'doNotDoJavaScript' => false
+                    ])
+                    </div>                    
                 @endif
 
                 {{--@include('partials.slider', [
