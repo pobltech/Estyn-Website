@@ -10,12 +10,13 @@
                         <!-- SP Item -->
                         <div class="col-12 col-sm-6 col-xl-4 mb-4 position-relative">
                             @include('components.signpost', [
-                                'bgColourClass' => $signpost['bgColourClass'],
+                                'bgColourClass' => $signpost['bgColourClass'] ?? null,
+                                'bgColour' => $signpost['bgColour'] ?? null,
                                 'iconClasses' => $signpost['iconClasses'] ?? null,
                                 'svg' => $signpost['svg'] ?? null,
-                                'title' => $signpost['title'],
-                                'description' => $signpost['description'],
-                                'linkURL' => $signpost['linkURL']
+                                'title' => $signpost['title'] ?? null,
+                                'description' => $signpost['description'] ?? null,
+                                'linkURL' => $signpost['linkURL'] ?? null
                             ])
                         </div>
                     @endforeach
