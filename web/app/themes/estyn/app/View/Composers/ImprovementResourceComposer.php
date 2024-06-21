@@ -107,10 +107,14 @@ class ImprovementResourceComposer extends Composer
         return null;
     }
     private function quickLinks() {
-        $content = apply_filters('the_content', get_the_content()); // Apply filters to get_the_content
+        $content = apply_filters('the_content', get_the_content());
         $dom = new \DOMDocument();
         libxml_use_internal_errors(true); // Temporarily disable libxml errors
-        $dom->loadHTML('<?xml encoding="UTF-8">' . $content); // Ensure UTF-8 encoding and add doctype
+
+        // Ensure UTF-8 encoding and add doctype for HTML5, then load the content
+        $content = mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8');
+        $dom->loadHTML('<?xml encoding="UTF-8">' . $content);
+
         libxml_clear_errors(); // Clear any libxml errors that have been caught
 
         $headings = [];
@@ -125,14 +129,15 @@ class ImprovementResourceComposer extends Composer
         $links = [];
 
         foreach ($headings as $heading) {
-            if ($heading instanceof \DOMElement && $heading->hasAttribute('id')) { // Check if heading has 'id'
-                $id = $heading->getAttribute('id');
-                if (!empty($id)) { // Ensure 'id' is not empty
+            if ($heading instanceof \DOMElement) {// && $heading->hasAttribute('id')) {
+                //$id = $heading->getAttribute('id');
+                //if (!empty($id)) {
                     $links[] = [
                         'title' => $heading->textContent,
-                        'link' => '#' . $id
+                        //'link' => '#' . $id
+                        'link' => '#'
                     ];
-                }
+                //}
             }
         }
         

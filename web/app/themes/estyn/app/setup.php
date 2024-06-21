@@ -1285,6 +1285,10 @@ add_action('init', function () {
  * Add a filter to the_content that removes any empty paragraphs
  */
 add_filter('the_content', function($content) {
+    if(is_admin()) {
+        return $content;
+    }
+
     return str_replace('<p>&nbsp;</p>', '', str_replace('<p></p>', '', $content));
 });
 
@@ -1292,23 +1296,37 @@ add_filter('the_content', function($content) {
  * Add a filter to post content that gives every heading a unique ID attribute,
  * but only if the post type is estyn_imp_resource
  */
-add_filter('the_content', function($content) {
-    if(get_post_type() != 'estyn_imp_resource') {
+
+ // TODO: This solution doesn't work properly. Need a Javascript approach instead
+
+/* add_filter('the_content', function($content) {
+    if(get_post_type() != 'estyn_imp_resource' || is_admin()) {
         return $content;
     }
 
     $dom = new \DOMDocument();
-    $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    @$dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     $xpath = new \DOMXPath($dom);
 
     $headings = $xpath->query('//h1|//h2|//h3|//h4|//h5|//h6');
+    $usedIDs = [];
     foreach($headings as $index => $heading) {
-        //$heading->setAttribute('id', 'heading-' . $index);
-
-        // Set the ID attribute to be the heading text, with spaces replaced by hyphens
-        $heading->setAttribute('id', strtolower(str_replace(' ', '-', $heading->textContent)));
+        if($heading->hasAttribute('id')) {
+            continue;
+        }
+        
+        $idBase = 'heading-' . $index;//strtolower(str_replace(' ', '-', trim($heading->textContent)));
+        $id = $idBase;
+        $counter = 1;
+        // Ensure the ID is unique by appending a number if necessary
+        while(in_array($id, $usedIDs)) {
+            $id = $idBase . '-' . $counter;
+            $counter++;
+        }
+        $heading->setAttribute('id', $id);
+        $usedIDs[] = $id;
     }
 
     return $dom->saveHTML();
-});
+}); */
 
