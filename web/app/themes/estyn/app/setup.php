@@ -1280,3 +1280,35 @@ add_action('init', function () {
     ));
 
 });
+
+/**
+ * Add a filter to the_content that removes any empty paragraphs
+ */
+add_filter('the_content', function($content) {
+    return str_replace('<p>&nbsp;</p>', '', str_replace('<p></p>', '', $content));
+});
+
+/**
+ * Add a filter to post content that gives every heading a unique ID attribute,
+ * but only if the post type is estyn_imp_resource
+ */
+add_filter('the_content', function($content) {
+    if(get_post_type() != 'estyn_imp_resource') {
+        return $content;
+    }
+
+    $dom = new \DOMDocument();
+    $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $xpath = new \DOMXPath($dom);
+
+    $headings = $xpath->query('//h1|//h2|//h3|//h4|//h5|//h6');
+    foreach($headings as $index => $heading) {
+        //$heading->setAttribute('id', 'heading-' . $index);
+
+        // Set the ID attribute to be the heading text, with spaces replaced by hyphens
+        $heading->setAttribute('id', strtolower(str_replace(' ', '-', $heading->textContent)));
+    }
+
+    return $dom->saveHTML();
+});
+

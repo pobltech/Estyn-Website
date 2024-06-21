@@ -305,6 +305,20 @@
                       @php(the_post_thumbnail(null, ['class' => 'w-100 img-fluid rounded-3 mb-4']))
                     @endif
 
+                    @if($isEffectivePractice)
+                      @if(!empty($quickLinks))
+                        <div class="quick-links mt-5">
+                          <p class="mb-1"><strong>{{ __('Quick links', 'sage') . ':' }}</strong></p>
+                          <ul class="list-unstyled">
+                            @foreach($quickLinks as $quickLink)
+                              <li><a href="{{ $quickLink['link'] }}">{{ $quickLink['title'] }}</a></li>
+                            @endforeach
+                          </ul>
+                        </div>
+                        <hr>
+                      @endif
+                    @endif
+
                     @if($isAdditionalResource)
                       <?php
                         if (get_the_excerpt() && !preg_match('/\[\.\.\.\]$/', get_the_excerpt())) {

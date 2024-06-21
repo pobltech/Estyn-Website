@@ -13,7 +13,8 @@ class ImprovementResourceComposer extends Composer
     public function with()
     {
         return [
-            'thematicReportData' => $this->thematicReportData()
+            'thematicReportData' => $this->thematicReportData(),
+            'quickLinks' => $this->quickLinks()
         ];
     }
 
@@ -104,5 +105,37 @@ class ImprovementResourceComposer extends Composer
         }
 
         return null;
+    }
+    private function quickLinks() {
+        $content = apply_filters('the_content', get_the_content()); // Apply filters to get_the_content
+        $dom = new \DOMDocument();
+        libxml_use_internal_errors(true); // Temporarily disable libxml errors
+        $dom->loadHTML('<?xml encoding="UTF-8">' . $content); // Ensure UTF-8 encoding and add doctype
+        libxml_clear_errors(); // Clear any libxml errors that have been caught
+
+        $headings = [];
+
+        for ($i = 1; $i <= 6; $i++) {
+            $currentHeadings = $dom->getElementsByTagName('h' . $i);
+            foreach ($currentHeadings as $heading) {
+                $headings[] = $heading;
+            }
+        }
+
+        $links = [];
+
+        foreach ($headings as $heading) {
+            if ($heading instanceof \DOMElement && $heading->hasAttribute('id')) { // Check if heading has 'id'
+                $id = $heading->getAttribute('id');
+                if (!empty($id)) { // Ensure 'id' is not empty
+                    $links[] = [
+                        'title' => $heading->textContent,
+                        'link' => '#' . $id
+                    ];
+                }
+            }
+        }
+        
+        return $links;
     }
 }
