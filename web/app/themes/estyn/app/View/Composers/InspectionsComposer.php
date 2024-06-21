@@ -15,6 +15,7 @@ class InspectionsComposer extends Composer
         return [
             'latestInspectionReportsResourceListItems' => $this->getLatestInspectionReportsResourceListItems(),
             'inspectionScheduleResourceListItems' => $this->getInspectionScheduleResourceListItems(),
+            'inspectionGuidancePostsCarouselItems' => $this->inspectionGuidancePostsCarouselItems(),
         ];
     }
 
@@ -108,5 +109,43 @@ class InspectionsComposer extends Composer
         $inspectionScheduleResourceListItems = array_slice($inspectionScheduleResourceListItems, 0, 6);
 
         return $inspectionScheduleResourceListItems;
+    }
+
+    private function inspectionGuidancePostsCarouselItems() {
+        $inspectionGuidancePosts = get_posts([
+            'post_type' => 'estyn_inspguidance',
+            'posts_per_page' => 50
+        ]);
+
+        $inspectionGuidancePostsCarouselItems = array_map(function($post) {
+            $link = \App\getInspectionGuidanceFileURL($post);
+            
+            if(empty($link)) {
+                $link = get_permalink($post);
+            }
+
+            $featuredImageURL = get_the_post_thumbnail_url($post, 'full');
+
+            if(empty($featuredImageURL)) {
+                $featuredImageURL = \App\getInspectionGuidancePostPlaceholderImageURL($post);
+            }
+
+            $title = $post->post_title;
+
+            $excerpt = get_the_excerpt($post);
+            
+
+            return [
+                'link' => $link,
+                'featured_image_src' => $featuredImageURL,
+                'title' => $title,
+                'excerpt' => $excerpt                
+            ];
+        }, $inspectionGuidancePosts);
+
+        // Cut it down to maximum of 6 items
+        $inspectionGuidancePostsCarouselItems = array_slice($inspectionGuidancePostsCarouselItems, 0, 6);
+
+        return $inspectionGuidancePostsCarouselItems;
     }
 }

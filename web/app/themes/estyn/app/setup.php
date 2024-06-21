@@ -579,6 +579,10 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
         } elseif($params['postType'] === 'estyn_inspectionrpt') {
             $args['post_type'] = 'estyn_inspectionrpt';
+        } elseif($params['postType'] === 'estyn_inspguidance') {
+            $args['post_type'] = 'estyn_inspguidance';
+        } elseif($params['postType'] === 'estyn_insp_qu') {
+            $args['post_type'] = 'estyn_insp_qu';
         }
     }
 
@@ -657,6 +661,34 @@ function estyn_resources_search(\WP_REST_Request $request) {
         ];
     }
 
+    // inspection_guidance_type
+    if(isset($params['inspectionGuidanceType']) && term_exists($params['inspectionGuidanceType']) ) {
+        if(!isset($args['tax_query'])) {
+            $args['tax_query'] = [];
+        }
+        $args['tax_query'][] = [
+            [
+                'taxonomy' => 'inspection_guidance_type',
+                'field' => 'slug',
+                'terms' => $params['inspectionGuidanceType'],
+            ],
+        ];
+    }
+
+    // Inspection Questionnaire Category
+    if(isset($params['inspectionQuestionnaireCategory']) && term_exists($params['inspectionQuestionnaireCategory']) ) {
+        if(!isset($args['tax_query'])) {
+            $args['tax_query'] = [];
+        }
+        $args['tax_query'][] = [
+            [
+                'taxonomy' => 'inspection_questionnaire_cat',
+                'field' => 'slug',
+                'terms' => $params['inspectionQuestionnaireCategory'],
+            ],
+        ];
+    }
+
     if(isset($params['tags'])) {
         $args['tag'] = $params['tags'];
     }
@@ -684,7 +716,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
     // We'll send the HTML, from the view, instead of the raw post data
     $items = [];
     foreach($posts as $post) {
-        $reportFile = null;//$firstPDFAttachment = null; // Used for inspection reports and annual reports
+        $reportFile = null;//$firstPDFAttachment = null; // Used for inspection reports and annual reports and inspection guidance
 
         $isAnnualReport = false;
         if($args['post_type'] == 'estyn_imp_resource') {
@@ -699,36 +731,41 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
         }
 
-        if($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport) {
+        if($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport || $args['post_type'] == 'estyn_inspguidance' || $args['post_type'] == 'estyn_insp_qu') {
 /*             $attachments = get_posts([
                 'post_type' => 'attachment',
                 'posts_per_page' => 1,
                 'post_parent' => $post->ID,
                 'post_mime_type' => 'application/pdf',
             ]); */
-
-            // We use get_field('report_file') to get the PDF attachment.
-            // If that returns null, then we'll try the 'report_file_from_old_site' custom field (using get_post_meta()),
-            // prepending the value with the uploads directory path + '/estyn_old_files/'
-            $reportFile = get_field('report_file', $post->ID);
-            if(!$reportFile) {
-                $reportFile = get_post_meta($post->ID, 'report_file_from_old_site', true);
-                if($reportFile) {
-                    // report_file_from_old_site is the filename of the PDF prepended with the old folder structure, either 'private/files' or just 'files'
-                    // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
-                    // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
-                    $reportFile = ESTYN_OLD_FILES_URL . $reportFile;
-                    // Now we have to deal with the fact that some of the filenames literally have "%20" in them!
-                    $reportFile = explode('/', $reportFile);
-                    $reportFilename = array_pop($reportFile);
-                    $reportFile = implode('/', $reportFile) . '/' . rawurlencode($reportFilename);
-                } else {
-                    continue; // We skip this inspection report if there's no PDF attachment
-                }
+            
+            if($args['post_type'] == 'estyn_inspguidance') {
+                $reportFile = getInspectionGuidanceFileURL($post);
+            } elseif($args['post_type'] == 'estyn_insp_qu') {
+                $reportFile = getInspectionQuestionnaireFileURL($post);
             } else {
-                $reportFile = $reportFile['url'];
+                // We use get_field('report_file') to get the PDF attachment.
+                // If that returns null, then we'll try the 'report_file_from_old_site' custom field (using get_post_meta()),
+                // prepending the value with the uploads directory path + '/estyn_old_files/'
+                $reportFile = get_field('report_file', $post->ID);
+                if(!$reportFile) {
+                    $reportFile = get_post_meta($post->ID, 'report_file_from_old_site', true);
+                    if($reportFile) {
+                        // report_file_from_old_site is the filename of the PDF prepended with the old folder structure, either 'private/files' or just 'files'
+                        // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
+                        // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
+                        $reportFile = ESTYN_OLD_FILES_URL . $reportFile;
+                        // Now we have to deal with the fact that some of the filenames literally have "%20" in them!
+                        $reportFile = explode('/', $reportFile);
+                        $reportFilename = array_pop($reportFile);
+                        $reportFile = implode('/', $reportFile) . '/' . rawurlencode($reportFilename);
+                    } else {
+                        continue; // We skip this inspection report if there's no PDF attachment
+                    }
+                } else {
+                    $reportFile = $reportFile['url'];
+                }
             }
-
 
             /* if($attachments) {
                 $firstPDFAttachment = $attachments[0];
@@ -743,6 +780,30 @@ function estyn_resources_search(\WP_REST_Request $request) {
         } elseif(strtolower($postTypeName) == 'improvement resource') {
           // In this case we use the 'Improvement Resource Type' taxonomy to get the type of resource
             $terms = get_the_terms($post->ID, 'improvement_resource_type');
+            if($terms) {
+                foreach($terms as $index => $term) {
+                    if($index == 0) {
+                        $postTypeName = $term->name;
+                    } else {
+                        $postTypeName .= ', ' . $term->name;
+                    }
+                }
+            }
+        } elseif(strtolower($postTypeName) == 'inspection guidance') {
+            // In this case we use the 'Inspection Guidance Type' taxonomy to get the type of guidance
+            $terms = get_the_terms($post->ID, 'inspection_guidance_type');
+            if($terms) {
+                foreach($terms as $index => $term) {
+                    if($index == 0) {
+                        $postTypeName = $term->name;
+                    } else {
+                        $postTypeName .= ', ' . $term->name;
+                    }
+                }
+            }
+        } elseif(strtolower($postTypeName) == 'inspection questionnaire') { // TODO: Don't rely on the post type name. Same for other lines in this file
+            // In this case we use the 'Inspection Questionnaire Category' taxonomy to get the type of questionnaire
+            $terms = get_the_terms($post->ID, 'inspection_questionnaire_cat');
             if($terms) {
                 foreach($terms as $index => $term) {
                     if($index == 0) {
@@ -769,7 +830,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
         }
 
-        if(($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport) && $reportFile) {
+        if(($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport || $args['post_type'] == 'estyn_inspguidance' || $args['post_type'] == 'estyn_insp_qu') && (!empty($reportFile))) {
             $items[] = [
                 'linkURL' => $reportFile, //wp_get_attachment_url($firstPDFAttachment->ID),
                 'superText' => $postTypeName,
@@ -821,7 +882,7 @@ function save_post_after_import($post_id) {
 /** 
  * Stop ACF removing the 'Custom Fields' meta box from the post edit screen
  */
-add_filter('acf/settings/remove_wp_meta_box', '__return_false');
+//add_filter('acf/settings/remove_wp_meta_box', '__return_false');
 
 /**
  * Get the permalink of a page that uses a specific template
@@ -892,4 +953,330 @@ function getInspectionReportFileURL($post) {
     }*/
     
     return $reportFile;
+
 }
+
+/**
+ * For an inspection guidance, retrieve the corresponding file, from either the ACF field
+ * or the custom field 'guidance_file_from_old_site'
+ */
+function getInspectionGuidanceFileURL($post) {
+    $guidanceFile = get_field('inspection_guidance_file', $post);
+
+    if(!$guidanceFile) {
+        $guidanceFile = get_post_meta($post->ID, 'guidance_file_from_old_site', true);
+        if($guidanceFile) {
+            // guidance_file_from_old_site is the filename of the PDF prepended with the old folder structure, either 'private/files' or just 'files'
+            // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
+            // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
+            $guidanceFile = ESTYN_OLD_FILES_URL . $guidanceFile;
+            // Now we have to deal with the fact that some of the filenames literally have "%20" in them!
+            $guidanceFile = explode('/', $guidanceFile);
+            $guidanceFilename = array_pop($guidanceFile);
+            $guidanceFile = implode('/', $guidanceFile) . '/' . rawurlencode($guidanceFilename);
+        } else {
+            return null;
+        }
+    } else {
+        $guidanceFile = $guidanceFile['url'];
+    }
+
+    return $guidanceFile;
+
+}
+
+function getInspectionQuestionnaireFileURL($post) {
+    $questionnaireFile = get_field('inspection_questionnaire_file', $post);
+
+    if(!$questionnaireFile) {
+        $questionnaireFile = get_post_meta($post->ID, 'guidance_file_from_old_site', true); // Yes, I forgot to change the field name during import
+        if($questionnaireFile) {
+            // guidance_file_from_old_site is the filename of the PDF prepended with the old folder structure, either 'private/files' or just 'files'
+            // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
+            // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
+            $questionnaireFile = ESTYN_OLD_FILES_URL . $questionnaireFile;
+            // Now we have to deal with the fact that some of the filenames literally have "%20" in them!
+            $questionnaireFile = explode('/', $questionnaireFile);
+            $questionnaireFilename = array_pop($questionnaireFile);
+            $questionnaireFile = implode('/', $questionnaireFile) . '/' . rawurlencode($questionnaireFilename);
+        } else {
+            return null;
+        }
+    } else {
+        $questionnaireFile = $questionnaireFile['url'];
+    }
+
+    return $questionnaireFile;
+}
+
+
+
+/**
+ * Register 'estyn_inspection_guidance' post type,
+ * and 'estyn_inspection_guidance_type' taxonomy.
+ * 
+ * The post type supports the Sectors taxonomy and tags
+ */
+add_action('init', function () {
+    $inspectionGuidanceSlug = __('inspection-guidance', 'sage');
+    register_post_type('estyn_inspguidance', [
+        'labels' => [
+            'name' => __('Inspection Guidance', 'sage'),
+            'singular_name' => __('Inspection Guidance', 'sage'),
+            'add_new' => __('Add New', 'sage'),
+            'add_new_item' => __('Add New Inspection Guidance', 'sage'),
+            'edit_item' => __('Edit Inspection Guidance', 'sage'),
+            'new_item' => __('New Inspection Guidance', 'sage'),
+            'view_item' => __('View Inspection Guidance', 'sage'),
+            'search_items' => __('Search Inspection Guidance', 'sage'),
+            'not_found' => __('No inspection guidance found', 'sage'),
+            'not_found_in_trash' => __('No inspection guidance found in Trash', 'sage'),
+            'all_items' => __('All Inspection Guidance', 'sage'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-clipboard',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
+        'rewrite' => ['slug' => $inspectionGuidanceSlug, 'with_front' => false],
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ]);
+
+    // Add tag support
+    register_taxonomy_for_object_type('post_tag', 'estyn_inspguidance');
+
+    // Add the 'estyn_inspection_guidance_type' taxonomy
+    $labels = array(
+        'name' => _x( 'Inspection Guidance Types', 'taxonomy general name', 'sage' ),
+        'singular_name' => _x( 'Inspection Guidance Type', 'taxonomy singular name', 'sage' ),
+        'search_items' =>  __( 'Search Inspection Guidance Types', 'sage' ),
+        'all_items' => __( 'All Inspection Guidance Types', 'sage' ),
+        'edit_item' => __( 'Edit Inspection Guidance Type', 'sage' ),
+        'update_item' => __( 'Update Inspection Guidance Type', 'sage' ),
+        'add_new_item' => __( 'Add New Inspection Guidance Type', 'sage' ),
+        'new_item_name' => __( 'New Inspection Guidance Type Name', 'sage' ),
+        'menu_name' => __( 'Inspection Guidance Types', 'sage' ),
+    );
+
+    $inspectionGuidanceTypeSlug = __('inspection-guidance-type', 'sage');
+
+    register_taxonomy('inspection_guidance_type', array('estyn_inspguidance'), array(
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => $inspectionGuidanceTypeSlug, 'with_front' => false),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+
+    // Add the 'sector' taxonomy
+    register_taxonomy_for_object_type('sector', 'estyn_inspguidance');
+
+
+});
+
+function getInspectionGuidancePostPlaceholderImageURL($post) {
+    return asset('images/inspection-guidance-placeholder.jpg');
+}
+
+function getInspectionQuestionnairePostPlaceholderImageURL($post) {
+    return asset('images/inspection-guidance-placeholder.jpg');
+}
+
+/**
+ * Register 'estyn_insp_qu' post type (Inspection Questionnaires),
+ * and 'estyn_inspection_questionnaire_category' taxonomy.
+ * 
+ * The post type supports the Sectors taxonomy and tags
+ */
+add_action('init', function () {
+    $inspectionQuestionnaireSlug = __('inspection-questionnaire', 'sage');
+    register_post_type('estyn_insp_qu', [
+        'labels' => [
+            'name' => __('Inspection Questionnaires', 'sage'),
+            'singular_name' => __('Inspection Questionnaire', 'sage'),
+            'add_new' => __('Add New', 'sage'),
+            'add_new_item' => __('Add New Inspection Questionnaire', 'sage'),
+            'edit_item' => __('Edit Inspection Questionnaire', 'sage'),
+            'new_item' => __('New Inspection Questionnaire', 'sage'),
+            'view_item' => __('View Inspection Questionnaire', 'sage'),
+            'search_items' => __('Search Inspection Questionnaires', 'sage'),
+            'not_found' => __('No inspection questionnaires found', 'sage'),
+            'not_found_in_trash' => __('No inspection questionnaires found in Trash', 'sage'),
+            'all_items' => __('All Inspection Questionnaires', 'sage'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-clipboard',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
+        'rewrite' => ['slug' => $inspectionQuestionnaireSlug, 'with_front' => false],
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ]);
+
+    // Add tag support
+    register_taxonomy_for_object_type('post_tag', 'estyn_insp_qu');
+
+    // Add the 'estyn_inspection_questionnaire_category' taxonomy
+    $labels = array(
+        'name' => _x( 'Inspection Questionnaire Categories', 'taxonomy general name', 'sage' ),
+        'singular_name' => _x( 'Inspection Questionnaire Category', 'taxonomy singular name', 'sage' ),
+        'search_items' =>  __( 'Search Inspection Questionnaire Categories', 'sage' ),
+        'all_items' => __( 'All Inspection Questionnaire Categories', 'sage' ),
+        'edit_item' => __( 'Edit Inspection Questionnaire Category', 'sage' ),
+        'update_item' => __( 'Update Inspection Questionnaire Category', 'sage' ),
+        'add_new_item' => __( 'Add New Inspection Questionnaire Category', 'sage' ),
+        'new_item_name' => __( 'New Inspection Questionnaire Category Name', 'sage' ),
+        'menu_name' => __( 'Inspection Questionnaire Categories', 'sage' ),
+    );
+
+    $inspectionQuestionnaireCategorySlug = __('inspection-questionnaire-category', 'sage');
+
+    register_taxonomy('inspection_questionnaire_cat', array('estyn_insp_qu'), array(
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => $inspectionQuestionnaireCategorySlug, 'with_front' => false),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+
+    // Add the 'sector' taxonomy
+    register_taxonomy_for_object_type('sector', 'estyn_insp_qu');
+
+});
+
+/**
+ * Register 'estyn_team_member' post type with 'team_member_category' taxonomy
+ */
+add_action('init', function () {
+    $teamMemberSlug = __('team-member', 'sage');
+    register_post_type('estyn_team_member', [
+        'labels' => [
+            'name' => __('Team Members', 'sage'),
+            'singular_name' => __('Team Member', 'sage'),
+            'add_new' => __('Add New', 'sage'),
+            'add_new_item' => __('Add New Team Member', 'sage'),
+            'edit_item' => __('Edit Team Member', 'sage'),
+            'new_item' => __('New Team Member', 'sage'),
+            'view_item' => __('View Team Member', 'sage'),
+            'search_items' => __('Search Team Members', 'sage'),
+            'not_found' => __('No team members found', 'sage'),
+            'not_found_in_trash' => __('No team members found in Trash', 'sage'),
+            'all_items' => __('All Team Members', 'sage'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-groups',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
+        'rewrite' => ['slug' => $teamMemberSlug, 'with_front' => false],
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ]);
+
+    // Add the 'team_member_category' taxonomy
+    $labels = array(
+        'name' => _x( 'Team Member Categories', 'taxonomy general name', 'sage' ),
+        'singular_name' => _x( 'Team Member Category', 'taxonomy singular name', 'sage' ),
+        'search_items' =>  __( 'Search Team Member Categories', 'sage' ),
+        'all_items' => __( 'All Team Member Categories', 'sage' ),
+        'edit_item' => __( 'Edit Team Member Category', 'sage' ),
+        'update_item' => __( 'Update Team Member Category', 'sage' ),
+        'add_new_item' => __( 'Add New Team Member Category', 'sage' ),
+        'new_item_name' => __( 'New Team Member Category Name', 'sage' ),
+        'menu_name' => __( 'Team Member Categories', 'sage' ),
+    );
+
+    $teamMemberCategorySlug = __('team-member-category', 'sage');
+
+    register_taxonomy('team_member_category', array('estyn_team_member'), array(
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => $teamMemberCategorySlug, 'with_front' => false),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+
+});
+
+/**
+ * Add a 'estyn_job_vacancy' post type
+ */
+add_action('init', function () {
+    $jobVacancySlug = __('job-vacancy', 'sage');
+    register_post_type('estyn_job_vacancy', [
+        'labels' => [
+            'name' => __('Job Vacancies', 'sage'),
+            'singular_name' => __('Job Vacancy', 'sage'),
+            'add_new' => __('Add New', 'sage'),
+            'add_new_item' => __('Add New Job Vacancy', 'sage'),
+            'edit_item' => __('Edit Job Vacancy', 'sage'),
+            'new_item' => __('New Job Vacancy', 'sage'),
+            'view_item' => __('View Job Vacancy', 'sage'),
+            'search_items' => __('Search Job Vacancies', 'sage'),
+            'not_found' => __('No job vacancies found', 'sage'),
+            'not_found_in_trash' => __('No job vacancies found in Trash', 'sage'),
+            'all_items' => __('All Job Vacancies', 'sage'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-businessman',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
+        'rewrite' => ['slug' => $jobVacancySlug, 'with_front' => false],
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ]);
+});
+
+/**
+ * Add a 'estyn_event' post type. Also add a taxonomy called 'event tag'
+ */
+add_action('init', function () {
+    $eventSlug = __('event', 'sage');
+    register_post_type('estyn_event', [
+        'labels' => [
+            'name' => __('Events', 'sage'),
+            'singular_name' => __('Event', 'sage'),
+            'add_new' => __('Add New', 'sage'),
+            'add_new_item' => __('Add New Event', 'sage'),
+            'edit_item' => __('Edit Event', 'sage'),
+            'new_item' => __('New Event', 'sage'),
+            'view_item' => __('View Event', 'sage'),
+            'search_items' => __('Search Events', 'sage'),
+            'not_found' => __('No events found', 'sage'),
+            'not_found_in_trash' => __('No events found in Trash', 'sage'),
+            'all_items' => __('All Events', 'sage'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-calendar-alt',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields'],
+        'rewrite' => ['slug' => $eventSlug, 'with_front' => false],
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ]);
+
+    // Add tag support
+    //register_taxonomy_for_object_type('post_tag', 'estyn_event');
+
+    // Add the 'event_tag' taxonomy
+    $labels = array(
+        'name' => _x( 'Event Tags', 'taxonomy general name', 'sage' ),
+        'singular_name' => _x( 'Event Tag', 'taxonomy singular name', 'sage' ),
+        'search_items' =>  __( 'Search Event Tags', 'sage' ),
+        'all_items' => __( 'All Event Tags', 'sage' ),
+        'edit_item' => __( 'Edit Event Tag', 'sage' ),
+        'update_item' => __( 'Update Event Tag', 'sage' ),
+        'add_new_item' => __( 'Add New Event Tag', 'sage' ),
+        'new_item_name' => __( 'New Event Tag Name', 'sage' ),
+        'menu_name' => __( 'Event Tags', 'sage' ),
+    );
+
+    $eventTagSlug = __('event-tag', 'sage');
+
+    register_taxonomy('event_tag', array('estyn_event'), array(
+        'labels' => $labels,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array( 'slug' => $eventTagSlug, 'with_front' => false),
+        'show_in_rest' => true, // Enable Gutenberg editor
+    ));
+
+});

@@ -1,5 +1,5 @@
 {{--
-	Template name: Inspection Questionnaires Search Page
+	Template name: Inspection Questionnaires search page
  --}}
 @extends('layouts.app')
 

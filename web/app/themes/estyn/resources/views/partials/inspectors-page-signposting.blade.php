@@ -1,4 +1,7 @@
 @include('components.signposting', [
+	'signposts' => $signpostingComponentItems
+])
+{{--@include('components.signposting', [
 	'signposts' => [
 		[
 			'bgColourClass' => 'bg-signpost-blue',
@@ -43,4 +46,4 @@
 			'linkURL' => '#'
 		]
 	]
-])
+])--}}

@@ -3,7 +3,8 @@
 --}}
 @extends('layouts.app')
 @section('content')
-    @include('partials.inside-hero', [
+    @include('partials.inside-hero', $insideHeroPartialArgs)
+    {{--@include('partials.inside-hero', [
         'title' => __('About Estyn', 'sage'),
         'heroImageImgTag' => get_the_post_thumbnail(),
         'secondHeading' => __('What do we do?', 'sage'),
@@ -15,14 +16,31 @@
             [ 'url' => '#', 'text' => 'Learn about Inspections']
         ],
         'introImageID' => get_field('intro_image')
-    ])
+    ])--}}
 <div class="reportMain pt-md-5">
 	<div class="container px-md-4 px-xl-5 mt-5">
-        <h2>{{ __('Who are we?', 'sage') }}</h2>
+        {{--<h2>{{ __('Who are we?', 'sage') }}</h2>
         <p>{{ __('We\'re the Education and Training Inspectorate for Wales.', 'sage') }}<br/>
-        {{ __('Meet the Chief Inspector and his team.', 'sage') }}</p>
+        {{ __('Meet the Chief Inspector and his team.', 'sage') }}</p>--}}
+        {!! get_the_content() !!}
 
         @include('partials.slider', [
+            'carouselID' => 'estyn-meet-the-team-carousel',
+            'carouselHeading' => __('Meet the team', 'sage'),
+            'carouselHeadingNumber' => 3,
+            'carouselDescription' => null,
+            'carouselLeftButtons' => array_map(function($teamMemberCategory) {
+                return [
+                    'link' => '#',
+                    'text' => $teamMemberCategory->name
+                ];
+            }, $teamMemberCategories),
+            'doNotDoJavaScript' => false,
+            'carouselSectionClass' => 'pobl-tech-carousel-block pb-5',
+            'carouselSliderWrapperClass' => 'pobl-tech-carousel-block-slider',
+            'carouselItems' => $teamMembersCarouselItems
+        ])
+        {{--@include('partials.slider', [
             'carouselID' => 'estyn-meet-the-team-carousel',
             'carouselHeading' => __('Meet the team', 'sage'),
             'carouselHeadingNumber' => 3,
@@ -86,7 +104,7 @@
                     'excerpt' => 'Attendance and attitudes to learning are important factors in learners’ achievement and wellbeing.'
                 ]
             ]
-        ])
+        ])--}}
     </div>
     @include('partials.our-work')
   @php
@@ -105,7 +123,8 @@
         $sliderItems[] = [
           'featured_image_src' => get_the_post_thumbnail_url(),
           'title' => get_the_title(),
-          'excerpt' => get_the_excerpt()
+          'excerpt' => get_the_excerpt(),
+            'link' => get_the_permalink()
         ];
       }
 
@@ -113,39 +132,50 @@
     }
 
     // For TESTING: Append a copy of $sliderItems to $sliderItems to make the carousel longer
-    $sliderItems = array_merge($sliderItems, $sliderItems);
+    //$sliderItems = array_merge($sliderItems, $sliderItems);
   @endphp
   @include('partials.slider', [
     'carouselID' => 'estyn-home-latest-news-carousel',
-    'carouselHeading' => 'Latest articles',
-    'carouselDescription' => 'Blog posts and news articles from Estyn',
-    'carouselButtonText' => 'All articles',
+    'carouselHeading' => __('Latest articles', 'sage'),
+    'carouselDescription' => __('Blog posts and news articles from Estyn', 'sage'),
+    'carouselButtonText' => __('All articles', 'sage'),
+    'carouselButtonLink' => \App\get_permalink_by_template('template-news-and-blog.blade.php'),
     'carouselItems' => $sliderItems,
     'doNotDoJavaScript' => false,
     'carouselSectionClass' => 'pobl-tech-carousel-block py-md-5',
   ])
     <div class="container px-md-4 px-xl-5 pt-5">
-        <?php
-            // TODO: Multiple buttons in CTA
-        ?>
         <div class="mb-md-5">
         @include('partials.cta', [
-            'ctaHeading' => __('Working for us', 'sage'),
-            'ctaText' => __('Our staff include corporate services, HMI and contracted trained inspectors.', 'sage'),
-            'ctaButtonLinkURL' => '#',
-            'ctaButtonText' => __('Vacancies', 'sage'),
-            'ctaImageURL' => asset('images/cta-example.png'),
-            'ctaImageAlt' => 'CTA example'
+            'ctaHeading' => get_field('about_cta_heading'),
+            'ctaContent' => get_field('about_cta_text'),
+            /*'ctaButtonLinkURL' => \App\get_permalink_by_template('template-vacancies.blade.php'),
+            'ctaButtonText' => __('Vacancies', 'sage'),*/
+            'ctaImageURL' => get_field('about_cta_image')['url'],
+            'ctaImageAlt' => get_field('about_cta_image')['alt'],
+            'ctaButtons' => array_map(function($button) {
+                return [
+                    // NOTE: external_link is a text field, link is post object (from ACF relationship field with max 1 post allowed)
+                    'link' => empty($button['external_link']) ? get_permalink($button['link'][0]->ID) : $button['external_link'],
+                    'text' => $button['label']
+                ];
+            }, get_field('about_cta_buttons'))
         ])
         </div>
 
         <div class="row pt-md-5 pb-5">
             <div class="col-12 col-sm-4">
-                <h2>{{ __('Get in touch', 'sage') }}</h2>
-                <p>{{ __('Whatever you need, get in touch', 'sage') }}.</p>
-                <a class="btn btn-outline-primary me-3 mb-3" href="#">{{ __('General inquiries', 'sage') }}</a>
+                <h2>{{ get_field('about_bottom_content_heading') }}</h2>
+                {!! get_field('about_bottom_content_text') !!}
+                @if(get_field('about_bottom_content_buttons'))
+                    @foreach(get_field('about_bottom_content_buttons') as $button)
+                        <a class="btn btn-outline-primary mb-3 me-3" href="{{ empty($button['external_link']) ? get_permalink($button['link'][0]->ID) : $button['external_link'] }}">{{ $button['label'] }}</a>
+                    @endforeach
+                @endif
+
+                {{--<a class="btn btn-outline-primary me-3 mb-3" href="#">{{ __('General inquiries', 'sage') }}</a>
                 <a class="btn btn-outline-primary mb-3" href="#">{{ __('Feedback', 'sage') }}</a>
-                <a class="btn btn-outline-primary" href="#">{{ __('Contact the press office', 'sage') }}</a>
+                <a class="btn btn-outline-primary" href="#">{{ __('Contact the press office', 'sage') }}</a>--}}
             </div>
         </div>
     </div>

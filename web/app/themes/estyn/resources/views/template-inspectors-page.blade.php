@@ -14,7 +14,22 @@
         <div class="row">
             <div class="col-12">
                 <div class="row gy-4">
-                    <div class="col-12 col-md-6 col-xl-3">
+                    @foreach($pictureLinks as $pictureLink)
+                        <div class="col-12 col-md-6 col-xl-3">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="magic-responsive-image-container">
+                                        <a href="{{ $pictureLink['linkURL'] }}">{!! wp_get_attachment_image($pictureLink['imageID'], 'full', false, ['class' => 'img-fluid rounded-3']) !!}</a>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <a href="{{ $pictureLink['linkURL'] }}" class="text-decoration-none colour-black"><h3 class="mb-0 py-2">{{ $pictureLink['linkText'] }}</span></a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+
+                    {{--<div class="col-12 col-md-6 col-xl-3">
                         <div class="row">
                             <div class="col-12">
                                 <div class="magic-responsive-image-container">
@@ -61,7 +76,7 @@
                                 <a href="#" class="text-decoration-none colour-black"><h3 class="mb-0 py-2">{{ __('My concern', 'sage') }}</span></a>
                             </div>
                         </div>
-                    </div>
+                    </div>--}}
                 </div>
             </div>
         </div>

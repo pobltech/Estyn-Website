@@ -11,6 +11,7 @@
 					@else
 						<div class="card-body my-2 mx-0 my-sm-5 mx-sm-4 my-lg-5 mx-lg-4">
 					@endif
+						@if(empty($ctaCarouselItems))
 						<div class="row">
 							@if(isset($ctaImageURL))
 							<div class="col-12 col-lg-6 col-xl-5 col-xxl-4 mb-4 mb-md-0 pb-md-5">
@@ -19,15 +20,25 @@
 							@endif
 								<div class="pt-cta-content">
 									<h2 class="mb-3 mb-md-4">{{ $ctaHeading }}</h2>
-									@if(isset($ctaText))
+									@if(!empty($ctaContent))
+										{!! $ctaContent !!}
+									@elseif(isset($ctaText))
 										<p>{{ $ctaText }}</p>
 									@endif
-									<a class="btn btn-primary" href="{{ $ctaButtonLinkURL }}">
-										{{ $ctaButtonText }}
-										@if(isset($ctaButtonIconClasses))
-											<i class="{{ $ctaButtonIconClasses }}"></i>
-										@endif
-									</a>
+									@if(!empty($ctaButtons))
+										@foreach($ctaButtons as $ctaButton)
+											<a class="btn btn-primary me-3 mb-3" href="{{ $ctaButton['link'] }}">
+												{{ $ctaButton['text'] }}
+											</a>
+										@endforeach
+									@elseif(!empty($ctaButtonText) && !empty($ctaButtonLinkURL))
+										<a class="btn btn-primary" href="{{ $ctaButtonLinkURL }}">
+											{{ $ctaButtonText }}
+											@if(isset($ctaButtonIconClasses))
+												<i class="{{ $ctaButtonIconClasses }}"></i>
+											@endif
+										</a>
+									@endif
 								</div>
 							</div>
 							<div class="col-12 col-lg-6 offset-xl-1 position-relative px-5 px-md-0 text-center text-lg-end {{ isset($showSearchBox) && ($showSearchBox === true) ? 'cta-search-col' : '' }}">
@@ -47,6 +58,47 @@
 								@endif
 							</div>
 						</div>
+						@else
+						<div class="row cta-carousel">
+							<div class="col-12 col-md-4">
+								<h2 class="mb-3 mb-md-4">{{ $ctaHeading }}</h2>
+								<!-- Carousel Indicators and Captions -->
+								{{--<ol class="carousel-indicators">
+									@for($i = 0; $i < count($ctaCarouselItems); $i++)
+										<li data-target="#carouselExampleIndicators" data-slide-to="{{ $i }}" class="{{ $i == 0 ? 'active' : '' }}"></li>
+									@endfor
+								</ol>--}}
+								<div class="carousel-captions">
+									@for($i = 0; $i < count($ctaCarouselItems); $i++)
+										<div class="carousel-caption {{ $i != 0 ? 'd-none' : '' }}" id="caption-{{ $i }}">{!! $ctaCarouselItems[$i]['caption'] !!}</div>
+									@endfor
+								</div>
+							</div>
+							<div class="col-12 col-md-8 position-relative">
+									<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+										<div class="carousel-inner">
+											@foreach($ctaCarouselItems as $i => $carouselItem)
+												<div class="carousel-item {{ $i == 0 ? 'active' : '' }}">
+													<div class="cta-carousel-item-container">
+														<div class="cta-carousel-item-image-container">
+															<img class="cta-carousel-image img-fluid" src="{{ $carouselItem['image'] }}" alt="{{ $carouselItem['alt'] }}">
+														</div>
+													</div>
+												</div>
+											@endforeach
+										</div>
+									</div>
+									<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+										<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+										<span class="visually-hidden">Previous</span>
+									</button>
+									<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+										<span class="carousel-control-next-icon" aria-hidden="true"></span>
+										<span class="visually-hidden">Next</span>
+									</button>
+							</div>
+						</div>
+						@endif
 					</div>
 				</div>
 			</div>
@@ -210,6 +262,18 @@
 				const contentHeight = $('#{{ $ctaUniqueID }} .pt-cta-content').height();
 				const height = contentHeight * 1.25; // 125% of the text content's height
 				$('#{{ $ctaUniqueID }} .pt-cta-image:not(.breakOut)').css('height', height);
+
+				// Code for managing captions with the carousel
+				if($('#carouselExampleIndicators').length > 0) {
+					$('#carouselExampleIndicators').on('slide.bs.carousel', function (e) {
+						// Hide all captions
+						$('.carousel-caption').addClass('d-none');
+						
+						// Show the caption corresponding to the next slide
+						var nextSlideIndex = e.to;
+						$('#caption-' + nextSlideIndex).removeClass('d-none');
+					});
+				}
 			});
 		</script>
 	@endif

@@ -51,8 +51,8 @@
                 @if(isset($carouselDescription) && !empty($carouselDescription))
 				    <p class="mb-0">{{ $carouselDescription }}</p>
                 @else
-                    @if(isset($carouselHeadingNumber) && !empty($carouselHeadingNumber))
-                        <h{{ $carouselHeadingNumber }} class="mb-0">{{ $carouselHeading }}</h{{ $carouselHeadingNumber }}>
+                    @if(!empty($carouselHeadingNumber))
+                        <h{{ $carouselHeadingNumber }} class="mb-2 mb-sm-3">{{ $carouselHeading }}</h{{ $carouselHeadingNumber }}>
                     @else
                         <h2 class="mb-0">{{ $carouselHeading }}</h2>
                     @endif
@@ -80,14 +80,19 @@
 	        <div class="d-flex flex-row flex-nowrap">
                 <?php foreach($carouselItems as $carouselItem) : ?>
                     <div class="card me-2 me-sm-4 h-100">
+                        @if(!empty($carouselItem['tag']))
+                            <div class="carousel-item-tag text-white px-2 py-1">{{ $carouselItem['tag'] }}</div>
+                        @endif
                         <div class="slideCardBody">
                             <img class="img-fluid" src="{{ $carouselItem['featured_image_src'] }}" alt="{{ $carouselItem['featured_image_alt'] ?? '' }}" />
                         </div>
                         <div class="card-footer py-sm-4 pb-0 px-0">
                             @if(!empty($carouselItem['date']))
-                                <p class="slider-item-date mb-0">{{ $carouselItem['date'] }}</p>
+                                <p class="slider-item-date mb-0">{{ (new \DateTime($carouselItem['date']))->format('j F Y') }}</p>
                             @endif
+                            @if(!empty($carouselItem['link']))
                             <a class="stretched-link" href="{{ $carouselItem['link'] ?? '#' }}"><h4 class="mb-0 {{ !empty($carouselItem['excerpt']) ? 'mb-2' : '' }}">{{ $carouselItem['title'] }}</h4></a>
+                            @endif
                             @if(!empty($carouselItem['excerpt']))
                                 <p class="mb-0">{{ wp_strip_all_tags($carouselItem['excerpt']) }}</p>
                             @endif

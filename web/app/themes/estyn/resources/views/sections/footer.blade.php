@@ -4,12 +4,10 @@
 		<div class="row py-5">
 			<div class="col-12 col-lg-3 mb-4">
 				<img src="{{ asset('images/estyn-logo-white.svg') }}" alt="Estyn logo" class="mb-4" width="138" />
-				<p class="mb-4">Anchor Court,<br>
-				Keen Road, <br>
-				Cardiff, CF24 5JW</p>
+				<p class="mb-4">{!! nl2br(e($footerData['address'])) !!}</p>
 				<ul class="fa-ul">
-				  <li><span class="fa-li"><i class="fa-regular fa-envelope"></i></span><a href="mailto:enquiries@estyn.gov.wales">enquiries@estyn.gov.wales</a></li>
-				  <li><span class="fa-li"><i class="fa-regular fa-mobile"></i></span>029 2044 6446</li>
+				  <li><span class="fa-li"><i class="fa-regular fa-envelope"></i></span><a href="mailto:{{ $footerData['email'] }}">{{ $footerData['email'] }}</a></li>
+				  <li><span class="fa-li"><i class="fa-regular fa-mobile"></i></span>{{ $footerData['phone'] }}</li>
 				</ul>
 				<div class="row">
 					<div class="col-12">
@@ -18,7 +16,7 @@
 								<div class="row numrow">
 									<div class="w-100 h-100">
 										<div class="rounded-circle w-100 h-100 d-flex">
-											<span class="align-self-center mx-auto"><a href="#" class="stretched-link"><i class="fa-brands fa-facebook"></i></a></span>
+											<span class="align-self-center mx-auto"><a href="{{ $footerData['facebook_url'] }}" class="stretched-link"><i class="fa-brands fa-facebook"></i></a></span>
 										</div>
 									</div>
 								</div>
@@ -29,7 +27,7 @@
 								<div class="row numrow">
 									<div class="w-100 h-100">
 										<div class="rounded-circle w-100 h-100 d-flex">
-											<span class="align-self-center mx-auto"><a href="#" class="stretched-link"><i class="fa-brands fa-x-twitter"></i></a></span>
+											<span class="align-self-center mx-auto"><a href="{{ $footerData['x_twitter_url'] }}" class="stretched-link"><i class="fa-brands fa-x-twitter"></i></a></span>
 										</div>
 									</div>
 								</div>
@@ -40,7 +38,7 @@
 								<div class="row numrow">
 									<div class="w-100 h-100">
 										<div class="rounded-circle w-100 h-100 d-flex">
-											<span class="align-self-center mx-auto"><a href="#" class="stretched-link"><i class="fa-brands fa-linkedin"></i></a></span>
+											<span class="align-self-center mx-auto"><a href="{{ $footerData['linkedin_url'] }}" class="stretched-link"><i class="fa-brands fa-linkedin"></i></a></span>
 										</div>
 									</div>
 								</div>

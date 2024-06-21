@@ -221,6 +221,7 @@ p, li {
 }
 
 
+
 .footer {
     p, li {
         color: $estyn-footertext;
@@ -403,6 +404,11 @@ h5 {
     margin-bottom: $m-4;
 }
 
+h2 a, h3 a, h4 a, h5 a {
+    text-decoration: none;
+    color: $estyn-darkblue;
+}
+
 blockquote {
     color: $estyn-darkblue;
     font-family: "Source Sans 3", sans-serif;
@@ -481,7 +487,10 @@ blockquote {
         color:$estyn-darkblue;
     }
 }
-.btn-outline-primary {
+.wp-block-button:where(.is-style-outline)>.wp-block-button__link {
+    border-width: 1px;
+}
+.btn-outline-primary, .wp-element-button, .wp-block-button__link, .wp-block-button:where(.is-style-outline)>.wp-block-button__link {
     font-size: 18px;
     font-family: "Source Sans 3", sans-serif;
     font-optical-sizing: auto;
@@ -1509,6 +1518,7 @@ p.sp-desc {
 
     .card {
         min-width: 456px;
+        max-width: 456px;
         overflow: hidden;
         position: relative;
         background: transparent;
@@ -1686,13 +1696,26 @@ p.sp-desc {
     border-radius: $border-radius-form;
 } */
 
-.register-for-updates {
+.cf7-container {
     .form-control {
         color: $estyn-darkblue;
         background-color: $estyn-lightblue;
         border: 1px solid $estyn-darkblue;
         border-radius: $border-radius-form;
+        padding: 0.775rem 0.75rem;
     }
+
+    .checkbox {
+        margin-bottom: 0.6rem;
+    }
+
+    input[type="checkbox"], input[type="radio"] {
+        margin-right: 0.5rem;
+    }
+}
+
+.wpcf7-response-output {
+    margin-top: 2rem;
 }
 
 .mainNum {
@@ -1803,6 +1826,51 @@ p.sp-desc {
     left: 50%;
     transform: translate(-50%, 0);
     overflow: hidden;
+}
+
+.carousel-item-tag {
+    z-index: 100;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border-radius: 4px;
+    background-color: $estyn-darkblue;
+}
+
+.cta-carousel .carousel-caption {
+    position: static;
+    padding: 0;
+    color: inherit;
+    text-align: left;
+}
+
+.cta-carousel-item-container {
+    min-width: 660px;
+    max-width: 660px;
+    overflow: hidden;
+    position: relative;
+    background: transparent;
+    border: none;
+
+    .cta-carousel-item-image-container {
+        width: 100%;
+        overflow: hidden;
+        padding-top: 75%;
+        position: relative;
+
+        .cta-carousel-image {
+            bottom: 0;
+            height: 100%;
+            left: 0;
+            -o-object-fit: cover;
+            object-fit: cover;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100%;
+            border-radius: 0.25rem;
+        }
+    }
 }
 
 /** Rogue Media Queries **/
