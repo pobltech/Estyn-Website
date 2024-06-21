@@ -9,7 +9,8 @@
         'subtitle' => $subtitle ?? null,
         'readTime' => $readTime ?? null,
         'shareLinkURL' => $shareLinkURL ?? '#',
-        'date' => $date ?? null
+        'date' => $date ?? null,
+        'noReadtime' => true,
     ])
 
     <div class="w-100 register-for-updates pb-md-5">

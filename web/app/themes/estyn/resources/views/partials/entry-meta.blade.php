@@ -20,7 +20,9 @@
     $read_time = ceil($word_count / 200); // Assuming an average reading speed of 200 words per minute
   }
 @endphp
-<span class="reportReadHero me-4">{{ $read_time }} {{ __('min read', 'sage') }}</span>
+@if(empty($noReadtime))
+  <span class="reportReadHero me-4">{{ $read_time }} {{ __('min read', 'sage') }}</span>
+@endif
 
 
 {{--<p>
