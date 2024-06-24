@@ -34,8 +34,9 @@ import './editor.scss';
  */
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	// Note: postTypeOfPostsToDisplayAsCarouselItems is the rest_base of the post type
-	const { carouselId, buttonText, buttonLink, postTypeOfPostsToDisplayAsCarouselItems, heading, numberOfPostsToDisplay, description, postIdsOfPostsToDisplayAsCarouselItems, populateCarouselUsing } = attributes;
+	const { carouselId, buttonText, buttonLink, postTypeOfPostsToDisplayAsCarouselItems, heading, numberOfPostsToDisplay, description, postIdsOfPostsToDisplayAsCarouselItems, populateCarouselUsing, chosenImprovementResourceType } = attributes;
     const [postTypes, setPostTypes] = useState([]);
+	const [improvementResourceTypes, setImprovementResourceTypes] = useState([]);
 	const [posts, setPosts] = useState([]);
 	const [allPostsToChooseFrom, setAllPostsToChooseFrom] = useState([]);
 	const [selectedPostToAddId, setSelectedPostToAddId] = useState(null);
@@ -76,6 +77,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		// If the carouselId attribute doesn't exist, generate a new UUID and set it
 		if (!attributes.carouselId) {
 			setAttributes({ carouselId: 'pobl-tech-carousel-block-' + uuidv4() });
+		}
+
+		if (!chosenImprovementResourceType) {
+			setAttributes({ chosenImprovementResourceType: 'any' });
 		}
 
 		// Get all the post types that support featured images
@@ -153,18 +158,52 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			 */
 			postTypes.forEach((postType) => {
 				if (postType.value === postTypeOfPostsToDisplayAsCarouselItems) {
-					apiFetch({ path: `/wp/v2/${postType.rest_base}` })
-						.then((data) => {
-							//console.log('Line 132 is setting posts');
-							setPosts(data);
-						});
+					if(postTypeOfPostsToDisplayAsCarouselItems === 'estyn_imp_resource' && chosenImprovementResourceType !== 'any') {
+						//console.log('Fetching estyn_imp_resource posts with improvement resource type: ' + chosenImprovementResourceType);
+						
+						apiFetch({ path: `/wp/v2/estyn_imp_resource?improvement_resource_type=${chosenImprovementResourceType}` })
+							.then((data) => {
+								//console.log('Posts = ');
+								//console.log(data);
+
+								setPosts(data);
+							});
+					} else {
+						apiFetch({ path: `/wp/v2/${postType.rest_base}` })
+							.then((data) => {
+								//console.log('Line 132 is setting posts');
+								//console.log('Posts = ');
+								//console.log(data);
+
+								setPosts(data);
+							});
+					}
 
 					// Break out of the loop
 					return;
 				}
 			});
 		}
-	}, [postTypeOfPostsToDisplayAsCarouselItems, populateCarouselUsing]);
+	}, [postTypeOfPostsToDisplayAsCarouselItems, populateCarouselUsing, chosenImprovementResourceType]);
+
+	useEffect(() => {
+		// Fetch the improvement resource types (taxonomy: improvement_resource_type) terms
+		// Because if the user chooses to populate the carousel using the 'estyn_imp_resource' post type,
+		// they can also choose which type of improvement resources to display
+		apiFetch({ path: '/wp/v2/improvement_resource_type' }).then((data) => {
+			let types = data.map((term) => {
+				return { label: term.name, value: term.slug, id: term.id };
+			});
+
+			// Add an 'any' option
+			types.unshift({ label: 'Any', value: 'any' });
+
+			//console.log('Improvement resource types:');
+			//console.log(types);
+
+			setImprovementResourceTypes(types);
+		});
+	}, []);
 
 	useEffect(() => {
 		//console.log('populateCarouselUsing updated to: ' + populateCarouselUsing);
@@ -269,14 +308,26 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						] }
 						onChange={ ( value ) => setAttributes( { populateCarouselUsing: value } ) }
 					/>
-					{ populateCarouselUsing === 'postType' && (
-						<SelectControl
-							label="Post Type of posts to display as carousel items"
-							value={ postTypeOfPostsToDisplayAsCarouselItems }
-							options={ postTypes }
-							onChange={ ( value ) => setAttributes( { postTypeOfPostsToDisplayAsCarouselItems: value } ) }
-						/>
-					)}
+					{
+						populateCarouselUsing === 'postType' && (
+							<>
+							<SelectControl
+								label="Post Type of posts to display as carousel items"
+								value={postTypeOfPostsToDisplayAsCarouselItems}
+								options={postTypes}
+								onChange={(value) => setAttributes({ postTypeOfPostsToDisplayAsCarouselItems: value })}
+							/>
+							{postTypeOfPostsToDisplayAsCarouselItems === 'estyn_imp_resource' && (
+								<SelectControl
+								label="Improvement Resource Type"
+								value={chosenImprovementResourceType}
+								options={improvementResourceTypes}
+								onChange={(value) => setAttributes({ chosenImprovementResourceType: value })}
+								/>
+							)}
+							</>
+						)
+					}
 {/* 					<TextControl
 						label="Post IDs"
 						value={ postIdsOfPostsToDisplayAsCarouselItems.join(',') }

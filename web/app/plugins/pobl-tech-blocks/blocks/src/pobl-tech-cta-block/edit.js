@@ -49,7 +49,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		console.log( 'imageBreakOut updated to: ' + imageBreakOut );
 	}, [ imageBreakOut ]);
 
-	console.log( 'mapImageSrc: ' + mapImageSrc );
+	//console.log( 'mapImageSrc: ' + mapImageSrc );
 
 	return (
 		<div { ...useBlockProps() }>
