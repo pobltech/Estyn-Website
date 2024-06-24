@@ -1,1 +1,24 @@
+@font-face {
+    font-display: swap;
+    font-family: 'Source Sans 3';
+    font-style: normal;
+    font-weight: 400;
+    src: url('~@fonts/source-sans-3-v15-latin-regular.woff2') format('woff2'),
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'museo';
+    font-style: normal;
+    font-weight: 700;
+    src: url('~@fonts/raleway-v29-latin-regular.woff2') format('woff2'),
+}
+
 @import '~@styles/app.scss';
+
+/* Have to override forms.css that the editor loads */
+.card {
+    max-width: 100%;
+    margin-top: 0;
+    padding: 0;
+}

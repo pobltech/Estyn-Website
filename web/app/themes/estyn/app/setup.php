@@ -257,6 +257,55 @@ add_action('init', function () {
 });
 
 /**
+ * Override the post type archive links
+ */
+add_filter('post_type_archive_link', __NAMESPACE__ . '\\estyn_custom_archive_links', 10, 2);
+
+function estyn_custom_archive_links($link, $post_type) {
+    $newLink = $link;
+    
+    switch($post_type) {
+        case 'post':
+            $newLink = get_permalink_by_template('template-news-and-blog.blade.php');
+            break;
+        case 'estyn_imp_resource':
+            $newLink = get_permalink_by_template('template-search.blade.php');
+            break;
+        case 'estyn_eduprovider':
+            $newLink = get_permalink_by_template('provider-search.blade.php');
+            break;
+        case 'estyn_inspectionrpt':
+            $newLink = get_permalink_by_template('template-inspection-report-search.blade.php');
+            break;
+        case 'estyn_newsarticle':
+            $newLink = get_permalink_by_template('template-news-and-blog.blade.php');
+            break;
+        case 'estyn_inspguidance':
+            $newLink = get_permalink_by_template('template-inspection-guidance-search-page.blade.php');
+            break;
+        case 'estyn_insp_qu':
+            $newLink = get_permalink_by_template('template-inspection-questionnaire-search-page.blade.php');
+            break;
+        case 'estyn_thematicreport':
+            $newLink = get_permalink_by_template('template-search.blade.php');
+            break;
+        case 'estyn_job_vacancy':
+            $newLink = get_permalink_by_template('template-vacancies.blade.php');
+            break;
+        case 'estyn_team_member':
+            $newLink = get_permalink_by_template('template-about.blade.php');
+            break;
+        case 'estyn_event':
+            $newLink = get_permalink_by_template('template-events.blade.php');
+            break;
+        default:
+            break;
+    }
+
+    return $newLink;
+}
+
+/**
  * Add the custom taxonomy for Improvement Resources
  */
 function create_improvement_resource_type_taxonomy() {
@@ -284,6 +333,95 @@ function create_improvement_resource_type_taxonomy() {
     ));
 }
 add_action( 'init', __NAMESPACE__ . '\\create_improvement_resource_type_taxonomy', 0 );
+
+// Enable REST query for the 'improvement_resource_type' taxonomy
+add_action('rest_api_init', function () {
+    register_rest_route('wp/v2', '/estyn_imp_resource', array(
+        'methods' => 'GET',
+        'callback' => __NAMESPACE__ . '\\estyn_imp_resource_query',
+        'args' => array(
+            'improvement_resource_type' => array(
+                'validate_callback' => function($param, $request, $key) {
+                    return true; // Here you can add validation for the parameter value
+                },
+                'sanitize_callback' => 'sanitize_text_field', // Sanitize the input
+            ),
+        ),
+        'permission_callback' => function (\WP_REST_Request $request) {
+            $nonce = $request->get_header('X-WP-Nonce');
+            return wp_verify_nonce($nonce, 'wp_rest');
+        },
+    ));
+});
+
+function estyn_imp_resource_query($data) {
+    $args = array(
+        'post_type' => 'estyn_imp_resource',
+        // Add other WP_Query arguments as needed
+    );
+
+    // Check if 'improvement_resource_type' is in the query and modify the query accordingly
+    if (!empty($data['improvement_resource_type'])) {
+        $args['tax_query'] = array(
+            array(
+                'taxonomy' => 'improvement_resource_type',
+                'field' => 'slug',
+                'terms' => explode(',', $data['improvement_resource_type']),
+            ),
+        );
+    }
+
+    $posts = get_posts($args);
+    $data = array();
+
+    foreach ($posts as $post) {
+        // Format the post data so it's the same as when you get it from the REST API
+        $item = array(
+            'id' => $post->ID,
+            'title' => [
+                'rendered' => apply_filters('the_title', $post->post_title),
+                'protected' => false,
+            ],
+            'content' => [
+                'rendered' => apply_filters('the_content', $post->post_content),
+                'protected' => false,
+            ],
+            'excerpt' => [
+                'rendered' => apply_filters('the_excerpt', $post->post_excerpt),
+                'protected' => false,
+            ],
+            'featured_media' => get_post_thumbnail_id($post->ID),
+            'date' => $post->post_date,
+            'modified' => $post->post_modified,
+            'slug' => $post->post_name,
+            'type' => $post->post_type,
+            'link' => get_permalink($post->ID)
+        );
+
+        $data[] = $item;
+    }
+
+    return new \WP_REST_Response($data, 200);
+}
+/* function my_custom_query_vars_filter($vars) {
+    $vars[] = 'improvement_resource_type';
+    return $vars;
+}
+add_filter('rest_query_vars', __NAMESPACE__ . '\\my_custom_query_vars_filter');
+
+function filter_rest_estyn_imp_resource_query($args, $request) {
+    if (!empty($request['improvement-resource-type'])) {
+        $args['tax_query'] = [
+            [
+                'taxonomy' => 'improvement_resource_type',
+                'field' => 'slug',
+                'terms' => explode(',', $request['improvement-resource-type']),
+            ],
+        ];
+    }
+    return $args;
+}
+add_filter('rest_estyn_imp_resource_query', __NAMESPACE__ . '\\filter_rest_estyn_imp_resource_query', 10, 2); */
 
 function add_improvement_resource_types() {
     $types = array('Thematic Report', 'Effective Practice', 'Additional Resource', 'Annual Report');

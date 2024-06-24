@@ -46,10 +46,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     }, [ clientId ] );
 
 	useEffect(() => {
-		console.log( 'imageBreakOut updated to: ' + imageBreakOut );
+		//console.log( 'imageBreakOut updated to: ' + imageBreakOut );
 	}, [ imageBreakOut ]);
 
-	console.log( 'mapImageSrc: ' + mapImageSrc );
+	//console.log( 'mapImageSrc: ' + mapImageSrc );
 
 	return (
 		<div { ...useBlockProps() }>
