@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 scrollAmount = scrollAmountDesktop;
             }
 
-            carouselSliderElement.scrollLeft += scrollAmount;
+            carouselSlider.scrollLeft += scrollAmount;
         };
 
         buttonLeft.onclick = function () {
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 scrollAmount = scrollAmountDesktop;
             }
 
-            carouselSliderElement.scrollLeft -= scrollAmount;
+            carouselSlider.scrollLeft -= scrollAmount;
         };
     });
 });

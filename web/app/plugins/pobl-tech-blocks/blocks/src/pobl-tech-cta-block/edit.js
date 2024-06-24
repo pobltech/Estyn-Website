@@ -46,7 +46,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
     }, [ clientId ] );
 
 	useEffect(() => {
-		console.log( 'imageBreakOut updated to: ' + imageBreakOut );
+		//console.log( 'imageBreakOut updated to: ' + imageBreakOut );
 	}, [ imageBreakOut ]);
 
 	//console.log( 'mapImageSrc: ' + mapImageSrc );

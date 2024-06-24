@@ -79,9 +79,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			setAttributes({ carouselId: 'pobl-tech-carousel-block-' + uuidv4() });
 		}
 
-		if (!chosenImprovementResourceType) {
-			setAttributes({ chosenImprovementResourceType: 'any' });
-		}
+/* 		if (!attributes.chosenImprovementResourceType) {
+			//console.log('Setting chosenImprovementResourceType to all');
+			setAttributes({ chosenImprovementResourceType: 'all' });
+		} */
 
 		// Get all the post types that support featured images
 		// and set them as options in the select box
@@ -97,41 +98,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 			setPostTypes(types);
 
-			if (populateCarouselUsing === 'postType') {
-				// Fetch the posts of this post type.
-				// wp/v2/[post type's "rest_base" value e.g. "posts"]
-				postTypes.forEach((postType) => {
-					if (postType.value === postTypeOfPostsToDisplayAsCarouselItems) {
-						apiFetch({ path: `/wp/v2/${postType.rest_base}` })
-							.then((data) => {
-								//console.log('Line 77 is setting posts');
-								setPosts(data);
-							});
-	
-						// Break out of the loop
-						return;
-					}
-				});
-			} else if (populateCarouselUsing === 'postIDs') {
-				if(postIdsOfPostsToDisplayAsCarouselItems.length > 0) {
-					let postsToAdd = [];
-					// Fetch the posts based on the post IDs.
-					postIdsOfPostsToDisplayAsCarouselItems.forEach((postId, index) => {
-						//apiFetch({ path: `/wp/v2/posts?include=${postIdsOfPostsToDisplayAsCarouselItems.join(',')}` })
-						apiFetch({ path: `/wp/v2/posts/${postId}` })
-							.then((data) => {
-								//setPosts([...posts, data]);
-								postsToAdd.push(data);
-
-								if(index === postIdsOfPostsToDisplayAsCarouselItems.length - 1) {
-									//console.log('Line 97 is setting posts');
-									setPosts(postsToAdd);
-								}
-							});
-					});
-				}
-			}
-
 		});
 
 		// Fetch all the posts to choose from
@@ -146,20 +112,27 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			setSelectedPostToAddId(data[0].id);
 		});
 
-
 	}, []);
 
-	useEffect(() => {
-		//console.log('postTypeOfPostsToDisplayAsCarouselItems updated to: ' + postTypeOfPostsToDisplayAsCarouselItems);
-		if(populateCarouselUsing === 'postType') {
-			/**
-			 * Fetch the posts of this post type.
-			 * wp/v2/[post type's "rest_base" value e.g. "posts"]
-			 */
+	// Utility function to decode HTML entities
+	function decodeHtmlEntities(htmlString) {
+		const tempElement = document.createElement('div');
+		tempElement.innerHTML = htmlString;
+		return tempElement.textContent || tempElement.innerText || "";
+	}
+
+	function fetchPosts(populateCarouselUsing, postIdsOfPostsToDisplayAsCarouselItems, chosenImprovementResourceType, postTypes) {
+		//console.log('Fetching posts');
+
+	//useEffect(() => {
+		if (populateCarouselUsing === 'postType') {
+			// Fetch the posts of this post type.
+			// wp/v2/[post type's "rest_base" value e.g. "posts"]
+			//console.log('Post type of posts to display as carousel items: ' + postTypeOfPostsToDisplayAsCarouselItems);
 			postTypes.forEach((postType) => {
 				if (postType.value === postTypeOfPostsToDisplayAsCarouselItems) {
-					if(postTypeOfPostsToDisplayAsCarouselItems === 'estyn_imp_resource' && chosenImprovementResourceType !== 'any') {
-						//console.log('Fetching estyn_imp_resource posts with improvement resource type: ' + chosenImprovementResourceType);
+					if(postTypeOfPostsToDisplayAsCarouselItems === 'estyn_imp_resource' && chosenImprovementResourceType !== 'all') {
+						console.log('Fetching estyn_imp_resource posts with improvement resource type: ' + chosenImprovementResourceType);
 						
 						apiFetch({ path: `/wp/v2/estyn_imp_resource?improvement_resource_type=${chosenImprovementResourceType}` })
 							.then((data) => {
@@ -183,8 +156,28 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					return;
 				}
 			});
+		} else if (populateCarouselUsing === 'postIDs') {
+			//console.log('Fetching posts using post IDs');
+			if(postIdsOfPostsToDisplayAsCarouselItems.length > 0) {
+				let postsToAdd = [];
+				// Fetch the posts based on the post IDs.
+				postIdsOfPostsToDisplayAsCarouselItems.forEach((postId, index) => {
+					//apiFetch({ path: `/wp/v2/posts?include=${postIdsOfPostsToDisplayAsCarouselItems.join(',')}` })
+					apiFetch({ path: `/wp/v2/posts/${postId}` })
+						.then((data) => {
+							//setPosts([...posts, data]);
+							postsToAdd.push(data);
+
+							if(index === postIdsOfPostsToDisplayAsCarouselItems.length - 1) {
+								//console.log('Line 97 is setting posts');
+								setPosts(postsToAdd);
+							}
+						});
+				});
+			}
 		}
-	}, [postTypeOfPostsToDisplayAsCarouselItems, populateCarouselUsing, chosenImprovementResourceType]);
+	//}, [postTypes]);
+	}
 
 	useEffect(() => {
 		// Fetch the improvement resource types (taxonomy: improvement_resource_type) terms
@@ -196,7 +189,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			});
 
 			// Add an 'any' option
-			types.unshift({ label: 'Any', value: 'any' });
+			types.unshift({ label: 'All', value: 'all' });
 
 			//console.log('Improvement resource types:');
 			//console.log(types);
@@ -236,6 +229,18 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		//console.log('postTypes updated to:');
 		//console.log(postTypes);
 	}), [postTypes];
+
+	// Initial fetch of posts
+	useEffect(() => {
+		fetchPosts(populateCarouselUsing, postIdsOfPostsToDisplayAsCarouselItems, chosenImprovementResourceType, postTypes);
+	}, [postTypes]);
+
+
+
+	useEffect(() => {
+		fetchPosts(populateCarouselUsing, postIdsOfPostsToDisplayAsCarouselItems, chosenImprovementResourceType, postTypes);
+	}, [chosenImprovementResourceType, postTypeOfPostsToDisplayAsCarouselItems, populateCarouselUsing, postIdsOfPostsToDisplayAsCarouselItems]);
+
 
 /* 	class ScrollDiv extends React.Component {
 		constructor(props) {
@@ -420,7 +425,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 														<img src={imageSrcs[post.id]} />
 													</div>
 													<div className="card-footer py-4 px-0">
-														<h4 className="mb-0">{post.title.rendered}</h4>
+														<h4 className="mb-0">{decodeHtmlEntities(post.title.rendered)}</h4>
 														<p>{excerpt}</p>
 													</div>
 												</div>

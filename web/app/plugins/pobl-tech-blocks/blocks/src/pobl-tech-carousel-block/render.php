@@ -13,30 +13,52 @@ if(!function_exists('poblTechCarouselBlockRender')) {
 
 			$carouselItems = [];
 	
+			$carouselItemsQuery = new WP_Query();
 			if($attributes['populateCarouselUsing'] === 'postType') {
 				// Get post type details
 				$postType = get_post_type_object($attributes['postTypeOfPostsToDisplayAsCarouselItems']);
 				$postTypeLink = get_post_type_archive_link($postType->name);
-				$buttonLink = $postTypeLink;
-			}
+				$buttonLink = $postTypeLink ? $postTypeLink : $attributes['buttonLink'];
 
-			$carouselItemsQuery = new WP_Query();
-			if($attributes['populateCarouselUsing'] === 'postType') {
-				$carouselItemsQuery = new WP_Query(array(
+
+				$args = array(
 					'post_type' => $attributes['postTypeOfPostsToDisplayAsCarouselItems'],
 					'posts_per_page' => -1,
 					'status' => 'publish'
-				));
+				);
+
+				if($attributes['postTypeOfPostsToDisplayAsCarouselItems'] === 'estyn_imp_resource') {
+					$args['tax_query'] = [
+						[
+							'taxonomy' => 'improvement_resource_type',
+							'field' => 'slug',
+							'terms' => $attributes['chosenImprovementResourceType']
+						]
+					];
+				}
+
+				// Make sure we get posts in the current language
+				if(function_exists('pll_current_language')) {
+					$args['lang'] = pll_current_language();
+				}
+
+				$carouselItemsQuery = new WP_Query($args);
 
 				if($carouselItemsQuery->have_posts()) {
 					while($carouselItemsQuery->have_posts()) {
 						$carouselItemsQuery->the_post();
 
+						// If it doesn't have a featured image, skip
+						if(!has_post_thumbnail()) {
+							continue;
+						}
+
 						$carouselItems[] = [
 							'title' => get_the_title(),
 							'excerpt' => get_the_excerpt(),
 							'featured_image_src' => get_the_post_thumbnail_url(get_the_ID(), 'full'),
-							'permalink' => get_the_permalink()
+							'featured_image_alt' => get_post_meta(get_post_thumbnail_id(), '_wp_attachment_image_alt', true),
+							'link' => get_the_permalink()
 						];
 
 						
@@ -57,11 +79,17 @@ if(!function_exists('poblTechCarouselBlockRender')) {
 					$post = get_post($postId);
 					setup_postdata($post);
 
+					// If it doesn't have a featured image, skip
+					if(!has_post_thumbnail()) {
+						continue;
+					}
+
 					$carouselItems[] = [
-						'title' => get_the_title(),
-						'excerpt' => get_the_excerpt(),
+						'title' => get_the_title($post),
+						'excerpt' => get_the_excerpt($post),
 						'featured_image_src' => get_the_post_thumbnail_url($post, 'full'),
-						'permalink' => get_the_permalink()
+						'featured_image_alt' => get_post_meta(get_post_thumbnail_id($post), '_wp_attachment_image_alt', true),
+						'link' => get_the_permalink($post)
 					];
 
 					wp_reset_postdata();
@@ -70,11 +98,14 @@ if(!function_exists('poblTechCarouselBlockRender')) {
 
 			wp_reset_postdata();
 
+			// Cut carouselItems down to 10 items
+			$carouselItems = array_slice($carouselItems, 0, 10);
+
 			try {
 				$HTML = \Roots\view('partials.slider', [
 					'carouselHeading' => $attributes['heading'],
 					'carouselDescription' => $attributes['description'],
-					'carouselButtonLinkURL' => $attributes['buttonLink'],
+					'carouselButtonLink' => $buttonLink,
 					'carouselButtonText' => $attributes['buttonText'],
 					'postIDs' => $attributes['postIdsOfPostsToDisplayAsCarouselItems'],
 					'postType' => $attributes['postTypeOfPostsToDisplayAsCarouselItems'],
@@ -106,7 +137,7 @@ if(!function_exists('poblTechCarouselBlockRender')) {
 		if($attributes['populateCarouselUsing'] === 'postType') {
 			// Get post type details
 			$postType = get_post_type_object($attributes['postTypeOfPostsToDisplayAsCarouselItems']);
-			$postTypeLink = get_post_type_archive_link($postType->name);
+			$postTypeLink = get_post_type_archive_link($postType);
 			$buttonLink = $postTypeLink;
 		}
 
@@ -157,11 +188,23 @@ if(!function_exists('poblTechCarouselBlockRender')) {
 						<?php
 							$carouselItemsQuery = new WP_Query();
 							if($attributes['populateCarouselUsing'] === 'postType') {
-								$carouselItemsQuery = new WP_Query(array(
+								$args = array(
 									'post_type' => $attributes['postTypeOfPostsToDisplayAsCarouselItems'],
 									'posts_per_page' => -1,
 									'status' => 'publish'
-								));
+								);
+
+								if($attributes['postTypeOfPostsToDisplayAsCarouselItems'] === 'estyn_imp_resource') {
+									$args['tax_query'] = [
+										[
+											'taxonomy' => 'improvement_resource_type',
+											'field' => 'slug',
+											'terms' => $attributes['chosenImprovementResourceType']
+										]
+									];
+								}
+								
+								$carouselItemsQuery = new WP_Query($args);
 							}
 
 							if($carouselItemsQuery->have_posts()) : while($carouselItemsQuery->have_posts()) : $carouselItemsQuery->the_post();

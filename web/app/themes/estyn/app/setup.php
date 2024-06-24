@@ -257,6 +257,55 @@ add_action('init', function () {
 });
 
 /**
+ * Override the post type archive links
+ */
+add_filter('post_type_archive_link', __NAMESPACE__ . '\\estyn_custom_archive_links', 10, 2);
+
+function estyn_custom_archive_links($link, $post_type) {
+    $newLink = $link;
+    
+    switch($post_type) {
+        case 'post':
+            $newLink = get_permalink_by_template('template-news-and-blog.blade.php');
+            break;
+        case 'estyn_imp_resource':
+            $newLink = get_permalink_by_template('template-search.blade.php');
+            break;
+        case 'estyn_eduprovider':
+            $newLink = get_permalink_by_template('provider-search.blade.php');
+            break;
+        case 'estyn_inspectionrpt':
+            $newLink = get_permalink_by_template('template-inspection-report-search.blade.php');
+            break;
+        case 'estyn_newsarticle':
+            $newLink = get_permalink_by_template('template-news-and-blog.blade.php');
+            break;
+        case 'estyn_inspguidance':
+            $newLink = get_permalink_by_template('template-inspection-guidance-search-page.blade.php');
+            break;
+        case 'estyn_insp_qu':
+            $newLink = get_permalink_by_template('template-inspection-questionnaire-search-page.blade.php');
+            break;
+        case 'estyn_thematicreport':
+            $newLink = get_permalink_by_template('template-search.blade.php');
+            break;
+        case 'estyn_job_vacancy':
+            $newLink = get_permalink_by_template('template-vacancies.blade.php');
+            break;
+        case 'estyn_team_member':
+            $newLink = get_permalink_by_template('template-about.blade.php');
+            break;
+        case 'estyn_event':
+            $newLink = get_permalink_by_template('template-events.blade.php');
+            break;
+        default:
+            break;
+    }
+
+    return $newLink;
+}
+
+/**
  * Add the custom taxonomy for Improvement Resources
  */
 function create_improvement_resource_type_taxonomy() {
