@@ -1718,6 +1718,16 @@ p.sp-desc {
     margin-top: 2rem;
 }
 
+.quick-links {
+    a {
+        color: $estyn-blue;
+    }
+
+    li {
+        margin-bottom: 0.5rem;
+    }
+}
+
 .mainNum {
     width: 36px;
     float: left;

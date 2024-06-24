@@ -134,7 +134,8 @@
                 }*/
 
                 // If there's an explicitly defined excerpt, show it, else show the content
-                if (get_the_excerpt() && !preg_match('/\[\.\.\.\]$/', get_the_excerpt())) {
+                //if (get_the_excerpt() && !preg_match('/\[\.\.\.\]$/', get_the_excerpt())) {
+                if(has_excerpt()) {
                   the_excerpt();
                 
                   if(!empty(get_the_content())) {
@@ -305,6 +306,20 @@
                       @php(the_post_thumbnail(null, ['class' => 'w-100 img-fluid rounded-3 mb-4']))
                     @endif
 
+                    @if($isEffectivePractice)
+                      @if(!empty($quickLinks))
+                        <div class="quick-links mt-5">
+                          <p class="mb-1"><strong>{{ __('Quick links', 'sage') . ':' }}</strong></p>
+                          <ul class="list-unstyled">
+                            @foreach($quickLinks as $quickLink)
+                              <li><a href="{{ $quickLink['link'] }}">{{ $quickLink['title'] }}</a></li>
+                            @endforeach
+                          </ul>
+                        </div>
+                        <hr>
+                      @endif
+                    @endif
+
                     @if($isAdditionalResource)
                       <?php
                         if (get_the_excerpt() && !preg_match('/\[\.\.\.\]$/', get_the_excerpt())) {
@@ -366,3 +381,31 @@
   </div>
 @endif
 </article>
+@if($isEffectivePractice)
+  @push('scripts')
+    <script>
+      // Clever script to add the functionality to the Quick Links section
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const headings = document.querySelectorAll('.reportMain h2, .reportMain h3, .reportMain h4, .reportMain h5, .reportMain h6');
+
+        headings.forEach(function(heading) {
+          if(!heading.id) {
+            let id = heading.textContent.toLowerCase().replace(/[^a-z0-9]/g, '-');
+            id = id.replace(/-+$/, '');
+            heading.id = id;
+          }
+        });
+
+        const quickLinks = document.querySelectorAll('.quick-links a');
+
+        quickLinks.forEach(function(quickLink) {
+          const href = quickLink.getAttribute('href');
+
+          // Set the href to the heading ID
+          quickLink.setAttribute('href', '#' + headings[Array.from(headings).findIndex(heading => heading.textContent === quickLink.textContent)].id);
+        });
+      });
+    </script>
+  @endpush
+@endif

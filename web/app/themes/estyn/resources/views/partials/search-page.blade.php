@@ -154,7 +154,7 @@
                       </div>
                       @foreach($sectors as $sector)
                         <div class="form-check">
-                          <input class="form-check-input" type="radio" name="sector" value="{{ $sector->slug }}" id="flexCheckSector-{{ $sector->slug }}">
+                          <input class="form-check-input" type="radio" name="sector" value="{{ $sector->slug }}" id="flexCheckSector-{{ $sector->slug }}" {{ (!empty($_GET['sector'])) && (strtolower($_GET['sector']) == strtolower($sector->name)) ? 'checked' : '' }}>
                           <label class="form-check-label" for="flexCheckSector-{{ $sector->slug }}">
                             {{ $sector->name }}
                           </label>

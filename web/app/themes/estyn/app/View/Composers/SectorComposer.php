@@ -52,6 +52,7 @@ class SectorComposer extends Composer
             'sectorResourcesCarouselItems' => $this->getSectorResourcesCarouselItems($term),
             'sectorLatestArticlesCarouselItems' => $this->sectorLatestArticlesCarouselItems($term),
             'sectorLatestInspectionReports' => $this->getSectorLatestInspectionReportsResourceListItems($term),
+            'latestNewsAndBlogPostsCarouselItems' => $this->latestNewsAndBlogPostsCarouselItems(),
         ];
     }
 
@@ -250,6 +251,38 @@ class SectorComposer extends Composer
         $sectorArticles = array_slice($sectorArticles, 0, 10);
 
         return $sectorArticles;
+    }
+
+    private function latestNewsAndBlogPostsCarouselItems() {
+        $latestNewsAndBlogPosts = get_posts([
+            'posts_per_page' => 10,
+            'post_type' => ['post', 'estyn_newsarticle'],
+            'meta_query' => [
+                [
+                    'key' => '_thumbnail_id',
+                    'compare' => 'EXISTS' // this line tells WordPress to only get posts where the '_thumbnail_id' meta key exists
+                ],
+            ],
+        ]);
+
+        $latestNewsAndBlogPosts = array_map(function($post) {
+            $image = get_the_post_thumbnail_url($post, 'full');
+            $imageAlt = get_the_post_thumbnail_caption($post);
+            $postLink = get_permalink($post);
+
+            return [
+                'title' => $post->post_title,
+                'excerpt' => wp_trim_words($post->post_excerpt, 20, '...'),
+                'link' => $postLink,
+                'featured_image_src' => $image,
+                'featured_image_alt' => $imageAlt,
+            ];
+        }, $latestNewsAndBlogPosts);
+
+        // Cut it down to maximum of 10 items
+        $latestNewsAndBlogPosts = array_slice($latestNewsAndBlogPosts, 0, 10);
+
+        return $latestNewsAndBlogPosts;
     }
 
     /**
