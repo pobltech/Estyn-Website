@@ -65,6 +65,17 @@ class ImprovementResourceComposer extends Composer
         ];
     }
 
+    private function urlEncodeEstynOldFilePath($path) {
+        // Paths are in the form private/files/filename.pdf or files/filename.pdf
+        // AND in some cases the filename is not safe for URLs, so we need to encode it
+        $pathParts = explode('/', $path);
+        $filename = array_pop($pathParts);
+        $filename = rawurlencode($filename);
+        $pathParts[] = $filename;
+
+        return implode('/', $pathParts);
+    }
+
     private function getThematicReportDownloadURL() {
         // Check for ACF field first
         $fullReportFile = get_field('full_report_file');
@@ -89,19 +100,19 @@ class ImprovementResourceComposer extends Composer
         $pdfs = get_post_meta(get_the_ID(), 'pdfs_uris', true);
         if (!empty($pdfs)) {
             $pdfs = explode('|', $pdfs);
-            return ESTYN_OLD_FILES_URL . $pdfs[0];
+            return ESTYN_OLD_FILES_URL . $this->urlEncodeEstynOldFilePath($pdfs[0]);
         }
 
         $documents = get_post_meta(get_the_ID(), 'documents_uris', true);
         if (!empty($documents)) {
             $documents = explode('|', $documents);
-            return ESTYN_OLD_FILES_URL . $documents[0];
+            return ESTYN_OLD_FILES_URL . $this->urlEncodeEstynOldFilePath($documents[0]);
         }
 
         $nodeFiles = get_post_meta(get_the_ID(), 'document_node_files_uris', true);
         if (!empty($nodeFiles)) {
             $nodeFiles = explode('|', $nodeFiles);
-            return ESTYN_OLD_FILES_URL . $nodeFiles[0];
+            return ESTYN_OLD_FILES_URL . $this->urlEncodeEstynOldFilePath($nodeFiles[0]);
         }
 
         return null;

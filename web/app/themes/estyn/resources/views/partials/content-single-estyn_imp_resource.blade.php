@@ -182,7 +182,7 @@
                   }
                 ?>
               @endif
-              @if($featuredProviders)
+              @if(!empty($featuredProviders))
                 <hr>
 							  <h3>{{ __('Featured providers', 'sage') }}</h3>
                 <?php

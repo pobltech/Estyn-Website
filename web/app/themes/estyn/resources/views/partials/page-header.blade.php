@@ -29,7 +29,11 @@
               </div>
               <div class="col-12 d-flex justify-content-sm-between">
                 <div class="d-flex justify-content-start align-items-center">
-                    @include('partials.entry-meta')
+                    @if(!empty($extraButtons))
+                      @include('partials.entry-meta', ['pdfURL' => $extraButtons[0]['url']])
+                    @else
+                      @include('partials.entry-meta')
+                    @endif
                 </div>
                 <div class="pt-share-button-container">
                   @if(isset($shareLinkURL))

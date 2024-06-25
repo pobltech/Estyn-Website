@@ -1468,3 +1468,146 @@ add_filter('the_content', function($content) {
     return $dom->saveHTML();
 }); */
 
+/**
+ * Go through all the estyn_imp_resource, estyn_newsarticle, and normal posts.
+ * For each one, if the ACF field 'read_time' is empty, calculate the read time
+ * based on the post content and the corresponding PDF file if it has one (we'll use \Smalot\PdfParser), and
+ * set the ACF field to the calculated value.
+ * 
+ * Normal posts and estyn_newsarticle posts don't have PDF attachments.
+ * 
+ * estyn_imp_resource posts that have the improvement_resource_type taxonomy term of 'Thematic Report' may have PDF attachments, and there are several ways they may be "attached":
+ * 
+ * 1. ACF File field called full_report_file
+ * 2. Attached to the post as a media attachment
+ * 3. Any of the following custom fields (not ACF):
+ *          pdfs_uris
+ *          documents_uris
+ *          document_node_files_uris
+ *    In which cases, the values are separated by a | character and we'll just take the first one.
+ * 
+ *    Also note that the values will be in the form "private/files/pdffilename.pdf" or "files/pdffilename.pdf",
+ *    and the filename part will need to be rawurlencoded. Then we prepend ESTYN_OLD_FILES_URL to the front.
+ * 
+ * Obviously we're only going to run this once and then comment it out.
+ */
+/*  add_action('init', function() {
+    $args = [
+        'post_type' => ['estyn_imp_resource', 'post', 'estyn_newsarticle'],
+        'posts_per_page' => -1,
+    ];
+
+    $countOfPostsThatNeedReadTime = 0;
+
+    $query = new \WP_Query($args);
+
+    foreach($query->posts as $post) {
+        $readTime = get_field('read_time', $post->ID);
+        // Note: -1 means we previously attempted to calculate the read time but failed
+        // We don't want to get stuck in an infinite loop
+        if( (!empty($readTime)) && (intval($readTime) > 0 || intval($readTime == -1)) ) {
+            continue;
+        }
+
+        $countOfPostsThatNeedReadTime++;
+    }
+
+    error_log('Number of posts that need read time: ' . $countOfPostsThatNeedReadTime);
+
+    foreach($query->posts as $post) {
+        $readTime = get_field('read_time', $post->ID);
+        // Note: -1 means we previously attempted to calculate the read time but failed
+        // We don't want to get stuck in an infinite loop
+        if( (!empty($readTime)) && (intval($readTime) > 0 || intval($readTime == -1)) ) {
+            continue;
+        }
+
+        $content = $post->post_content;
+        $pdfFile = null;
+
+        if(get_post_type($post) == 'estyn_imp_resource') {
+            $terms = get_the_terms($post->ID, 'improvement_resource_type');
+            if($terms) {
+                foreach($terms as $term) {
+                    if($term->name == __('Thematic Report', 'sage')) {
+                        $pdfFile = get_field('full_report_file', $post->ID);
+                        if(!$pdfFile) {
+                            $attachments = get_posts([
+                                'post_type' => 'attachment',
+                                'post_parent' => $post->ID,
+                                'posts_per_page' => 1,
+                                'post_mime_type' => 'application/pdf',
+                            ]);
+
+                            if($attachments) {
+                                $pdfFile = get_permalink($attachments[0]->ID);
+                            } else {
+                                $pdfFile = get_post_meta($post->ID, 'pdfs_uris', true);
+                                if(!$pdfFile) {
+                                    $pdfFile = get_post_meta($post->ID, 'documents_uris', true);
+                                    if(!$pdfFile) {
+                                        $pdfFile = get_post_meta($post->ID, 'document_node_files_uris', true);
+                                    }
+                                }
+
+                                if($pdfFile) {
+                                    $pdfFile = explode('|', $pdfFile)[0];
+
+                                    // Paths are in the form private/files/filename.pdf or files/filename.pdf
+                                    // AND in some cases the filename is not safe for URLs, so we need to encode it
+                                    $pathParts = explode('/', $pdfFile);
+                                    $filename = array_pop($pathParts);
+                                    $filename = rawurlencode($filename);
+                                    $pathParts[] = $filename;
+
+                                    $pdfFile = implode('/', $pathParts);
+
+                                    $pdfFile = ESTYN_OLD_FILES_URL . $pdfFile;
+                                }
+                            }
+                        } else {
+                            $pdfFile = $pdfFile['url'];
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        
+        
+        error_log('Calculating read time for post ' . $post->ID);
+
+        $readTime = calculateReadTime($content, $pdfFile);
+        
+        error_log('Read time for post ' . $post->ID . ' is ' . $readTime);
+
+        error_log('Updating post ' . $post->ID . ' ACF field with read time ' . $readTime);
+        update_field('read_time', $readTime, $post->ID);
+
+        $countOfPostsThatNeedReadTime--;
+        error_log('Number of posts that still need read time: ' . $countOfPostsThatNeedReadTime);
+    }
+}); */
+
+function calculateReadTime($content, $pdfFile) {
+    $wordCount = str_word_count(strip_tags($content));
+    $readTime = ceil($wordCount / 200); // 200 words per minute is the average reading speed
+
+    if($pdfFile) {
+        try {
+            $pdfParser = new \Smalot\PdfParser\Parser();
+            $pdf = $pdfParser->parseFile($pdfFile);
+            $pdfText = $pdf->getText();
+            $pdfWordCount = str_word_count($pdfText);
+            $pdfReadTime = ceil($pdfWordCount / 200);
+            $readTime += $pdfReadTime;
+        } catch(\Exception $e) {
+            error_log('Error parsing PDF file ' . $pdfFile . ': ' . $e->getMessage());
+
+            return -1; // We'll set the read time -1 so we can easily identify posts without read time
+        }
+    }
+
+    return $readTime;
+}
