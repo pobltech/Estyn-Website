@@ -54,6 +54,16 @@
           ['text' => __('Download report', 'sage'), 'url' => $thematicReportData['fullReportDownloadURL'] ?? '#', 'iconClasses' => 'fa-sharp fa-solid fa-file-arrow-down']
       ];
 
+      if(!empty($thematicReportResources)) {
+        $pageHeaderArgs['dropdownButtons'] = [];
+        $dropdownButtons = [];
+        foreach($thematicReportResources as $resource) {
+          $dropdownButtons[] = ['title' => $resource['title'], 'url' => $resource['file']];
+        }
+
+        $pageHeaderArgs['dropdownButtons'][] = ['buttonLabel' => __('Resources', 'sage'), 'iconClasses' => 'fa-sharp fa-solid fa-chevron-down', 'items' => $dropdownButtons];
+      }
+
       if($reportResources) {
         $pageHeaderArgs['extraButtons'][] = ['text' => __('Resources', 'sage'), 'url' => '#resources', 'iconClasses' => 'fa-sharp fa-solid fa-chevron-down'];
       }

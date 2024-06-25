@@ -14,7 +14,8 @@ class ImprovementResourceComposer extends Composer
     {
         return [
             'thematicReportData' => $this->thematicReportData(),
-            'quickLinks' => $this->quickLinks()
+            'quickLinks' => $this->quickLinks(),
+            'thematicReportResources' => $this->thematicReportResources()
         ];
     }
 
@@ -153,5 +154,43 @@ class ImprovementResourceComposer extends Composer
         }
         
         return $links;
+    }
+
+    private function thematicReportResources() {
+        /**
+         * ACF Repeater field, with subfields 'resource_file' (File field),
+         * 'title' (Text field),
+         * and 'resource_post' (Relationship field. Max 1 post. If not empty, overrides 'resource_file').
+         * If 'title' is empty then we use the filename of resource_file or title of resource_post.
+         */
+        
+        $resources = get_field('thematic_report_resources');
+
+        if (empty($resources)) {
+            return [];
+        }
+
+        $formattedResources = [];
+
+        foreach ($resources as $resource) {
+            $title = $resource['title'];
+            $file = $resource['resource_file'];
+            $post = $resource['resource_post'];
+
+            if (empty($title)) {
+                if (!empty($file)) {
+                    $title = $file['title'];
+                } elseif (!empty($post)) {
+                    $title = get_the_title($post[0]->ID);
+                }
+            }
+
+            $formattedResources[] = [
+                'title' => $title,
+                'file' => !empty($post) ? get_the_permalink($post[0]->ID) : $file['url']
+            ];
+        }
+
+        return $formattedResources;
     }
 }
