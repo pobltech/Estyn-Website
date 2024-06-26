@@ -1134,7 +1134,7 @@
           const self = $(this); // Preserve the context
 
           postcodeBoxTypingTimer = setTimeout(() => { // Use arrow function
-            if($("#flexCheckProximity-any").is(":checked") || self.val().trim() === "") {
+            if($("#flexCheckProximity-any").is(":checked") || self.val().trim() === "" || self.val().trim().length < 3) {
               return;
             }
             applyFilters();
