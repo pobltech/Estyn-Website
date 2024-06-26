@@ -8,6 +8,12 @@ namespace App;
 
 use function Roots\bundle;
 
+use Geocoder\Query\GeocodeQuery;
+use Geocoder\Query\ReverseQuery;
+use Http\Adapter\Guzzle6\Client;
+use Geocoder\Provider\GoogleMaps\GoogleMaps;
+use Geocoder\StatefulGeocoder;
+
 // Output error_log() etc. to the terminal. TODO: Remove this in production.
 ini_set('error_log', 'php://stdout');
 ini_set('display_errors', 1);
@@ -660,7 +666,23 @@ function estyn_all_search(\WP_REST_Request $request) {
 
     return $items;
 }
-  
+
+function calculateDistanceBetween($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $earthRadius = 6371000) {
+    // Convert from degrees to radians
+    $latFrom = deg2rad($latitudeFrom);
+    $lonFrom = deg2rad($longitudeFrom);
+    $latTo = deg2rad($latitudeTo);
+    $lonTo = deg2rad($longitudeTo);
+
+    $latDelta = $latTo - $latFrom;
+    $lonDelta = $lonTo - $lonFrom;
+
+    $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) +
+        cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+    return $angle * $earthRadius;
+}
+
+
 // For the search pages (ajax) requests
 // Returns the HTML for the list of resources
 function estyn_resources_search(\WP_REST_Request $request) {
@@ -671,7 +693,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
     //error_log('Language: ' . $language);
     
     $args = [
-        'posts_per_page' => 10,
+        'posts_per_page' => -1,
         'post_type' => ['post', 'estyn_newsarticle'],
         'lang' => $language,
     ];
@@ -831,6 +853,20 @@ function estyn_resources_search(\WP_REST_Request $request) {
         $args['tag'] = $params['tags'];
     }
 
+/*     if(isset($params['numLearners'])) {
+        if(!isset($args['meta_query'])) {
+            $args['meta_query'] = [];
+        }
+        $args['meta_query'][] = [
+            [
+                'key' => 'number_of_pupils',
+                'value' => $params['numLearners']
+            ],
+        ];
+    
+    } */
+
+
     // Merge the request parameters into the query arguments
     /* $args = array_merge($args, $params); */
 
@@ -853,6 +889,307 @@ function estyn_resources_search(\WP_REST_Request $request) {
     
     // We'll send the HTML, from the view, instead of the raw post data
     $items = [];
+
+
+    // 'Similar Settings To Mine' filters
+    $postsToRemove = [];
+    
+    if( ((!empty($params['numLearners'])) && ($params['numLearners'] != 'any')) || ((!empty($params['languageMedium'])) && $params['languageMedium'] != 'any' ) || ((!empty($params['proximity'])) && $params['proximity'] != 'any' ) || ((!empty($params['ageRange'])) && $params['ageRange'] != 'any' ) ) {
+        // We need to get all the estyn_eduprovider posts that are
+        // assigned to this post and check if any of them match the number of learners.
+        // If they do, then we include this post in the results, otherwise we skip it.
+        //
+        // Inspection reports (inspected_provider ACF Post Object field), effective practice (resource_creator ACF Post Object field), thematic reports (featured_providers ACF Relationship field)
+
+        // If they've chosen to filter by proximity, we need to make sure we have
+        // a Google Maps API key, otherwise there's no point in continuing
+        $GoogleMapsAPIKey = '';
+        $geocodingHttpClient = null;
+        $geocodingProvider = null;
+        $geocoder = null;
+        $providerDistances = [];
+        $geoCodingResult = null;
+        $latitude = 0;
+        $longitude = 0;
+        if((!empty($params['proximity'])) && $params['proximity'] != 'any') {
+            $GoogleMapsAPIKey = env('GOOGLE_MAPS_API_KEY');
+            if(empty($GoogleMapsAPIKey)) {
+                error_log('NO MAPS API KEY!');
+                return ['html' => __('Sorry, no resources were found based on your search criteria.', 'sage'), 'totalPosts' => 0];
+            }
+
+            try {
+                $geocodingHttpClient = new \GuzzleHttp\Client();
+                $geocodingProvider = new GoogleMaps($geocodingHttpClient, null, $GoogleMapsAPIKey);
+                $geocoder = new StatefulGeocoder($geocodingProvider, 'en');
+            } catch(\Exception $e) {
+                error_log('Error creating geocoder: ' . $e->getMessage());
+                return ['html' => __('Sorry, no resources were found based on your search criteria.', 'sage'), 'totalPosts' => 0];
+            }
+
+            $postcode = trim($params['proximityPostcode']);
+
+            
+
+            try {
+                $geoCodingResult = $geocoder->geocodeQuery(GeocodeQuery::create($postcode));
+            } catch(\Exception $e) {
+                error_log('Error geocoding postcode: ' . $e->getMessage());
+                return ['html' => __('Sorry, no resources were found based on your search criteria.', 'sage'), 'totalPosts' => 0];
+            }
+
+            $firstResult = $geoCodingResult->first();
+            $latitude = $firstResult->getCoordinates()->getLatitude();
+            $longitude = $firstResult->getCoordinates()->getLongitude();
+        }
+
+        foreach($posts as $post) {
+            $providers = get_field('inspected_provider', $post->ID);
+            if(empty($providers)) {
+                //error_log('No inspected provider for ' . $post->ID);
+                $providers = get_field('resource_creator', $post->ID);
+            }
+            if(empty($providers)) {
+                //error_log('No resource creator for ' . $post->ID);
+                $providers = get_field('featured_providers', $post->ID);
+            }
+
+            if(empty($providers)) {
+                $postsToRemove[] = $post->ID;
+                continue; // We skip this improvement resource if there are no providers assigned to it
+            }
+
+               //error_log('Providers for ' . $post->ID . ':');
+            //error_log(print_r($providers, true));
+
+            // $providers will either be a single post object, an array of post objects, or a comma separated list of post IDs
+            // We need to make it an array of post objects
+            if(!is_array($providers)) {
+                if(is_string($providers)) {
+                    $providers = explode(',', trim($providers));
+                } else {
+                    $providers = [$providers];
+                }
+            }
+
+            //error_log('Providers after conversion for ' . $post->ID . ':');
+            //error_log(print_r($providers, true));
+
+            // All providers at this point should be a numeric value (post ID)
+            // but it's possible that some of the items are just empty strings. Need to remove those
+            $providers = array_filter($providers, function($provider) {
+                return !empty($provider);
+            });
+
+            if(empty($providers)) {
+                $postsToRemove[] = $post->ID;
+                continue; // We skip this improvement resource if there are no providers assigned to it
+            }
+
+            // If it's an array of post IDs, we need to convert them to post objects
+            foreach($providers as $index => $provider) {
+                if(is_numeric($provider)) {
+                    $providers[$index] = get_post($provider);
+                }
+            }
+
+            //error_log('Providers for ' . $post->ID . ':');
+            //error_log(print_r($providers, true));
+
+            if((!empty($params['numLearners'])) && ($params['numLearners'] != 'any')) {
+                $numLearnersMin = 0;
+                $numLearnersMax = 0;
+
+                if(is_numeric($params['numLearners'])) {
+                    $numLearnersMin = $params['numLearners'];
+                    $numLearnersMax = $params['numLearners'];
+                } else {
+                    // We have a range (e.g. '1-50') or e.g. '50+'
+                    $numLearnersRange = explode('-', $params['numLearners']);
+                    if(count($numLearnersRange) == 2) {
+                        $numLearnersMin = $numLearnersRange[0];
+                        $numLearnersMax = $numLearnersRange[1];
+                    } else {
+                        $numLearnersMin = explode('+', $params['numLearners'])[0];
+                        $numLearnersMax = 9999999; // A very high number
+                    }
+                }
+                
+                //error_log('Num learners: ' . $params['numLearners']);
+                $match = false;
+                foreach($providers as $provider) {
+                    $numLearners = get_field('number_of_pupils', $provider->ID);
+                    //error_log('Num learners ACF field value for ' . $provider->ID . ': ' . $numLearners);
+                    if(empty($numLearners)) {
+                        continue;
+                    }
+                    
+                    if(is_numeric($numLearners)) {
+                        // If it's between the min and max, we have a match
+                        if(intval($numLearners) >= intval($numLearnersMin) && intval($numLearners) <= intval($numLearnersMax)) {
+                            $match = true;
+                            //error_log('Matched ' . $numLearners . ' with ' . $params['numLearners']);
+                            break;
+                        }
+                    }
+
+                    if($numLearners == $params['numLearners']) {
+                        $match = true;
+                        //error_log('Matched ' . $numLearners . ' with ' . $params['numLearners']);
+                        break;
+                    }
+                }
+
+                if(!$match) {
+                    $postsToRemove[] = $post->ID;
+                    continue; // We skip this improvement resource if the number of learners doesn't match
+                }
+            }
+
+            if((!empty($params['languageMedium'])) && $params['languageMedium'] != 'any') {
+                //error_log('Language medium: ' . $params['languageMedium']);
+                $match = false;
+                foreach($providers as $provider) {
+                    $languageMedium = get_field('language_medium', $provider->ID);
+                    //error_log('Language medium ACF field value for ' . $provider->ID . ': ' . $languageMedium);
+
+                    if(empty($languageMedium)) {
+                        // Try 'provider_language_id_external_db' custom field
+                        $languageMedium = get_post_meta($provider->ID, 'provider_language_id_external_db', true);
+
+                        //error_log('Language medium custom field value for ' . $provider->ID . ': ' . $languageMedium);
+
+                        if(empty($languageMedium)) {
+                            continue;
+                        }
+
+                        if(intval($languageMedium) == 1) {
+                            $languageMedium = 'english';
+                        } else {
+                            $languageMedium = 'welsh';
+                        }
+                    }
+
+                    
+
+                    if(strtolower($languageMedium) == strtolower($params['languageMedium'])) {
+                        $match = true;
+                        //error_log('Matched ' . $languageMedium . ' with ' . $params['languageMedium']);
+                        break;
+                    }
+                }
+
+                if(!$match) {
+                    $postsToRemove[] = $post->ID;
+                    continue; // We skip this improvement resource if the language medium doesn't match
+                }
+            }
+
+            if((!empty($params['ageRange'])) && $params['ageRange'] != 'any') {
+                $match = false;
+
+                foreach($providers as $provider) {
+                    $ageRange = get_field('age_range', $provider->ID);
+                    if($ageRange == $params['ageRange']) {
+                        $match = true;
+                        //error_log('Matched ' . $ageRange . ' with ' . $params['ageRange']);
+                        break;
+                    }
+                }
+
+                if(!$match) {
+                    $postsToRemove[] = $post->ID;
+                    continue; // We skip this improvement resource if the age range doesn't match
+                }
+            }
+
+            if((!empty($params['proximity'])) && $params['proximity'] != 'any') {
+                // $params['proximity'] will be e.g. '0-50', '50-100', '100-200', '200-250', '250+'
+                // Lets convert it to a min and max
+                $proximityMin = 0;
+                $proximityMax = 0;
+                
+                // If there's a '+' symbol, set min to the number before the '+'
+                // and max to a very large number
+                if(strpos($params['proximity'], '+') !== false) {
+                    $proximityMin = intval(explode('+', $params['proximity'])[0]);
+                    $proximityMax = 9999999; // A very high number
+                } else {
+                    $proximityRange = explode('-', $params['proximity']);
+                    $proximityMin = intval($proximityRange[0]);
+                    $proximityMax = intval($proximityRange[1]);
+                }
+                
+                $match = false;
+
+                foreach($providers as $provider) {
+                    // Let's check if we've already calculated the distance from this provider to the given postcode
+                    if(array_key_exists($provider->ID, $providerDistances)) {
+                        //error_log('Distance already calculated for ' . $provider->ID);
+                        $distance = $providerDistances[$provider->ID];
+                        if($distance >= $proximityMin && $distance <= $proximityMax) {
+                            $match = true;
+                            //error_log('Matched ' . $distance . ' miles with ' . $params['proximity']);
+                            break;
+                        }
+                        continue;
+                    }
+
+                    $providerLongitude = get_field('longitude', $provider->ID);
+                    if(empty($providerLongitude) || (!is_numeric($providerLongitude))) {
+                        continue;
+                    }
+
+                    $providerLatitude = get_field('latitude', $provider->ID);
+                    if(empty($providerLatitude) || (!is_numeric($providerLatitude))) {
+                        continue;
+                    }
+
+                    // Calculate the distance between the provider and the postcode
+                    $distance = calculateDistanceBetween($latitude, $longitude, $providerLatitude, $providerLongitude);
+                    // In miles:
+                    $distance = $distance * 0.000621371;
+
+                    // Store the distance for this provider so we don't recalculate it later
+                    $providerDistances[$provider->ID] = $distance;
+                    //error_log('Stored distance for ' . $provider->ID . ': ' . $distance . ' miles');
+
+                    //error_log('Distance between ' . $postcode . ' and ' . $provider->ID . ': ' . $distance . ' miles');
+
+                    if($distance >= $proximityMin && $distance <= $proximityMax) {
+                        $match = true;
+                        //error_log('Matched ' . $distance . ' miles with ' . $params['proximity']);
+                        break;
+                    }
+                }
+
+                if(!$match) {
+                    $postsToRemove[] = $post->ID;
+                    continue; // We skip this improvement resource if the proximity doesn't match
+                }
+            }
+            
+        }
+    }
+
+    //error_log('Number of posts to remove: ' . count($postsToRemove));
+    //error_log('Posts to remove:');
+    //error_log(print_r($postsToRemove, true));
+
+    if(!empty($postsToRemove)) {
+        $args['post__not_in'] = $postsToRemove;
+    }
+
+    $args['posts_per_page'] = 10;
+
+    $query = new \WP_Query($args);
+
+    if($query->found_posts == 0) {
+        return ['html' => __('Sorry, no resources were found based on your search criteria.', 'sage'), 'totalPosts' => 0];
+    }
+
+    $posts = $query->posts;
+
     foreach($posts as $post) {
         $reportFile = null;//$firstPDFAttachment = null; // Used for inspection reports and annual reports and inspection guidance
 
@@ -876,6 +1213,8 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 'post_parent' => $post->ID,
                 'post_mime_type' => 'application/pdf',
             ]); */
+
+            
             
             if($args['post_type'] == 'estyn_inspguidance') {
                 $reportFile = getInspectionGuidanceFileURL($post);
@@ -1020,7 +1359,7 @@ function save_post_after_import($post_id) {
 /** 
  * Stop ACF removing the 'Custom Fields' meta box from the post edit screen
  */
-//add_filter('acf/settings/remove_wp_meta_box', '__return_false');
+add_filter('acf/settings/remove_wp_meta_box', '__return_false');
 
 /**
  * Get the permalink of a page that uses a specific template
@@ -1468,3 +1807,146 @@ add_filter('the_content', function($content) {
     return $dom->saveHTML();
 }); */
 
+/**
+ * Go through all the estyn_imp_resource, estyn_newsarticle, and normal posts.
+ * For each one, if the ACF field 'read_time' is empty, calculate the read time
+ * based on the post content and the corresponding PDF file if it has one (we'll use \Smalot\PdfParser), and
+ * set the ACF field to the calculated value.
+ * 
+ * Normal posts and estyn_newsarticle posts don't have PDF attachments.
+ * 
+ * estyn_imp_resource posts that have the improvement_resource_type taxonomy term of 'Thematic Report' may have PDF attachments, and there are several ways they may be "attached":
+ * 
+ * 1. ACF File field called full_report_file
+ * 2. Attached to the post as a media attachment
+ * 3. Any of the following custom fields (not ACF):
+ *          pdfs_uris
+ *          documents_uris
+ *          document_node_files_uris
+ *    In which cases, the values are separated by a | character and we'll just take the first one.
+ * 
+ *    Also note that the values will be in the form "private/files/pdffilename.pdf" or "files/pdffilename.pdf",
+ *    and the filename part will need to be rawurlencoded. Then we prepend ESTYN_OLD_FILES_URL to the front.
+ * 
+ * Obviously we're only going to run this once and then comment it out.
+ */
+/*  add_action('init', function() {
+    $args = [
+        'post_type' => ['estyn_imp_resource', 'post', 'estyn_newsarticle'],
+        'posts_per_page' => -1,
+    ];
+
+    $countOfPostsThatNeedReadTime = 0;
+
+    $query = new \WP_Query($args);
+
+    foreach($query->posts as $post) {
+        $readTime = get_field('read_time', $post->ID);
+        // Note: -1 means we previously attempted to calculate the read time but failed
+        // We don't want to get stuck in an infinite loop
+        if( (!empty($readTime)) && (intval($readTime) > 0 || intval($readTime == -1)) ) {
+            continue;
+        }
+
+        $countOfPostsThatNeedReadTime++;
+    }
+
+    error_log('Number of posts that need read time: ' . $countOfPostsThatNeedReadTime);
+
+    foreach($query->posts as $post) {
+        $readTime = get_field('read_time', $post->ID);
+        // Note: -1 means we previously attempted to calculate the read time but failed
+        // We don't want to get stuck in an infinite loop
+        if( (!empty($readTime)) && (intval($readTime) > 0 || intval($readTime == -1)) ) {
+            continue;
+        }
+
+        $content = $post->post_content;
+        $pdfFile = null;
+
+        if(get_post_type($post) == 'estyn_imp_resource') {
+            $terms = get_the_terms($post->ID, 'improvement_resource_type');
+            if($terms) {
+                foreach($terms as $term) {
+                    if($term->name == __('Thematic Report', 'sage')) {
+                        $pdfFile = get_field('full_report_file', $post->ID);
+                        if(!$pdfFile) {
+                            $attachments = get_posts([
+                                'post_type' => 'attachment',
+                                'post_parent' => $post->ID,
+                                'posts_per_page' => 1,
+                                'post_mime_type' => 'application/pdf',
+                            ]);
+
+                            if($attachments) {
+                                $pdfFile = get_permalink($attachments[0]->ID);
+                            } else {
+                                $pdfFile = get_post_meta($post->ID, 'pdfs_uris', true);
+                                if(!$pdfFile) {
+                                    $pdfFile = get_post_meta($post->ID, 'documents_uris', true);
+                                    if(!$pdfFile) {
+                                        $pdfFile = get_post_meta($post->ID, 'document_node_files_uris', true);
+                                    }
+                                }
+
+                                if($pdfFile) {
+                                    $pdfFile = explode('|', $pdfFile)[0];
+
+                                    // Paths are in the form private/files/filename.pdf or files/filename.pdf
+                                    // AND in some cases the filename is not safe for URLs, so we need to encode it
+                                    $pathParts = explode('/', $pdfFile);
+                                    $filename = array_pop($pathParts);
+                                    $filename = rawurlencode($filename);
+                                    $pathParts[] = $filename;
+
+                                    $pdfFile = implode('/', $pathParts);
+
+                                    $pdfFile = ESTYN_OLD_FILES_URL . $pdfFile;
+                                }
+                            }
+                        } else {
+                            $pdfFile = $pdfFile['url'];
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        
+        
+        error_log('Calculating read time for post ' . $post->ID);
+
+        $readTime = calculateReadTime($content, $pdfFile);
+        
+        error_log('Read time for post ' . $post->ID . ' is ' . $readTime);
+
+        error_log('Updating post ' . $post->ID . ' ACF field with read time ' . $readTime);
+        update_field('read_time', $readTime, $post->ID);
+
+        $countOfPostsThatNeedReadTime--;
+        error_log('Number of posts that still need read time: ' . $countOfPostsThatNeedReadTime);
+    }
+}); */
+
+function calculateReadTime($content, $pdfFile) {
+    $wordCount = str_word_count(strip_tags($content));
+    $readTime = ceil($wordCount / 200); // 200 words per minute is the average reading speed
+
+    if($pdfFile) {
+        try {
+            $pdfParser = new \Smalot\PdfParser\Parser();
+            $pdf = $pdfParser->parseFile($pdfFile);
+            $pdfText = $pdf->getText();
+            $pdfWordCount = str_word_count($pdfText);
+            $pdfReadTime = ceil($pdfWordCount / 200);
+            $readTime += $pdfReadTime;
+        } catch(\Exception $e) {
+            error_log('Error parsing PDF file ' . $pdfFile . ': ' . $e->getMessage());
+
+            return -1; // We'll set the read time -1 so we can easily identify posts without read time
+        }
+    }
+
+    return $readTime;
+}

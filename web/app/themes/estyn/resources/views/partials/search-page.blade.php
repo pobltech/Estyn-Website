@@ -32,6 +32,11 @@
   - Type (Thematic Report, Effective Practice, Annual Report, or Additional Resource)
   - Year
   - Sort: Latest updated, publication date, title, type
+  - "Similar Settings to Mine"
+    -- Proximity
+    -- Number of learners
+    -- Language medium
+    -- Age range
 
   Provider search:
   - Sector
@@ -370,6 +375,199 @@
                 @endif
               </div>
             </div>
+            @if(!empty($isImprovementResourcesSearch))
+              <h4>{{ __('Similar Settings to Mine', 'sage') }}</h4>
+              <div class="search-filters accordion accordion-flush" id="accordionFlushExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-headingProximity">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseProximity" aria-expanded="false" aria-controls="flush-collapseProximity">
+                      {{ __('Proximity', 'sage') }}
+                    </button>
+                  </h2>
+                  <div id="flush-collapseProximity" class="accordion-collapse collapse" aria-labelledby="flush-headingProximity" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                      <div class="form-input mb-2">
+                        <label for="proximityPostcode" class="form-label">{{ __('Postcode', 'sage') }}:</label>
+                        <input type="text" class="form-control proximityPostcode" id="proximityPostcode" name="proximityPostcode" placeholder="{{ __('Enter a postcode', 'sage') }}">
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="proximity" value="any" id="flexCheckProximity-any" checked>
+                        <label class="form-check-label" for="flexCheckProximity-any">
+                          {{ __('Any proximity', 'sage') }}
+                        </label>
+                      </div>
+                      {{-- '0-10', '0-20', '0-30', '0-40', ... , '0-250' --}}
+                      @for($i = 10; $i < 250; $i += 10)
+                        <div class="form-check">
+                          <input class="form-check-input proximity-range"  type="radio" name="proximity" value="0-{{ $i }}" id="flexCheckProximity-0-{{ $i }}">
+                          <label class="form-check-label" for="flexCheckProximity-0-{{ $i }}">
+                            0-{{ $i }} {{ __('miles', 'sage') }}
+                          </label>
+                        </div>
+                      @endfor
+
+                      {{--@for($i = 0; $i < 50; $i += 10)
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="proximity" value="{{ $i }}-{{ $i + 10 }}" id="flexCheckProximity-{{ $i }}-{{ $i + 10 }}">
+                          <label class="form-check-label" for="flexCheckProximity-{{ $i }}-{{ $i + 10 }}">
+                            {{ $i }}-{{ $i + 10 }} {{ __('miles', 'sage') }}
+                          </label>
+                        </div>
+                      @endfor
+                      @for($i = 50; $i <= 200; $i += 50)
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="proximity" value="{{ $i }}-{{ $i + 50 }}" id="flexCheckProximity-{{ $i }}-{{ $i + 50 }}">
+                          <label class="form-check-label" for="flexCheckProximity-{{ $i }}-{{ $i + 50 }}">
+                            {{ $i }}-{{ $i + 50 }} {{ __('miles', 'sage') }}
+                          </label>
+                        </div>
+                      @endfor--}}
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="proximity" value="250-plus" id="flexCheckProximity-250-plus">
+                        <label class="form-check-label" for="flexCheckProximity-250-plus">
+                          {{ __('250+ miles', 'sage') }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {{--<div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-headingLearners">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseLearners" aria-expanded="false" aria-controls="flush-collapseLearners">
+                      {{ __('Number of learners', 'sage') }}
+                    </button>
+                  </h2>
+                  <div id="flush-collapseLearners" class="accordion-collapse collapse" aria-labelledby="flush-headingLearners" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="learners" value="any" id="flexCheckLearners-any" checked>
+                        <label class="form-check-label" for="flexCheckLearners-any">
+                          {{ __('Any number of learners', 'sage') }}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="learners" value="0-50" id="flexCheckLearners-0-50">
+                        <label class="form-check-label" for="flexCheckLearners-0-50">
+                          {{ __('0-50', 'sage') }}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="learners" value="50-100" id="flexCheckLearners-50-100">
+                        <label class="form-check-label" for="flexCheckLearners-50-100">
+                          {{ __('50-100', 'sage') }}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="learners" value="100-200" id="flexCheckLearners-100-200">
+                        <label class="form-check-label" for="flexCheckLearners-100-200">
+                          {{ __('100-200', 'sage') }}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="learners" value="200-500" id="flexCheckLearners-200-500">
+                        <label class="form-check-label" for="flexCheckLearners-200-500">
+                          {{ __('200-500', 'sage') }}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="learners" value="500-1000" id="flexCheckLearners-500-1000">
+                        <label class="form-check-label" for="flexCheckLearners-500-1000">
+                          {{ __('500-1000', 'sage') }}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="learners" value="1000+" id="flexCheckLearners-1000-plus">
+                        <label class="form-check-label" for="flexCheckLearners-1000-plus">
+                          {{ __('1000+', 'sage') }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>--}}
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-headingLanguageMedium">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseLanguageMedium" aria-expanded="false" aria-controls="flush-collapseLanguageMedium">
+                      {{ __('Language medium', 'sage') }}
+                    </button>
+                  </h2>
+                  <div id="flush-collapseLanguageMedium" class="accordion-collapse collapse" aria-labelledby="flush-headingLanguageMedium" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="languageMedium" value="any" id="flexCheckLanguageMedium-any" checked>
+                        <label class="form-check-label" for="flexCheckLanguageMedium-any">
+                          {{ __('Any language medium', 'sage') }}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="languageMedium" value="Welsh" id="flexCheckLanguageMedium-welsh">
+                        <label class="form-check-label" for="flexCheckLanguageMedium-welsh">
+                          {{ __('Welsh', 'sage') }}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="languageMedium" value="English" id="flexCheckLanguageMedium-english">
+                        <label class="form-check-label" for="flexCheckLanguageMedium-english">
+                          {{ __('English', 'sage') }}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {{--<div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-headingAgeRange">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseAgeRange" aria-expanded="false" aria-controls="flush-collapseAgeRange">
+                      {{ __('Age range', 'sage') }}
+                    </button>
+                  </h2>
+                  <div id="flush-collapseAgeRange" class="accordion-collapse collapse" aria-labelledby="flush-headingAgeRange" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="ageRange" value="any" id="flexCheckAgeRange-any" checked>
+                        <label class="form-check-label" for="flexCheckAgeRange-any">
+                          {{ __('Any age range', 'sage') }}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="ageRange" value="0-3" id="flexCheckAgeRange-0-3">
+                        <label class="form-check-label" for="flexCheckAgeRange-0-3">
+                          {{ __('0-3', 'sage') }}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="ageRange" value="3-11" id="flexCheckAgeRange-3-11">
+                        <label class="form-check-label" for="flexCheckAgeRange-3-11">
+                          {{ __('3-11', 'sage') }}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="ageRange" value="11-16" id="flexCheckAgeRange-11-16">
+                        <label class="form-check-label" for="flexCheckAgeRange-11-16">
+                          {{ __('11-16', 'sage') }}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="ageRange" value="16-18" id="flexCheckAgeRange-16-18">
+                        <label class="form-check-label" for="flexCheckAgeRange-16-18">
+                          {{ __('16-18', 'sage') }}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="ageRange" value="18-21" id="flexCheckAgeRange-18-21">
+                        <label class="form-check-label" for="flexCheckAgeRange-18-21">
+                          {{ __('18-21', 'sage') }}
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="ageRange" value="21+" id="flexCheckAgeRange-21-plus">
+                        <label class="form-check-label" for="flexCheckAgeRange-21-plus">
+                          {{ __('21+', 'sage') }}
+                        </label>
+                      </div>                      
+                    </div>
+                  </div>
+                </div>--}}
+              </div>
+            @endif
 					</div>
 				</div>
 			</div>
@@ -879,10 +1077,20 @@
 			const searchBoxTypingInterval = 500;
       let currentPage = 1;
 
+      let postcodeBoxTypingTimer = setTimeout(function() {}, 0);
+      const postcodeBoxTypingInterval = searchBoxTypingInterval;
+
 			$(document).ready(function() {
 				hideSearchResultsLoadingIndicator();
 
 				$(".search-filters input:not([type='text'])").on("change", function() {
+          if($(this).hasClass('proximity-range') && $("#proximityPostcode").val().trim() == "") {
+            // Add Bootstrap error class/es to the postcode input
+            $("#proximityPostcode").addClass('is-invalid');
+            return;
+          }
+          $("#proximityPostcode").removeClass('is-invalid');
+          
           currentPage = 1;
 					applyFilters();
 				});
@@ -914,6 +1122,23 @@
 				$("#sort-by").on("change", function() {
 					applyFilters();
 				});
+
+        $(".search-filters .proximityPostcode").on("input", function() {
+          clearTimeout(postcodeBoxTypingTimer);
+
+          if($(this).val().trim() != "") {
+            $("#proximityPostcode").removeClass('is-invalid');
+          }
+
+          const self = $(this); // Preserve the context
+
+          postcodeBoxTypingTimer = setTimeout(() => { // Use arrow function
+            if($("#flexCheckProximity-any").is(":checked") || self.val().trim() === "" || self.val().trim().length < 3) {
+              return;
+            }
+            applyFilters();
+          }, postcodeBoxTypingInterval);
+        });
 
         @if(!empty($searchArgs))
           applyFilters(true);
@@ -1066,7 +1291,12 @@
             return $(this).val();
           }).get(),
           improvementResourceType: $("#flush-collapseFour input:checked").val(),
-          year: $("#flush-collapseFive input:checked").val()
+          year: $("#flush-collapseFive input:checked").val(),
+          //numLearners: $("#flush-collapseLearners input:checked").val(),
+          languageMedium: $("#flush-collapseLanguageMedium input:checked").val(),
+          //ageRange: $("#flush-collapseAgeRange input:checked").val(),
+          proximity: $("#flush-collapseProximity input:checked").val(),
+          proximityPostcode: $("#flush-collapseProximity input[type='text']").val().trim()
         };
       }
       @endif

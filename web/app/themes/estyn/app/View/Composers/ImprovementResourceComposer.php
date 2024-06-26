@@ -14,7 +14,8 @@ class ImprovementResourceComposer extends Composer
     {
         return [
             'thematicReportData' => $this->thematicReportData(),
-            'quickLinks' => $this->quickLinks()
+            'quickLinks' => $this->quickLinks(),
+            'thematicReportResources' => $this->thematicReportResources()
         ];
     }
 
@@ -65,6 +66,17 @@ class ImprovementResourceComposer extends Composer
         ];
     }
 
+    private function urlEncodeEstynOldFilePath($path) {
+        // Paths are in the form private/files/filename.pdf or files/filename.pdf
+        // AND in some cases the filename is not safe for URLs, so we need to encode it
+        $pathParts = explode('/', $path);
+        $filename = array_pop($pathParts);
+        $filename = rawurlencode($filename);
+        $pathParts[] = $filename;
+
+        return implode('/', $pathParts);
+    }
+
     private function getThematicReportDownloadURL() {
         // Check for ACF field first
         $fullReportFile = get_field('full_report_file');
@@ -89,19 +101,19 @@ class ImprovementResourceComposer extends Composer
         $pdfs = get_post_meta(get_the_ID(), 'pdfs_uris', true);
         if (!empty($pdfs)) {
             $pdfs = explode('|', $pdfs);
-            return ESTYN_OLD_FILES_URL . $pdfs[0];
+            return ESTYN_OLD_FILES_URL . $this->urlEncodeEstynOldFilePath($pdfs[0]);
         }
 
         $documents = get_post_meta(get_the_ID(), 'documents_uris', true);
         if (!empty($documents)) {
             $documents = explode('|', $documents);
-            return ESTYN_OLD_FILES_URL . $documents[0];
+            return ESTYN_OLD_FILES_URL . $this->urlEncodeEstynOldFilePath($documents[0]);
         }
 
         $nodeFiles = get_post_meta(get_the_ID(), 'document_node_files_uris', true);
         if (!empty($nodeFiles)) {
             $nodeFiles = explode('|', $nodeFiles);
-            return ESTYN_OLD_FILES_URL . $nodeFiles[0];
+            return ESTYN_OLD_FILES_URL . $this->urlEncodeEstynOldFilePath($nodeFiles[0]);
         }
 
         return null;
@@ -142,5 +154,43 @@ class ImprovementResourceComposer extends Composer
         }
         
         return $links;
+    }
+
+    private function thematicReportResources() {
+        /**
+         * ACF Repeater field, with subfields 'resource_file' (File field),
+         * 'title' (Text field),
+         * and 'resource_post' (Relationship field. Max 1 post. If not empty, overrides 'resource_file').
+         * If 'title' is empty then we use the filename of resource_file or title of resource_post.
+         */
+        
+        $resources = get_field('thematic_report_resources');
+
+        if (empty($resources)) {
+            return [];
+        }
+
+        $formattedResources = [];
+
+        foreach ($resources as $resource) {
+            $title = $resource['title'];
+            $file = $resource['resource_file'];
+            $post = $resource['resource_post'];
+
+            if (empty($title)) {
+                if (!empty($file)) {
+                    $title = $file['title'];
+                } elseif (!empty($post)) {
+                    $title = get_the_title($post[0]->ID);
+                }
+            }
+
+            $formattedResources[] = [
+                'title' => $title,
+                'file' => !empty($post) ? get_the_permalink($post[0]->ID) : $file['url']
+            ];
+        }
+
+        return $formattedResources;
     }
 }

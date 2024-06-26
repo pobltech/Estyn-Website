@@ -39,17 +39,34 @@
               </div>
               @endif
             </div>
-            @if(isset($extraButtons))
+            @if( (!empty($extraButtons)) || (!empty($dropdownButtons)) )
               <hr class="my-4">
               <div class="row">
                 <div class="col-12">
                   <div class="d-flex">
-                    @foreach($extraButtons as $button)
-                      <a href="{{ $button['url'] }}" class="btn btn-outline-info me-3">
-                        <span>{{ $button['text'] }}</span>
-                        <i class="{{ $button['iconClasses'] }}"></i>
-                      </a>
-                    @endforeach
+                    @if(!empty($extraButtons))
+                      @foreach($extraButtons as $button)
+                        <a href="{{ $button['url'] }}" class="btn btn-outline-info me-3">
+                          <span>{{ $button['text'] }}</span>
+                          <i class="{{ $button['iconClasses'] }}"></i>
+                        </a>
+                      @endforeach
+                    @endif
+                    @if(!empty($dropdownButtons))
+                      @foreach($dropdownButtons as $button)
+                        <div class="dropdown">
+                          <button class="btn btn-outline-info me-3 dropdown-toggle" type="button" id="resourceDropdownMenuButton-{{ $loop->iteration }}" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span>{{ $button['buttonLabel'] }}</span>
+                            {{--<i class="{{ $button['iconClasses'] }}"></i>--}}
+                          </button>
+                          <ul class="dropdown-menu" aria-labelledby="resourceDropdownMenuButton-{{ $loop->iteration }}">
+                            @foreach($button['items'] as $item)
+                              <li><a class="dropdown-item" href="{{ $item['url'] }}">{{ $item['title'] }}</a></li>
+                            @endforeach
+                          </ul>
+                        </div>
+                      @endforeach
+                    @endif
                   </div>
                 </div>
               </div>
