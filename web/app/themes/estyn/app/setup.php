@@ -671,7 +671,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
     //error_log('Language: ' . $language);
     
     $args = [
-        'posts_per_page' => 10,
+        'posts_per_page' => -1,
         'post_type' => ['post', 'estyn_newsarticle'],
         'lang' => $language,
     ];
@@ -831,6 +831,20 @@ function estyn_resources_search(\WP_REST_Request $request) {
         $args['tag'] = $params['tags'];
     }
 
+/*     if(isset($params['numLearners'])) {
+        if(!isset($args['meta_query'])) {
+            $args['meta_query'] = [];
+        }
+        $args['meta_query'][] = [
+            [
+                'key' => 'number_of_pupils',
+                'value' => $params['numLearners']
+            ],
+        ];
+    
+    } */
+
+
     // Merge the request parameters into the query arguments
     /* $args = array_merge($args, $params); */
 
@@ -853,6 +867,177 @@ function estyn_resources_search(\WP_REST_Request $request) {
     
     // We'll send the HTML, from the view, instead of the raw post data
     $items = [];
+
+
+    // 'Similar Settings To Mine' filters
+    $postsToRemove = [];
+    
+    if( ((!empty($params['numLearners'])) && ($params['numLearners'] != 'any')) || ((!empty($params['languageMedium'])) && $params['languageMedium'] != 'any' ) || ((!empty($params['proximity'])) && $params['proximity'] != 'any' ) || ((!empty($params['ageRange'])) && $params['ageRange'] != 'any' ) ) {
+        // We need to get all the estyn_eduprovider posts that are
+        // assigned to this post and check if any of them match the number of learners.
+        // If they do, then we include this post in the results, otherwise we skip it.
+        //
+        // Inspection reports (inspected_provider ACF Post Object field), effective practice (resource_creator ACF Post Object field), thematic reports (featured_providers ACF Relationship field)
+
+        foreach($posts as $post) {
+            $providers = get_field('inspected_provider', $post->ID);
+            if(empty($providers)) {
+                error_log('No inspected provider for ' . $post->ID);
+                $providers = get_field('resource_creator', $post->ID);
+            }
+            if(empty($providers)) {
+                error_log('No resource creator for ' . $post->ID);
+                $providers = get_field('featured_providers', $post->ID);
+            }
+
+            if(empty($providers)) {
+                $postsToRemove[] = $post->ID;
+                continue; // We skip this improvement resource if there are no providers assigned to it
+            }
+
+               error_log('Providers for ' . $post->ID . ':');
+            error_log(print_r($providers, true));
+
+            // $providers will either be a single post object, an array of post objects, or a comma separated list of post IDs
+            // We need to make it an array of post objects
+            if(!is_array($providers)) {
+                if(is_string($providers)) {
+                    $providers = explode(',', trim($providers));
+                } else {
+                    $providers = [$providers];
+                }
+            }
+
+            error_log('Providers after conversion for ' . $post->ID . ':');
+            error_log(print_r($providers, true));
+
+            // All providers at this point should be a numeric value (post ID)
+            // but it's possible that some of the items are just empty strings. Need to remove those
+            $providers = array_filter($providers, function($provider) {
+                return !empty($provider);
+            });
+
+            if(empty($providers)) {
+                $postsToRemove[] = $post->ID;
+                continue; // We skip this improvement resource if there are no providers assigned to it
+            }
+
+            // If it's an array of post IDs, we need to convert them to post objects
+            foreach($providers as $index => $provider) {
+                if(is_numeric($provider)) {
+                    $providers[$index] = get_post($provider);
+                }
+            }
+
+            //error_log('Providers for ' . $post->ID . ':');
+            //error_log(print_r($providers, true));
+
+            if((!empty($params['numLearners'])) && ($params['numLearners'] != 'any')) {
+                $numLearnersMin = 0;
+                $numLearnersMax = 0;
+
+                if(is_numeric($params['numLearners'])) {
+                    $numLearnersMin = $params['numLearners'];
+                    $numLearnersMax = $params['numLearners'];
+                } else {
+                    // We have a range (e.g. '1-50') or e.g. '50+'
+                    $numLearnersRange = explode('-', $params['numLearners']);
+                    if(count($numLearnersRange) == 2) {
+                        $numLearnersMin = $numLearnersRange[0];
+                        $numLearnersMax = $numLearnersRange[1];
+                    } else {
+                        $numLearnersMin = explode('+', $params['numLearners'])[0];
+                        $numLearnersMax = 9999999; // A very high number
+                    }
+                }
+                
+                //error_log('Num learners: ' . $params['numLearners']);
+                $match = false;
+                foreach($providers as $provider) {
+                    $numLearners = get_field('number_of_pupils', $provider->ID);
+                    error_log('Num learners ACF field value for ' . $provider->ID . ': ' . $numLearners);
+                    if(empty($numLearners)) {
+                        continue;
+                    }
+                    
+                    if(is_numeric($numLearners)) {
+                        // If it's between the min and max, we have a match
+                        if(intval($numLearners) >= intval($numLearnersMin) && intval($numLearners) <= intval($numLearnersMax)) {
+                            $match = true;
+                            error_log('Matched ' . $numLearners . ' with ' . $params['numLearners']);
+                            break;
+                        }
+                    }
+
+                    if($numLearners == $params['numLearners']) {
+                        $match = true;
+                        error_log('Matched ' . $numLearners . ' with ' . $params['numLearners']);
+                        break;
+                    }
+                }
+
+                if(!$match) {
+                    $postsToRemove[] = $post->ID;
+                    continue; // We skip this improvement resource if the number of learners doesn't match
+                }
+            }
+
+            if((!empty($params['languageMedium'])) && $params['languageMedium'] != 'any') {
+                $match = false;
+                foreach($providers as $provider) {
+                    $languageMedium = get_field('language_medium', $provider->ID);
+                    if($languageMedium == $params['languageMedium']) {
+                        $match = true;
+                        error_log('Matched ' . $languageMedium . ' with ' . $params['languageMedium']);
+                        break;
+                    }
+                }
+
+                if(!$match) {
+                    $postsToRemove[] = $post->ID;
+                    continue; // We skip this improvement resource if the language medium doesn't match
+                }
+            }
+
+            if((!empty($params['ageRange'])) && $params['ageRange'] != 'any') {
+                $match = false;
+
+                foreach($providers as $provider) {
+                    $ageRange = get_field('age_range', $provider->ID);
+                    if($ageRange == $params['ageRange']) {
+                        $match = true;
+                        error_log('Matched ' . $ageRange . ' with ' . $params['ageRange']);
+                        break;
+                    }
+                }
+
+                if(!$match) {
+                    $postsToRemove[] = $post->ID;
+                    continue; // We skip this improvement resource if the age range doesn't match
+                }
+            }
+            
+        }
+    }
+
+    error_log('Number of posts to remove: ' . count($postsToRemove));
+    error_log('Posts to remove:');
+    error_log(print_r($postsToRemove, true));
+
+    if(!empty($postsToRemove)) {
+        $args['post__not_in'] = $postsToRemove;
+    }
+
+    $args['posts_per_page'] = 10;
+
+    $query = new \WP_Query($args);
+
+    if($query->found_posts == 0) {
+        return ['html' => __('Sorry, no resources were found based on your search criteria.', 'sage'), 'totalPosts' => 0];
+    }
+
+    $posts = $query->posts;
+
     foreach($posts as $post) {
         $reportFile = null;//$firstPDFAttachment = null; // Used for inspection reports and annual reports and inspection guidance
 
@@ -876,6 +1061,8 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 'post_parent' => $post->ID,
                 'post_mime_type' => 'application/pdf',
             ]); */
+
+            
             
             if($args['post_type'] == 'estyn_inspguidance') {
                 $reportFile = getInspectionGuidanceFileURL($post);
@@ -998,7 +1185,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
 
     return [
         'html' => $HTML->render(), // We use the Blade template view function to render the HTML
-        'totalPosts' => $query->found_posts,
+        'totalPosts' => $query->found_posts - count($postsToRemove),
         'maxPages' => $query->max_num_pages,
         'currentPage' => $args['paged'],
         'nextPage' => $query->max_num_pages > $args['paged'] ? $args['paged'] + 1 : null,
