@@ -396,14 +396,32 @@
                           {{ __('Any proximity', 'sage') }}
                         </label>
                       </div>
-                      @for($i = 0; $i <= 200; $i += 50)
+                      {{-- '0-10', '0-20', '0-30', '0-40', ... , '0-250' --}}
+                      @for($i = 10; $i < 250; $i += 10)
+                        <div class="form-check">
+                          <input class="form-check-input proximity-range"  type="radio" name="proximity" value="0-{{ $i }}" id="flexCheckProximity-0-{{ $i }}">
+                          <label class="form-check-label" for="flexCheckProximity-0-{{ $i }}">
+                            0-{{ $i }} {{ __('miles', 'sage') }}
+                          </label>
+                        </div>
+                      @endfor
+
+                      {{--@for($i = 0; $i < 50; $i += 10)
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="proximity" value="{{ $i }}-{{ $i + 10 }}" id="flexCheckProximity-{{ $i }}-{{ $i + 10 }}">
+                          <label class="form-check-label" for="flexCheckProximity-{{ $i }}-{{ $i + 10 }}">
+                            {{ $i }}-{{ $i + 10 }} {{ __('miles', 'sage') }}
+                          </label>
+                        </div>
+                      @endfor
+                      @for($i = 50; $i <= 200; $i += 50)
                         <div class="form-check">
                           <input class="form-check-input" type="radio" name="proximity" value="{{ $i }}-{{ $i + 50 }}" id="flexCheckProximity-{{ $i }}-{{ $i + 50 }}">
                           <label class="form-check-label" for="flexCheckProximity-{{ $i }}-{{ $i + 50 }}">
                             {{ $i }}-{{ $i + 50 }} {{ __('miles', 'sage') }}
                           </label>
                         </div>
-                      @endfor
+                      @endfor--}}
                       <div class="form-check">
                         <input class="form-check-input" type="radio" name="proximity" value="250-plus" id="flexCheckProximity-250-plus">
                         <label class="form-check-label" for="flexCheckProximity-250-plus">
@@ -1067,6 +1085,13 @@
 				hideSearchResultsLoadingIndicator();
 
 				$(".search-filters input:not([type='text'])").on("change", function() {
+          if($(this).hasClass('proximity-range') && $("#proximityPostcode").val().trim() == "") {
+            // Add Bootstrap error class/es to the postcode input
+            $("#proximityPostcode").addClass('is-invalid');
+            return;
+          }
+          $("#proximityPostcode").removeClass('is-invalid');
+          
           currentPage = 1;
 					applyFilters();
 				});
@@ -1101,6 +1126,10 @@
 
         $(".search-filters .proximityPostcode").on("input", function() {
           clearTimeout(postcodeBoxTypingTimer);
+
+          if($(this).val().trim() != "") {
+            $("#proximityPostcode").removeClass('is-invalid');
+          }
 
           const self = $(this); // Preserve the context
 

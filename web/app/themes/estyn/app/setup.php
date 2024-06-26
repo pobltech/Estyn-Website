@@ -1125,11 +1125,11 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 foreach($providers as $provider) {
                     // Let's check if we've already calculated the distance from this provider to the given postcode
                     if(array_key_exists($provider->ID, $providerDistances)) {
-                        error_log('Distance already calculated for ' . $provider->ID);
+                        //error_log('Distance already calculated for ' . $provider->ID);
                         $distance = $providerDistances[$provider->ID];
                         if($distance >= $proximityMin && $distance <= $proximityMax) {
                             $match = true;
-                            error_log('Matched ' . $distance . ' miles with ' . $params['proximity']);
+                            //error_log('Matched ' . $distance . ' miles with ' . $params['proximity']);
                             break;
                         }
                         continue;
@@ -1152,13 +1152,13 @@ function estyn_resources_search(\WP_REST_Request $request) {
 
                     // Store the distance for this provider so we don't recalculate it later
                     $providerDistances[$provider->ID] = $distance;
-                    error_log('Stored distance for ' . $provider->ID . ': ' . $distance . ' miles');
+                    //error_log('Stored distance for ' . $provider->ID . ': ' . $distance . ' miles');
 
-                    error_log('Distance between ' . $postcode . ' and ' . $provider->ID . ': ' . $distance . ' miles');
+                    //error_log('Distance between ' . $postcode . ' and ' . $provider->ID . ': ' . $distance . ' miles');
 
                     if($distance >= $proximityMin && $distance <= $proximityMax) {
                         $match = true;
-                        error_log('Matched ' . $distance . ' miles with ' . $params['proximity']);
+                        //error_log('Matched ' . $distance . ' miles with ' . $params['proximity']);
                         break;
                     }
                 }
