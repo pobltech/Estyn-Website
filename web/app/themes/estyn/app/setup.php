@@ -8,6 +8,12 @@ namespace App;
 
 use function Roots\bundle;
 
+use Geocoder\Query\GeocodeQuery;
+use Geocoder\Query\ReverseQuery;
+use Http\Adapter\Guzzle6\Client;
+use Geocoder\Provider\GoogleMaps\GoogleMaps;
+use Geocoder\StatefulGeocoder;
+
 // Output error_log() etc. to the terminal. TODO: Remove this in production.
 ini_set('error_log', 'php://stdout');
 ini_set('display_errors', 1);
@@ -660,7 +666,23 @@ function estyn_all_search(\WP_REST_Request $request) {
 
     return $items;
 }
-  
+
+function calculateDistanceBetween($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $earthRadius = 6371000) {
+    // Convert from degrees to radians
+    $latFrom = deg2rad($latitudeFrom);
+    $lonFrom = deg2rad($longitudeFrom);
+    $latTo = deg2rad($latitudeTo);
+    $lonTo = deg2rad($longitudeTo);
+
+    $latDelta = $latTo - $latFrom;
+    $lonDelta = $lonTo - $lonFrom;
+
+    $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) +
+        cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+    return $angle * $earthRadius;
+}
+
+
 // For the search pages (ajax) requests
 // Returns the HTML for the list of resources
 function estyn_resources_search(\WP_REST_Request $request) {
@@ -879,6 +901,30 @@ function estyn_resources_search(\WP_REST_Request $request) {
         //
         // Inspection reports (inspected_provider ACF Post Object field), effective practice (resource_creator ACF Post Object field), thematic reports (featured_providers ACF Relationship field)
 
+        // If they've chosen to filter by proximity, we need to make sure we have
+        // a Google Maps API key, otherwise there's no point in continuing
+        $GoogleMapsAPIKey = '';
+        $geocodingHttpClient = null;
+        $geocodingProvider = null;
+        $geocoder = null;
+        $providerDistances = [];
+        if((!empty($params['proximity'])) && $params['proximity'] != 'any') {
+            $GoogleMapsAPIKey = env('GOOGLE_MAPS_API_KEY');
+            if(empty($GoogleMapsAPIKey)) {
+                error_log('NO MAPS API KEY!');
+                return ['html' => __('Sorry, no resources were found based on your search criteria.', 'sage'), 'totalPosts' => 0];
+            }
+
+            try {
+                $geocodingHttpClient = new \GuzzleHttp\Client();
+                $geocodingProvider = new GoogleMaps($geocodingHttpClient, null, $GoogleMapsAPIKey);
+                $geocoder = new StatefulGeocoder($geocodingProvider, 'en');
+            } catch(\Exception $e) {
+                error_log('Error creating geocoder: ' . $e->getMessage());
+                return ['html' => __('Sorry, no resources were found based on your search criteria.', 'sage'), 'totalPosts' => 0];
+            }
+        }
+
         foreach($posts as $post) {
             $providers = get_field('inspected_provider', $post->ID);
             if(empty($providers)) {
@@ -1036,6 +1082,85 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 if(!$match) {
                     $postsToRemove[] = $post->ID;
                     continue; // We skip this improvement resource if the age range doesn't match
+                }
+            }
+
+            if((!empty($params['proximity'])) && $params['proximity'] != 'any') {
+                // $params['proximity'] will be e.g. '0-50', '50-100', '100-200', '200-250', '250+'
+                // Lets convert it to a min and max
+                $proximityMin = 0;
+                $proximityMax = 0;
+                
+                // If there's a '+' symbol, set min to the number before the '+'
+                // and max to a very large number
+                if(strpos($params['proximity'], '+') !== false) {
+                    $proximityMin = intval(explode('+', $params['proximity'])[0]);
+                    $proximityMax = 9999999; // A very high number
+                } else {
+                    $proximityRange = explode('-', $params['proximity']);
+                    $proximityMin = intval($proximityRange[0]);
+                    $proximityMax = intval($proximityRange[1]);
+                }
+                
+                $match = false;
+
+                $postcode = trim($params['proximityPostcode']);
+
+                foreach($providers as $provider) {
+                    // Let's check if we've already calculated the distance from this provider to the given postcode
+                    if(array_key_exists($provider->ID, $providerDistances)) {
+                        $distance = $providerDistances[$provider->ID];
+                        if($distance >= $proximityMin && $distance <= $proximityMax) {
+                            $match = true;
+                            error_log('Matched ' . $distance . ' miles with ' . $params['proximity']);
+                            break;
+                        }
+                        continue;
+                    }
+
+                    $providerLongitude = get_field('longitude', $provider->ID);
+                    if(empty($providerLongitude) || (!is_numeric($providerLongitude))) {
+                        continue;
+                    }
+
+                    $providerLatitude = get_field('latitude', $provider->ID);
+                    if(empty($providerLatitude) || (!is_numeric($providerLatitude))) {
+                        continue;
+                    }
+
+                    $result = null;
+
+                    try {
+                        $result = $geocoder->geocodeQuery(GeocodeQuery::create($postcode));
+                    } catch(\Exception $e) {
+                        error_log('Error geocoding postcode: ' . $e->getMessage());
+                        continue;
+                    }
+
+                    $firstResult = $result->first();
+                    $latitude = $firstResult->getCoordinates()->getLatitude();
+                    $longitude = $firstResult->getCoordinates()->getLongitude();
+
+                    // Calculate the distance between the provider and the postcode
+                    $distance = calculateDistanceBetween($latitude, $longitude, $providerLatitude, $providerLongitude);
+                    // In miles:
+                    $distance = $distance * 0.000621371;
+
+                    // Store the distance for this provider so we don't recalculate it later
+                    $providerDistances[$provider->ID] = $distance;
+
+                    error_log('Distance between ' . $postcode . ' and ' . $provider->ID . ': ' . $distance . ' miles');
+
+                    if($distance >= $proximityMin && $distance <= $proximityMax) {
+                        $match = true;
+                        error_log('Matched ' . $distance . ' miles with ' . $params['proximity']);
+                        break;
+                    }
+                }
+
+                if(!$match) {
+                    $postsToRemove[] = $post->ID;
+                    continue; // We skip this improvement resource if the proximity doesn't match
                 }
             }
             

@@ -386,10 +386,28 @@
                   </h2>
                   <div id="flush-collapseProximity" class="accordion-collapse collapse" aria-labelledby="flush-headingProximity" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
+                      <div class="form-input mb-2">
+                        <label for="proximityPostcode" class="form-label">{{ __('Postcode', 'sage') }}:</label>
+                        <input type="text" class="form-control proximityPostcode" id="proximityPostcode" name="proximityPostcode" placeholder="{{ __('Enter a postcode', 'sage') }}">
+                      </div>
                       <div class="form-check">
                         <input class="form-check-input" type="radio" name="proximity" value="any" id="flexCheckProximity-any" checked>
                         <label class="form-check-label" for="flexCheckProximity-any">
                           {{ __('Any proximity', 'sage') }}
+                        </label>
+                      </div>
+                      @for($i = 0; $i <= 200; $i += 50)
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="proximity" value="{{ $i }}-{{ $i + 50 }}" id="flexCheckProximity-{{ $i }}-{{ $i + 50 }}">
+                          <label class="form-check-label" for="flexCheckProximity-{{ $i }}-{{ $i + 50 }}">
+                            {{ $i }}-{{ $i + 50 }} {{ __('miles', 'sage') }}
+                          </label>
+                        </div>
+                      @endfor
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="proximity" value="250-plus" id="flexCheckProximity-250-plus">
+                        <label class="form-check-label" for="flexCheckProximity-250-plus">
+                          {{ __('250+ miles', 'sage') }}
                         </label>
                       </div>
                     </div>
@@ -1042,6 +1060,9 @@
 			const searchBoxTypingInterval = 500;
       let currentPage = 1;
 
+      let postcodeBoxTypingTimer = setTimeout(function() {}, 0);
+      const postcodeBoxTypingInterval = searchBoxTypingInterval;
+
 			$(document).ready(function() {
 				hideSearchResultsLoadingIndicator();
 
@@ -1077,6 +1098,19 @@
 				$("#sort-by").on("change", function() {
 					applyFilters();
 				});
+
+        $(".search-filters .proximityPostcode").on("input", function() {
+          clearTimeout(postcodeBoxTypingTimer);
+
+          const self = $(this); // Preserve the context
+
+          postcodeBoxTypingTimer = setTimeout(() => { // Use arrow function
+            if($("#flexCheckProximity-any").is(":checked") || self.val().trim() === "") {
+              return;
+            }
+            applyFilters();
+          }, postcodeBoxTypingInterval);
+        });
 
         @if(!empty($searchArgs))
           applyFilters(true);
@@ -1232,7 +1266,9 @@
           year: $("#flush-collapseFive input:checked").val(),
           numLearners: $("#flush-collapseLearners input:checked").val(),
           languageMedium: $("#flush-collapseLanguageMedium input:checked").val(),
-          ageRange: $("#flush-collapseAgeRange input:checked").val()
+          ageRange: $("#flush-collapseAgeRange input:checked").val(),
+          proximity: $("#flush-collapseProximity input:checked").val(),
+          proximityPostcode: $("#flush-collapseProximity input[type='text']").val().trim()
         };
       }
       @endif
