@@ -882,11 +882,11 @@ function estyn_resources_search(\WP_REST_Request $request) {
         foreach($posts as $post) {
             $providers = get_field('inspected_provider', $post->ID);
             if(empty($providers)) {
-                error_log('No inspected provider for ' . $post->ID);
+                //error_log('No inspected provider for ' . $post->ID);
                 $providers = get_field('resource_creator', $post->ID);
             }
             if(empty($providers)) {
-                error_log('No resource creator for ' . $post->ID);
+                //error_log('No resource creator for ' . $post->ID);
                 $providers = get_field('featured_providers', $post->ID);
             }
 
@@ -895,8 +895,8 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 continue; // We skip this improvement resource if there are no providers assigned to it
             }
 
-               error_log('Providers for ' . $post->ID . ':');
-            error_log(print_r($providers, true));
+               //error_log('Providers for ' . $post->ID . ':');
+            //error_log(print_r($providers, true));
 
             // $providers will either be a single post object, an array of post objects, or a comma separated list of post IDs
             // We need to make it an array of post objects
@@ -908,8 +908,8 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 }
             }
 
-            error_log('Providers after conversion for ' . $post->ID . ':');
-            error_log(print_r($providers, true));
+            //error_log('Providers after conversion for ' . $post->ID . ':');
+            //error_log(print_r($providers, true));
 
             // All providers at this point should be a numeric value (post ID)
             // but it's possible that some of the items are just empty strings. Need to remove those
@@ -955,7 +955,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 $match = false;
                 foreach($providers as $provider) {
                     $numLearners = get_field('number_of_pupils', $provider->ID);
-                    error_log('Num learners ACF field value for ' . $provider->ID . ': ' . $numLearners);
+                    //error_log('Num learners ACF field value for ' . $provider->ID . ': ' . $numLearners);
                     if(empty($numLearners)) {
                         continue;
                     }
@@ -964,14 +964,14 @@ function estyn_resources_search(\WP_REST_Request $request) {
                         // If it's between the min and max, we have a match
                         if(intval($numLearners) >= intval($numLearnersMin) && intval($numLearners) <= intval($numLearnersMax)) {
                             $match = true;
-                            error_log('Matched ' . $numLearners . ' with ' . $params['numLearners']);
+                            //error_log('Matched ' . $numLearners . ' with ' . $params['numLearners']);
                             break;
                         }
                     }
 
                     if($numLearners == $params['numLearners']) {
                         $match = true;
-                        error_log('Matched ' . $numLearners . ' with ' . $params['numLearners']);
+                        //error_log('Matched ' . $numLearners . ' with ' . $params['numLearners']);
                         break;
                     }
                 }
@@ -983,12 +983,34 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
 
             if((!empty($params['languageMedium'])) && $params['languageMedium'] != 'any') {
+                //error_log('Language medium: ' . $params['languageMedium']);
                 $match = false;
                 foreach($providers as $provider) {
                     $languageMedium = get_field('language_medium', $provider->ID);
-                    if($languageMedium == $params['languageMedium']) {
+                    //error_log('Language medium ACF field value for ' . $provider->ID . ': ' . $languageMedium);
+
+                    if(empty($languageMedium)) {
+                        // Try 'provider_language_id_external_db' custom field
+                        $languageMedium = get_post_meta($provider->ID, 'provider_language_id_external_db', true);
+
+                        //error_log('Language medium custom field value for ' . $provider->ID . ': ' . $languageMedium);
+
+                        if(empty($languageMedium)) {
+                            continue;
+                        }
+
+                        if(intval($languageMedium) == 1) {
+                            $languageMedium = 'english';
+                        } else {
+                            $languageMedium = 'welsh';
+                        }
+                    }
+
+                    
+
+                    if(strtolower($languageMedium) == strtolower($params['languageMedium'])) {
                         $match = true;
-                        error_log('Matched ' . $languageMedium . ' with ' . $params['languageMedium']);
+                        //error_log('Matched ' . $languageMedium . ' with ' . $params['languageMedium']);
                         break;
                     }
                 }
@@ -1006,7 +1028,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
                     $ageRange = get_field('age_range', $provider->ID);
                     if($ageRange == $params['ageRange']) {
                         $match = true;
-                        error_log('Matched ' . $ageRange . ' with ' . $params['ageRange']);
+                        //error_log('Matched ' . $ageRange . ' with ' . $params['ageRange']);
                         break;
                     }
                 }
@@ -1020,9 +1042,9 @@ function estyn_resources_search(\WP_REST_Request $request) {
         }
     }
 
-    error_log('Number of posts to remove: ' . count($postsToRemove));
-    error_log('Posts to remove:');
-    error_log(print_r($postsToRemove, true));
+    //error_log('Number of posts to remove: ' . count($postsToRemove));
+    //error_log('Posts to remove:');
+    //error_log(print_r($postsToRemove, true));
 
     if(!empty($postsToRemove)) {
         $args['post__not_in'] = $postsToRemove;
@@ -1185,7 +1207,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
 
     return [
         'html' => $HTML->render(), // We use the Blade template view function to render the HTML
-        'totalPosts' => $query->found_posts - count($postsToRemove),
+        'totalPosts' => $query->found_posts,
         'maxPages' => $query->max_num_pages,
         'currentPage' => $args['paged'],
         'nextPage' => $query->max_num_pages > $args['paged'] ? $args['paged'] + 1 : null,
@@ -1207,7 +1229,7 @@ function save_post_after_import($post_id) {
 /** 
  * Stop ACF removing the 'Custom Fields' meta box from the post edit screen
  */
-//add_filter('acf/settings/remove_wp_meta_box', '__return_false');
+add_filter('acf/settings/remove_wp_meta_box', '__return_false');
 
 /**
  * Get the permalink of a page that uses a specific template
