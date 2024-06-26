@@ -908,6 +908,9 @@ function estyn_resources_search(\WP_REST_Request $request) {
         $geocodingProvider = null;
         $geocoder = null;
         $providerDistances = [];
+        $geoCodingResult = null;
+        $latitude = 0;
+        $longitude = 0;
         if((!empty($params['proximity'])) && $params['proximity'] != 'any') {
             $GoogleMapsAPIKey = env('GOOGLE_MAPS_API_KEY');
             if(empty($GoogleMapsAPIKey)) {
@@ -923,6 +926,21 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 error_log('Error creating geocoder: ' . $e->getMessage());
                 return ['html' => __('Sorry, no resources were found based on your search criteria.', 'sage'), 'totalPosts' => 0];
             }
+
+            $postcode = trim($params['proximityPostcode']);
+
+            
+
+            try {
+                $geoCodingResult = $geocoder->geocodeQuery(GeocodeQuery::create($postcode));
+            } catch(\Exception $e) {
+                error_log('Error geocoding postcode: ' . $e->getMessage());
+                return ['html' => __('Sorry, no resources were found based on your search criteria.', 'sage'), 'totalPosts' => 0];
+            }
+
+            $firstResult = $geoCodingResult->first();
+            $latitude = $firstResult->getCoordinates()->getLatitude();
+            $longitude = $firstResult->getCoordinates()->getLongitude();
         }
 
         foreach($posts as $post) {
@@ -1104,11 +1122,10 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 
                 $match = false;
 
-                $postcode = trim($params['proximityPostcode']);
-
                 foreach($providers as $provider) {
                     // Let's check if we've already calculated the distance from this provider to the given postcode
                     if(array_key_exists($provider->ID, $providerDistances)) {
+                        error_log('Distance already calculated for ' . $provider->ID);
                         $distance = $providerDistances[$provider->ID];
                         if($distance >= $proximityMin && $distance <= $proximityMax) {
                             $match = true;
@@ -1128,19 +1145,6 @@ function estyn_resources_search(\WP_REST_Request $request) {
                         continue;
                     }
 
-                    $result = null;
-
-                    try {
-                        $result = $geocoder->geocodeQuery(GeocodeQuery::create($postcode));
-                    } catch(\Exception $e) {
-                        error_log('Error geocoding postcode: ' . $e->getMessage());
-                        continue;
-                    }
-
-                    $firstResult = $result->first();
-                    $latitude = $firstResult->getCoordinates()->getLatitude();
-                    $longitude = $firstResult->getCoordinates()->getLongitude();
-
                     // Calculate the distance between the provider and the postcode
                     $distance = calculateDistanceBetween($latitude, $longitude, $providerLatitude, $providerLongitude);
                     // In miles:
@@ -1148,6 +1152,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
 
                     // Store the distance for this provider so we don't recalculate it later
                     $providerDistances[$provider->ID] = $distance;
+                    error_log('Stored distance for ' . $provider->ID . ': ' . $distance . ' miles');
 
                     error_log('Distance between ' . $postcode . ' and ' . $provider->ID . ': ' . $distance . ' miles');
 
