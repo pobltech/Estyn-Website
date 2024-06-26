@@ -431,7 +431,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="accordion-item">
+                {{--<div class="accordion-item">
                   <h2 class="accordion-header" id="flush-headingLearners">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseLearners" aria-expanded="false" aria-controls="flush-collapseLearners">
                       {{ __('Number of learners', 'sage') }}
@@ -463,7 +463,6 @@
                           {{ __('100-200', 'sage') }}
                         </label>
                       </div>
-                      {{-- Repeat up to "1000+" --}}
                       <div class="form-check">
                         <input class="form-check-input" type="radio" name="learners" value="200-500" id="flexCheckLearners-200-500">
                         <label class="form-check-label" for="flexCheckLearners-200-500">
@@ -484,7 +483,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div>--}}
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="flush-headingLanguageMedium">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseLanguageMedium" aria-expanded="false" aria-controls="flush-collapseLanguageMedium">
@@ -514,7 +513,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="accordion-item">
+                {{--<div class="accordion-item">
                   <h2 class="accordion-header" id="flush-headingAgeRange">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseAgeRange" aria-expanded="false" aria-controls="flush-collapseAgeRange">
                       {{ __('Age range', 'sage') }}
@@ -566,7 +565,7 @@
                       </div>                      
                     </div>
                   </div>
-                </div>
+                </div>--}}
               </div>
             @endif
 					</div>
@@ -1293,9 +1292,9 @@
           }).get(),
           improvementResourceType: $("#flush-collapseFour input:checked").val(),
           year: $("#flush-collapseFive input:checked").val(),
-          numLearners: $("#flush-collapseLearners input:checked").val(),
+          //numLearners: $("#flush-collapseLearners input:checked").val(),
           languageMedium: $("#flush-collapseLanguageMedium input:checked").val(),
-          ageRange: $("#flush-collapseAgeRange input:checked").val(),
+          //ageRange: $("#flush-collapseAgeRange input:checked").val(),
           proximity: $("#flush-collapseProximity input:checked").val(),
           proximityPostcode: $("#flush-collapseProximity input[type='text']").val().trim()
         };
