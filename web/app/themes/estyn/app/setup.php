@@ -15,10 +15,12 @@ use Geocoder\Provider\GoogleMaps\GoogleMaps;
 use Geocoder\StatefulGeocoder;
 
 // Output error_log() etc. to the terminal. TODO: Remove this in production.
-ini_set('error_log', 'php://stdout');
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+if(env('WP_ENV') === 'development') {
+    ini_set('error_log', 'php://stdout');
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+}
 
 /**
  * Register the theme assets.
