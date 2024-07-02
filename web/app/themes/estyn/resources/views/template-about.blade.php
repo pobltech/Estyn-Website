@@ -32,9 +32,12 @@
             'carouselLeftButtons' => array_map(function($teamMemberCategory) {
                 return [
                     'link' => '#',
-                    'text' => $teamMemberCategory->name
+                    'text' => $teamMemberCategory->name,
+                    'slug' => $teamMemberCategory->slug,
+                    'id' => $teamMemberCategory->term_id
                 ];
             }, $teamMemberCategories),
+            'dynamicFiltering' => true,
             'doNotDoJavaScript' => false,
             'carouselSectionClass' => 'pobl-tech-carousel-block pb-5',
             'carouselSliderWrapperClass' => 'pobl-tech-carousel-block-slider',
