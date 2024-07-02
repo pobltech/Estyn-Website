@@ -2,7 +2,7 @@
 @include('partials.page-header', [
   'title' => get_the_title(),
   'subtitle' => __('News article', 'sage'),
-  'shareLinkURL' => $shareLinkURL ?? '#',
+  'showShareButton' => true,
   'date' => $date ?? null
 ])
 <div class="reportMain">

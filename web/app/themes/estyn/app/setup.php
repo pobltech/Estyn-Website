@@ -578,23 +578,47 @@ add_action( 'init', __NAMESPACE__ . '\\create_eduprovider_status_taxonomy', 0 );
 function correct_slug_in_language_switcher($url, $lang) {
     global $post;
 
-    $translated_post_id = pll_get_post($post->ID, $lang);
-    $translated_post = get_post($translated_post_id);
-    $translated_post_name = $translated_post->post_name;
+    $translated_post_name = null;
 
-    if($post->post_type == 'estyn_inspectionrpt') {
-        $slug = $lang == 'cy' ? 'adolygiadau' : 'inspection-reports';
-    } elseif ($post->post_type == 'estyn_newsarticle') {
-        $slug = $lang == 'cy' ? 'newyddion' : 'news';
-    } elseif ($post->post_type == 'estyn_imp_resource') {
-        $slug = $lang == 'cy' ? 'adnoddau-gwella' : 'improvement-resources';
-    } elseif ($post->post_type == 'estyn_eduprovider') {
-        $slug = $lang == 'cy' ? 'darparwyr-addysg' : 'education-providers';
+    if ($post) {
+        // We're on a post page
+        $translated_post_id = pll_get_post($post->ID, $lang);
+        $translated_post = get_post($translated_post_id);
+        $translated_post_name = $translated_post->post_name;
+        $is_taxonomy = false;
     } else {
-        return $url;
+        // We're on a taxonomy page
+        $queried_object = get_queried_object();
+        $translated_term_id = pll_get_term($queried_object->term_id, $lang);
+        $translated_term = get_term($translated_term_id);
+        $translated_post_name = $translated_term->slug;
+        $is_taxonomy = true;
     }
-    
-    if($lang == 'en') {
+
+    if (!$is_taxonomy) {
+        // Handle post types
+        if ($post->post_type == 'estyn_inspectionrpt') {
+            $slug = $lang == 'cy' ? 'adolygiadau' : 'inspection-reports';
+        } elseif ($post->post_type == 'estyn_newsarticle') {
+            $slug = $lang == 'cy' ? 'newyddion' : 'news';
+        } elseif ($post->post_type == 'estyn_imp_resource') {
+            $slug = $lang == 'cy' ? 'adnoddau-gwella' : 'improvement-resources';
+        } elseif ($post->post_type == 'estyn_eduprovider') {
+            $slug = $lang == 'cy' ? 'darparwyr-addysg' : 'education-providers';
+        } else {
+            return $url;
+        }
+    } else {
+        // Handle taxonomy slugs
+        // Example: Adjust these slugs according to your taxonomy structure
+        /* if ($queried_object->taxonomy == 'estyn_') {
+            $slug = $lang == 'cy' ? 'taxonomy-cy' : 'taxonomy-en';
+        } else { */
+            return $url;
+       /*  } */
+    }
+
+    if ($lang == 'en') {
         $url = '/' . $slug . '/' . $translated_post_name . '/';
     } else {
         $url = '/cy/' . $slug . '/' . $translated_post_name . '/';

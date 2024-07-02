@@ -114,7 +114,7 @@
           'title' => get_the_title(),
           'excerpt' => get_the_excerpt(),
           'link' => get_the_permalink(),
-          'date' => get_the_date('d F Y'),
+          'date' => get_the_date('Y-m-d'),
         ];
       }
 
@@ -226,7 +226,7 @@
             'featured_image_src' => get_the_post_thumbnail_url(),
             'title' => get_the_title(),
             'link' => get_the_permalink(),
-            'date' => get_the_date('d F Y'),
+            'date' => get_the_date('Y-m-d'),
           ];
         }
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e3e4b32d2d3983772103f8972df6542",
+    "content-hash": "acc24a483d7e78b5de414cc0323cb334",
     "packages": [
         {
             "name": "brick/math",
@@ -6491,6 +6491,24 @@
                 }
             ],
             "time": "2022-03-08T17:03:00+00:00"
+        },
+        {
+            "name": "wpackagist-plugin/add-to-any",
+            "version": "1.8.10",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/add-to-any/",
+                "reference": "tags/1.8.10"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/add-to-any.1.8.10.zip"
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/add-to-any/"
         },
         {
             "name": "wpackagist-plugin/admin-taxonomy-filter",
