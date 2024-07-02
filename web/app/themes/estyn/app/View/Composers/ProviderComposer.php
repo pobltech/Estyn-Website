@@ -4,6 +4,12 @@ namespace App\View\Composers;
 
 use Roots\Acorn\View\Composer;
 
+use Geocoder\Query\GeocodeQuery;
+use Geocoder\Query\ReverseQuery;
+use Http\Adapter\Guzzle6\Client;
+use Geocoder\Provider\GoogleMaps\GoogleMaps;
+use Geocoder\StatefulGeocoder;
+
 class ProviderComposer extends Composer
 {
     protected static $views = [
@@ -24,7 +30,7 @@ class ProviderComposer extends Composer
 
     public function providerData()
     {
-        $fields = ['address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'town', 'county', 'postcode', 'phone', 'email', 'latitude', 'longitude'];
+        $fields = ['address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'town', 'county', 'postcode', 'phone', 'email'];//, 'latitude', 'longitude'];
         $data = [];
 
         foreach ($fields as $field) {
@@ -32,7 +38,91 @@ class ProviderComposer extends Composer
             $data[$field] = !empty($value) ? $value : '';
         }
 
+        $latAndLong = $this->latitudeAndLongitude();
+
+        $data['latitude'] = $latAndLong['latitude'];
+        $data['longitude'] = $latAndLong['longitude'];
+
         return $data;
+    }
+
+    private function latitudeAndLongitude() {
+        // We'll use geocoding/address lookup to try to get
+        // precise lat and long.
+        // If no good then we go with the get_field('latitude') and get_field('longitude')
+        // which came from the old DB but aren't as precise
+
+        $placeName = get_the_title();
+        $addressLine1 = get_field('address_line_1');
+        $addressLine2 = get_field('address_line_2');
+        $addressLine3 = get_field('address_line_3');
+        $addressLine4 = get_field('address_line_4');
+        $town = get_field('town');
+        $county = get_field('county');
+        $postcode = get_field('postcode');
+
+        $latitudeACF = get_field('latitude');
+        $longitudeACF = get_field('longitude');
+
+        $GoogleMapsAPIKey = env('GOOGLE_MAPS_API_KEY');
+
+        $fallbackReturn = ['latitude' => $latitudeACF, 'longitude' => $longitudeACF];
+
+        if(empty($postcode) || empty($GoogleMapsAPIKey)) {
+            return $fallbackReturn;
+        }
+
+        try {
+            $geocodingHttpClient = new \GuzzleHttp\Client();
+            $geocodingProvider = new GoogleMaps($geocodingHttpClient, null, $GoogleMapsAPIKey);
+            $geocoder = new StatefulGeocoder($geocodingProvider, 'en');
+        } catch(\Exception $e) {
+            error_log('Error creating geocoder: ' . $e->getMessage());
+            return $fallbackReturn;
+        }
+
+        $postcode = trim($postcode);
+        $addressLine1 = trim($addressLine1);
+
+        $addressLine2 = empty($addressLine2) ? '' : trim($addressLine2);
+        $addressLine3 = empty($addressLine3) ? '' : trim($addressLine3);
+        $addressLine4 = empty($addressLine4) ? '' : trim($addressLine4);
+        $town = empty($town) ? '' : trim($town);
+        $county = empty($county) ? '' : trim($county);
+
+        // Concatenate the address fields, but only include them if they're not empty
+        $address = $placeName;
+
+        if(!empty($addressLine1)) {
+            $address .= ', ' . $addressLine1;
+        }
+        if(!empty($addressLine2)) {
+            $address .= ', ' . $addressLine2;
+        }
+        if(!empty($addressLine3)) {
+            $address .= ', ' . $addressLine3;
+        }
+        if(!empty($addressLine4)) {
+            $address .= ', ' . $addressLine4;
+        }
+        if(!empty($town)) {
+            $address .= ', ' . $town;
+        }
+        if(!empty($county)) {
+            $address .= ', ' . $county;
+        }
+        $address .= ', ' . $postcode;
+
+        try {
+            $geocodeQuery = GeocodeQuery::create($address);
+            $result = $geocoder->geocodeQuery($geocodeQuery);
+            $coordinates = $result->first()->getCoordinates();
+            return ['latitude' => $coordinates->getLatitude(), 'longitude' => $coordinates->getLongitude()];
+        } catch(\Exception $e) {
+            error_log('Error geocoding address: ' . $e->getMessage());
+            return $fallbackReturn;
+        }
+
     }
 
     public function hasResources() {

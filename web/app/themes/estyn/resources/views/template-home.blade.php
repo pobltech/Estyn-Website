@@ -48,8 +48,8 @@
             <div id="homeProviderCol" class="col-12 col-md-6 homeProviderCol">
               <div class="row">
                 <div class="col-12 col-md-10">
-                  <h2 class="mb-0 mb-sm-2">{{ __('Find a provider', 'sage') }}</h2>
-                  <label for="providerSearch" class="form-label mb-2 mb-md-4">{{ __('Search our education & training providers', 'sage') }}</label>
+                  <h2 class="mb-0 mb-sm-2">{{ get_field('provider_search_heading') }}</h2>
+                  <label for="providerSearch" class="form-label mb-2 mb-md-4">{{ get_field('provider_search_description') }}</label>
                   <div class="estyn-search-container input-group mb-3">
                     <input type="text" list="home-provider-search-datalist-options" class="estyn-search-box form-control" data-posttype="estyn_eduprovider" placeholder="" aria-label="providerSearch" aria-describedby="providerSearch">
                     <button class="estyn-search-box-button btn btn-secondary" type="button" id="providerSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
@@ -61,8 +61,8 @@
               </div>
             </div>
             <div class="col-12 col-md-5 offset-md-1">
-              <h2 class="d-none d-md-block mb-sm-2">{{ __('Estyn for you', 'sage') }}</h2>
-              <p class="d-none d-md-block mb-2 mb-md-4">{{ __('Sub text explaining more detail', 'sage') }}</p>
+              <h2 class="d-none d-md-block mb-sm-2">{{ get_field('estyn_for_you_heading') }}</h2>
+              <p class="d-none d-md-block mb-2 mb-md-4">{{ get_field('estyn_for_you_description') }}</p>
               <div class="d-flex align-items-start flex-column flex-sm-row flex-md-column flex-xxl-row">
                 @if(!empty($homeData['intro_buttons']))
                   @foreach($homeData['intro_buttons'] as $button)
@@ -114,7 +114,7 @@
           'title' => get_the_title(),
           'excerpt' => get_the_excerpt(),
           'link' => get_the_permalink(),
-          'date' => get_the_date('d F Y'),
+          'date' => get_the_date('Y-m-d'),
         ];
       }
 
@@ -226,7 +226,7 @@
             'featured_image_src' => get_the_post_thumbnail_url(),
             'title' => get_the_title(),
             'link' => get_the_permalink(),
-            'date' => get_the_date('d F Y'),
+            'date' => get_the_date('Y-m-d'),
           ];
         }
 

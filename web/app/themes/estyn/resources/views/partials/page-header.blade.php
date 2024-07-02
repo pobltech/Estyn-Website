@@ -32,8 +32,12 @@
                     @include('partials.entry-meta')
                 </div>
                 <div class="pt-share-button-container">
-                  @if(isset($shareLinkURL))
+                  @if(!empty($shareLinkURL))
                     <a class="btn btn-outline-info" href="{{ $shareLinkURL }}"><span class="d-none d-sm-inline">{{ __('Share this page', 'sage') }} </span><i class="fa-regular fa-arrow-up-from-square"></i></a>
+                  @endif
+                  @if(!empty($showShareButton))
+                    {{-- AddToAny Share Buttons --}}
+                    {!! ADDTOANY_SHARE_SAVE_KIT() !!}
                   @endif
                 </div>
               </div>

@@ -214,7 +214,7 @@
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
                     // Create a marker at the property's location
-                    //L.marker(location).addTo(map);
+                    L.marker(location).addTo(map);
                 }
             }
         })(jQuery);

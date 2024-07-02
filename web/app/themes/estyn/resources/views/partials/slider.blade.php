@@ -92,6 +92,8 @@
                             @endif
                             @if(!empty($carouselItem['link']))
                             <a class="stretched-link" href="{{ $carouselItem['link'] ?? '#' }}"><h4 class="mb-0 {{ !empty($carouselItem['excerpt']) ? 'mb-2' : '' }}">{{ html_entity_decode($carouselItem['title'], ENT_QUOTES, 'UTF-8') }}</h4></a>
+                            @elseif(!empty($carouselItem['title']))
+                            <h4 class="mb-0 {{ !empty($carouselItem['excerpt']) ? 'mb-2' : '' }}">{{ html_entity_decode($carouselItem['title'], ENT_QUOTES, 'UTF-8') }}</h4>
                             @endif
                             @if(!empty($carouselItem['excerpt']))
                                 <p class="mb-0">{{ wp_strip_all_tags($carouselItem['excerpt']) }}</p>

@@ -41,7 +41,7 @@ class AboutComposer extends Composer
         foreach ($teamMembers as $teamMember) {
             $imageURL = get_the_post_thumbnail_url($teamMember->ID, 'full');
             $imageAlt = '';
-            if(empty($image)) {
+            if(empty($imageURL)) {
                 $imageURL = asset('images/teammemberplaceholder.png')->uri();
                 $imageAlt = __('Placeholder image', 'sage');
             } else {

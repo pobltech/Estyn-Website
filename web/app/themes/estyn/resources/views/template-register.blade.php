@@ -8,7 +8,7 @@
         'title' => $title ?? get_the_title(),
         'subtitle' => $subtitle ?? null,
         'readTime' => $readTime ?? null,
-        'shareLinkURL' => $shareLinkURL ?? '#',
+        'showShareButton' => true,
         'date' => $date ?? null,
         'noReadtime' => true,
     ])
