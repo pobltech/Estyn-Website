@@ -13,6 +13,11 @@
     <!-- Font Awesome 6 -->
     <script src="https://kit.fontawesome.com/f460c66ec1.js" crossorigin="anonymous"></script>
 
+    <!-- Leaflet -->
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
     @php(do_action('get_header'))
     @php(wp_head())
   </head>

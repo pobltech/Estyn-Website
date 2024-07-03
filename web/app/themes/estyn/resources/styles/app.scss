@@ -79,7 +79,9 @@ $navbar-toggler-focus-width: 0;
 $fa-font-path: "~font-awesome/fonts";
 $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 $leaflet-image-path: "~leaflet/dist/images/";
-@import 'leaflet/dist/leaflet';
+/* @import 'leaflet/dist/leaflet'; */
+/* Because of a bug with Leaflet and Webpack, we'll just add the
+    CSS to the head of the website */
 
 .navbar-toggler {
     /** Change the nav burger icon into an X. For some reason, using our own CSS variable didn't work **/
