@@ -120,11 +120,11 @@
                 let carouselElement = document.getElementById(carouselID);
                 let carouselSliderElement = document.getElementById(carouselSliderPartID);
                 //const carousel = new Carousel(carouselElement);
-                let carousel = null;
+                //let carousel = null;
                 //console.log('Carousel with ID ' + carouselId + ' initialized');
 
-                const allCarouselItems = carouselElement.querySelectorAll('.slider-carousel-item');
-                let currentCarouselItems = allCarouselItems;
+                //const allCarouselItems = carouselElement.querySelectorAll('.slider-carousel-item');
+                //let currentCarouselItems = allCarouselItems;
 
                 let buttonRight = carouselElement.querySelector('#' + carouselID + '-slideRight');
                 let buttonLeft = carouselElement.querySelector('#' + carouselID + '-slideLeft');
@@ -163,21 +163,59 @@
                         // Prevent default
                         event.preventDefault();
 
-                        console.log('Dynamic filter button clicked');
+                        //console.log('Dynamic filter button clicked');
+
+                        carouselSliderElement.scrollLeft = 0;
 
                         dynamicFilterCarouselItems(button.getAttribute('data-filter-term-id'));
                     };
                 });
 
-                function dynamicFilterCarouselItems(filterTermID) {
-                    console.log('Filtering carousel items by term: ' + filterTermID);
+                function fadeOutEffect(element) {
+                    var fadeEffect = setInterval(function () {
+                        if (!element.style.opacity) {
+                            element.style.opacity = 1;
+                        }
+                        if (element.style.opacity > 0) {
+                            element.style.opacity -= 0.1;
+                        } else {
+                            clearInterval(fadeEffect);
+                            element.style.display = 'none';
+                        }
+                    }, 50); // Adjust the interval to control the speed of the fade-out
+                }
 
-                    // Remove all the carousel items from the carousel, then populate
-                    // currentCarouselItems with the carousel items for which the element with class
-                    // 'carousel-item-excerpt' has inner text that matches the filterTermName.
-                    // Then add the carousel items in currentCarouselItems back to the carousel,
-                    // and reinitialize the carousel (bootstrap).
+                function fadeInEffect(element) {
+                    var fadeEffect = setInterval(function () {
+                        if (!element.style.opacity) {
+                            element.style.opacity = 0;
+                        }
+
+                        element.style.display = 'block';
+
+                        if (element.style.opacity < 1) {
+                            element.style.opacity = parseFloat(element.style.opacity) + 0.1;
+                        } else {
+                            clearInterval(fadeEffect);
+                        }
+                    }, 50); // Adjust the interval to control the speed of the fade-in
+                }
+
+                function dynamicFilterCarouselItems(filterTermID) {
+                    //console.log('Filtering carousel items by term: ' + filterTermID);
+
                     carouselElement.querySelectorAll('.slider-carousel-item').forEach(function(item) {
+                        let itemTermID = item.getAttribute('data-team-member-category-id');
+
+                        if(itemTermID !== filterTermID) {
+                            fadeOutEffect(item);
+                        } else {
+                            fadeInEffect(item);
+                        }
+                    });
+
+
+                    /*carouselElement.querySelectorAll('.slider-carousel-item').forEach(function(item) {
                         item.remove();
                     });
 
@@ -193,15 +231,7 @@
 
                     currentCarouselItems.forEach(function(item) {
                         carouselElement.querySelector('.slider-carousel-items-container').appendChild(item);
-                    });
-
-                    // Reinitialise the carousel
-                    
-
-                    // Reinitialise carouselElement and carouselSliderElement
-                    //carouselElement = document.getElementById(carouselID);
-                    //carouselSliderElement = document.getElementById(carouselSliderPartID);
-                                        
+                    });*/               
                 }
             });
         </script>
