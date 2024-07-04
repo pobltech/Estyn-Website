@@ -45,6 +45,13 @@ add_action('enqueue_block_editor_assets', function () {
     bundle('editor')->enqueue();
 }, 100);
 
+add_action('admin_enqueue_scripts', function () {
+    bundle('admin')->enqueue();
+
+    // Workaround becuase the above isn't working for some reason
+    wp_enqueue_style('estyn-admin-styles', get_template_directory_uri() . '/public/admin.css');
+}, 100);
+
 /**
  * Register the initial theme setup.
  *
