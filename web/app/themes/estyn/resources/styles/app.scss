@@ -574,17 +574,6 @@ blockquote {
     height: auto;
 }
 
-.a2a_kit {
-    a {
-        &::after {
-            font-family: "Font Awesome 6 Sharp";
-            content: "\e09c";
-            display: inline-block;
-            margin-left: 0.455em;
-        }
-    }
-}
-
 .btn-outline-info, .a2a_kit a, .addtoany_list.a2a_kit_size_32 a {
     font-size: 14px;
     font-family: "Source Sans 3", sans-serif;
@@ -601,6 +590,26 @@ blockquote {
     }
 }
 
+.addtoany_list.a2a_kit, .addtoany_list.a2a_kit_size_32 {
+    a {
+        &::after {
+            font-family: "Font Awesome 6 Sharp";
+            content: "\e09c";
+            display: inline-block;
+            margin-left: 0.455em;
+            font-size: 14px;
+
+            @include media-breakpoint-down(sm) {
+                margin-left: 0;
+            }
+        }
+
+        @include media-breakpoint-down(sm) {
+            font-size: 0;
+            border-color: transparent;
+        }
+    }
+}
 
 
 .btn-outline-info i {
