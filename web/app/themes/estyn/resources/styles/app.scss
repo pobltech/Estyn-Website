@@ -314,13 +314,22 @@ p, li {
 
     .footer-bottom-nav {
         li {
+            
             padding: 0.5rem 0;
+
+            @include media-breakpoint-down(sm) {
+                padding: 0;
+            }
 
             a {
                 color: $estyn-white;
 
                 display: block;
                 padding: .5rem 2rem .5rem 0;
+
+                @include media-breakpoint-down(sm) {
+                    padding: 0;
+                }
 
                 text-decoration: none;
 
