@@ -43,11 +43,12 @@
 		</div>
         @endif
         @if(isset($carouselLeftButtons) && !empty($carouselLeftButtons))
-		    <div class="d-flex justify-content-end justify-content-md-between align-items-sm-center">
+		    <div class="d-flex justify-content-between align-items-sm-center">
+            <div>
         @else
             <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+            <div class="mb-4 mb-sm-0">
         @endif
-			<div class="mb-4 mb-sm-0">
                 @if(isset($carouselDescription) && !empty($carouselDescription))
 				    <p class="mb-0">{{ $carouselDescription }}</p>
                 @else
@@ -59,7 +60,7 @@
                 @endif
                 @if(isset($carouselLeftButtons) && !empty($carouselLeftButtons))
                     @foreach($carouselLeftButtons as $carouselLeftButton)
-                        <a class="d-none d-md-inline-block btn btn-outline-primary {{ (!empty($dynamicFiltering)) ? 'dynamic-filter-button' : '' }} {{ $loop->iteration > 1 ? 'ms-4' : '' }}" href="{{ $carouselLeftButton['link'] }}" {!! (!empty($dynamicFiltering)) ? 'data-filter-term-id="' . $carouselLeftButton['id'] . '"' . ' data-filter-term-slug="' . $carouselLeftButton['slug'] . '"' : '' !!}>{{ $carouselLeftButton['text'] }}</a>
+                        <a class="d-inline-block btn btn-outline-primary {{ (!empty($dynamicFiltering)) ? 'dynamic-filter-button' : '' }} {{ $loop->iteration > 1 ? 'ms-sm-4' : '' }}" href="{{ $carouselLeftButton['link'] }}" {!! (!empty($dynamicFiltering)) ? 'data-filter-term-id="' . $carouselLeftButton['id'] . '"' . ' data-filter-term-slug="' . $carouselLeftButton['slug'] . '"' : '' !!}>{{ $carouselLeftButton['text'] }}</a>
                     @endforeach
                 @endif
 			</div>

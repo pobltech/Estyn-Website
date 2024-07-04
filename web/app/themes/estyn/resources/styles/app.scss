@@ -1582,6 +1582,11 @@ p.sp-desc {
             border: none;
             text-decoration: underline;
             padding-left: 0;
+
+            &:hover, &:focus, &:active, &:not(:disabled):not(.disabled):active {
+                background-color: transparent;
+                color: $estyn-blue;
+            }
         }
     }
 
