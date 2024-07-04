@@ -5,7 +5,7 @@
     </div>
 </div>
 <div class="row justify-content-between">
-    <div class="col-12 col-md-6 col-lg-4">
+    <div class="col-12 col-md-6 col-lg-4 pb-4 pb-sm-0">
         <p>{{ !empty(get_field('ways_to_improve_section_intro_text', $term)) ? get_field('ways_to_improve_section_intro_text', $term) : __('Estyn are here to help you improve your ' . $term->name . ' sector school/setting. Explore our vast wealth of improvement resources') . '.' }}</p>
     </div>
     <div class="col-12 col-lg-8 col-xl-7">
