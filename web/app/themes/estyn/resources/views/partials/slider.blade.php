@@ -43,11 +43,12 @@
 		</div>
         @endif
         @if(isset($carouselLeftButtons) && !empty($carouselLeftButtons))
-		    <div class="d-flex justify-content-end justify-content-md-between align-items-sm-center">
+		    <div class="d-flex justify-content-between align-items-sm-center">
+            <div>
         @else
             <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+            <div class="mb-4 mb-sm-0">
         @endif
-			<div class="mb-4 mb-sm-0">
                 @if(isset($carouselDescription) && !empty($carouselDescription))
 				    <p class="mb-0">{{ $carouselDescription }}</p>
                 @else
@@ -59,7 +60,7 @@
                 @endif
                 @if(isset($carouselLeftButtons) && !empty($carouselLeftButtons))
                     @foreach($carouselLeftButtons as $carouselLeftButton)
-                        <a class="d-none d-md-inline-block btn btn-outline-primary {{ $loop->iteration > 1 ? 'ms-4' : '' }}" href="{{ $carouselLeftButton['link'] }}">{{ $carouselLeftButton['text'] }}</a>
+                        <a class="d-inline-block btn btn-outline-primary {{ (!empty($dynamicFiltering)) ? 'dynamic-filter-button' : '' }} {{ $loop->iteration > 1 ? 'ms-sm-4' : '' }}" href="{{ $carouselLeftButton['link'] }}" {!! (!empty($dynamicFiltering)) ? 'data-filter-term-id="' . $carouselLeftButton['id'] . '"' . ' data-filter-term-slug="' . $carouselLeftButton['slug'] . '"' : '' !!}>{{ $carouselLeftButton['text'] }}</a>
                     @endforeach
                 @endif
 			</div>
@@ -77,9 +78,9 @@
 	<div class="{{ $carouselSliderWrapperClass ?? '' }} scrollCont w-100 overflow-auto" id="{{ $carouselID }}-scrollCont">
 	  <div class="container px-md-4 px-xl-5">
 	    <div class="row">
-	        <div class="d-flex flex-row flex-nowrap">
+	        <div class="slider-carousel-items-container d-flex flex-row flex-nowrap">
                 <?php foreach($carouselItems as $carouselItem) : ?>
-                    <div class="card me-2 me-sm-4 h-100">
+                    <div class="slider-carousel-item card me-2 me-sm-4 h-100" {!! (!empty($carouselItem['team_member_category_term'])) ? 'data-team-member-category-id="' . $carouselItem['team_member_category_term']->term_id . '"' : '' !!}>
                         @if(!empty($carouselItem['tag']))
                             <div class="carousel-item-tag text-white px-2 py-1">{{ $carouselItem['tag'] }}</div>
                         @endif
@@ -96,7 +97,7 @@
                             <h4 class="mb-0 {{ !empty($carouselItem['excerpt']) ? 'mb-2' : '' }}">{{ html_entity_decode($carouselItem['title'], ENT_QUOTES, 'UTF-8') }}</h4>
                             @endif
                             @if(!empty($carouselItem['excerpt']))
-                                <p class="mb-0">{{ wp_strip_all_tags($carouselItem['excerpt']) }}</p>
+                                <p class="mb-0 carousel-item-excerpt">{{ wp_strip_all_tags($carouselItem['excerpt']) }}</p>
                             @endif
                         </div>
                     </div>
@@ -120,8 +121,11 @@
                 let carouselElement = document.getElementById(carouselID);
                 let carouselSliderElement = document.getElementById(carouselSliderPartID);
                 //const carousel = new Carousel(carouselElement);
-                
+                //let carousel = null;
                 //console.log('Carousel with ID ' + carouselId + ' initialized');
+
+                //const allCarouselItems = carouselElement.querySelectorAll('.slider-carousel-item');
+                //let currentCarouselItems = allCarouselItems;
 
                 let buttonRight = carouselElement.querySelector('#' + carouselID + '-slideRight');
                 let buttonLeft = carouselElement.querySelector('#' + carouselID + '-slideLeft');
@@ -151,6 +155,85 @@
 
                     carouselSliderElement.scrollLeft -= scrollAmount;
                 };
+
+                // If there are elements with class 'dynamic-filter-button' then add event listeners to them
+                let dynamicFilterButtons = carouselElement.querySelectorAll('.dynamic-filter-button');
+
+                dynamicFilterButtons.forEach(function(button) {
+                    button.onclick = function(event) {
+                        // Prevent default
+                        event.preventDefault();
+
+                        //console.log('Dynamic filter button clicked');
+
+                        carouselSliderElement.scrollLeft = 0;
+
+                        dynamicFilterCarouselItems(button.getAttribute('data-filter-term-id'));
+                    };
+                });
+
+                function fadeOutEffect(element) {
+                    var fadeEffect = setInterval(function () {
+                        if (!element.style.opacity) {
+                            element.style.opacity = 1;
+                        }
+                        if (element.style.opacity > 0) {
+                            element.style.opacity -= 0.1;
+                        } else {
+                            clearInterval(fadeEffect);
+                            element.style.display = 'none';
+                        }
+                    }, 50); // Adjust the interval to control the speed of the fade-out
+                }
+
+                function fadeInEffect(element) {
+                    var fadeEffect = setInterval(function () {
+                        if (!element.style.opacity) {
+                            element.style.opacity = 0;
+                        }
+
+                        element.style.display = 'block';
+
+                        if (element.style.opacity < 1) {
+                            element.style.opacity = parseFloat(element.style.opacity) + 0.1;
+                        } else {
+                            clearInterval(fadeEffect);
+                        }
+                    }, 50); // Adjust the interval to control the speed of the fade-in
+                }
+
+                function dynamicFilterCarouselItems(filterTermID) {
+                    //console.log('Filtering carousel items by term: ' + filterTermID);
+
+                    carouselElement.querySelectorAll('.slider-carousel-item').forEach(function(item) {
+                        let itemTermID = item.getAttribute('data-team-member-category-id');
+
+                        if(itemTermID !== filterTermID) {
+                            fadeOutEffect(item);
+                        } else {
+                            fadeInEffect(item);
+                        }
+                    });
+
+
+                    /*carouselElement.querySelectorAll('.slider-carousel-item').forEach(function(item) {
+                        item.remove();
+                    });
+
+                    currentCarouselItems = [];
+
+                    allCarouselItems.forEach(function(item) {
+                        let itemTermID = item.getAttribute('data-team-member-category-id');
+
+                        if(itemTermID === filterTermID) {
+                            currentCarouselItems.push(item);
+                        }
+                    });
+
+                    currentCarouselItems.forEach(function(item) {
+                        carouselElement.querySelector('.slider-carousel-items-container').appendChild(item);
+                    });*/               
+                }
             });
         </script>
     @else

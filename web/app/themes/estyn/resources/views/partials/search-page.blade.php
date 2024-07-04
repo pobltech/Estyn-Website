@@ -86,7 +86,7 @@
 
             <div class="search-filters collapse d-md-block pb-5" id="search-filters">
               <h3>{{ __('Filters', 'sage') }}</h3>
-              <div class="accordion accordion-flush" id="accordionFlushExample">
+              <div class="accordion accordion-flush pb-5 pb-sm-0" id="accordionFlushExample">
                 @if(isset($isNewsAndBlog) && $isNewsAndBlog)
                   <div class="accordion-item">
                       <h2 class="accordion-header" id="flush-headingOne">
@@ -374,7 +374,7 @@
                 @endif
                 @endif
               </div>
-            </div>
+            
             @if(!empty($isImprovementResourcesSearch))
               <h4>{{ __('Similar Settings to Mine', 'sage') }}</h4>
               <div class="search-filters accordion accordion-flush" id="accordionFlushExample">
@@ -567,6 +567,7 @@
                   </div>
                 </div>--}}
               </div>
+            </div>
             @endif
 					</div>
 				</div>

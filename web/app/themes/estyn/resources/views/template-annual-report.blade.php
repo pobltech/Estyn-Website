@@ -14,7 +14,7 @@
                     <h2>{{ __('Annual report archive', 'sage') }}</h2>
                 </div>
             </div>
-            <div class="row justify-content-center gy-5">
+            <div class="row justify-content-center gy-5 pb-5 pb-md-0">
                 <div class="col-12 col-md-6">
                     <p>{{ __('Our archive of previous annual report publications', 'sage') }}</p>
                     @include('components.resource-list', ['items' => $annualReportArchiveResourceListItems])

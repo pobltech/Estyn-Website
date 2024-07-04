@@ -82,5 +82,7 @@
         </div>
     </div>
 </div>
+<div class="pb-5">
 @include('partials.inspectors-page-signposting')
+</div>
 @endsection

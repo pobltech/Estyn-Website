@@ -79,7 +79,9 @@ $navbar-toggler-focus-width: 0;
 $fa-font-path: "~font-awesome/fonts";
 $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 $leaflet-image-path: "~leaflet/dist/images/";
-@import 'leaflet/dist/leaflet';
+/* @import 'leaflet/dist/leaflet'; */
+/* Because of a bug with Leaflet and Webpack, we'll just add the
+    CSS to the head of the website */
 
 .navbar-toggler {
     /** Change the nav burger icon into an X. For some reason, using our own CSS variable didn't work **/
@@ -105,6 +107,8 @@ $m-2: $p-2;
 $m-3: $p-3;
 $m-4: $p-4;
 $m-5: $p-5;
+
+$paragraph-margin-bottom: 1.6rem;
 
 .colour-black {
     color: black;
@@ -213,7 +217,11 @@ p, li {
     font-style: normal;
     font-size: 20px;
     line-height: 26px;
-    margin-bottom: 1.6rem;
+    margin-bottom: $paragraph-margin-bottom;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 
     strong {
         font-weight: 700;
@@ -306,13 +314,22 @@ p, li {
 
     .footer-bottom-nav {
         li {
+            
             padding: 0.5rem 0;
+
+            @include media-breakpoint-down(sm) {
+                padding: 0;
+            }
 
             a {
                 color: $estyn-white;
 
                 display: block;
                 padding: .5rem 2rem .5rem 0;
+
+                @include media-breakpoint-down(sm) {
+                    padding: 0;
+                }
 
                 text-decoration: none;
 
@@ -487,9 +504,20 @@ blockquote {
         color:$estyn-darkblue;
     }
 }
-.wp-block-button:where(.is-style-outline)>.wp-block-button__link {
+.wp-element-button, .wp-block-button__link, .wp-block-button:where(.is-style-outline)>.wp-block-button__link {
     border-width: 1px;
+    border-style: solid;
+    background: transparent;
 }
+
+.wp-block-buttons {
+    margin-bottom: $paragraph-margin-bottom;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
 .btn-outline-primary, .wp-element-button, .wp-block-button__link, .wp-block-button:where(.is-style-outline)>.wp-block-button__link {
     font-size: 18px;
     font-family: "Source Sans 3", sans-serif;
@@ -505,6 +533,7 @@ blockquote {
         border-color: $estyn-darkblue;
     }
 }
+
 .btn-outline-light {
     font-size: 16px;
     font-family: "museo", serif;
@@ -545,17 +574,6 @@ blockquote {
     height: auto;
 }
 
-.a2a_kit {
-    a {
-        &::after {
-            font-family: "Font Awesome 6 Sharp";
-            content: "\e09c";
-            display: inline-block;
-            margin-left: 0.455em;
-        }
-    }
-}
-
 .btn-outline-info, .a2a_kit a, .addtoany_list.a2a_kit_size_32 a {
     font-size: 14px;
     font-family: "Source Sans 3", sans-serif;
@@ -572,6 +590,26 @@ blockquote {
     }
 }
 
+.addtoany_list.a2a_kit, .addtoany_list.a2a_kit_size_32 {
+    a {
+        &::after {
+            font-family: "Font Awesome 6 Sharp";
+            content: "\e09c";
+            display: inline-block;
+            margin-left: 0.455em;
+            font-size: 14px;
+
+            @include media-breakpoint-down(sm) {
+                margin-left: 0;
+            }
+        }
+
+        @include media-breakpoint-down(sm) {
+            font-size: 0;
+            border-color: transparent;
+        }
+    }
+}
 
 
 .btn-outline-info i {
@@ -1553,6 +1591,11 @@ p.sp-desc {
             border: none;
             text-decoration: underline;
             padding-left: 0;
+
+            &:hover, &:focus, &:active, &:not(:disabled):not(.disabled):active {
+                background-color: transparent;
+                color: $estyn-blue;
+            }
         }
     }
 

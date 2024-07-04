@@ -45,6 +45,13 @@ add_action('enqueue_block_editor_assets', function () {
     bundle('editor')->enqueue();
 }, 100);
 
+add_action('admin_enqueue_scripts', function () {
+    bundle('admin')->enqueue();
+
+    // Workaround becuase the above isn't working for some reason
+    wp_enqueue_style('estyn-admin-styles', get_template_directory_uri() . '/public/admin.css');
+}, 100);
+
 /**
  * Register the initial theme setup.
  *
@@ -579,19 +586,23 @@ function correct_slug_in_language_switcher($url, $lang) {
     global $post;
 
     $translated_post_name = null;
+    $is_taxonomy = false;
+
+    $url = '';
+    $slug = '';
 
     if ($post) {
         // We're on a post page
         $translated_post_id = pll_get_post($post->ID, $lang);
         $translated_post = get_post($translated_post_id);
         $translated_post_name = $translated_post->post_name;
-        $is_taxonomy = false;
     } else {
         // We're on a taxonomy page
         $queried_object = get_queried_object();
         $translated_term_id = pll_get_term($queried_object->term_id, $lang);
-        $translated_term = get_term($translated_term_id);
-        $translated_post_name = $translated_term->slug;
+        // Note: "post" and "post_name" because we use the variables later
+        $translated_post = get_term($translated_term_id);
+        $translated_post_name = $translated_post->slug;
         $is_taxonomy = true;
     }
 
@@ -614,8 +625,11 @@ function correct_slug_in_language_switcher($url, $lang) {
         /* if ($queried_object->taxonomy == 'estyn_') {
             $slug = $lang == 'cy' ? 'taxonomy-cy' : 'taxonomy-en';
         } else { */
-            return $url;
+            /* return $url; */
        /*  } */
+
+       $taxonomy = $queried_object->taxonomy;
+       $slug = $taxonomy->rewrite['slug'];
     }
 
     if ($lang == 'en') {
@@ -1385,7 +1399,7 @@ function save_post_after_import($post_id) {
 /** 
  * Stop ACF removing the 'Custom Fields' meta box from the post edit screen
  */
-add_filter('acf/settings/remove_wp_meta_box', '__return_false');
+//add_filter('acf/settings/remove_wp_meta_box', '__return_false');
 
 /**
  * Get the permalink of a page that uses a specific template

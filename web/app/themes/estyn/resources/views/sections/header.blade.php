@@ -23,12 +23,12 @@
 			</div>
           </a>
           <div class="megaMenu dropdown-menu w-100 bg-white">
-          	<div class="container my-5">
+          	<div class="container mt-5 mb-md-5">
           		<div class="row d-flex justify-content-center">
           			<div class="col-12 px-0 col-lg-8">
           				<h3 class="mb-4">{{ __('Parents, carers & learners', 'sage') }}</h3>
-          				<div class="row w-100 pb-5">
-          					<div class="col-12 col-md-6 megaMenuFeature">
+          				<div class="row w-100 pb-3 pb-md-5">
+          					<div class="col-12 col-md-6 pb-4 pb-md-0 megaMenuFeature">
           						<div class="row">
 												@php
 													// Get the nav menu items from the nav menu that is assigned to the 'main_nav_parents_carers_and_learners_signposts' menu location
@@ -112,8 +112,8 @@
           		<div class="row d-flex justify-content-center">
           			<div class="col-12 px-0 col-lg-8">
           				<h3 class="mb-4">{{ __('Education professionals', 'sage') }}</h3>
-          				<div class="row w-100 pb-5">
-          					<div class="col-12 col-md-6 megaMenuFeature">
+          				<div class="row w-100 pb-3 pb-md-5">
+          					<div class="col-12 col-md-6 pb-4 pb-md-0 megaMenuFeature">
           						<div class="row">
 												@php
 													// Get the nav menu items from the nav menu that is assigned to the 'main_nav_education_professionals_signposts' menu location
@@ -257,12 +257,12 @@
 			</div>
           </a>
           <div class="megaMenu dropdown-menu w-100 bg-white">
-          	<div class="container my-5">
+          	<div class="container mt-5 mb-md-5">
           		<div class="row d-flex justify-content-center">
           			<div class="col-12 px-0 col-lg-8">
           				<h3 class="mb-4">{{ __('About Estyn', 'sage') }}</h3>
-          				<div class="row w-100 pb-5">
-          					<div class="col-12 col-md-6 megaMenuFeature">
+          				<div class="row w-100 pb-3 pb-md-5">
+          					<div class="col-12 col-md-6 pb-4 pb-md-0 megaMenuFeature">
           						<div class="row">
 												@php
 													// Get the nav menu items from the nav menu that is assigned to the 'main_nav_about_estyn_signposts' menu location
@@ -386,7 +386,7 @@
 			<li class="nav-item d-flex flex-column justify-content-center nav-search dropdown">
 				<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
 				<div class="megaMenu dropdown-menu w-100 bg-white search-menu">
-					<div class="container my-5">
+					<div class="container mt-5 mb-md-5">
 						<div class="row d-flex justify-content-center">
 							<div class="col-12 col-md-10">
 								<div class="row">
