@@ -13,7 +13,7 @@
         'noReadtime' => true,
     ])
 
-    <div class="w-100 register-for-updates pb-md-5">
+    <div class="w-100 register-for-updates pb-5">
         <div class="container px-md-4 px-xl-5">
             <div class="row d-flex justify-content-center">
                 <div class="col-12 col-lg-10 col-xl-8">
