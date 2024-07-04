@@ -108,6 +108,8 @@ $m-3: $p-3;
 $m-4: $p-4;
 $m-5: $p-5;
 
+$paragraph-margin-bottom: 1.6rem;
+
 .colour-black {
     color: black;
 }
@@ -215,7 +217,11 @@ p, li {
     font-style: normal;
     font-size: 20px;
     line-height: 26px;
-    margin-bottom: 1.6rem;
+    margin-bottom: $paragraph-margin-bottom;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 
     strong {
         font-weight: 700;
@@ -489,9 +495,20 @@ blockquote {
         color:$estyn-darkblue;
     }
 }
-.wp-block-button:where(.is-style-outline)>.wp-block-button__link {
+.wp-element-button, .wp-block-button__link, .wp-block-button:where(.is-style-outline)>.wp-block-button__link {
     border-width: 1px;
+    border-style: solid;
+    background: transparent;
 }
+
+.wp-block-buttons {
+    margin-bottom: $paragraph-margin-bottom;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
 .btn-outline-primary, .wp-element-button, .wp-block-button__link, .wp-block-button:where(.is-style-outline)>.wp-block-button__link {
     font-size: 18px;
     font-family: "Source Sans 3", sans-serif;
@@ -507,6 +524,7 @@ blockquote {
         border-color: $estyn-darkblue;
     }
 }
+
 .btn-outline-light {
     font-size: 16px;
     font-family: "museo", serif;
