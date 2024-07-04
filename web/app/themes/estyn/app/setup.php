@@ -1392,7 +1392,7 @@ function save_post_after_import($post_id) {
 /** 
  * Stop ACF removing the 'Custom Fields' meta box from the post edit screen
  */
-add_filter('acf/settings/remove_wp_meta_box', '__return_false');
+//add_filter('acf/settings/remove_wp_meta_box', '__return_false');
 
 /**
  * Get the permalink of a page that uses a specific template
