@@ -579,19 +579,23 @@ function correct_slug_in_language_switcher($url, $lang) {
     global $post;
 
     $translated_post_name = null;
+    $is_taxonomy = false;
+
+    $url = '';
+    $slug = '';
 
     if ($post) {
         // We're on a post page
         $translated_post_id = pll_get_post($post->ID, $lang);
         $translated_post = get_post($translated_post_id);
         $translated_post_name = $translated_post->post_name;
-        $is_taxonomy = false;
     } else {
         // We're on a taxonomy page
         $queried_object = get_queried_object();
         $translated_term_id = pll_get_term($queried_object->term_id, $lang);
-        $translated_term = get_term($translated_term_id);
-        $translated_post_name = $translated_term->slug;
+        // Note: "post" and "post_name" because we use the variables later
+        $translated_post = get_term($translated_term_id);
+        $translated_post_name = $translated_post->slug;
         $is_taxonomy = true;
     }
 
@@ -614,8 +618,11 @@ function correct_slug_in_language_switcher($url, $lang) {
         /* if ($queried_object->taxonomy == 'estyn_') {
             $slug = $lang == 'cy' ? 'taxonomy-cy' : 'taxonomy-en';
         } else { */
-            return $url;
+            /* return $url; */
        /*  } */
+
+       $taxonomy = $queried_object->taxonomy;
+       $slug = $taxonomy->rewrite['slug'];
     }
 
     if ($lang == 'en') {
