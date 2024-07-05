@@ -159,6 +159,7 @@
 
 				$('.estyn-search-box-button').on('click', function() {
 					//console.log('click');
+					//$(this).prev('.estyn-search-results-modal').modal('show');
 
 					clearTimeout(processSearchBoxChangeTimer);
 					processSearchBoxChangeTimer = setTimeout(function($elem) {
@@ -195,6 +196,16 @@
 							// Find the next <datalist> element
 							const $datalist = $elem.nextAll('datalist:first');
 
+							//const $modal = $elem.prevAll('.estyn-search-results-modal:first');
+							// Use the element's data-bs-target attribute to find the modal
+							const $modal = $($elem.next('button').data('bs-target'));
+							
+							console.log('Modal = ' + $elem.next('button').data('bs-target'))
+
+
+							const $modalUL = $modal.find('ul');
+							$modalUL.empty();
+
 							// Clear the <datalist>
 							$datalist.empty();
 							// Add the new options (if the response is not an empty array)
@@ -205,6 +216,7 @@
 
 							response.forEach(function(item) {
 								$datalist.append(`<option value="${item.title}" data-link="${item.URL}">`);
+								$modalUL.append(`<li class="list-group-item"><a href="${item.URL}">${item.title}</a></li>`);
 							});
 						},
 					});

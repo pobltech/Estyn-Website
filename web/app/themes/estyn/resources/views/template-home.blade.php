@@ -51,8 +51,27 @@
                   <h2 class="mb-0 mb-sm-2">{{ get_field('provider_search_heading') }}</h2>
                   <label for="providerSearch" class="form-label mb-2 mb-md-4">{{ get_field('provider_search_description') }}</label>
                   <div class="estyn-search-container input-group mb-3">
+                    <div class="modal estyn-search-results-modal" tabindex="-1" id="home-hero-provider-search-modal">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">{{ __('Search results', 'sage') }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Close', 'sage') }}"></button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="row">
+                              <div class="col">
+                                <ul class="estyn-search-results-list list-group list-group-flush">
+                                  {{-- Search results will be added here --}}
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <input type="text" list="home-provider-search-datalist-options" class="estyn-search-box form-control" data-posttype="estyn_eduprovider" placeholder="" aria-label="providerSearch" aria-describedby="providerSearch">
-                    <button class="estyn-search-box-button btn btn-secondary" type="button" id="providerSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+                    <button class="estyn-search-box-button btn btn-secondary" data-bs-toggle="modal" data-bs-target="#home-hero-provider-search-modal" type="button" id="providerSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
                     <datalist class="search-datalist" id="home-provider-search-datalist-options">
 
                     </datalist>
