@@ -685,10 +685,40 @@ function estyn_all_search(\WP_REST_Request $request) {
 
     $query = new \WP_Query([
         'posts_per_page' => 20,
-        'post_type' => $request->get_param('postType') != null ? $request->get_param('postType') : ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_eduprovider', 'estyn_inspectionrpt', 'estyn_inspguidance', 'estyn_insp_qu'],
+        'post_type' => $request->get_param('postType') != null ? $request->get_param('postType') : ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_inspguidance', 'estyn_insp_qu', 'estyn_eduprovider'],
         's' => $request->get_param('searchText'),
         'lang' => $language
     ]);
+
+
+/*     $query1 = new \WP_Query([
+        'posts_per_page' => 20,
+        'post_type' => $request->get_param('postType') != null ? $request->get_param('postType') : ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_inspguidance', 'estyn_insp_qu'],
+        's' => $request->get_param('searchText'),
+        'lang' => $language
+    ]); */
+
+/*     $query2 = new \WP_Query([
+        'post_type' => 'estyn_eduprovider',
+        'lang' => 'en',
+        'posts_per_page' => 20,
+        's' => $request->get_param('searchText'),
+    ]); */
+
+/*     $postsIDs = [];
+    $posts = $query1->posts;
+    foreach($posts as $post) {
+        $postsIDs[] = $post->ID;
+    }
+    $posts = $query2->posts;
+    foreach($posts as $post) {
+        $postsIDs[] = $post->ID;
+    }
+
+    $query = new \WP_Query([
+        'post_type' => ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_inspguidance', 'estyn_insp_qu', 'estyn_eduprovider'],
+        'post__in' => $postsIDs,
+    ]); */
 
     $posts = $query->posts;
 
@@ -810,6 +840,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 $args['posts_per_page'] = 50;
                 $args['orderby'] = 'title';
                 $args['order'] = 'ASC';
+                //$args['lang'] = 'en'; // We only want to show the English version of the provider
             } else {
                 $args['post_type'] = 'estyn_eduprovider';
                 $args['meta_query'] = [
@@ -831,6 +862,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 $args['orderby'] = 'meta_value';
                 $args['meta_key'] = 'next_scheduled_inspection_date';
                 $args['order'] = 'ASC';
+                //$args['lang'] = 'en'; // We only want to show the English version of the provider
             }
         } elseif($params['postType'] === 'estyn_inspectionrpt') {
             $args['post_type'] = 'estyn_inspectionrpt';
@@ -880,7 +912,27 @@ function estyn_resources_search(\WP_REST_Request $request) {
         if(!isset($args['tax_query'])) {
             $args['tax_query'] = [];
         }
-        $args['tax_query'][] = [
+
+        // We need to use the translated term too, because Providers don't have a translation but the taxonomy terms do
+/*         $localAuthority = get_term_by('slug', $params['localAuthority'], 'local_authority');
+        $termIDEnglish = pll_get_term($localAuthority->term_id, 'en');
+        $termIDWelsh = pll_get_term($localAuthority->term_id, 'cy'); */
+
+/*         $args['tax_query'][] = [
+            'relation' => 'OR',
+            [
+                'taxonomy' => 'local_authority',
+                'field' => 'term_id',
+                'terms' => $termIDEnglish,
+            ],
+            [
+                'taxonomy' => 'local_authority',
+                'field' => 'term_id',
+                'terms' => $termIDWelsh,
+            ],
+        ]; */
+
+         $args['tax_query'][] = [
             [
                 'taxonomy' => 'local_authority',
                 'field' => 'slug',
@@ -893,6 +945,26 @@ function estyn_resources_search(\WP_REST_Request $request) {
         if(!isset($args['tax_query'])) {
             $args['tax_query'] = [];
         }
+
+        // We need to use the translated term too, because Providers don't have a translation but the taxonomy terms do
+/*         $sector = get_term_by('slug', $params['sector'], 'sector');
+        $termIDEnglish = pll_get_term($sector->term_id, 'en');
+        $termIDWelsh = pll_get_term($sector->term_id, 'cy'); */
+
+/*         $args['tax_query'][] = [
+            'relation' => 'OR',
+            [
+                'taxonomy' => 'sector',
+                'field' => 'term_id',
+                'terms' => $termIDEnglish,
+            ],
+            [
+                'taxonomy' => 'sector',
+                'field' => 'term_id',
+                'terms' => $termIDWelsh,
+            ],
+        ]; */
+
         $args['tax_query'][] = [
             [
                 'taxonomy' => 'sector',
@@ -2045,3 +2117,70 @@ function calculateReadTime($content, $pdfFile) {
 
     return $readTime;
 }
+
+// Make sure you only run this once!
+function generateWelshProviders() {
+    $args = array(
+        'post_type' => 'estyn_eduprovider',
+        'posts_per_page' => -1, // Retrieve all posts
+        'post_status' => 'publish', // Only get published posts
+    );
+
+    $posts = get_posts($args);
+
+    foreach ($posts as $post) {
+        // Check if the post already has a translation
+        $translations = pll_get_post_translations($post->ID);
+        $target_language = 'cy';
+
+        if (empty($translations[$target_language])) {
+            // Prepare the post data, copying content from the original
+            $new_post_data = array(
+                'post_author' => $post->post_author,
+                'post_content' => $post->post_content,
+                'post_title' => $post->post_title,
+                'post_status' => $post->post_status,
+                'post_type' => $post->post_type,
+                'post_name' => $post->post_name, // Slug
+                // Copy other fields as needed
+            );
+
+            // Insert the new post
+            $new_post_id = wp_insert_post($new_post_data);
+
+            // Set the language for the new post
+            pll_set_post_language($new_post_id, $target_language);
+
+            // Link the new post as a translation of the original
+            $translations[$target_language] = $new_post_id;
+            pll_save_post_translations($translations);
+
+            // Copy all custom fields
+            $custom_fields = get_post_custom($post->ID);
+            foreach ($custom_fields as $key => $values) {
+                foreach ($values as $value) {
+                    add_post_meta($new_post_id, $key, $value);
+                }
+            }
+
+            $taxonomies = ['sector', 'local_authority', 'provider_status'];
+            foreach ($taxonomies as $taxonomy) {
+                $original_terms = wp_get_post_terms($post->ID, $taxonomy, ['fields' => 'ids']);
+                $translated_terms = [];
+
+                foreach ($original_terms as $original_term_id) {
+                    $translated_term_id = pll_get_term($original_term_id, $target_language);
+                    if ($translated_term_id) {
+                        $translated_terms[] = $translated_term_id;
+                    }
+                }
+
+                if (!empty($translated_terms)) {
+                    wp_set_object_terms($new_post_id, $translated_terms, $taxonomy);
+                }
+            }
+        }
+    }
+}
+
+//add_action('init', __NAMESPACE__ . '\\generateWelshProviders');

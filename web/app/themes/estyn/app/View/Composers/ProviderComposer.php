@@ -134,13 +134,20 @@ class ProviderComposer extends Composer
     public function getResources() {
         $resources = get_posts(array(
             'post_type' => 'estyn_imp_resource',
-            'meta_query' => array(
-                array(
+            'meta_query' => [
+                'relation' => 'OR',
+                [
                     'key' => 'resource_creator',
                     'value' => get_the_ID(),
                     'compare' => '='
-                )
-            )
+                ],
+                [
+                    'key' => 'resource_creator',
+                    // Welsh versions of providers may not have resources linked to them so we should get the English version's resources too
+                    'value' => pll_current_language() == 'cy' ? pll_get_post(get_the_ID(), 'en') : get_the_ID(),
+                    'compare' => '='
+                ]
+            ]
         ));
         
         return $resources;
@@ -155,13 +162,20 @@ class ProviderComposer extends Composer
     public function getInspectionReports() {
         $inspectionReports = get_posts(array(
             'post_type' => 'estyn_inspectionrpt',
-            'meta_query' => array(
-                array(
+            'meta_query' => [
+                'relation' => 'OR',
+                [
                     'key' => 'inspected_provider',
                     'value' => get_the_ID(),
                     'compare' => '='
-                )
-            ),
+                ],
+                [
+                    'key' => 'inspected_provider',
+                    // Welsh versions of providers may not have inspection reports linked to them so we should get the English version's reports too
+                    'value' => pll_current_language() == 'cy' ? pll_get_post(get_the_ID(), 'en') : get_the_ID(),
+                    'compare' => '='
+                ]
+            ],
         ));
 
         // Sort them by inspection date, descending
