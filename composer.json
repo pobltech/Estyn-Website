@@ -48,7 +48,6 @@
     "roots/acorn": "^4.1",
     "wpengine/advanced-custom-fields-pro": "^6.2",
     "wpackagist-plugin/advanced-custom-fields-font-awesome": "^4.0",
-    "wpackagist-plugin/polylang": "^3.6",
     "wpackagist-plugin/theme-translation-for-polylang": "^3.4",
     "wpackagist-plugin/email-encoder-bundle": "^2.2",
     "smalot/pdfparser": "^2.10",
