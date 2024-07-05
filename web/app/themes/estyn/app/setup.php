@@ -215,8 +215,8 @@ add_action('init', function() {
  * TODO: Remove hack to get custom post type URL slugs translations to work with Polylang (when we use Polylang Pro)
  */
 add_action('init', function () {
-    $news_slug = __('news', 'sage');
-    flush_rewrite_rules(); // Only use this once, not in any other actions added to init. It's part of the hack to get custom post type URL slugs translations to work with Polylang (until we use Pro
+    $news_slug = 'news'; //__('news', 'sage');
+    //flush_rewrite_rules(); // Only use this once, not in any other actions added to init. It's part of the hack to get custom post type URL slugs translations to work with Polylang (until we use Pro
     register_post_type('estyn_newsarticle', [
         'labels' => [
             'name' => __('News Articles', 'sage'),
@@ -244,7 +244,7 @@ add_action('init', function () {
  * Register Improvement Resource post type.
  */
 add_action('init', function () {
-    $improvementResourcesSlug = __('improvement-resources', 'sage');
+    $improvementResourcesSlug = 'improvement-resources';//__('improvement-resources', 'sage');
     register_post_type('estyn_imp_resource', [
         'labels' => [
             'name' => __('Improvement Resources', 'sage'),
@@ -336,7 +336,7 @@ function create_improvement_resource_type_taxonomy() {
         'menu_name' => __( 'Improvement Resource Types', 'sage' ),
     );
 
-    $improvementResourceTypeSlug = __('improvement-resource-type', 'sage');
+    $improvementResourceTypeSlug = 'improvement-resource-type'; //__('improvement-resource-type', 'sage');
     register_taxonomy('improvement_resource_type', array('estyn_imp_resource'), array(
         'labels' => $labels,
         'show_ui' => true,
@@ -452,7 +452,7 @@ add_action('init', __NAMESPACE__ . '\\add_improvement_resource_types');
  * Register 'estyn_eduprovider' post type.
  */
 add_action('init', function () {
-    $providersSlug = __('education-providers', 'sage');
+    $providersSlug = 'education-providers'; //__('education-providers', 'sage');
     register_post_type('estyn_eduprovider', [
         'labels' => [
             'name' => __('Providers', 'sage'),
@@ -479,7 +479,7 @@ add_action('init', function () {
  * Register the Inspection Report post type.
  */
 add_action('init', function () {
-    $inspectionReportsSlug = __('inspection-reports', 'sage');
+    $inspectionReportsSlug = 'inspection-reports'; //__('inspection-reports', 'sage');
     register_post_type('estyn_inspectionrpt', [
         'labels' => [
             'name' => __('Inspection Reports', 'sage'),
@@ -519,7 +519,7 @@ function create_eduprovider_taxonomies() {
         'menu_name' => __( 'Sectors', 'sage' ),
     );
 
-    $sectorSlug = __('sector', 'sage');
+    $sectorSlug = 'sector'; // __('sector', 'sage');
     register_taxonomy('sector', array('estyn_eduprovider', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_newsarticle', 'post'), array(
         'labels' => $labels,
         'show_ui' => true,
@@ -541,7 +541,7 @@ function create_eduprovider_taxonomies() {
         'menu_name' => __( 'Local Authorities', 'sage' ),
     );
 
-    $localAuthoritySlug = __('local-authority', 'sage');
+    $localAuthoritySlug = 'local-authority'; //__('local-authority', 'sage');
     register_taxonomy('local_authority', array('estyn_eduprovider', 'estyn_imp_resource', 'estyn_inspectionrpt'), array(
         'labels' => $labels,
         'show_ui' => true,
@@ -569,7 +569,7 @@ function create_eduprovider_status_taxonomy() {
         'menu_name' => __( 'Statuses', 'sage' ),
     );
 
-    $providerStatusSlug = __('provider-status', 'sage');
+    $providerStatusSlug = 'provider-status'; //__('provider-status', 'sage');
     register_taxonomy('provider_status', array('estyn_eduprovider'), array(
         'labels' => $labels,
         'show_ui' => true,
@@ -640,7 +640,7 @@ function correct_slug_in_language_switcher($url, $lang) {
 
     return $url;
 }
-add_filter('pll_translation_url', __NAMESPACE__ . '\\correct_slug_in_language_switcher', 10, 2);
+//add_filter('pll_translation_url', __NAMESPACE__ . '\\correct_slug_in_language_switcher', 10, 2);
 
 /**
  * Change the rewrite rule for tags so they don't have "/blog/" in the URL
@@ -706,7 +706,7 @@ function estyn_all_search(\WP_REST_Request $request) {
             $resourceTypes = get_the_terms($post->ID, 'improvement_resource_type');
             if($resourceTypes) {
                 foreach($resourceTypes as $type) {
-                    if($type->name == __('Annual Report', 'sage')) {
+                    if($type->name == 'Annual Report' || $type->name == 'Adroddiad Blynyddol') {
                         $isAnnualReport = true;
                         break;
                     }
@@ -1293,7 +1293,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
             $terms = get_the_terms($post->ID, 'improvement_resource_type');
             if($terms) {
                 foreach($terms as $term) {
-                    if($term->name == __('Annual Report', 'sage')) {
+                    if($term->name == 'Annual Report' || $term->name == 'Adroddiad Blynyddol') {
                         $isAnnualReport = true;
                         break;
                     }
@@ -1590,7 +1590,7 @@ function getInspectionQuestionnaireFileURL($post) {
  * The post type supports the Sectors taxonomy and tags
  */
 add_action('init', function () {
-    $inspectionGuidanceSlug = __('inspection-guidance', 'sage');
+    $inspectionGuidanceSlug = 'inspection-guidance';//__('inspection-guidance', 'sage');
     register_post_type('estyn_inspguidance', [
         'labels' => [
             'name' => __('Inspection Guidance', 'sage'),
@@ -1629,7 +1629,7 @@ add_action('init', function () {
         'menu_name' => __( 'Inspection Guidance Types', 'sage' ),
     );
 
-    $inspectionGuidanceTypeSlug = __('inspection-guidance-type', 'sage');
+    $inspectionGuidanceTypeSlug = 'inspection-guidance-type'; //__('inspection-guidance-type', 'sage');
 
     register_taxonomy('inspection_guidance_type', array('estyn_inspguidance'), array(
         'labels' => $labels,
@@ -1661,7 +1661,7 @@ function getInspectionQuestionnairePostPlaceholderImageURL($post) {
  * The post type supports the Sectors taxonomy and tags
  */
 add_action('init', function () {
-    $inspectionQuestionnaireSlug = __('inspection-questionnaire', 'sage');
+    $inspectionQuestionnaireSlug = 'inspection-questionnaire'; // __('inspection-questionnaire', 'sage');
     register_post_type('estyn_insp_qu', [
         'labels' => [
             'name' => __('Inspection Questionnaires', 'sage'),
@@ -1700,7 +1700,7 @@ add_action('init', function () {
         'menu_name' => __( 'Inspection Questionnaire Categories', 'sage' ),
     );
 
-    $inspectionQuestionnaireCategorySlug = __('inspection-questionnaire-category', 'sage');
+    $inspectionQuestionnaireCategorySlug = 'inspection-questionnaire-category'; //__('inspection-questionnaire-category', 'sage');
 
     register_taxonomy('inspection_questionnaire_cat', array('estyn_insp_qu'), array(
         'labels' => $labels,
@@ -1720,7 +1720,7 @@ add_action('init', function () {
  * Register 'estyn_team_member' post type with 'team_member_category' taxonomy
  */
 add_action('init', function () {
-    $teamMemberSlug = __('team-member', 'sage');
+    $teamMemberSlug = 'team-member'; //__('team-member', 'sage');
     register_post_type('estyn_team_member', [
         'labels' => [
             'name' => __('Team Members', 'sage'),
@@ -1756,7 +1756,7 @@ add_action('init', function () {
         'menu_name' => __( 'Team Member Categories', 'sage' ),
     );
 
-    $teamMemberCategorySlug = __('team-member-category', 'sage');
+    $teamMemberCategorySlug = 'team-member-category';//__('team-member-category', 'sage');
 
     register_taxonomy('team_member_category', array('estyn_team_member'), array(
         'labels' => $labels,
@@ -1773,7 +1773,7 @@ add_action('init', function () {
  * Add a 'estyn_job_vacancy' post type
  */
 add_action('init', function () {
-    $jobVacancySlug = __('job-vacancy', 'sage');
+    $jobVacancySlug = 'job-vacancy'; //__('job-vacancy', 'sage');
     register_post_type('estyn_job_vacancy', [
         'labels' => [
             'name' => __('Job Vacancies', 'sage'),
@@ -1801,7 +1801,7 @@ add_action('init', function () {
  * Add a 'estyn_event' post type. Also add a taxonomy called 'event tag'
  */
 add_action('init', function () {
-    $eventSlug = __('event', 'sage');
+    $eventSlug = 'event'; //__('event', 'sage');
     register_post_type('estyn_event', [
         'labels' => [
             'name' => __('Events', 'sage'),
@@ -1840,7 +1840,7 @@ add_action('init', function () {
         'menu_name' => __( 'Event Tags', 'sage' ),
     );
 
-    $eventTagSlug = __('event-tag', 'sage');
+    $eventTagSlug = 'event-tag'; //__('event-tag', 'sage');
 
     register_taxonomy('event_tag', array('estyn_event'), array(
         'labels' => $labels,
