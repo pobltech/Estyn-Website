@@ -212,7 +212,7 @@ add_action('init', function() {
 /**
  * Register 'estyn_newsarticle' post type.
  * 
- * TODO: Remove hack to get custom post type URL slugs translations to work with Polylang (until we use Pro)
+ * TODO: Remove hack to get custom post type URL slugs translations to work with Polylang (when we use Polylang Pro)
  */
 add_action('init', function () {
     $news_slug = __('news', 'sage');
@@ -679,14 +679,13 @@ add_action('rest_api_init', function () {
 
 // For the typical 'search Estyn' boxes
 // Returns an array of items with the URL and title or an empty array if no results
-// TODO: When finding an inspection report or annual report, return the link to the PDF file instead of the link to the post
 function estyn_all_search(\WP_REST_Request $request) {
     $params = $request->get_params();
     $language = !empty($params['language']) ? $params['language'] : (function_exists('pll_current_language') ? pll_current_language() : 'en');
 
     $query = new \WP_Query([
         'posts_per_page' => 20,
-        'post_type' => $request->get_param('postType') != null ? $request->get_param('postType') : ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_eduprovider', 'estyn_inspectionrpt'],
+        'post_type' => $request->get_param('postType') != null ? $request->get_param('postType') : ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_eduprovider', 'estyn_inspectionrpt', 'estyn_inspguidance', 'estyn_insp_qu'],
         's' => $request->get_param('searchText'),
         'lang' => $language
     ]);
@@ -695,14 +694,69 @@ function estyn_all_search(\WP_REST_Request $request) {
 
     if($query->found_posts == 0) {
         return [];
-    }
+    } 
 
     $items = [];
     foreach($posts as $post) {
-        $items[] = [
-            'URL' => get_permalink($post->ID),
-            'title' => get_the_title($post->ID),
-        ];
+        // When finding an inspection report or annual report of inspection guidance or inspection questionnaire,
+        // return the link to the PDF file instead of the link to the post
+        $isAnnualReport = false;
+        if($post->post_type == 'estyn_imp_resource') {
+            // Get the type of improvement resource
+            $resourceTypes = get_the_terms($post->ID, 'improvement_resource_type');
+            if($resourceTypes) {
+                foreach($resourceTypes as $type) {
+                    if($type->name == __('Annual Report', 'sage')) {
+                        $isAnnualReport = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        $reportFile = null;
+        
+        if($post->post_type == 'estyn_inspectionrpt' || $isAnnualReport || $post->post_type == 'estyn_inspguidance' || $post->post_type == 'estyn_insp_qu') {
+            if($post->post_type == 'estyn_inspguidance') {
+                $reportFile = getInspectionGuidanceFileURL($post);
+            } elseif($post->post_type == 'estyn_insp_qu') {
+                $reportFile = getInspectionQuestionnaireFileURL($post);
+            } else {
+                // We use get_field('report_file') to get the PDF attachment.
+                // If that returns null, then we'll try the 'report_file_from_old_site' custom field (using get_post_meta()),
+                // prepending the value with the uploads directory path + '/estyn_old_files/'
+                $reportFile = get_field('report_file', $post->ID);
+                if(!$reportFile) {
+                    $reportFile = get_post_meta($post->ID, 'report_file_from_old_site', true);
+                    if($reportFile) {
+                        // report_file_from_old_site is the filename of the PDF prepended with the old folder structure, either 'private/files' or just 'files'
+                        // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
+                        // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
+                        $reportFile = ESTYN_OLD_FILES_URL . $reportFile;
+                        // Now we have to deal with the fact that some of the filenames literally have "%20" in them!
+                        $reportFile = explode('/', $reportFile);
+                        $reportFilename = array_pop($reportFile);
+                        $reportFile = implode('/', $reportFile) . '/' . rawurlencode($reportFilename);
+                    } else {
+                        continue; // We skip this inspection report if there's no PDF attachment
+                    }
+                } else {
+                    $reportFile = $reportFile['url'];
+                }
+            }
+        }
+        
+        if(empty($reportFile)) {
+            $items[] = [
+                'URL' => get_permalink($post->ID),
+                'title' => get_the_title($post->ID),
+            ];
+        } else {
+            $items[] = [
+                'URL' => $reportFile,
+                'title' => get_the_title($post->ID),
+            ];
+        }
     }
 
     return $items;

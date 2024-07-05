@@ -26,7 +26,7 @@
   </a> --}}
 <nav class="navbar navbar-expand-xl navbar-light bg-white">
   <div class="container my-2 my-sm-3 px-md-4 px-xl-5">
-    <a class="navbar-brand order-xl-1" href="{{ home_url('/') }}"><img src="@asset('images/estyn-logo.svg')" alt="{!! $siteName !!}" width="138"/></a>
+    <a class="navbar-brand order-xl-1" href="{{ pll_home_url() }}"><img src="@asset('images/estyn-logo.svg')" alt="{!! $siteName !!}" width="138"/></a>
     <div class="collapse navbar-collapse order-3 order-xl-2" id="navbarNavDropdown">
 		<hr class="p-0 m-0 w-100 d-block d-xl-none">
       <ul class="navbar-nav ms-auto mt-5 mt-xl-0">
@@ -394,15 +394,34 @@
 			<!-- Language -->
 			<li class="nav-item nav-language d-flex flex-column justify-content-center">
 				{{-- Polylang language switcher --}}
-				@if(pll_current_language() === 'en')
+				{{--@if(pll_current_language() === 'en')
 					@if(is_front_page())
-						<a class="nav-link" href="{{ get_bloginfo('url') }}/cy/">Cymraeg</a>
+						<a class="nav-link" href="{{ pll_home_url() }}">Cymraeg</a>
 					@else
 						<a class="nav-link" href="{{ pll_the_languages(array('raw' => 1))['cy']['url'] }}">Cymraeg</a>
 					@endif
 				@else
-					<a class="nav-link" href="{{ pll_the_languages(array('raw' => 1))['en']['url'] }}">English</a>
-				@endif
+					@if(is_front_page())
+						<a class="nav-link" href="{{ pll_home_url() }}">English</a>
+					@else
+						<a class="nav-link" href="{{ pll_the_languages(array('raw' => 1))['en']['url'] }}">English</a>
+					@endif
+				@endif--}}
+				@php
+				$current_post_id = get_queried_object_id(); // Get the current post/page ID
+				$languages = pll_the_languages(array('raw' => 1));
+				$current_language = pll_current_language();
+				@endphp
+
+				@foreach($languages as $code => $details)
+					@if($code !== $current_language)
+						@php
+						$translated_post_id = pll_get_post($current_post_id, $code); // Get the translated post ID
+						$switch_url = $translated_post_id ? get_permalink($translated_post_id) : '#'; // Get the permalink for the translated post ID
+						@endphp
+						<a class="nav-link" href="{{ $switch_url }}">{{ $details['name'] }}</a>
+					@endif
+				@endforeach
 			</li>
 			<!-- Search -->
 			<li class="nav-item d-flex flex-column justify-content-center nav-search dropdown">
