@@ -48,8 +48,27 @@
 								@if(isset($showSearchBox) && ($showSearchBox === true))
 									<div class="d-flex justify-content-center justify-content-lg-end ctaSearchBoxContainer">
 										<div class="estyn-search-container input-group mb-3 shadow rounded">
+											<div class="modal estyn-search-results-modal" tabindex="-1" id="{{ $ctaUniqueID }}-search-results-modal">
+												<div class="modal-dialog modal-dialog-centered">
+													<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title">{{ __('Search results', 'sage') }}</h5>
+														<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Close', 'sage') }}"></button>
+													</div>
+													<div class="modal-body">
+														<div class="row">
+														<div class="col">
+															<ul class="estyn-search-results-list list-group list-group-flush">
+															{{-- Search results will be added here --}}
+															</ul>
+														</div>
+														</div>
+													</div>
+													</div>
+												</div>
+											</div>
 											<input type="text" class="form-control estyn-search-box" data-posttype="estyn_eduprovider" list="{{ $ctaUniqueID }}-search-datalist-options" placeholder="Primary schools" aria-label="Primary schools" aria-describedby="button-addon2">
-											<button class="estyn-search-box-button btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+											<button class="estyn-search-box-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#{{ $ctaUniqueID }}-search-results-modal"><i class="fa-solid fa-magnifying-glass"></i></button>
 											<datalist class="search-datalist" id="{{ $ctaUniqueID }}-search-datalist-options">
 
                     						</datalist>

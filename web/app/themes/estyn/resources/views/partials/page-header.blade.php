@@ -15,8 +15,27 @@
                 <div class="col-12 col-md-4">
                   <span class="d-block"> {{ __('Find a provider', 'sage') }}</span>
 										<div class="estyn-search-container input-group mb-3 rounded">
+                      <div class="modal estyn-search-results-modal" tabindex="-1" id="estyn-page-header-search-results-modal">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">{{ __('Search results', 'sage') }}</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Close', 'sage') }}"></button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="row">
+                                <div class="col">
+                                  <ul class="estyn-search-results-list list-group list-group-flush">
+                                  {{-- Search results will be added here --}}
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 											<input type="text" list="page-header-provider-search-datalist-options" class="estyn-search-box form-control" data-posttype="estyn_eduprovider" placeholder="{{ __('Primary schools', 'sage') }}" aria-label="{{ __('Primary schools', 'sage') }}" aria-describedby="button-addon2">
-											<button class="estyn-search-box-button btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+											<button class="estyn-search-box-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#estyn-page-header-search-results-modal"><i class="fa-solid fa-magnifying-glass"></i></button>
                       <datalist class="search-datalist" id="page-header-provider-search-datalist-options">
 
                       </datalist>

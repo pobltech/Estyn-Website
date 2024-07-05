@@ -1,10 +1,32 @@
+@php
+	$navSearchUniqueID = uniqid()
+@endphp
+<div class="modal estyn-search-results-modal" tabindex="-1" id="{{ $navSearchUniqueID }}-search-results-modal">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">{{ __('Search results', 'sage') }}</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Close', 'sage') }}"></button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col">
+						<ul class="estyn-search-results-list list-group list-group-flush">
+						{{-- Search results will be added here --}}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <header class="banner sticky-top">
 {{--   <a class="brand" href="{{ home_url('/') }}">
     {!! $siteName !!}
   </a> --}}
 <nav class="navbar navbar-expand-xl navbar-light bg-white">
   <div class="container my-2 my-sm-3 px-md-4 px-xl-5">
-    <a class="navbar-brand order-xl-1" href="{{ home_url('/') }}"><img src="@asset('images/estyn-logo.svg')" alt="{!! $siteName !!}" width="138"/></a>
+    <a class="navbar-brand order-xl-1" href="{{ pll_home_url() }}"><img src="@asset('images/estyn-logo.svg')" alt="{!! $siteName !!}" width="138"/></a>
     <div class="collapse navbar-collapse order-3 order-xl-2" id="navbarNavDropdown">
 		<hr class="p-0 m-0 w-100 d-block d-xl-none">
       <ul class="navbar-nav ms-auto mt-5 mt-xl-0">
@@ -372,15 +394,40 @@
 			<!-- Language -->
 			<li class="nav-item nav-language d-flex flex-column justify-content-center">
 				{{-- Polylang language switcher --}}
-				@if(pll_current_language() === 'en')
+				{{--@if(pll_current_language() === 'en')
 					@if(is_front_page())
-						<a class="nav-link" href="{{ get_bloginfo('url') }}/cy/">Cymraeg</a>
+						<a class="nav-link" href="{{ pll_home_url() }}">Cymraeg</a>
 					@else
 						<a class="nav-link" href="{{ pll_the_languages(array('raw' => 1))['cy']['url'] }}">Cymraeg</a>
 					@endif
 				@else
-					<a class="nav-link" href="{{ pll_the_languages(array('raw' => 1))['en']['url'] }}">English</a>
-				@endif
+					@if(is_front_page())
+						<a class="nav-link" href="{{ pll_home_url() }}">English</a>
+					@else
+						<a class="nav-link" href="{{ pll_the_languages(array('raw' => 1))['en']['url'] }}">English</a>
+					@endif
+				@endif--}}
+				@php
+				$current_object_id = get_queried_object_id(); // Get the current post/page or term ID
+				$languages = pll_the_languages(array('raw' => 1));
+				$current_language = pll_current_language();
+				$is_term = is_tax() || is_category() || is_tag(); // Check if the current query is for a taxonomy term
+				@endphp
+
+				@foreach($languages as $code => $details)
+					@if($code !== $current_language)
+						@php
+						if ($is_term) {
+							$translated_id = pll_get_term($current_object_id, $code); // Get the translated term ID
+							$switch_url = $translated_id ? get_term_link($translated_id) : '#'; // Get the link for the translated term ID
+						} else {
+							$translated_id = pll_get_post($current_object_id, $code); // Get the translated post ID
+							$switch_url = $translated_id ? get_permalink($translated_id) : '#'; // Get the permalink for the translated post ID
+						}
+						@endphp
+						<a class="nav-link" href="{{ $switch_url }}">{{ $details['name'] }}</a>
+					@endif
+				@endforeach
 			</li>
 			<!-- Search -->
 			<li class="nav-item d-flex flex-column justify-content-center nav-search dropdown">
@@ -395,9 +442,8 @@
 											<div class="col-md-10 pb-4 pb-sm-0 estyn-search-container">
 												<h3 class="mb-4">{{ __('Search Estyn') }}</h3>
 												<div class="input-group mb-3">
-													@php($navSearchUniqueID = uniqid())
 													<input type="text" id="navSearchEstynBox" list="datalistOptions-{{ $navSearchUniqueID }}" class="form-control estyn-search-box" placeholder="" aria-label="estynSearch" aria-describedby="estynSearch">
-													<button class="estyn-search-box-button btn btn-primary" type="button" id="estynSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+													<button class="estyn-search-box-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#{{ $navSearchUniqueID }}-search-results-modal" id="estynSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
 													<datalist class="search-datalist" id="datalistOptions-{{ $navSearchUniqueID }}">
 														
 													</datalist>

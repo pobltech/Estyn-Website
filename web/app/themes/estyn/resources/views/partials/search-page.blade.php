@@ -376,7 +376,7 @@
               </div>
             
             @if(!empty($isImprovementResourcesSearch))
-              <h4>{{ __('Similar Settings to Mine', 'sage') }}</h4>
+              <h4 class="pt-4">{{ __('Similar Settings to Mine', 'sage') }}</h4>
               <div class="search-filters accordion accordion-flush" id="accordionFlushExample">
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="flush-headingProximity">
@@ -567,8 +567,9 @@
                   </div>
                 </div>--}}
               </div>
-            </div>
+            
             @endif
+            </div>
 					</div>
 				</div>
 			</div>

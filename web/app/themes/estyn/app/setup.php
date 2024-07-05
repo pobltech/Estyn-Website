@@ -212,11 +212,11 @@ add_action('init', function() {
 /**
  * Register 'estyn_newsarticle' post type.
  * 
- * TODO: Remove hack to get custom post type URL slugs translations to work with Polylang (until we use Pro)
+ * TODO: Remove hack to get custom post type URL slugs translations to work with Polylang (when we use Polylang Pro)
  */
 add_action('init', function () {
-    $news_slug = __('news', 'sage');
-    flush_rewrite_rules(); // Only use this once, not in any other actions added to init. It's part of the hack to get custom post type URL slugs translations to work with Polylang (until we use Pro
+    $news_slug = 'news'; //__('news', 'sage');
+    //flush_rewrite_rules(); // Only use this once, not in any other actions added to init. It's part of the hack to get custom post type URL slugs translations to work with Polylang (until we use Pro
     register_post_type('estyn_newsarticle', [
         'labels' => [
             'name' => __('News Articles', 'sage'),
@@ -244,7 +244,7 @@ add_action('init', function () {
  * Register Improvement Resource post type.
  */
 add_action('init', function () {
-    $improvementResourcesSlug = __('improvement-resources', 'sage');
+    $improvementResourcesSlug = 'improvement-resources';//__('improvement-resources', 'sage');
     register_post_type('estyn_imp_resource', [
         'labels' => [
             'name' => __('Improvement Resources', 'sage'),
@@ -336,7 +336,7 @@ function create_improvement_resource_type_taxonomy() {
         'menu_name' => __( 'Improvement Resource Types', 'sage' ),
     );
 
-    $improvementResourceTypeSlug = __('improvement-resource-type', 'sage');
+    $improvementResourceTypeSlug = 'improvement-resource-type'; //__('improvement-resource-type', 'sage');
     register_taxonomy('improvement_resource_type', array('estyn_imp_resource'), array(
         'labels' => $labels,
         'show_ui' => true,
@@ -452,7 +452,7 @@ add_action('init', __NAMESPACE__ . '\\add_improvement_resource_types');
  * Register 'estyn_eduprovider' post type.
  */
 add_action('init', function () {
-    $providersSlug = __('education-providers', 'sage');
+    $providersSlug = 'education-providers'; //__('education-providers', 'sage');
     register_post_type('estyn_eduprovider', [
         'labels' => [
             'name' => __('Providers', 'sage'),
@@ -479,7 +479,7 @@ add_action('init', function () {
  * Register the Inspection Report post type.
  */
 add_action('init', function () {
-    $inspectionReportsSlug = __('inspection-reports', 'sage');
+    $inspectionReportsSlug = 'inspection-reports'; //__('inspection-reports', 'sage');
     register_post_type('estyn_inspectionrpt', [
         'labels' => [
             'name' => __('Inspection Reports', 'sage'),
@@ -519,7 +519,7 @@ function create_eduprovider_taxonomies() {
         'menu_name' => __( 'Sectors', 'sage' ),
     );
 
-    $sectorSlug = __('sector', 'sage');
+    $sectorSlug = 'sector'; // __('sector', 'sage');
     register_taxonomy('sector', array('estyn_eduprovider', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_newsarticle', 'post'), array(
         'labels' => $labels,
         'show_ui' => true,
@@ -541,7 +541,7 @@ function create_eduprovider_taxonomies() {
         'menu_name' => __( 'Local Authorities', 'sage' ),
     );
 
-    $localAuthoritySlug = __('local-authority', 'sage');
+    $localAuthoritySlug = 'local-authority'; //__('local-authority', 'sage');
     register_taxonomy('local_authority', array('estyn_eduprovider', 'estyn_imp_resource', 'estyn_inspectionrpt'), array(
         'labels' => $labels,
         'show_ui' => true,
@@ -569,7 +569,7 @@ function create_eduprovider_status_taxonomy() {
         'menu_name' => __( 'Statuses', 'sage' ),
     );
 
-    $providerStatusSlug = __('provider-status', 'sage');
+    $providerStatusSlug = 'provider-status'; //__('provider-status', 'sage');
     register_taxonomy('provider_status', array('estyn_eduprovider'), array(
         'labels' => $labels,
         'show_ui' => true,
@@ -640,7 +640,7 @@ function correct_slug_in_language_switcher($url, $lang) {
 
     return $url;
 }
-add_filter('pll_translation_url', __NAMESPACE__ . '\\correct_slug_in_language_switcher', 10, 2);
+//add_filter('pll_translation_url', __NAMESPACE__ . '\\correct_slug_in_language_switcher', 10, 2);
 
 /**
  * Change the rewrite rule for tags so they don't have "/blog/" in the URL
@@ -685,23 +685,108 @@ function estyn_all_search(\WP_REST_Request $request) {
 
     $query = new \WP_Query([
         'posts_per_page' => 20,
-        'post_type' => $request->get_param('postType') != null ? $request->get_param('postType') : ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_eduprovider', 'estyn_inspectionrpt'],
+        'post_type' => $request->get_param('postType') != null ? $request->get_param('postType') : ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_inspguidance', 'estyn_insp_qu', 'estyn_eduprovider'],
         's' => $request->get_param('searchText'),
         'lang' => $language
     ]);
+
+
+/*     $query1 = new \WP_Query([
+        'posts_per_page' => 20,
+        'post_type' => $request->get_param('postType') != null ? $request->get_param('postType') : ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_inspguidance', 'estyn_insp_qu'],
+        's' => $request->get_param('searchText'),
+        'lang' => $language
+    ]); */
+
+/*     $query2 = new \WP_Query([
+        'post_type' => 'estyn_eduprovider',
+        'lang' => 'en',
+        'posts_per_page' => 20,
+        's' => $request->get_param('searchText'),
+    ]); */
+
+/*     $postsIDs = [];
+    $posts = $query1->posts;
+    foreach($posts as $post) {
+        $postsIDs[] = $post->ID;
+    }
+    $posts = $query2->posts;
+    foreach($posts as $post) {
+        $postsIDs[] = $post->ID;
+    }
+
+    $query = new \WP_Query([
+        'post_type' => ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_inspguidance', 'estyn_insp_qu', 'estyn_eduprovider'],
+        'post__in' => $postsIDs,
+    ]); */
 
     $posts = $query->posts;
 
     if($query->found_posts == 0) {
         return [];
-    }
+    } 
 
     $items = [];
     foreach($posts as $post) {
-        $items[] = [
-            'URL' => get_permalink($post->ID),
-            'title' => get_the_title($post->ID),
-        ];
+        // When finding an inspection report or annual report of inspection guidance or inspection questionnaire,
+        // return the link to the PDF file instead of the link to the post
+        $isAnnualReport = false;
+        if($post->post_type == 'estyn_imp_resource') {
+            // Get the type of improvement resource
+            $resourceTypes = get_the_terms($post->ID, 'improvement_resource_type');
+            if($resourceTypes) {
+                foreach($resourceTypes as $type) {
+                    if($type->name == 'Annual Report' || $type->name == 'Adroddiad Blynyddol') {
+                        $isAnnualReport = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        $reportFile = null;
+        
+        if($post->post_type == 'estyn_inspectionrpt' || $isAnnualReport || $post->post_type == 'estyn_inspguidance' || $post->post_type == 'estyn_insp_qu') {
+            if($post->post_type == 'estyn_inspguidance') {
+                $reportFile = getInspectionGuidanceFileURL($post);
+            } elseif($post->post_type == 'estyn_insp_qu') {
+                $reportFile = getInspectionQuestionnaireFileURL($post);
+            } else {
+                // We use get_field('report_file') to get the PDF attachment.
+                // If that returns null, then we'll try the 'report_file_from_old_site' custom field (using get_post_meta()),
+                // prepending the value with the uploads directory path + '/estyn_old_files/'
+                $reportFile = get_field('report_file', $post->ID);
+                if(!$reportFile) {
+                    $reportFile = get_post_meta($post->ID, 'report_file_from_old_site', true);
+                    if($reportFile) {
+                        // report_file_from_old_site is the filename of the PDF prepended with the old folder structure, either 'private/files' or just 'files'
+                        // So for example, 'private/files/filename.pdf' or 'files/filename.pdf'
+                        // We've emulated it this by moving the private and files folders to uploads/estyn_old_files
+                        $reportFile = ESTYN_OLD_FILES_URL . $reportFile;
+                        // Now we have to deal with the fact that some of the filenames literally have "%20" in them!
+                        $reportFile = explode('/', $reportFile);
+                        $reportFilename = array_pop($reportFile);
+                        $reportFile = implode('/', $reportFile) . '/' . rawurlencode($reportFilename);
+                    } else {
+                        continue; // We skip this inspection report if there's no PDF attachment
+                    }
+                } else {
+                    $reportFile = $reportFile['url'];
+                }
+            }
+        }
+        
+        if(empty($reportFile)) {
+            $items[] = [
+                'URL' => get_permalink($post->ID),
+                'title' => get_the_title($post->ID),
+            ];
+        } else {
+            $items[] = [
+                'URL' => $reportFile,
+                'title' => get_the_title($post->ID),
+            ];
+        }
     }
 
     return $items;
@@ -755,6 +840,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 $args['posts_per_page'] = 50;
                 $args['orderby'] = 'title';
                 $args['order'] = 'ASC';
+                //$args['lang'] = 'en'; // We only want to show the English version of the provider
             } else {
                 $args['post_type'] = 'estyn_eduprovider';
                 $args['meta_query'] = [
@@ -776,6 +862,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 $args['orderby'] = 'meta_value';
                 $args['meta_key'] = 'next_scheduled_inspection_date';
                 $args['order'] = 'ASC';
+                //$args['lang'] = 'en'; // We only want to show the English version of the provider
             }
         } elseif($params['postType'] === 'estyn_inspectionrpt') {
             $args['post_type'] = 'estyn_inspectionrpt';
@@ -825,7 +912,27 @@ function estyn_resources_search(\WP_REST_Request $request) {
         if(!isset($args['tax_query'])) {
             $args['tax_query'] = [];
         }
-        $args['tax_query'][] = [
+
+        // We need to use the translated term too, because Providers don't have a translation but the taxonomy terms do
+/*         $localAuthority = get_term_by('slug', $params['localAuthority'], 'local_authority');
+        $termIDEnglish = pll_get_term($localAuthority->term_id, 'en');
+        $termIDWelsh = pll_get_term($localAuthority->term_id, 'cy'); */
+
+/*         $args['tax_query'][] = [
+            'relation' => 'OR',
+            [
+                'taxonomy' => 'local_authority',
+                'field' => 'term_id',
+                'terms' => $termIDEnglish,
+            ],
+            [
+                'taxonomy' => 'local_authority',
+                'field' => 'term_id',
+                'terms' => $termIDWelsh,
+            ],
+        ]; */
+
+         $args['tax_query'][] = [
             [
                 'taxonomy' => 'local_authority',
                 'field' => 'slug',
@@ -838,6 +945,26 @@ function estyn_resources_search(\WP_REST_Request $request) {
         if(!isset($args['tax_query'])) {
             $args['tax_query'] = [];
         }
+
+        // We need to use the translated term too, because Providers don't have a translation but the taxonomy terms do
+/*         $sector = get_term_by('slug', $params['sector'], 'sector');
+        $termIDEnglish = pll_get_term($sector->term_id, 'en');
+        $termIDWelsh = pll_get_term($sector->term_id, 'cy'); */
+
+/*         $args['tax_query'][] = [
+            'relation' => 'OR',
+            [
+                'taxonomy' => 'sector',
+                'field' => 'term_id',
+                'terms' => $termIDEnglish,
+            ],
+            [
+                'taxonomy' => 'sector',
+                'field' => 'term_id',
+                'terms' => $termIDWelsh,
+            ],
+        ]; */
+
         $args['tax_query'][] = [
             [
                 'taxonomy' => 'sector',
@@ -1238,7 +1365,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
             $terms = get_the_terms($post->ID, 'improvement_resource_type');
             if($terms) {
                 foreach($terms as $term) {
-                    if($term->name == __('Annual Report', 'sage')) {
+                    if($term->name == 'Annual Report' || $term->name == 'Adroddiad Blynyddol') {
                         $isAnnualReport = true;
                         break;
                     }
@@ -1535,7 +1662,7 @@ function getInspectionQuestionnaireFileURL($post) {
  * The post type supports the Sectors taxonomy and tags
  */
 add_action('init', function () {
-    $inspectionGuidanceSlug = __('inspection-guidance', 'sage');
+    $inspectionGuidanceSlug = 'inspection-guidance';//__('inspection-guidance', 'sage');
     register_post_type('estyn_inspguidance', [
         'labels' => [
             'name' => __('Inspection Guidance', 'sage'),
@@ -1574,7 +1701,7 @@ add_action('init', function () {
         'menu_name' => __( 'Inspection Guidance Types', 'sage' ),
     );
 
-    $inspectionGuidanceTypeSlug = __('inspection-guidance-type', 'sage');
+    $inspectionGuidanceTypeSlug = 'inspection-guidance-type'; //__('inspection-guidance-type', 'sage');
 
     register_taxonomy('inspection_guidance_type', array('estyn_inspguidance'), array(
         'labels' => $labels,
@@ -1606,7 +1733,7 @@ function getInspectionQuestionnairePostPlaceholderImageURL($post) {
  * The post type supports the Sectors taxonomy and tags
  */
 add_action('init', function () {
-    $inspectionQuestionnaireSlug = __('inspection-questionnaire', 'sage');
+    $inspectionQuestionnaireSlug = 'inspection-questionnaire'; // __('inspection-questionnaire', 'sage');
     register_post_type('estyn_insp_qu', [
         'labels' => [
             'name' => __('Inspection Questionnaires', 'sage'),
@@ -1645,7 +1772,7 @@ add_action('init', function () {
         'menu_name' => __( 'Inspection Questionnaire Categories', 'sage' ),
     );
 
-    $inspectionQuestionnaireCategorySlug = __('inspection-questionnaire-category', 'sage');
+    $inspectionQuestionnaireCategorySlug = 'inspection-questionnaire-category'; //__('inspection-questionnaire-category', 'sage');
 
     register_taxonomy('inspection_questionnaire_cat', array('estyn_insp_qu'), array(
         'labels' => $labels,
@@ -1665,7 +1792,7 @@ add_action('init', function () {
  * Register 'estyn_team_member' post type with 'team_member_category' taxonomy
  */
 add_action('init', function () {
-    $teamMemberSlug = __('team-member', 'sage');
+    $teamMemberSlug = 'team-member'; //__('team-member', 'sage');
     register_post_type('estyn_team_member', [
         'labels' => [
             'name' => __('Team Members', 'sage'),
@@ -1701,7 +1828,7 @@ add_action('init', function () {
         'menu_name' => __( 'Team Member Categories', 'sage' ),
     );
 
-    $teamMemberCategorySlug = __('team-member-category', 'sage');
+    $teamMemberCategorySlug = 'team-member-category';//__('team-member-category', 'sage');
 
     register_taxonomy('team_member_category', array('estyn_team_member'), array(
         'labels' => $labels,
@@ -1718,7 +1845,7 @@ add_action('init', function () {
  * Add a 'estyn_job_vacancy' post type
  */
 add_action('init', function () {
-    $jobVacancySlug = __('job-vacancy', 'sage');
+    $jobVacancySlug = 'job-vacancy'; //__('job-vacancy', 'sage');
     register_post_type('estyn_job_vacancy', [
         'labels' => [
             'name' => __('Job Vacancies', 'sage'),
@@ -1746,7 +1873,7 @@ add_action('init', function () {
  * Add a 'estyn_event' post type. Also add a taxonomy called 'event tag'
  */
 add_action('init', function () {
-    $eventSlug = __('event', 'sage');
+    $eventSlug = 'event'; //__('event', 'sage');
     register_post_type('estyn_event', [
         'labels' => [
             'name' => __('Events', 'sage'),
@@ -1785,7 +1912,7 @@ add_action('init', function () {
         'menu_name' => __( 'Event Tags', 'sage' ),
     );
 
-    $eventTagSlug = __('event-tag', 'sage');
+    $eventTagSlug = 'event-tag'; //__('event-tag', 'sage');
 
     register_taxonomy('event_tag', array('estyn_event'), array(
         'labels' => $labels,
@@ -1990,3 +2117,70 @@ function calculateReadTime($content, $pdfFile) {
 
     return $readTime;
 }
+
+// Make sure you only run this once!
+function generateWelshProviders() {
+    $args = array(
+        'post_type' => 'estyn_eduprovider',
+        'posts_per_page' => -1, // Retrieve all posts
+        'post_status' => 'publish', // Only get published posts
+    );
+
+    $posts = get_posts($args);
+
+    foreach ($posts as $post) {
+        // Check if the post already has a translation
+        $translations = pll_get_post_translations($post->ID);
+        $target_language = 'cy';
+
+        if (empty($translations[$target_language])) {
+            // Prepare the post data, copying content from the original
+            $new_post_data = array(
+                'post_author' => $post->post_author,
+                'post_content' => $post->post_content,
+                'post_title' => $post->post_title,
+                'post_status' => $post->post_status,
+                'post_type' => $post->post_type,
+                'post_name' => $post->post_name, // Slug
+                // Copy other fields as needed
+            );
+
+            // Insert the new post
+            $new_post_id = wp_insert_post($new_post_data);
+
+            // Set the language for the new post
+            pll_set_post_language($new_post_id, $target_language);
+
+            // Link the new post as a translation of the original
+            $translations[$target_language] = $new_post_id;
+            pll_save_post_translations($translations);
+
+            // Copy all custom fields
+            $custom_fields = get_post_custom($post->ID);
+            foreach ($custom_fields as $key => $values) {
+                foreach ($values as $value) {
+                    add_post_meta($new_post_id, $key, $value);
+                }
+            }
+
+            $taxonomies = ['sector', 'local_authority', 'provider_status'];
+            foreach ($taxonomies as $taxonomy) {
+                $original_terms = wp_get_post_terms($post->ID, $taxonomy, ['fields' => 'ids']);
+                $translated_terms = [];
+
+                foreach ($original_terms as $original_term_id) {
+                    $translated_term_id = pll_get_term($original_term_id, $target_language);
+                    if ($translated_term_id) {
+                        $translated_terms[] = $translated_term_id;
+                    }
+                }
+
+                if (!empty($translated_terms)) {
+                    wp_set_object_terms($new_post_id, $translated_terms, $taxonomy);
+                }
+            }
+        }
+    }
+}
+
+//add_action('init', __NAMESPACE__ . '\\generateWelshProviders');

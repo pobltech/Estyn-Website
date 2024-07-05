@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "acc24a483d7e78b5de414cc0323cb334",
+    "content-hash": "17a2b08367cdca7482924e0fa70b7765",
     "packages": [
         {
             "name": "brick/math",
@@ -6599,24 +6599,6 @@
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/email-encoder-bundle/"
-        },
-        {
-            "name": "wpackagist-plugin/polylang",
-            "version": "3.6.1",
-            "source": {
-                "type": "svn",
-                "url": "https://plugins.svn.wordpress.org/polylang/",
-                "reference": "tags/3.6.1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/polylang.3.6.1.zip"
-            },
-            "require": {
-                "composer/installers": "^1.0 || ^2.0"
-            },
-            "type": "wordpress-plugin",
-            "homepage": "https://wordpress.org/plugins/polylang/"
         },
         {
             "name": "wpackagist-plugin/theme-translation-for-polylang",
