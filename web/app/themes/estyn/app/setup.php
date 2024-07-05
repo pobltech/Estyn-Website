@@ -679,6 +679,7 @@ add_action('rest_api_init', function () {
 
 // For the typical 'search Estyn' boxes
 // Returns an array of items with the URL and title or an empty array if no results
+// TODO: When finding an inspection report or annual report, return the link to the PDF file instead of the link to the post
 function estyn_all_search(\WP_REST_Request $request) {
     $params = $request->get_params();
     $language = !empty($params['language']) ? $params['language'] : (function_exists('pll_current_language') ? pll_current_language() : 'en');
