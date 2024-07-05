@@ -47,3 +47,6 @@ web/app/debug.log
 
 # Ignore cache
 /web/app/cache/acorn/
+
+# yarn lock file in theme folder
+/web/app/themes/estyn/yarn.lock
