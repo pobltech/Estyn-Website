@@ -77,7 +77,7 @@
 					<div class="col-12 col-md-11">
 
 						<div id="search-box-container" class="input-group mb-4">
-						  <input type="text" class="form-control" placeholder="" aria-label="Search filter" aria-describedby="searchFilter">
+						  <input type="text" class="form-control" placeholder="" aria-label="Search filter" aria-describedby="searchFilter" value="{{ !empty($_GET['search']) ? $_GET['search'] : '' }}">
 						  <button class="btn btn-primary" type="button" id="searchFilter"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
 						</div>
 
@@ -604,8 +604,8 @@
           ];
 
           // If there's a Wordpress search query in the URL then add it to the search args
-          if(isset($_GET['s'])) {
-            $searchArgs['s'] = trim($_GET['s']);
+          if(isset($_GET['search'])) {
+            $searchArgs['s'] = trim($_GET['search']);
           }
         } elseif($isImprovementResourcesSearch) {
           $searchArgs = [
@@ -617,8 +617,8 @@
           ];
 
           // If there's a Wordpress search query in the URL then add it to the search args
-          if(isset($_GET['s'])) {
-            $searchArgs['s'] = trim($_GET['s']);
+          if(isset($_GET['search'])) {
+            $searchArgs['s'] = trim($_GET['search']);
           }
 
           // Sectors
@@ -682,8 +682,8 @@
           ];
 
           // If there's a Wordpress search query in the URL then add it to the search args
-          if(isset($_GET['s'])) {
-            $searchArgs['s'] = trim($_GET['s']);
+          if(isset($_GET['search'])) {
+            $searchArgs['s'] = trim($_GET['search']);
           }
 
           // Sector
@@ -726,8 +726,8 @@
           ];
 
           // If there's a Wordpress search query in the URL then add it to the search args
-          if(isset($_GET['s'])) {
-            $searchArgs['s'] = trim($_GET['s']);
+          if(isset($_GET['search'])) {
+            $searchArgs['s'] = trim($_GET['search']);
           }
 
           // Sector
@@ -771,8 +771,8 @@
           ];
 
           // If there's a Wordpress search query in the URL then add it to the search args
-          if(isset($_GET['s'])) {
-            $searchArgs['s'] = trim($_GET['s']);
+          if(isset($_GET['search'])) {
+            $searchArgs['s'] = trim($_GET['search']);
           }
 
           // Sector
