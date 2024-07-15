@@ -219,7 +219,7 @@
 </div>
 --}}
 <div id="home-map-search-section" class="pt-md-5">
-  @include('partials.cta', [
+  {{--@include('partials.cta', [
     'ctaHeading' => __('Our education map of Wales', 'sage'),
     'ctaText' => __('Find providers across Wales using our handy map', 'sage'),
     'ctaButtonLinkURL' => App\get_permalink_by_template('provider-search.blade.php'),
@@ -231,7 +231,8 @@
     'showSearchBox' => true,
     'darkArc' => true,
     'ctaContainerExtraClasses' => 'ctaSearchMapContainer'
-  ])
+  ])--}}
+  @include('partials.sectors-inside-full-width-arc-container')
 </div>
 
   <div class="pt-md-5 mt-5 pb-md-5">

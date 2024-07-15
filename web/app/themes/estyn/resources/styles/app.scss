@@ -1203,6 +1203,15 @@ header {
     margin-bottom: 1.8rem;
 }
 
+.listArc {
+    margin-top: -71px;
+    z-index: -1;
+
+    svg {
+        width: 100%;
+    }
+}
+
 
 .homeProviderCol {
     border-right: 1px solid #6AA2C8;
