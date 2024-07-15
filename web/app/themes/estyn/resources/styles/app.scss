@@ -1152,7 +1152,8 @@ header {
     }    
 
     .form-control {
-        color: $estyn-darkblue;
+        color: $estyn-white;
+        font-size: 20px;
         background-color: $estyn-anotherlightblue; /* #7EB1D6;*/
         background-clip: padding-box;
         border: none;/* 1px solid $estyn-lightbluegrey; */
@@ -1181,7 +1182,7 @@ header {
             }
         }
 
-        input[type="text"] {
+        input[type="text"], &.input-group > input[type="text"]:not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
             border-top-left-radius: 10px;
             border-bottom-left-radius: 10px;
 
@@ -1192,6 +1193,7 @@ header {
         }
     }
 }
+
 
 .insideIntroArc, .homeIntroArc {margin-top: -71px;} /*Make this the same as the height of the SVG*/
 .insideIntroArc svg, .homeIntroArc svg {width:100%;}
