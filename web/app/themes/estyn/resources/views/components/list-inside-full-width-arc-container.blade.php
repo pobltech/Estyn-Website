@@ -119,10 +119,10 @@
             const elemCollapseSectors = document.getElementById("{{ $elemUniqueID }}-collapseSectors");
 
             elemCollapseSectors.addEventListener('hidden.bs.collapse', event => {
-                elemToggleShowMore.innerHTML = "{{ __('Show more', 'sage') }}";
+                elemToggleShowMore.innerHTML = "{{ __('See more', 'sage') }}";
             });
             elemCollapseSectors.addEventListener('shown.bs.collapse', event => {
-                elemToggleShowMore.innerHTML = "{{ __('Show less', 'sage') }}";
+                elemToggleShowMore.innerHTML = "{{ __('See less', 'sage') }}";
             });
         });
     </script>
