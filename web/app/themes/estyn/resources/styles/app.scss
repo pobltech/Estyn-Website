@@ -1555,6 +1555,11 @@ p.sp-desc {
 .ctaMapLink {
     color: $estyn-white;
     font-size: 18px;
+
+    @include media-breakpoint-down(sm) {
+        font-size: 14px;
+    }
+
     line-height: 24px;
     font-family: "museo", serif;
     font-weight: 700;
@@ -1563,6 +1568,18 @@ p.sp-desc {
     &:hover {
         color: $estyn-white;
         background-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+.border-sm-bottom {
+    @include media-breakpoint-up(sm) {
+        border-bottom: $border-width solid $border-color;
+    }
+}
+
+.border-top-sm-0 {
+    @include media-breakpoint-up(sm) {
+        border-top: 0 !important;
     }
 }
 

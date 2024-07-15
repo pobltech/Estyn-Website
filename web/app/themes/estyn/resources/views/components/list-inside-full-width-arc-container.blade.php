@@ -53,8 +53,8 @@
                                             </div> {{-- Close the previous row --}}
                                             <div class="row">
                                         @endif
-                                                <div class="col-12 col-sm-6 mb-4">
-                                                    <span class="pb-2 border-bottom d-block">
+                                                <div class="col-12 col-sm-6 {{ $loop->iteration != 12 ? 'mb-3 mb-sm-4' : 'mb-2 mb-sm-4' }}">
+                                                    <span class="{{ $loop->iteration != 12 ? 'pb-2 border-bottom' : 'pb-sm-2 border-sm-bottom' }} d-block">
                                                         <a href="{{ $listItem['linkURL'] }}" class="ctaMapLink text-decoration-none">{!! $listItem['title'] !!}</a>
                                                     </span>
                                                 </div>
@@ -86,8 +86,8 @@
                                             </div> {{-- Close the previous row --}}
                                             <div class="row">
                                         @endif
-                                                <div class="col-12 col-sm-6 mb-4">
-                                                    <span class="pb-2 border-bottom d-block">
+                                                <div class="col-12 col-sm-6 mb-3 mb-sm-4">
+                                                    <span class="pb-2 {{ $loop->iteration == 13 ? 'pt-3 pt-sm-0 border-top border-top-sm-0' : '' }} {{ !$loop->last ? 'border-bottom' : 'border-sm-bottom' }} d-block">
                                                         <a href="{{ $listItem['linkURL'] }}" class="ctaMapLink text-decoration-none">{!! $listItem['title'] !!}</a>
                                                     </span>
                                                 </div>
@@ -98,7 +98,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-12 d-flex justify-content-center mt-4">
+                                <div class="col-12 d-flex justify-content-center mt-5">
                                     <a id="{{ $elemUniqueID }}-toggle-show-more" class="btn btn-outline-primary px-5 text-white bg-transparent-even-when-active border-white rounded-5 cta-toggle-more-less" data-bs-toggle="collapse" href="#{{ $elemUniqueID }}-collapseSectors" role="button" aria-expanded="false" aria-controls="{{ $elemUniqueID }}-collapseSectors">{{ __('See more') }}</a>
                                 </div>
                             </div>
