@@ -276,6 +276,11 @@
         'doNotDoJavaScript' => false
       ])
     </div>
+    @if(!empty($homeData['faqs']))
+    <div class="pb-md-5">
+      @include('partials.home-faqs', ['faqs' => $homeData['faqs']])
+    </div>
+    @endif
   </div>
 
   @while(have_posts()) @php(the_post())

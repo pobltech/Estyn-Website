@@ -44,6 +44,18 @@ class HomeComposer extends Composer
                 ];
             }
         }
+
+        $faqs = get_field('home_faqs'); // ACF Repeater field, each with a question and answer
+        if(!empty($faqs)) {
+            $faqs = array_map(function($faq) {
+                return [
+                    'question' => $faq['question'],
+                    'answer' => $faq['answer']
+                ];
+            }, $faqs);
+
+            $homeData['faqs'] = $faqs;
+        }
         
         return $homeData;
     }

@@ -174,7 +174,54 @@ body {
 .bg-estyn-blue {
     background-color: $estyn-blue;
 }
-.bg-blue {background-color: $estyn-blue}
+.bg-blue {
+    background-color: $estyn-blue;
+
+    .accordion-item {
+        background: transparent;
+        color: $estyn-white;
+    }
+
+    .accordion-button {
+        background: transparent;
+        color: $estyn-white;
+
+        padding-left: 0;
+        padding-right: 0;
+
+        font-size: 24px;
+        font-family: "museo", serif;
+        font-weight: 500;
+        font-style: normal;
+
+        &::after {
+            // Ridiculously complex way to set the arrow colour to white
+            filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(360deg) brightness(100%) contrast(100%);
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .accordion-body {
+        padding-left: 0;
+        padding-right: 0;
+
+        p, li {
+            font-size: 19px;
+            font-family: "Source Sans 3", sans-serif;
+            font-style: normal;
+            line-height: 26px;
+        }
+
+        p, li, a, h2, h3, h4, h5 {
+            color: $estyn-lightblue;
+        }
+    }
+}
+
+
 .bg-darkblue {background-color: $estyn-darkblue}
 .bg-lightblue {background-color: $estyn-lightblue}
 .bg-white {background-color:$estyn-white}

@@ -1,0 +1,1 @@
+@include('components.accordion-in-full-width-container', ['items' => $faqs, 'heading' => __('FAQs', 'sage'), 'id' => 'home-faqs'])
