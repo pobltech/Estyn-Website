@@ -204,14 +204,29 @@
                   </h2>
                   <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
-                      @foreach($tags as $tag)
+                      <div class="tag-search-container">
+                        <div class="form-group">
+                            <input type="text" class="form-control mb-3" id="searchTags" placeholder="{{ __('Search tags', 'sage') }}">
+                            <div id="tagList" class="tag-list">
+                                @foreach($tags as $tag)
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="checkbox" value="{{ $tag->slug }}" name="tags[]" {{ (!empty($_GET['tag'])) && (strtolower($_GET['tag']) == strtolower($tag->name)) ? 'checked' : '' }}>
+                                      <label class="form-check-label" for="flexCheckTags-{{ $tag->slug }}">
+                                          {{ $tag->name }}
+                                      </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                      </div>
+                      {{--@foreach($tags as $tag)
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox" value="{{ $tag->slug }}" name="tags[]" {{ (!empty($_GET['tag'])) && (strtolower($_GET['tag']) == strtolower($tag->name)) ? 'checked' : '' }}>
                           <label class="form-check-label" for="flexCheckTags-{{ $tag->slug }}">
                             {{ $tag->name }}
                           </label>
                         </div>
-                      @endforeach
+                      @endforeach--}}
                     </div>
                   </div>
                 </div>
@@ -250,7 +265,25 @@
                       </h2>
                       <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
-                          <div class="form-check">
+                          <div class="row">
+                            <div class="col">
+                              <label for="yearFrom">{{ __('From', 'sage') }}</label>
+                              <select class="form-control" name="yearFrom" id="yearFrom">
+                                @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                                  <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                              </select>
+                            </div>
+                            <div class="col">
+                              <label for="yearTo">{{ __('To', 'sage') }}</label>
+                              <select class="form-control" name="yearTo" id="yearTo">
+                                @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                                  <option value="{{ $i }}" {{ $i == intval(date('Y')) ? 'selected' : '' }}>{{ $i }}</option>
+                                @endfor
+                              </select>
+                            </div>
+                          </div>
+                          {{--<div class="form-check">
                             <input class="form-check-input" type="radio" name="year" id="flexCheckYearDefault" checked>
                             <label class="form-check-label" for="flexCheckYearDefault">
                               {{ __('Any year', 'sage') }}
@@ -263,7 +296,7 @@
                                 {{ $i }}
                               </label>
                             </div>
-                          @endfor
+                          @endfor--}}
                         </div>
                       </div>
                   </div>
@@ -1085,7 +1118,7 @@
 			$(document).ready(function() {
 				hideSearchResultsLoadingIndicator();
 
-				$(".search-filters input:not([type='text'])").on("change", function() {
+				$(".search-filters input:not([type='text']), #yearFrom, #yearTo").on("change", function() {
           if($(this).hasClass('proximity-range') && $("#proximityPostcode").val().trim() == "") {
             // Add Bootstrap error class/es to the postcode input
             $("#proximityPostcode").addClass('is-invalid');
@@ -1140,6 +1173,10 @@
             }
             applyFilters();
           }, postcodeBoxTypingInterval);
+        });
+
+        $("#searchTags").on("keyup", function(key) {
+          filterTags();
         });
 
         @if(!empty($searchArgs))
@@ -1217,7 +1254,9 @@
 				
 				return {
 					postType: postType,
-					year: $("#flush-collapseTwo input:checked").val(),
+          // year: $("#flush-collapseTwo input:checked").val(),
+					yearFrom: $("#yearFrom").val(),
+          yearTo: $("#yearTo").val(),
 					searchText: $("#search-box-container input[type='text']").val().trim(),
 					sort: sort
 				};
@@ -1293,7 +1332,9 @@
             return $(this).val();
           }).get(),
           improvementResourceType: $("#flush-collapseFour input:checked").val(),
-          year: $("#flush-collapseFive input:checked").val(),
+          // year: $("#flush-collapseTwo input:checked").val(),
+					yearFrom: $("#yearFrom").val(),
+          yearTo: $("#yearTo").val(),
           //numLearners: $("#flush-collapseLearners input:checked").val(),
           languageMedium: $("#flush-collapseLanguageMedium input:checked").val(),
           //ageRange: $("#flush-collapseAgeRange input:checked").val(),
@@ -1314,6 +1355,24 @@
 					opacity: 1
 				}, 250);
 			}
+
+      function filterTags() {
+          var input, filter, tagList, tags, label, i, txtValue;
+          input = document.getElementById('searchTags');
+          filter = input.value.toUpperCase();
+          tagList = document.getElementById("tagList");
+          tags = tagList.getElementsByClassName('form-check');
+
+          for (i = 0; i < tags.length; i++) {
+              label = tags[i].getElementsByTagName("label")[0];
+              txtValue = label.textContent || label.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                  tags[i].style.display = "";
+              } else {
+                  tags[i].style.display = "none";
+              }
+          }
+      }
 		})(jQuery);
 	</script>
 @endpush

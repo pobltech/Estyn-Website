@@ -254,6 +254,17 @@ pre {
     }
 }
 
+.tag-search-container {
+    .form-check {
+        
+    }
+    .tag-list {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+}
+
+
 /** TYPOGRAPHY **/
 
 p, li {

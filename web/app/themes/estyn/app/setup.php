@@ -881,6 +881,16 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 ],
             ];
         }
+    } elseif(isset($params['yearFrom']) && isset($params['yearTo'])) {
+        if(is_numeric($params['yearFrom']) && is_numeric($params['yearTo'])) {
+            $args['date_query'] = [
+                [
+                    'after' => $params['yearFrom'] . '-01-01',
+                    'before' => $params['yearTo'] . '-12-31',
+                    'inclusive' => true,
+                ],
+            ];
+        }
     }
 
     if(isset($params['searchText']) && !empty($params['searchText'])) {
