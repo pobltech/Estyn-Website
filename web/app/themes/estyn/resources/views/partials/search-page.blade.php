@@ -268,7 +268,7 @@
                           <div class="row">
                             <div class="col">
                               <label for="yearFrom">{{ __('From', 'sage') }}</label>
-                              <select class="form-control" name="yearFrom" id="yearFrom">
+                              <select class="form-select" name="yearFrom" id="yearFrom">
                                 @for ($i = 2005; $i <= intval(date('Y')); $i++)
                                   <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor
@@ -276,7 +276,7 @@
                             </div>
                             <div class="col">
                               <label for="yearTo">{{ __('To', 'sage') }}</label>
-                              <select class="form-control" name="yearTo" id="yearTo">
+                              <select class="form-select" name="yearTo" id="yearTo">
                                 @for ($i = 2005; $i <= intval(date('Y')); $i++)
                                   <option value="{{ $i }}" {{ $i == intval(date('Y')) ? 'selected' : '' }}>{{ $i }}</option>
                                 @endfor
