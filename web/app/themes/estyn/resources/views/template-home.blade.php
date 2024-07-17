@@ -55,13 +55,14 @@
                       <div class="modal-dialog modal-fullscreen">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title">{{ __('Search results', 'sage') }}</h5>
+                            {{--<h5 class="modal-title">{{ __('Search results', 'sage') }}</h5>--}}
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Close', 'sage') }}"></button>
                           </div>
                           <div class="modal-body">
                             <div class="row">
                               <div class="col">
-                                <div class="estyn-search-container input-group mb-3">
+                                <h3 class="mb-3">{{ __('Find a provider', 'sage') }}</h3>
+                                <div class="estyn-search-container input-group mb-4">
                                   <input type="text" list="home-provider-search-mobile-datalist-options" class="estyn-search-box form-control" data-posttype="estyn_eduprovider" placeholder="" aria-label="providerSearch" aria-describedby="providerSearch">
                                   <button class="estyn-search-box-button estyn-provider-search-button btn btn-secondary" type="button" id="homeMobileProviderSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
                                   <datalist class="search-datalist" id="home-provider-search-mobile-datalist-options">

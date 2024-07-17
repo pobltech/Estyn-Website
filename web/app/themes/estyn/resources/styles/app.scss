@@ -71,6 +71,12 @@ $navbar-toggler-padding-x: 0;
 $navbar-brand-margin-end: var(--navbar-brand-margin-right);
 $navbar-toggler-focus-width: 0;
 
+$btn-close-color: $estyn-blue;
+$btn-close-width: 0.5em;
+$btn-close-opacity: 1;
+
+$modal-header-padding: 1.5rem 1rem 1rem 1rem;
+
 
 @import 'bootstrap/scss/bootstrap';
 @import 'common/fonts';
@@ -1275,6 +1281,43 @@ header {
             @include media-breakpoint-down(md) {
                 border-top-left-radius: 6px;
                 border-bottom-left-radius: 6px;
+            }
+        }
+
+        .estyn-search-results-modal {
+            h2, p, .form-label {
+                color: $body-color;
+            }
+    
+            .form-control {
+                background-color: $estyn-lightblue;
+                padding: 0.25rem 0.75rem;
+                color: $body-color;
+                font-size: 16px;
+            }
+    
+            .btn, .btn-secondary {
+                font-size: 16px;
+                color: $estyn-white;
+                background-color: $estyn-blue;
+                padding: 0.5rem 0.8rem;
+            }
+
+            .modal-header {
+                border-bottom: none;
+            }
+
+            .modal-body {
+                .list-group-item {
+                    border: none;
+                    padding: 0;
+                    margin-bottom: 0.75rem;
+
+                    a {
+                        text-decoration: none;
+                        color: $estyn-blue;
+                    }
+                }
             }
         }
     }
