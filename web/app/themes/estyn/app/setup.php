@@ -2128,7 +2128,28 @@ function calculateReadTime($content, $pdfFile) {
     return $readTime;
 }
 
-// Make sure you only run this once!
+// Add a 'generate_welsh_providers' WP-CLI command to call the function to generate Welsh translations for all providers
+if (defined('WP_CLI') && WP_CLI) {
+    class Welsh_Providers_Command {
+        /**
+         * Generates Welsh translations for providers.
+         *
+         * ## EXAMPLES
+         *
+         *     wp generate_welsh_providers
+         *
+         */
+        public function __invoke($args, $assoc_args) {
+            // Call your function here
+            generateWelshProviders();
+            \WP_CLI::success('Welsh translations generated for all providers.');
+        }
+    }
+
+    \WP_CLI::add_command('generate_welsh_providers', __NAMESPACE__ . '\\Welsh_Providers_Command');
+}
+
+// Make sure you only run this once! (use the WP CLI command, i.e. wp generate_welsh_providers, from the project root directly)
 function generateWelshProviders() {
     $args = array(
         'post_type' => 'estyn_eduprovider',
@@ -2138,59 +2159,82 @@ function generateWelshProviders() {
 
     $posts = get_posts($args);
 
-    foreach ($posts as $post) {
+    $errorStrings = [];
+
+    foreach ($posts as $key => $post) {
+        error_log('Generating Welsh translation for post ' . $post->post_title . ' (post ' . $key . ' of ' . count($posts) . ')');
+
+        // Set the post language to English
+        pll_set_post_language($post->ID, 'en');
+        
         // Check if the post already has a translation
         $translations = pll_get_post_translations($post->ID);
         $target_language = 'cy';
 
-        if (empty($translations[$target_language])) {
-            // Prepare the post data, copying content from the original
-            $new_post_data = array(
-                'post_author' => $post->post_author,
-                'post_content' => $post->post_content,
-                'post_title' => $post->post_title,
-                'post_status' => $post->post_status,
-                'post_type' => $post->post_type,
-                'post_name' => $post->post_name, // Slug
-                // Copy other fields as needed
-            );
+        if (!empty($translations[$target_language])) {
+            continue;
+        }
 
-            // Insert the new post
-            $new_post_id = wp_insert_post($new_post_data);
+        // Make sure $translations['en'] is set
+        $translations['en'] = $post->ID;
 
-            // Set the language for the new post
-            pll_set_post_language($new_post_id, $target_language);
+        // Prepare the post data, copying content from the original
+        $new_post_data = array(
+            'post_author' => $post->post_author,
+            'post_content' => $post->post_content,
+            'post_title' => $post->post_title,
+            'post_status' => $post->post_status,
+            'post_type' => $post->post_type,
+            'post_name' => $post->post_name . '-cy', // Slug
+            // Copy other fields as needed
+        );
 
-            // Link the new post as a translation of the original
-            $translations[$target_language] = $new_post_id;
-            pll_save_post_translations($translations);
+        // Insert the new post
+        $new_post_id = wp_insert_post($new_post_data);
 
-            // Copy all custom fields
-            $custom_fields = get_post_custom($post->ID);
-            foreach ($custom_fields as $key => $values) {
-                foreach ($values as $value) {
-                    add_post_meta($new_post_id, $key, $value);
+        // Set the language for the new post
+        pll_set_post_language($new_post_id, $target_language);
+
+        // Link the new post as a translation of the original
+        $translations[$target_language] = $new_post_id;
+        pll_save_post_translations($translations);
+
+        // Copy all custom fields
+        $custom_fields = get_post_custom($post->ID);
+        foreach ($custom_fields as $key => $values) {
+            foreach ($values as $value) {
+                add_post_meta($new_post_id, $key, $value);
+            }
+        }
+
+        // Copy all taxonomies terms, but using the translated terms' IDs
+        $taxonomies = ['sector', 'local_authority', 'provider_status'];
+        foreach ($taxonomies as $taxonomy) {
+            $original_terms = wp_get_post_terms($post->ID, $taxonomy, ['fields' => 'ids']);
+            $translated_terms = [];
+
+            foreach ($original_terms as $original_term_id) {
+                $translated_term_id = pll_get_term($original_term_id, $target_language);
+                if ($translated_term_id) {
+                    $translated_terms[] = $translated_term_id;
+                } else {
+                    $translated_terms[] = $original_term_id;
                 }
             }
 
-            $taxonomies = ['sector', 'local_authority', 'provider_status'];
-            foreach ($taxonomies as $taxonomy) {
-                $original_terms = wp_get_post_terms($post->ID, $taxonomy, ['fields' => 'ids']);
-                $translated_terms = [];
-
-                foreach ($original_terms as $original_term_id) {
-                    $translated_term_id = pll_get_term($original_term_id, $target_language);
-                    if ($translated_term_id) {
-                        $translated_terms[] = $translated_term_id;
-                    }
-                }
-
-                if (!empty($translated_terms)) {
-                    wp_set_object_terms($new_post_id, $translated_terms, $taxonomy);
+            if (!empty($translated_terms)) {
+                $termsResult = wp_set_object_terms($new_post_id, $translated_terms, $taxonomy);
+                if(is_wp_error($termsResult)) {
+                    $errorStrings[] = 'Error setting terms for post ' . $new_post_id . ': ' . $termsResult->get_error_message();
+                } else {
+                    //error_log('Terms set for post ' . $new_post_id);
                 }
             }
         }
     }
-}
 
-//add_action('init', __NAMESPACE__ . '\\generateWelshProviders');
+    //Output any errors
+    foreach($errorStrings as $errorString) {
+        error_log($errorString);
+    }
+}
