@@ -423,44 +423,33 @@
                         <label for="proximityPostcode" class="form-label">{{ __('Postcode', 'sage') }}:</label>
                         <input type="text" class="form-control proximityPostcode" id="proximityPostcode" name="proximityPostcode" placeholder="{{ __('Enter a postcode', 'sage') }}">
                       </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="radio" name="proximity" value="any" id="flexCheckProximity-any" checked>
-                        <label class="form-check-label" for="flexCheckProximity-any">
-                          {{ __('Any proximity', 'sage') }}
-                        </label>
+
+                      <div class="form-input mb-2">
+                        <label for="proximityRange" class="form-label">{{ __('Search radius', 'sage') }}:</label>
+                        <select class="form-select proximity-range" name="proximity" id="proximityRange">
+                          <option value="0-0.1">{{ __('This area only', 'sage') }}</option>
+                          <option value="0-0.25">{{ __('Within 1/4 mile', 'sage') }}</option>
+                          <option value="0-0.5">{{ __('Within 1/2 mile', 'sage') }}</option>
+                          <option value="0-1">{{ __('Within 1 mile', 'sage') }}</option>
+                          <option value="0-3">{{ __('Within 3 miles', 'sage') }}</option>
+                          <option value="0-5">{{ __('Within 5 miles', 'sage') }}</option>
+                          <option value="0-10">{{ __('Within 10 miles', 'sage') }}</option>
+                          <option value="0-15">{{ __('Within 15 miles', 'sage') }}</option>
+                          <option value="0-20">{{ __('Within 20 miles', 'sage') }}</option>
+                          <option value="0-30">{{ __('Within 30 miles', 'sage') }}</option>
+                          <option value="0-40">{{ __('Within 40 miles', 'sage') }}</option>
+                        </select>
                       </div>
-                      {{-- '0-10', '0-20', '0-30', '0-40', ... , '0-250' --}}
-                      @for($i = 10; $i < 250; $i += 10)
+     
+                      {{--@for($i = 10; $i < 250; $i += 10)
                         <div class="form-check">
                           <input class="form-check-input proximity-range"  type="radio" name="proximity" value="0-{{ $i }}" id="flexCheckProximity-0-{{ $i }}">
                           <label class="form-check-label" for="flexCheckProximity-0-{{ $i }}">
                             0-{{ $i }} {{ __('miles', 'sage') }}
                           </label>
                         </div>
-                      @endfor
-
-                      {{--@for($i = 0; $i < 50; $i += 10)
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="proximity" value="{{ $i }}-{{ $i + 10 }}" id="flexCheckProximity-{{ $i }}-{{ $i + 10 }}">
-                          <label class="form-check-label" for="flexCheckProximity-{{ $i }}-{{ $i + 10 }}">
-                            {{ $i }}-{{ $i + 10 }} {{ __('miles', 'sage') }}
-                          </label>
-                        </div>
-                      @endfor
-                      @for($i = 50; $i <= 200; $i += 50)
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="proximity" value="{{ $i }}-{{ $i + 50 }}" id="flexCheckProximity-{{ $i }}-{{ $i + 50 }}">
-                          <label class="form-check-label" for="flexCheckProximity-{{ $i }}-{{ $i + 50 }}">
-                            {{ $i }}-{{ $i + 50 }} {{ __('miles', 'sage') }}
-                          </label>
-                        </div>
                       @endfor--}}
-                      <div class="form-check">
-                        <input class="form-check-input" type="radio" name="proximity" value="250-plus" id="flexCheckProximity-250-plus">
-                        <label class="form-check-label" for="flexCheckProximity-250-plus">
-                          {{ __('250+ miles', 'sage') }}
-                        </label>
-                      </div>
+
                     </div>
                   </div>
                 </div>
@@ -1118,7 +1107,7 @@
 			$(document).ready(function() {
 				hideSearchResultsLoadingIndicator();
 
-				$(".search-filters input:not([type='text']), #yearFrom, #yearTo").on("change", function() {
+				$(".search-filters input:not([type='text']), .search-filters select").on("change", function() {
           if($(this).hasClass('proximity-range') && $("#proximityPostcode").val().trim() == "") {
             // Add Bootstrap error class/es to the postcode input
             $("#proximityPostcode").addClass('is-invalid');
@@ -1168,7 +1157,8 @@
           const self = $(this); // Preserve the context
 
           postcodeBoxTypingTimer = setTimeout(() => { // Use arrow function
-            if($("#flexCheckProximity-any").is(":checked") || self.val().trim() === "" || self.val().trim().length < 3) {
+            //if($("#flexCheckProximity-any").is(":checked") || self.val().trim() === "" || self.val().trim().length < 3) {
+            if(self.val().trim() === "" || self.val().trim().length < 3) {
               return;
             }
             applyFilters();
@@ -1338,7 +1328,8 @@
           //numLearners: $("#flush-collapseLearners input:checked").val(),
           languageMedium: $("#flush-collapseLanguageMedium input:checked").val(),
           //ageRange: $("#flush-collapseAgeRange input:checked").val(),
-          proximity: $("#flush-collapseProximity input:checked").val(),
+          //proximity: $("#flush-collapseProximity input:checked").val(),
+          proximity: $("#proximityRange").val(),
           proximityPostcode: $("#flush-collapseProximity input[type='text']").val().trim()
         };
       }

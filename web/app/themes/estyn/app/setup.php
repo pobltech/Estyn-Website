@@ -1071,7 +1071,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
     // 'Similar Settings To Mine' filters
     $postsToRemove = [];
     
-    if( ((!empty($params['numLearners'])) && ($params['numLearners'] != 'any')) || ((!empty($params['languageMedium'])) && $params['languageMedium'] != 'any' ) || ((!empty($params['proximity'])) && $params['proximity'] != 'any' ) || ((!empty($params['ageRange'])) && $params['ageRange'] != 'any' ) ) {
+    if( ((!empty($params['numLearners'])) && ($params['numLearners'] != 'any')) || ((!empty($params['languageMedium'])) && $params['languageMedium'] != 'any' ) || ((!empty($params['proximity'])) && $params['proximity'] != 'any' && (!empty(trim($params['proximityPostcode'])))) || ((!empty($params['ageRange'])) && $params['ageRange'] != 'any' ) ) {
         // We need to get all the estyn_eduprovider posts that are
         // assigned to this post and check if any of them match the number of learners.
         // If they do, then we include this post in the results, otherwise we skip it.
