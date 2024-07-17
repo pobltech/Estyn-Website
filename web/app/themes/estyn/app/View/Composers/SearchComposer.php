@@ -27,6 +27,8 @@ class SearchComposer extends Composer
         $sectors = get_terms([
             'taxonomy' => 'sector',
             'hide_empty' => false,
+            'orderby' => 'count',
+            'order' => 'DESC'
         ]);
 
         return $sectors;
