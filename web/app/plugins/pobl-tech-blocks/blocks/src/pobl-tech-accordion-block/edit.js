@@ -38,23 +38,24 @@ import metadata from './block.json';
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { getBlockOrder } = useSelect( ( select ) => select( 'core/block-editor' ), [] );
 	const { updateBlockAttributes, moveBlockToPosition } = useDispatch( 'core/block-editor' );
+	const { accordionID, accordionHeading } = attributes;
 
 	const isSelected = useSelect( ( select ) => {
         const { getSelectedBlockClientId } = select( 'core/block-editor' );
         return getSelectedBlockClientId() === clientId;
     }, [ clientId ] );
 
-	// If attributes.accordionID is undefined, set it
+	// If accordionID is undefined, set it
 	useEffect(() => {
-		if (!attributes.accordionID) {
+		if (!accordionID) {
 			setAttributes({ accordionID: 'pobl-tech-accordion-block-' + Math.floor(Math.random() * 100000) });
 		}
 
 		const innerBlockClientIds = getBlockOrder(clientId);
 		//const lastInnerBlockClientId = innerBlockClientIds[innerBlockClientIds.length - 1];
-		//updateBlockAttributes(lastInnerBlockClientId, { parentID: attributes.accordionID });
+		//updateBlockAttributes(lastInnerBlockClientId, { parentID: accordionID });
 		innerBlockClientIds.forEach( blockId => {
-			updateBlockAttributes( blockId, { parentID: attributes.accordionID } );
+			updateBlockAttributes( blockId, { parentID: accordionID } );
 		});
 	});
 
@@ -65,22 +66,32 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					<Disabled>
 						<TextControl
 							label={ __( 'Accordion ID', 'pobl-tech-accordion-block' ) }
-							value={ attributes.accordionID }
+							value={ accordionID }
 						/>
 					</Disabled>
+					<TextControl
+						label={ __( 'Accordion Heading', 'pobl-tech-accordion-block' ) }
+						value={ accordionHeading }
+						onChange={ ( value ) => setAttributes( { accordionHeading: value } ) }
+					/>
 				</PanelBody>
 			</InspectorControls>
 			<div className="accordion accordion-flush p-2">
+				{
+					accordionHeading !== '' && (
+						<h2>{ accordionHeading }</h2>
+					)
+				}
 				<InnerBlocks
 					allowedBlocks={ metadata.allowedBlocks }
 					template={ [
-						[ 'create-block/pobl-tech-accordion-item-block', { heading: 'Accordion Item Heading', body: 'Accordion item body', parentID: attributes.accordionID } ],
+						[ 'create-block/pobl-tech-accordion-item-block', { heading: 'Accordion Item Heading', body: 'Accordion item body', parentID: accordionID } ],
 					] }
 					onMove={ ( fromClientId, toClientId, indexToMove ) => {
 						moveBlockToPosition( fromClientId, toClientId, indexToMove );
 						const blockOrder = getBlockOrder( toClientId );
 						blockOrder.forEach( blockId => {
-							updateBlockAttributes( blockId, { parentID: attributes.accordionID } );
+							updateBlockAttributes( blockId, { parentID: accordionID } );
 						});
 					} }
 				/>
