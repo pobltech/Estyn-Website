@@ -254,13 +254,41 @@ pre {
     }
 }
 
-.tag-search-container {
-    .form-check {
-        
+.tag-search-container, .searchFilter .tag-search-container {
+    .form-control {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
     }
     .tag-list {
-        max-height: 250px;
+        max-height: 173px;
         overflow-y: auto;
+
+        border-left: 1px solid $estyn-bluegrey;
+        border-right: 1px solid $estyn-bluegrey;
+        border-bottom: 1px solid $estyn-bluegrey;
+
+        border-bottom-left-radius: $border-radius-form;
+        border-bottom-right-radius: $border-radius-form;
+
+        .form-check {
+            padding: 0.45rem 0.675rem;
+            margin-bottom: 0;
+
+            display: flex;
+
+            &:nth-child(odd) {
+                background-color: #ECF6FE;
+            }
+            &:nth-child(even) {
+                background-color: $estyn-lightblue;
+            }
+
+            .form-check-input {
+                float: none;
+                margin-left: 0;
+                margin-right: 0.55rem;
+            }
+        }
     }
 }
 

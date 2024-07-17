@@ -206,11 +206,11 @@
                     <div class="accordion-body">
                       <div class="tag-search-container">
                         <div class="form-group">
-                            <input type="text" class="form-control mb-3" id="searchTags" placeholder="{{ __('Search tags', 'sage') }}">
+                            <input type="text" class="form-control" id="searchTags" placeholder="{{ __('Search tags', 'sage') }}">
                             <div id="tagList" class="tag-list">
                                 @foreach($tags as $tag)
                                     <div class="form-check">
-                                      <input class="form-check-input" type="checkbox" value="{{ $tag->slug }}" name="tags[]" {{ (!empty($_GET['tag'])) && (strtolower($_GET['tag']) == strtolower($tag->name)) ? 'checked' : '' }}>
+                                      <input class="form-check-input" type="checkbox" id="flexCheckTags-{{ $tag->slug }}" value="{{ $tag->slug }}" name="tags[]" {{ (!empty($_GET['tag'])) && (strtolower($_GET['tag']) == strtolower($tag->name)) ? 'checked' : '' }}>
                                       <label class="form-check-label" for="flexCheckTags-{{ $tag->slug }}">
                                           {{ $tag->name }}
                                       </label>
