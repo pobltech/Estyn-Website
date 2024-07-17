@@ -86,7 +86,7 @@
 
             <div class="search-filters collapse d-md-block pb-5" id="search-filters">
               <h3>{{ __('Filters', 'sage') }}</h3>
-              <div class="accordion accordion-flush pb-5 pb-sm-0" id="accordionFlushExample">
+              <div class="accordion accordion-flush pb-3 pb-sm-0" id="accordionFlushExample">
                 @if(isset($isNewsAndBlog) && $isNewsAndBlog)
                   <div class="accordion-item">
                       <h2 class="accordion-header" id="flush-headingOne">
@@ -591,6 +591,10 @@
               </div>
             
             @endif
+            {{-- Reset filters button --}}
+              <div class="mt-4">
+                <button type="button" class="btn btn-outline-primary reset-filters-button" id="resetFilters">{{ __('Reset filters', 'sage') }}</button>
+              </div>
             </div>
 					</div>
 				</div>
@@ -1106,6 +1110,33 @@
 
 			$(document).ready(function() {
 				hideSearchResultsLoadingIndicator();
+
+        $(".reset-filters-button").on("click", function() {
+          $(".search-filters input, .search-filters select").each(function() {
+            if($(this).attr('type') == 'checkbox') {
+              $(this).prop('checked', false);
+            } else if($(this).attr('type') == 'radio') {
+              $(this).prop('checked', false);
+            }
+            else if($(this).attr('id') == 'yearFrom') {
+              $(this).val($(this).find('option:first').val());
+            } else if($(this).attr('id') == 'yearTo') {
+              $(this).val("{{ date('Y') }}");
+            } else if($(this).hasClass('proximity-range')) {
+              // Set the value to the first option
+              $(this).val($(this).find('option:first').val());
+            }
+             else {
+              $(this).val('');
+            }
+          });
+
+          $("#search-box-container input[type='text']").val('');
+          $("#searchTags").val('');
+
+          currentPage = 1;
+          applyFilters();
+        });
 
 				$(".search-filters input:not([type='text']), .search-filters select").on("change", function() {
           if($(this).hasClass('proximity-range') && $("#proximityPostcode").val().trim() == "") {
