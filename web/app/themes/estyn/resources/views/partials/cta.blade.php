@@ -151,6 +151,8 @@
 									$sectors = isset($sectors) ? $sectors : get_terms([
 										'taxonomy' => 'sector',
 										'hide_empty' => false,
+										'orderby' => 'count',
+										'order' => 'DESC'
 									]);
 								@endphp
 								@foreach($sectors as $sector)

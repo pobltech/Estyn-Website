@@ -71,6 +71,12 @@ $navbar-toggler-padding-x: 0;
 $navbar-brand-margin-end: var(--navbar-brand-margin-right);
 $navbar-toggler-focus-width: 0;
 
+$btn-close-color: $estyn-blue;
+$btn-close-width: 0.5em;
+$btn-close-opacity: 1;
+
+$modal-header-padding: 1.5rem 1rem 1rem 1rem;
+
 
 @import 'bootstrap/scss/bootstrap';
 @import 'common/fonts';
@@ -174,7 +180,54 @@ body {
 .bg-estyn-blue {
     background-color: $estyn-blue;
 }
-.bg-blue {background-color: $estyn-blue}
+.bg-blue {
+    background-color: $estyn-blue;
+
+    .accordion-item {
+        background: transparent;
+        color: $estyn-white;
+    }
+
+    .accordion-button {
+        background: transparent;
+        color: $estyn-white;
+
+        padding-left: 0;
+        padding-right: 0;
+
+        font-size: 24px;
+        font-family: "museo", serif;
+        font-weight: 500;
+        font-style: normal;
+
+        &::after {
+            // Ridiculously complex way to set the arrow colour to white
+            filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(360deg) brightness(100%) contrast(100%);
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .accordion-body {
+        padding-left: 0;
+        padding-right: 0;
+
+        p, li {
+            font-size: 19px;
+            font-family: "Source Sans 3", sans-serif;
+            font-style: normal;
+            line-height: 26px;
+        }
+
+        p, li, a, h2, h3, h4, h5 {
+            color: $estyn-lightblue;
+        }
+    }
+}
+
+
 .bg-darkblue {background-color: $estyn-darkblue}
 .bg-lightblue {background-color: $estyn-lightblue}
 .bg-white {background-color:$estyn-white}
@@ -206,6 +259,52 @@ pre {
         text-wrap: wrap;
     }
 }
+
+.tag-search-container, .searchFilter .tag-search-container {
+    .form-control {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .tag-list {
+        max-height: 173px;
+        overflow-y: auto;
+
+        border-left: 1px solid $estyn-bluegrey;
+        border-right: 1px solid $estyn-bluegrey;
+        border-bottom: 1px solid $estyn-bluegrey;
+
+        border-bottom-left-radius: $border-radius-form;
+        border-bottom-right-radius: $border-radius-form;
+
+        .form-check {
+            padding: 0.45rem 0.675rem;
+            margin-bottom: 0;
+
+            display: flex;
+
+            &:nth-child(odd) {
+                background-color: #ECF6FE;
+            }
+            &:nth-child(even) {
+                background-color: $estyn-lightblue;
+            }
+
+            .form-check-input {
+                float: none;
+                margin-left: 0;
+                margin-right: 0.55rem;
+            }
+        }
+    }
+}
+
+.form-check-input {
+    width: 1.05em;
+    height: 1.05em;
+
+    border: $border-width solid #BADAFF;
+}
+
 
 /** TYPOGRAPHY **/
 
@@ -1152,7 +1251,8 @@ header {
     }    
 
     .form-control {
-        color: $estyn-darkblue;
+        color: $estyn-white;
+        font-size: 20px;
         background-color: $estyn-anotherlightblue; /* #7EB1D6;*/
         background-clip: padding-box;
         border: none;/* 1px solid $estyn-lightbluegrey; */
@@ -1181,7 +1281,7 @@ header {
             }
         }
 
-        input[type="text"] {
+        input[type="text"], &.input-group > input[type="text"]:not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
             border-top-left-radius: 10px;
             border-bottom-left-radius: 10px;
 
@@ -1190,8 +1290,46 @@ header {
                 border-bottom-left-radius: 6px;
             }
         }
+
+        .estyn-search-results-modal {
+            h2, p, .form-label {
+                color: $body-color;
+            }
+    
+            .form-control {
+                background-color: $estyn-lightblue;
+                padding: 0.25rem 0.75rem;
+                color: $body-color;
+                font-size: 16px;
+            }
+    
+            .btn, .btn-secondary {
+                font-size: 16px;
+                color: $estyn-white;
+                background-color: $estyn-blue;
+                padding: 0.5rem 0.8rem;
+            }
+
+            .modal-header {
+                border-bottom: none;
+            }
+
+            .modal-body {
+                .list-group-item {
+                    border: none;
+                    padding: 0;
+                    margin-bottom: 0.75rem;
+
+                    a {
+                        text-decoration: none;
+                        color: $estyn-blue;
+                    }
+                }
+            }
+        }
     }
 }
+
 
 .insideIntroArc, .homeIntroArc {margin-top: -71px;} /*Make this the same as the height of the SVG*/
 .insideIntroArc svg, .homeIntroArc svg {width:100%;}
@@ -1199,6 +1337,15 @@ header {
     font-size: 26px;
     line-height: 33px;
     margin-bottom: 1.8rem;
+}
+
+.listArc {
+    margin-top: -71px;
+    z-index: -1;
+
+    svg {
+        width: 100%;
+    }
 }
 
 
@@ -1544,6 +1691,11 @@ p.sp-desc {
 .ctaMapLink {
     color: $estyn-white;
     font-size: 18px;
+
+    @include media-breakpoint-down(sm) {
+        font-size: 14px;
+    }
+
     line-height: 24px;
     font-family: "museo", serif;
     font-weight: 700;
@@ -1552,6 +1704,18 @@ p.sp-desc {
     &:hover {
         color: $estyn-white;
         background-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+.border-sm-bottom {
+    @include media-breakpoint-up(sm) {
+        border-bottom: $border-width solid $border-color;
+    }
+}
+
+.border-top-sm-0 {
+    @include media-breakpoint-up(sm) {
+        border-top: 0 !important;
     }
 }
 

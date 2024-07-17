@@ -120,6 +120,12 @@
 					return;
 				}
 
+				function isMobile() {
+					return window.matchMedia('(max-width: 767px)').matches;
+				}
+
+				let providerSearchPageURL = "{{ \App\get_permalink_by_template('provider-search.blade.php') }}";
+
 				let searchBoxTypingTimer = setTimeout(function() {}, 0);
 				const searchBoxTypingInterval = 500;
 
@@ -157,9 +163,21 @@
 					}, processSearchBoxChangeInterval, $(this));
 				});
 
+				$('.estyn-search-box').on('focus', function() {
+					if(isMobile()) {
+						$(this).prev('.estyn-search-results-modal').modal('show');
+					}
+				});
+
 				$('.estyn-search-box-button').on('click', function() {
 					//console.log('click');
 					//$(this).prev('.estyn-search-results-modal').modal('show');
+
+					// If the search box is for providers, redirect to the provider search page (on desktop)
+					if( (!isMobile()) && $(this).hasClass('estyn-provider-search-button') ) {
+						window.location.href = providerSearchPageURL + '?search=' + $(this).prev('input').val();
+						return;
+					}
 
 					clearTimeout(processSearchBoxChangeTimer);
 					processSearchBoxChangeTimer = setTimeout(function($elem) {
@@ -198,9 +216,14 @@
 
 							//const $modal = $elem.prevAll('.estyn-search-results-modal:first');
 							// Use the element's data-bs-target attribute to find the modal
-							const $modal = $($elem.next('button').data('bs-target'));
+							let $modal = $($elem.next('button').data('bs-target'));
+
+							if(!$modal.length) {
+								// Assume the modal is a container of the search box
+								$modal = $elem.closest('.estyn-search-results-modal');
+							}
 							
-							console.log('Modal = ' + $elem.next('button').data('bs-target'))
+							console.log('Modal ID = ' + $modal.attr('id'));
 
 
 							const $modalUL = $modal.find('ul');

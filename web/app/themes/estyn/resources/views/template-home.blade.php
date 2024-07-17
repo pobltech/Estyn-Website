@@ -52,13 +52,25 @@
                   <label for="providerSearch" class="form-label mb-2 mb-md-4">{{ get_field('provider_search_description') }}</label>
                   <div class="estyn-search-container input-group mb-3">
                     <div class="modal estyn-search-results-modal" tabindex="-1" id="home-hero-provider-search-modal">
-                      <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-dialog modal-fullscreen">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title">{{ __('Search results', 'sage') }}</h5>
+                            {{--<h5 class="modal-title">{{ __('Search results', 'sage') }}</h5>--}}
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Close', 'sage') }}"></button>
                           </div>
                           <div class="modal-body">
+                            <div class="row">
+                              <div class="col">
+                                <h3 class="mb-3">{{ __('Find a provider', 'sage') }}</h3>
+                                <div class="estyn-search-container input-group mb-4">
+                                  <input type="text" list="home-provider-search-mobile-datalist-options" class="estyn-search-box form-control" data-posttype="estyn_eduprovider" placeholder="" aria-label="providerSearch" aria-describedby="providerSearch">
+                                  <button class="estyn-search-box-button estyn-provider-search-button btn btn-secondary" type="button" id="homeMobileProviderSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+                                  <datalist class="search-datalist" id="home-provider-search-mobile-datalist-options">
+
+                                  </datalist>
+                                </div>
+                              </div>
+                            </div>
                             <div class="row">
                               <div class="col">
                                 <ul class="estyn-search-results-list list-group list-group-flush">
@@ -71,7 +83,7 @@
                       </div>
                     </div>
                     <input type="text" list="home-provider-search-datalist-options" class="estyn-search-box form-control" data-posttype="estyn_eduprovider" placeholder="" aria-label="providerSearch" aria-describedby="providerSearch">
-                    <button class="estyn-search-box-button btn btn-secondary" data-bs-toggle="modal" data-bs-target="#home-hero-provider-search-modal" type="button" id="providerSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+                    <button class="estyn-search-box-button estyn-provider-search-button btn btn-secondary" data-bs-toggle="modal" data-bs-target="#home-hero-provider-search-modal" type="button" id="providerSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
                     <datalist class="search-datalist" id="home-provider-search-datalist-options">
 
                     </datalist>
@@ -208,7 +220,7 @@
 </div>
 --}}
 <div id="home-map-search-section" class="pt-md-5">
-  @include('partials.cta', [
+  {{--@include('partials.cta', [
     'ctaHeading' => __('Our education map of Wales', 'sage'),
     'ctaText' => __('Find providers across Wales using our handy map', 'sage'),
     'ctaButtonLinkURL' => App\get_permalink_by_template('provider-search.blade.php'),
@@ -220,7 +232,8 @@
     'showSearchBox' => true,
     'darkArc' => true,
     'ctaContainerExtraClasses' => 'ctaSearchMapContainer'
-  ])
+  ])--}}
+  @include('partials.sectors-inside-full-width-arc-container')
 </div>
 
   <div class="pt-md-5 mt-5 pb-md-5">
@@ -264,6 +277,11 @@
         'doNotDoJavaScript' => false
       ])
     </div>
+    @if(!empty($homeData['faqs']))
+    <div class="pb-md-5">
+      @include('partials.home-faqs', ['faqs' => $homeData['faqs']])
+    </div>
+    @endif
   </div>
 
   @while(have_posts()) @php(the_post())

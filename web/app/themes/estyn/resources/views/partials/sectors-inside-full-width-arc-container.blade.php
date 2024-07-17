@@ -1,0 +1,1 @@
+@include('components.list-inside-full-width-arc-container', ['heading' => __('Our education sectors', 'sage'), 'listItems' => $sectors, 'elemUniqueID' => $elemUniqueID])
