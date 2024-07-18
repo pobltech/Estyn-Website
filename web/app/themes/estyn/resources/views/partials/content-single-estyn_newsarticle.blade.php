@@ -5,7 +5,7 @@
   'showShareButton' => true,
   'date' => $date ?? null
 ])
-<div class="reportMain">
+<div class="reportMain pb-5">
 	<div class="container px-md-4 px-xl-5">
     <div class="row justify-content-center">
       <div class="col-12 col-lg-10 col-xl-8">
