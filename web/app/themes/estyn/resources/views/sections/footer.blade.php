@@ -178,6 +178,11 @@
 						window.location.href = providerSearchPageURL + '?search=' + $(this).prev('input').val();
 						return;
 					}
+					// If it's mobile and this is the MODAL's search button, then we'll do the redirect
+					if( (isMobile()) && $(this).hasClass('estyn-provider-search-mobile-modal-button') ) {
+						window.location.href = providerSearchPageURL + '?search=' + $(this).prev('input').val();
+						return;
+					}
 
 					clearTimeout(processSearchBoxChangeTimer);
 					processSearchBoxChangeTimer = setTimeout(function($elem) {
