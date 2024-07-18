@@ -442,7 +442,7 @@
 											<div class="col-md-10 pb-4 pb-sm-0 estyn-search-container">
 												<h3 class="mb-4">{{ __('Search Estyn') }}</h3>
 												<div class="input-group mb-3">
-													<input type="text" id="navSearchEstynBox" list="datalistOptions-{{ $navSearchUniqueID }}" class="form-control estyn-search-box" placeholder="" aria-label="estynSearch" aria-describedby="estynSearch">
+													<input type="text" id="navSearchEstynBox" data-language="{{ pll_current_language() }}" list="datalistOptions-{{ $navSearchUniqueID }}" class="form-control estyn-search-box" placeholder="" aria-label="estynSearch" aria-describedby="estynSearch">
 													<button class="estyn-search-box-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#{{ $navSearchUniqueID }}-search-results-modal" id="estynSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
 													<datalist class="search-datalist" id="datalistOptions-{{ $navSearchUniqueID }}">
 														

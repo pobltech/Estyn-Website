@@ -202,6 +202,11 @@
 						searchArgs.postType = [$elem.data('posttype')];
 					}
 
+					if($elem.data('language')) {
+						//console.log('Language = ' + $elem.data('language'));
+						searchArgs.language = $elem.data('language');
+					}
+
 					$.ajax({
 						url: estyn.all_search_rest_url,
 						type: 'GET',
@@ -223,7 +228,7 @@
 								$modal = $elem.closest('.estyn-search-results-modal');
 							}
 							
-							console.log('Modal ID = ' + $modal.attr('id'));
+							//console.log('Modal ID = ' + $modal.attr('id'));
 
 
 							const $modalUL = $modal.find('ul');
