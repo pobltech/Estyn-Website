@@ -125,20 +125,24 @@
                       </h2>
                       <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="year" id="flexCheckYearDefault" checked>
-                            <label class="form-check-label" for="flexCheckYearDefault">
-                              {{ __('Any year', 'sage') }}
-                            </label>
-                          </div>
-                          @for ($i = 2013; $i <= intval(date('Y')); $i++)
-                            <div class="form-check">
-                              <input class="form-check-input" type="radio" name="year" value="{{ $i }}" id="flexCheckYear{{ $i }}">
-                              <label class="form-check-label" for="flexCheckYear{{ $i }}">
-                                {{ $i }}
-                              </label>
+                          <div class="row">
+                            <div class="col">
+                              <label for="yearFrom">{{ __('From', 'sage') }}</label>
+                              <select class="form-select" name="yearFrom" id="yearFrom">
+                                @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                                  <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                              </select>
                             </div>
-                          @endfor
+                            <div class="col">
+                              <label for="yearTo">{{ __('To', 'sage') }}</label>
+                              <select class="form-select" name="yearTo" id="yearTo">
+                                @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                                  <option value="{{ $i }}" {{ $i == intval(date('Y')) ? 'selected' : '' }}>{{ $i }}</option>
+                                @endfor
+                              </select>
+                            </div>
+                          </div>
                         </div>
                       </div>
                   </div>
@@ -337,20 +341,24 @@
                       </h2>
                       <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="year" id="flexCheckYearDefault" checked>
-                            <label class="form-check-label" for="flexCheckYearDefault">
-                              {{ __('Any year', 'sage') }}
-                            </label>
-                          </div>
-                          @for ($i = 2005; $i <= intval(date('Y')); $i++)
-                            <div class="form-check">
-                              <input class="form-check-input" type="radio" name="year" value="{{ $i }}" id="flexCheckYear{{ $i }}">
-                              <label class="form-check-label" for="flexCheckYear{{ $i }}">
-                                {{ $i }}
-                              </label>
+                          <div class="row">
+                            <div class="col">
+                              <label for="yearFrom">{{ __('From', 'sage') }}</label>
+                              <select class="form-select" name="yearFrom" id="yearFrom">
+                                @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                                  <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                              </select>
                             </div>
-                          @endfor
+                            <div class="col">
+                              <label for="yearTo">{{ __('To', 'sage') }}</label>
+                              <select class="form-select" name="yearTo" id="yearTo">
+                                @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                                  <option value="{{ $i }}" {{ $i == intval(date('Y')) ? 'selected' : '' }}>{{ $i }}</option>
+                                @endfor
+                              </select>
+                            </div>
+                          </div>
                         </div>
                       </div>
                   </div>
@@ -389,20 +397,24 @@
                       </h2>
                       <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="year" id="flexCheckYearDefault" checked>
-                            <label class="form-check-label" for="flexCheckYearDefault">
-                              {{ __('Any year', 'sage') }}
-                            </label>
-                          </div>
-                          @for ($i = 2005; $i <= intval(date('Y')); $i++)
-                            <div class="form-check">
-                              <input class="form-check-input" type="radio" name="year" value="{{ $i }}" id="flexCheckYear{{ $i }}">
-                              <label class="form-check-label" for="flexCheckYear{{ $i }}">
-                                {{ $i }}
-                              </label>
+                          <div class="row">
+                            <div class="col">
+                              <label for="yearFrom">{{ __('From', 'sage') }}</label>
+                              <select class="form-select" name="yearFrom" id="yearFrom">
+                                @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                                  <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                              </select>
                             </div>
-                          @endfor
+                            <div class="col">
+                              <label for="yearTo">{{ __('To', 'sage') }}</label>
+                              <select class="form-select" name="yearTo" id="yearTo">
+                                @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                                  <option value="{{ $i }}" {{ $i == intval(date('Y')) ? 'selected' : '' }}>{{ $i }}</option>
+                                @endfor
+                              </select>
+                            </div>
+                          </div>
                         </div>
                       </div>
                   </div>
@@ -1338,6 +1350,8 @@
           tags: $("#flush-collapseThree input:checked").map(function() {
             return $(this).val();
           }).get(),
+          yearFrom: $("#yearFrom").val(),
+          yearTo: $("#yearTo").val(),
           inspectionGuidanceType: $("#flush-collapseFour input:checked").val()
         };
       }
@@ -1352,7 +1366,9 @@
           tags: $("#flush-collapseThree input:checked").map(function() {
             return $(this).val();
           }).get(),
-          inspectionQuestionnaireCategory: $("#flush-collapseFour input:checked").val()
+          inspectionQuestionnaireCategory: $("#flush-collapseFour input:checked").val(),
+          yearFrom: $("#yearFrom").val(),
+          yearTo: $("#yearTo").val()
         };
       }
 
