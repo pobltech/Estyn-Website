@@ -6,5 +6,6 @@
 @section('content')
 	@include('partials.search-page', [
 		'isImprovementResourcesSearch' => true,
+		'annualReportsArchive' => true
 	])
 @endsection

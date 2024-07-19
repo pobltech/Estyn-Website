@@ -125,20 +125,24 @@
                       </h2>
                       <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="year" id="flexCheckYearDefault" checked>
-                            <label class="form-check-label" for="flexCheckYearDefault">
-                              {{ __('Any year', 'sage') }}
-                            </label>
-                          </div>
-                          @for ($i = 2013; $i <= intval(date('Y')); $i++)
-                            <div class="form-check">
-                              <input class="form-check-input" type="radio" name="year" value="{{ $i }}" id="flexCheckYear{{ $i }}">
-                              <label class="form-check-label" for="flexCheckYear{{ $i }}">
-                                {{ $i }}
-                              </label>
+                          <div class="row">
+                            <div class="col">
+                              <label for="yearFrom">{{ __('From', 'sage') }}</label>
+                              <select class="form-select" name="yearFrom" id="yearFrom">
+                                @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                                  <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                              </select>
                             </div>
-                          @endfor
+                            <div class="col">
+                              <label for="yearTo">{{ __('To', 'sage') }}</label>
+                              <select class="form-select" name="yearTo" id="yearTo">
+                                @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                                  <option value="{{ $i }}" {{ $i == intval(date('Y')) ? 'selected' : '' }}>{{ $i }}</option>
+                                @endfor
+                              </select>
+                            </div>
+                          </div>
                         </div>
                       </div>
                   </div>
@@ -232,6 +236,7 @@
                 </div>
                 @endif
                 @if(isset($isImprovementResourcesSearch) && $isImprovementResourcesSearch && isset($improvementResourceTypes) && !empty($improvementResourceTypes))
+                  @if(empty($annualReportsArchive))
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-headingFour">
                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
@@ -241,7 +246,7 @@
                     <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
                       <div class="accordion-body">
                         <div class="form-check">
-                          <input class="form-check-input" type="radio" name="improvement_resource_type" value="any" id="flexCheckType-any" checked>
+                          <input class="form-check-input" type="radio" name="improvement_resource_type" value="any" id="flexCheckType-any">
                           <label class="form-check-label" for="flexCheckType-any">
                             {{ __('Any type', 'sage') }}
                           </label>
@@ -257,6 +262,7 @@
                       </div>
                     </div>
                   </div>
+                  @endif
                   <div class="accordion-item">
                       <h2 class="accordion-header" id="flush-headingFive">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
@@ -335,20 +341,24 @@
                       </h2>
                       <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="year" id="flexCheckYearDefault" checked>
-                            <label class="form-check-label" for="flexCheckYearDefault">
-                              {{ __('Any year', 'sage') }}
-                            </label>
-                          </div>
-                          @for ($i = 2005; $i <= intval(date('Y')); $i++)
-                            <div class="form-check">
-                              <input class="form-check-input" type="radio" name="year" value="{{ $i }}" id="flexCheckYear{{ $i }}">
-                              <label class="form-check-label" for="flexCheckYear{{ $i }}">
-                                {{ $i }}
-                              </label>
+                          <div class="row">
+                            <div class="col">
+                              <label for="yearFrom">{{ __('From', 'sage') }}</label>
+                              <select class="form-select" name="yearFrom" id="yearFrom">
+                                @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                                  <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                              </select>
                             </div>
-                          @endfor
+                            <div class="col">
+                              <label for="yearTo">{{ __('To', 'sage') }}</label>
+                              <select class="form-select" name="yearTo" id="yearTo">
+                                @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                                  <option value="{{ $i }}" {{ $i == intval(date('Y')) ? 'selected' : '' }}>{{ $i }}</option>
+                                @endfor
+                              </select>
+                            </div>
+                          </div>
                         </div>
                       </div>
                   </div>
@@ -387,20 +397,24 @@
                       </h2>
                       <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="year" id="flexCheckYearDefault" checked>
-                            <label class="form-check-label" for="flexCheckYearDefault">
-                              {{ __('Any year', 'sage') }}
-                            </label>
-                          </div>
-                          @for ($i = 2005; $i <= intval(date('Y')); $i++)
-                            <div class="form-check">
-                              <input class="form-check-input" type="radio" name="year" value="{{ $i }}" id="flexCheckYear{{ $i }}">
-                              <label class="form-check-label" for="flexCheckYear{{ $i }}">
-                                {{ $i }}
-                              </label>
+                          <div class="row">
+                            <div class="col">
+                              <label for="yearFrom">{{ __('From', 'sage') }}</label>
+                              <select class="form-select" name="yearFrom" id="yearFrom">
+                                @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                                  <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                              </select>
                             </div>
-                          @endfor
+                            <div class="col">
+                              <label for="yearTo">{{ __('To', 'sage') }}</label>
+                              <select class="form-select" name="yearTo" id="yearTo">
+                                @for ($i = 2005; $i <= intval(date('Y')); $i++)
+                                  <option value="{{ $i }}" {{ $i == intval(date('Y')) ? 'selected' : '' }}>{{ $i }}</option>
+                                @endfor
+                              </select>
+                            </div>
+                          </div>
                         </div>
                       </div>
                   </div>
@@ -613,6 +627,8 @@
 
         $isInspectionQuestionnairesSearch = isset($isInspectionQuestionnairesSearch) ? $isInspectionQuestionnairesSearch : false;
 
+        $isAllSearch = isset($isAllSearch) ? $isAllSearch : false;
+
         $searchQuery = null;
         $searchArgs = null;
 
@@ -620,7 +636,18 @@
           $searchArgs['paged'] = intval($_GET['paged']);
         }
 
-        if($isNewsAndBlog) {
+        if($isAllSearch) {
+          $searchArgs = [
+            'post_type' => ['post', 'page', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_inspguidance', 'estyn_insp_qu', 'estyn_eduprovider'],
+            'posts_per_page' => 10
+          ];
+
+          // If there's a Wordpress search query in the URL then add it to the search args
+          if(isset($_GET['search'])) {
+            $searchArgs['s'] = trim($_GET['search']);
+          }
+        }
+        elseif($isNewsAndBlog) {
           $searchArgs = [
             'post_type' => ['estyn_newsarticle', 'post'],
             'posts_per_page' => 10,
@@ -1261,8 +1288,17 @@
 					});
 				});
 			}
-
-      @if(isset($isNewsAndBlog) && $isNewsAndBlog)        
+      @if(!empty($isAllSearch))
+      function getSearchFilters() {
+        return {
+          postType: "any",
+          searchText: $("#search-box-container input[type='text']").val().trim(),
+          sort: $("#sort-by").val(),
+          localAuthority: $("#flush-collapseTwo input:checked").val(),
+          sector: $("#flush-collapse-sector input:checked").val(),
+        };
+      }
+      @elseif(isset($isNewsAndBlog) && $isNewsAndBlog)        
 			function getSearchFilters() {
 				let postType = "";
 				if($("#flexCheckNews").is(":checked")) {
@@ -1314,6 +1350,8 @@
           tags: $("#flush-collapseThree input:checked").map(function() {
             return $(this).val();
           }).get(),
+          yearFrom: $("#yearFrom").val(),
+          yearTo: $("#yearTo").val(),
           inspectionGuidanceType: $("#flush-collapseFour input:checked").val()
         };
       }
@@ -1328,7 +1366,9 @@
           tags: $("#flush-collapseThree input:checked").map(function() {
             return $(this).val();
           }).get(),
-          inspectionQuestionnaireCategory: $("#flush-collapseFour input:checked").val()
+          inspectionQuestionnaireCategory: $("#flush-collapseFour input:checked").val(),
+          yearFrom: $("#yearFrom").val(),
+          yearTo: $("#yearTo").val()
         };
       }
 
@@ -1352,7 +1392,8 @@
           tags: $("#flush-collapseThree input:checked").map(function() {
             return $(this).val();
           }).get(),
-          improvementResourceType: $("#flush-collapseFour input:checked").val(),
+          // TODO: DEV NOTE: If the slugs change, update the values below
+          improvementResourceType: {!! !empty($annualReportsArchive) ? (pll_current_language() == 'en' ? '"annual-report"' : '"adroddiad-blynyddol"') : '$("#flush-collapseFour input:checked").val()' !!},
           // year: $("#flush-collapseTwo input:checked").val(),
 					yearFrom: $("#yearFrom").val(),
           yearTo: $("#yearTo").val(),
