@@ -232,6 +232,7 @@
                 </div>
                 @endif
                 @if(isset($isImprovementResourcesSearch) && $isImprovementResourcesSearch && isset($improvementResourceTypes) && !empty($improvementResourceTypes))
+                  @if(empty($annualReportsArchive))
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-headingFour">
                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
@@ -241,7 +242,7 @@
                     <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
                       <div class="accordion-body">
                         <div class="form-check">
-                          <input class="form-check-input" type="radio" name="improvement_resource_type" value="any" id="flexCheckType-any" checked>
+                          <input class="form-check-input" type="radio" name="improvement_resource_type" value="any" id="flexCheckType-any">
                           <label class="form-check-label" for="flexCheckType-any">
                             {{ __('Any type', 'sage') }}
                           </label>
@@ -257,6 +258,7 @@
                       </div>
                     </div>
                   </div>
+                  @endif
                   <div class="accordion-item">
                       <h2 class="accordion-header" id="flush-headingFive">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
@@ -1374,7 +1376,8 @@
           tags: $("#flush-collapseThree input:checked").map(function() {
             return $(this).val();
           }).get(),
-          improvementResourceType: $("#flush-collapseFour input:checked").val(),
+          // TODO: DEV NOTE: If the slugs change, update the values below
+          improvementResourceType: {!! !empty($annualReportsArchive) ? (pll_current_language() == 'en' ? '"annual-report"' : '"adroddiad-blynyddol"') : '$("#flush-collapseFour input:checked").val()' !!},
           // year: $("#flush-collapseTwo input:checked").val(),
 					yearFrom: $("#yearFrom").val(),
           yearTo: $("#yearTo").val(),
