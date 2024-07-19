@@ -123,7 +123,8 @@
 				function isMobile() {
 					return window.matchMedia('(max-width: 767px)').matches;
 				}
-
+				
+				let allSearchPageURL = "{{ \App\get_permalink_by_template('template-all-search.blade.php') }}";
 				let providerSearchPageURL = "{{ \App\get_permalink_by_template('provider-search.blade.php') }}";
 
 				let searchBoxTypingTimer = setTimeout(function() {}, 0);
@@ -164,8 +165,10 @@
 				});
 
 				$('.estyn-search-box').on('focus', function() {
-					if(isMobile()) {
-						$(this).prev('.estyn-search-results-modal').modal('show');
+					if(isMobile() && $(this).data('modal-id')) {
+						$modal = $("#" + $(this).data('modal-id'));
+
+						$modal.modal('show');
 					}
 				});
 
@@ -178,16 +181,28 @@
 						window.location.href = providerSearchPageURL + '?search=' + $(this).prev('input').val();
 						return;
 					}
+					if( (!isMobile()) ) {
+						window.location.href = allSearchPageURL + '?search=' + $(this).prev('input').val();
+						return;
+					}
+					
 					// If it's mobile and this is the MODAL's search button, then we'll do the redirect
 					if( (isMobile()) && $(this).hasClass('estyn-provider-search-mobile-modal-button') ) {
 						window.location.href = providerSearchPageURL + '?search=' + $(this).prev('input').val();
 						return;
 					}
+					if( (isMobile()) && $(this).hasClass('estyn-search-mobile-modal-button') ) {
+						window.location.href = allSearchPageURL + '?search=' + $(this).prev('input').val();
+						return;
+					}
 
-					clearTimeout(processSearchBoxChangeTimer);
+					// If we've reached this point then we're on mobile and it's NOT the modal
+					$('#' + $(this).prev('.estyn-search-box').data('modal-id')).modal('show');
+
+					/*clearTimeout(processSearchBoxChangeTimer);
 					processSearchBoxChangeTimer = setTimeout(function($elem) {
 						processSearchBoxChange($elem);
-					}, processSearchBoxChangeInterval, $(this).prev('input'));
+					}, processSearchBoxChangeInterval, $(this).prev('input'));*/
 				});
 
 				function search($elem) {
@@ -226,9 +241,11 @@
 
 							//const $modal = $elem.prevAll('.estyn-search-results-modal:first');
 							// Use the element's data-bs-target attribute to find the modal
-							let $modal = $($elem.next('button').data('bs-target'));
+							//let $modal = $($elem.next('button').data('bs-target'));
+							let $modal = $("#" + $elem.data('modal-id'));
 
 							if(!$modal.length) {
+								//console.log('Modal not found');
 								// Assume the modal is a container of the search box
 								$modal = $elem.closest('.estyn-search-results-modal');
 							}

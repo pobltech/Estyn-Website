@@ -811,7 +811,7 @@ function calculateDistanceBetween($latitudeFrom, $longitudeFrom, $latitudeTo, $l
 
 
 // For the search pages (ajax) requests
-// Returns the HTML for the list of resources
+// Also used to search for anything. The main difference is that it returns the 'resource list' HTML using the 'resource-list' Blade template
 function estyn_resources_search(\WP_REST_Request $request) {
     $params = $request->get_params();
     //error_log(print_r($params, true));
@@ -830,7 +830,9 @@ function estyn_resources_search(\WP_REST_Request $request) {
     }
 
     if(isset($params['postType'])) {
-        if($params['postType'] === 'estyn_newsarticle') {
+        if($params['postType'] === 'any') {
+            $args['post_type'] = ['post', 'page', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_inspguidance', 'estyn_insp_qu', 'estyn_eduprovider'];
+        } elseif($params['postType'] === 'estyn_newsarticle') {
             $args['post_type'] = 'estyn_newsarticle';
         } elseif($params['postType'] === 'post') {
             $args['post_type'] = 'post';

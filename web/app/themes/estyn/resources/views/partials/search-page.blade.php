@@ -613,6 +613,8 @@
 
         $isInspectionQuestionnairesSearch = isset($isInspectionQuestionnairesSearch) ? $isInspectionQuestionnairesSearch : false;
 
+        $isAllSearch = isset($isAllSearch) ? $isAllSearch : false;
+
         $searchQuery = null;
         $searchArgs = null;
 
@@ -620,7 +622,18 @@
           $searchArgs['paged'] = intval($_GET['paged']);
         }
 
-        if($isNewsAndBlog) {
+        if($isAllSearch) {
+          $searchArgs = [
+            'post_type' => ['post', 'page', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_inspguidance', 'estyn_insp_qu', 'estyn_eduprovider'],
+            'posts_per_page' => 10
+          ];
+
+          // If there's a Wordpress search query in the URL then add it to the search args
+          if(isset($_GET['search'])) {
+            $searchArgs['s'] = trim($_GET['search']);
+          }
+        }
+        elseif($isNewsAndBlog) {
           $searchArgs = [
             'post_type' => ['estyn_newsarticle', 'post'],
             'posts_per_page' => 10,
@@ -1261,8 +1274,17 @@
 					});
 				});
 			}
-
-      @if(isset($isNewsAndBlog) && $isNewsAndBlog)        
+      @if(!empty($isAllSearch))
+      function getSearchFilters() {
+        return {
+          postType: "any",
+          searchText: $("#search-box-container input[type='text']").val().trim(),
+          sort: $("#sort-by").val(),
+          localAuthority: $("#flush-collapseTwo input:checked").val(),
+          sector: $("#flush-collapse-sector input:checked").val(),
+        };
+      }
+      @elseif(isset($isNewsAndBlog) && $isNewsAndBlog)        
 			function getSearchFilters() {
 				let postType = "";
 				if($("#flexCheckNews").is(":checked")) {

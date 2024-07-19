@@ -1,7 +1,7 @@
 @php
 	$navSearchUniqueID = uniqid()
 @endphp
-<div class="modal estyn-search-results-modal" tabindex="-1" id="{{ $navSearchUniqueID }}-search-results-modal">
+{{--<div class="modal estyn-search-results-modal" tabindex="-1" id="{{ $navSearchUniqueID }}-search-results-modal">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -12,14 +12,19 @@
 				<div class="row">
 					<div class="col">
 						<ul class="estyn-search-results-list list-group list-group-flush">
-						{{-- Search results will be added here --}}
+						
 						</ul>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+</div>--}}
+@include('components.search-modal', [
+	'heading' => __('Search Estyn', 'sage'),
+	'language' => pll_current_language(),
+	'modalID' => $navSearchUniqueID . '-search-results-modal'
+])
 <header class="banner sticky-top">
 {{--   <a class="brand" href="{{ home_url('/') }}">
     {!! $siteName !!}
@@ -441,9 +446,9 @@
 										<div class="row">
 											<div class="col-md-10 pb-4 pb-sm-0 estyn-search-container">
 												<h3 class="mb-4">{{ __('Search Estyn') }}</h3>
-												<div class="input-group mb-3">
-													<input type="text" id="navSearchEstynBox" data-language="{{ pll_current_language() }}" list="datalistOptions-{{ $navSearchUniqueID }}" class="form-control estyn-search-box" placeholder="" aria-label="estynSearch" aria-describedby="estynSearch">
-													<button class="estyn-search-box-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#{{ $navSearchUniqueID }}-search-results-modal" id="estynSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+												<div class="estyn-search-container input-group mb-3">
+													<input type="text" id="navSearchEstynBox" data-modal-id="{{ $navSearchUniqueID . '-search-results-modal' }}" data-language="{{ pll_current_language() }}" list="datalistOptions-{{ $navSearchUniqueID }}" class="form-control estyn-search-box" placeholder="" aria-label="estynSearch" aria-describedby="estynSearch">
+													<button class="estyn-search-box-button btn btn-primary" type="button" id="estynSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
 													<datalist class="search-datalist" id="datalistOptions-{{ $navSearchUniqueID }}">
 														
 													</datalist>
