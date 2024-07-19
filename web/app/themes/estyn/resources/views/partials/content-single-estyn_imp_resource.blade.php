@@ -19,22 +19,26 @@
         $resourceTypeString = '';
 
         foreach($resourceTypes as $resourceType) {
+            // echo the slug in a h2 for debugging
+             //echo '<h2>' . $resourceType->slug . '</h2>';
+
             if($resourceTypeString == '') {
               $resourceTypeString .= $resourceType->name;
             } else {
               $resourceTypeString .= ', ' . $resourceType->name;
             }
 
-            // If this is a Thematic Report then we want full width
-            if($resourceType->slug == __('thematic-report', 'sage')) {
+            if( ($resourceType->slug == __('thematic-report', 'sage')) || ($resourceType->slug == 'thematic-report') ) {
               //$pageHeaderArgs['fullWidth'] = true;
 
+              //echo '<h2>' . __('Thematic Report', 'sage') . '</h2>';
+
               $isThematicReport = true;
-            } elseif ($resourceType->slug == __('effective-practice', 'sage')) {
+            } elseif ($resourceType->slug == __('effective-practice', 'sage') || $resourceType->slug == 'effective-practice') {
               $isEffectivePractice = true;
-            } elseif ($resourceType->slug == __('annual-report', 'sage')) {
+            } elseif ($resourceType->slug == __('annual-report', 'sage') || $resourceType->slug == 'annual-report') {
               $isAnnualReport = true;
-            } elseif ($resourceType->slug == __('additional-resource', 'sage')) {
+            } elseif ($resourceType->slug == __('additional-resource', 'sage') || $resourceType->slug == 'additional-resource') {
               $isAdditionalResource = true;
             }
         }
@@ -51,7 +55,7 @@
       $reportResources = get_field('report_resources');
 
       $pageHeaderArgs['extraButtons'] = [
-          ['text' => __('Download report', 'sage'), 'url' => $thematicReportData['fullReportDownloadURL'] ?? '#', 'iconClasses' => 'fa-sharp fa-solid fa-file-arrow-down']
+          ['text' => __('Download report', 'sage') . ($thematicReportData['fullReportLanguage'] != pll_current_language() ? (pll_current_language() == 'cy' ? ' (Saesneg)' : ' (Welsh)') : ''), 'url' => $thematicReportData['fullReportDownloadURL'] ?? '#', 'iconClasses' => 'fa-sharp fa-solid fa-file-arrow-down']
       ];
 
       if(!empty($thematicReportResources)) {

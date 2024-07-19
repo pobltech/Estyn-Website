@@ -61,8 +61,47 @@ class ImprovementResourceComposer extends Composer
          *    full_report_file (ACF File field)
          */
 
+        $fullReportDownloadURL = $this->getThematicReportDownloadURL(get_the_ID());
+        $language = pll_current_language();
+        if (empty($fullReportDownloadURL)) {
+            // If we've reached this point, then maybe the report in the current language doesn't have any files,
+            // but the report in the other language does. If so, we should return the URL to the other language's report.
+            // Use PLL function to get the post in the other language
+            if(!function_exists('pll_current_language')) {
+                // Give up
+                //error_log('pll_current_language() function does not exist');
+                return [
+                    'fullReportDownloadURL' => null
+                ];
+            }
+
+            $otherLanguage = pll_current_language() === 'en' ? 'cy' : 'en';
+            $language = $otherLanguage;
+            //error_log('Other language = ' . $otherLanguage);
+
+            $otherLanguagePost = pll_get_post(get_the_ID(), $otherLanguage);
+            if (empty($otherLanguagePost)) {
+                // Give up
+                //error_log('No post found in ' . $otherLanguage . ' for post ID ' . get_the_ID());
+                return [
+                    'fullReportDownloadURL' => null
+                ];
+            }
+
+            $fullReportDownloadURL = $this->getThematicReportDownloadURL($otherLanguagePost);
+
+            if(empty($fullReportDownloadURL)) {
+                // Give up
+                //error_log('No download URL found for post in other language, ID ' . $otherLanguagePost);
+                return [
+                    'fullReportDownloadURL' => null
+                ];
+            }
+        }
+
         return [
-            'fullReportDownloadURL' => $this->getThematicReportDownloadURL()
+            'fullReportDownloadURL' => $fullReportDownloadURL,
+            'fullReportLanguage' => $language
         ];
     }
 
@@ -77,9 +116,9 @@ class ImprovementResourceComposer extends Composer
         return implode('/', $pathParts);
     }
 
-    private function getThematicReportDownloadURL() {
+    private function getThematicReportDownloadURL($postID) {
         // Check for ACF field first
-        $fullReportFile = get_field('full_report_file');
+        $fullReportFile = get_field('full_report_file', $postID);
         if (!empty($fullReportFile)) {
             return $fullReportFile['url'];
         }
@@ -87,7 +126,7 @@ class ImprovementResourceComposer extends Composer
         // Check for attached files next, of PDF or PPTX type
         $attachments = get_posts([
             'post_type' => 'attachment',
-            'post_parent' => get_the_ID(),
+            'post_parent' => $postID,
             'post_mime_type' => ['application/pdf', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'],
             'posts_per_page' => -1
         ]);
@@ -98,19 +137,19 @@ class ImprovementResourceComposer extends Composer
         }
         
         // Check for old meta fields, which may have been used during import from the old site
-        $pdfs = get_post_meta(get_the_ID(), 'pdfs_uris', true);
+        $pdfs = get_post_meta($postID, 'pdfs_uris', true);
         if (!empty($pdfs)) {
             $pdfs = explode('|', $pdfs);
             return ESTYN_OLD_FILES_URL . $this->urlEncodeEstynOldFilePath($pdfs[0]);
         }
 
-        $documents = get_post_meta(get_the_ID(), 'documents_uris', true);
+        $documents = get_post_meta($postID, 'documents_uris', true);
         if (!empty($documents)) {
             $documents = explode('|', $documents);
             return ESTYN_OLD_FILES_URL . $this->urlEncodeEstynOldFilePath($documents[0]);
         }
 
-        $nodeFiles = get_post_meta(get_the_ID(), 'document_node_files_uris', true);
+        $nodeFiles = get_post_meta($postID, 'document_node_files_uris', true);
         if (!empty($nodeFiles)) {
             $nodeFiles = explode('|', $nodeFiles);
             return ESTYN_OLD_FILES_URL . $this->urlEncodeEstynOldFilePath($nodeFiles[0]);
