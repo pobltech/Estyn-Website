@@ -1375,7 +1375,8 @@ function estyn_resources_search(\WP_REST_Request $request) {
         $reportFile = null;//$firstPDFAttachment = null; // Used for inspection reports and annual reports and inspection guidance
 
         $isAnnualReport = false;
-        if($args['post_type'] == 'estyn_imp_resource') {
+        /* if($args['post_type'] == 'estyn_imp_resource') { */
+        if($post->post_type == 'estyn_imp_resource') {
             $terms = get_the_terms($post->ID, 'improvement_resource_type');
             if($terms) {
                 foreach($terms as $term) {
@@ -1387,8 +1388,9 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
         }
 
-        if($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport || $args['post_type'] == 'estyn_inspguidance' || $args['post_type'] == 'estyn_insp_qu') {
-/*             $attachments = get_posts([
+        //if($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport || $args['post_type'] == 'estyn_inspguidance' || $args['post_type'] == 'estyn_insp_qu') {
+        if($post->post_type == 'estyn_inspectionrpt' || $isAnnualReport || $post->post_type == 'estyn_inspguidance' || $post->post_type == 'estyn_insp_qu') {
+            /*             $attachments = get_posts([
                 'post_type' => 'attachment',
                 'posts_per_page' => 1,
                 'post_parent' => $post->ID,
@@ -1397,9 +1399,11 @@ function estyn_resources_search(\WP_REST_Request $request) {
 
             
             
-            if($args['post_type'] == 'estyn_inspguidance') {
+            //if($args['post_type'] == 'estyn_inspguidance') {
+            if($post->post_type == 'estyn_inspguidance') {
                 $reportFile = getInspectionGuidanceFileURL($post);
-            } elseif($args['post_type'] == 'estyn_insp_qu') {
+            //} elseif($args['post_type'] == 'estyn_insp_qu') {
+            } elseif($post->post_type == 'estyn_insp_qu') {
                 $reportFile = getInspectionQuestionnaireFileURL($post);
             } else {
                 // We use get_field('report_file') to get the PDF attachment.
@@ -1476,11 +1480,13 @@ function estyn_resources_search(\WP_REST_Request $request) {
         $postTypeName = ucfirst(strtolower($postTypeName));
 
         $superDateText = null;
-        if(($args['post_type'] != 'estyn_eduprovider') && isset($args['orderby']) && empty($params['inspectionSchedule'])) {
+        //if(($args['post_type'] != 'estyn_eduprovider') && isset($args['orderby']) && empty($params['inspectionSchedule'])) {
+        if(($post->post_type != 'estyn_eduprovider') && isset($args['orderby']) && empty($params['inspectionSchedule'])) {
             if($params['sort'] == 'lastUpdated') {
                 $superDateText = get_field('last_updated', $post->ID) ? (new \DateTime(get_field('last_updated', $post->ID)))->format('d/m/Y') : get_the_date('d/m/Y', $post->ID);
             } else {
-                if($args['post_type'] == 'estyn_inspectionrpt') {
+                //if($args['post_type'] == 'estyn_inspectionrpt') {
+                if($post->post_type == 'estyn_inspectionrpt') {
                     $superDateText = get_field('inspection_date', $post->ID) ? (new \DateTime(get_field('inspection_date', $post->ID)))->format('F Y') : get_the_date('F Y', $post->ID);
                 } else {
                     $superDateText = get_the_date('d/m/Y', $post->ID);
@@ -1488,7 +1494,8 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
         }
 
-        if(($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport || $args['post_type'] == 'estyn_inspguidance' || $args['post_type'] == 'estyn_insp_qu') && (!empty($reportFile))) {
+        //if(($args['post_type'] == 'estyn_inspectionrpt' || $isAnnualReport || $args['post_type'] == 'estyn_inspguidance' || $args['post_type'] == 'estyn_insp_qu') && (!empty($reportFile))) {
+        if(($post->post_type == 'estyn_inspectionrpt' || $isAnnualReport || $post->post_type == 'estyn_inspguidance' || $post->post_type == 'estyn_insp_qu') && (!empty($reportFile))) {
             $items[] = [
                 'linkURL' => $reportFile, //wp_get_attachment_url($firstPDFAttachment->ID),
                 'superText' => $postTypeName,
