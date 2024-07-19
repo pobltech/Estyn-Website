@@ -1380,6 +1380,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
             $terms = get_the_terms($post->ID, 'improvement_resource_type');
             if($terms) {
                 foreach($terms as $term) {
+                    // TODO: DEV NOTE: If the name changes in either language, update the conditions below
                     if($term->name == 'Annual Report' || $term->name == 'Adroddiad Blynyddol') {
                         $isAnnualReport = true;
                         break;
