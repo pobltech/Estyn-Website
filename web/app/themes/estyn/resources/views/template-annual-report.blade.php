@@ -18,7 +18,7 @@
                 <div class="col-12 col-md-6">
                     <p>{{ __('Our archive of previous annual report publications', 'sage') }}</p>
                     @include('components.resource-list', ['items' => $annualReportArchiveResourceListItems])
-                    <a class="btn btn-outline-primary" href="{{ \App\get_permalink_by_template('template-annual-reports-archive.blade.php') . '?type=Annual Report' }}">{{ __('View full archive', 'sage') }}</a>
+                    <a class="btn btn-outline-primary" href="{{ \App\get_permalink_by_template('template-annual-reports-archive.blade.php') }}">{{ __('View full archive', 'sage') }}</a>
                 </div>
                 <div class="col-12 col-md-6">
                     <div class="d-flex justify-content-center">
