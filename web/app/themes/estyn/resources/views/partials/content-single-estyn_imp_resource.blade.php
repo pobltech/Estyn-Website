@@ -29,18 +29,17 @@
             }
 
             // TODO: DEV NOTE: If the slugs change, update the conditions below
-
-            if( ($resourceType->slug == __('thematic-report', 'sage')) || ($resourceType->slug == 'thematic-report') || (pll_get_term($resourceType->term_id, 'en')->slug == 'thematic-report') ) {
+            if( ($resourceType->slug == __('thematic-report', 'sage')) || ($resourceType->slug == 'thematic-report') || (get_term(pll_get_term($resourceType->term_id, 'en'))->slug == 'thematic-report') ) {
               //$pageHeaderArgs['fullWidth'] = true;
 
               //echo '<h2>' . __('Thematic Report', 'sage') . '</h2>';
 
               $isThematicReport = true;
-            } elseif ($resourceType->slug == __('effective-practice', 'sage') || $resourceType->slug == 'effective-practice' || (pll_get_term($resourceType->term_id, 'en')->slug == 'effective-practice') ) {
+            } elseif ($resourceType->slug == __('effective-practice', 'sage') || $resourceType->slug == 'effective-practice' || (get_term(pll_get_term($resourceType->term_id, 'en'))->slug == 'effective-practice') ) {
               $isEffectivePractice = true;
-            } elseif ($resourceType->slug == __('annual-report', 'sage') || $resourceType->slug == 'annual-report' || (pll_get_term($resourceType->term_id, 'en')->slug == 'annual-report') ) {
+            } elseif ($resourceType->slug == __('annual-report', 'sage') || $resourceType->slug == 'annual-report' || (get_term(pll_get_term($resourceType->term_id, 'en'))->slug == 'annual-report') ) {
               $isAnnualReport = true;
-            } elseif ($resourceType->slug == __('additional-resource', 'sage') || $resourceType->slug == 'additional-resource' || (pll_get_term($resourceType->term_id, 'en')->slug == 'additional-resource') ) {
+            } elseif ($resourceType->slug == __('additional-resource', 'sage') || $resourceType->slug == 'additional-resource' || (get_term(pll_get_term($resourceType->term_id, 'en'))->slug == 'additional-resource') ) {
               $isAdditionalResource = true;
             }
         }
