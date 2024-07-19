@@ -271,7 +271,7 @@
       }
     @endphp
 
-    <div class="pb-md-5">
+    <div class="pb-5">
     @include('partials.slider', [
         'carouselID' => 'estyn-home-latest-news-carousel',
         'carouselHeading' => __('Latest articles', 'sage'),
