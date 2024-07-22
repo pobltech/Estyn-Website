@@ -2201,6 +2201,52 @@ if (defined('WP_CLI') && WP_CLI) {
     }
     
     \WP_CLI::add_command('remove_cy_suffix', __NAMESPACE__ . '\\Remove_Cy_Suffix_Command');
+
+    // And now to correct the publication dates of the Welsh versions of news articles and blog posts...
+    class Sync_Post_Dates_Command {
+        /**
+         * Synchronizes publication dates of English and Welsh versions of posts.
+         *
+         * ## EXAMPLES
+         *
+         *     wp sync_post_dates
+         *
+         */
+        public function __invoke($args, $assoc_args) {
+            $post_types = ['post', 'estyn_newsarticle']; // Define the post types to include
+            foreach ($post_types as $post_type) {
+                $args = array(
+                    'post_type' => $post_type,
+                    'posts_per_page' => -1, // Retrieve all posts
+                    'post_status' => 'publish', // Only get published posts
+                    'lang' => 'en', // Only get English posts
+                );
+                $query = new \WP_Query($args);
+                if ($query->have_posts()) {
+                    while ($query->have_posts()) {
+                        $query->the_post();
+                        $post_id = get_the_ID();
+                        $welsh_post_id = pll_get_post($post_id, 'cy'); // Get the Welsh version of the post
+                        if ($welsh_post_id) {
+                            $english_post_date = get_the_date('Y-m-d H:i:s', $post_id); // Get the English post's publication date
+                            // Update the Welsh post's publication date to match the English post's date
+                            wp_update_post(array(
+                                'ID' => $welsh_post_id,
+                                'post_date' => $english_post_date,
+                                'post_date_gmt' => get_gmt_from_date($english_post_date),
+                            ));
+
+                            error_log('Synchronized publication date for post ' . $post_id . ' (' . get_the_title() . ')');
+                        }
+                    }
+                }
+                wp_reset_postdata(); // Reset the global post object
+            }
+            \WP_CLI::success('Synchronized publication dates for English and Welsh versions of posts.');
+        }
+    }
+
+    \WP_CLI::add_command('sync_post_dates', __NAMESPACE__ . '\\Sync_Post_Dates_Command');
 }
 
 // Make sure you only run this once! (use the WP CLI command, i.e. wp generate_welsh_providers, from the project root directly)
@@ -2314,7 +2360,7 @@ function estynFormatDate($dateString, $outputFormat = 'd MMMM yyyy') {
     } catch(\Exception $e) {
         return $dateString;
     }
-    
+
     $formatter = estynIntlDateFormatter($outputFormat);
 
     return $formatter->format($date);
