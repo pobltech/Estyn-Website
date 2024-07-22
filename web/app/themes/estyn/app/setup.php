@@ -2292,3 +2292,30 @@ function generateWelshProviders() {
         error_log($errorString);
     }
 }
+
+// Useful for making sure dates are formatted correctly in the correct language
+function estynIntlDateFormatter($format = 'd MMMM yyyy') {
+    $current_language = pll_current_language();
+    $locale = $current_language == 'cy' ? 'cy_GB' : get_locale();
+
+    return new \IntlDateFormatter(
+        $locale,
+        \IntlDateFormatter::LONG,
+        \IntlDateFormatter::NONE,
+        date_default_timezone_get(),
+        \IntlDateFormatter::GREGORIAN,
+        $format
+    );
+}
+
+function estynFormatDate($dateString, $outputFormat = 'd MMMM yyyy') {
+    try {
+        $date = new \DateTime($dateString);
+    } catch(\Exception $e) {
+        return $dateString;
+    }
+    
+    $formatter = estynIntlDateFormatter($outputFormat);
+
+    return $formatter->format($date);
+}
