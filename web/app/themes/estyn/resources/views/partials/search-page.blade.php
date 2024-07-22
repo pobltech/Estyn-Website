@@ -13,7 +13,7 @@
   - Type (news/blog)(News Articles is a CPT, blog posts are Posts)
   - Dates (year)
   - [Tags? (blog posts only)]
-  - Sort: Publication date, title, type
+  - Sort: Latest updated, Publication date, title, type
 
   Inspection reports:
   - Sector
@@ -898,13 +898,13 @@
                 @if(empty($isProviderSearch) && empty($isInspectionScheduleSearch))
                   <label class="text-nowrap me-3" for="sort-by">{{ __('Sort by', 'sage') }}</label>
                   <select id="sort-by" class="form-select">
-                    @if((!isset($isNewsAndBlog) || !$isNewsAndBlog) && (!isset($isProviderSearch) || !$isProviderSearch) && (!isset($isInspectionScheduleSearch) || !$isInspectionScheduleSearch) && !(isset($isInspectionReportsSearch)) )
+{{--                     @if((!isset($isNewsAndBlog) || !$isNewsAndBlog) && (!isset($isProviderSearch) || !$isProviderSearch) && (!isset($isInspectionScheduleSearch) || !$isInspectionScheduleSearch) && !(isset($isInspectionReportsSearch)) )
                       <option value="lastUpdated">{{ __('Latest updated', 'sage') }}</option>
-                    @endif
+                    @endif --}}
                     @if(!isset($isProviderSearch) || !$isProviderSearch)
                       <option value="date">{{ __('Publication date', 'sage') }}</option>
                     @endif
-                    @if(isset($isInspectionReportsSearch) && $isInspectionReportsSearch)
+                    @if( !empty($isImprovementResourcesSearch) || !empty($isInspectionReportsSearch) || !empty($isNewsAndBlog)  )
                       <option value="lastUpdated">{{ __('Latest updated', 'sage') }}</option>
                     @endif
                     <option value="title">{{ __('Title', 'sage') }}</option>
