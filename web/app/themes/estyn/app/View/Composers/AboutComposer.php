@@ -23,12 +23,17 @@ class AboutComposer extends Composer
          * Get all 'estyn_team_member' posts, along with their
          * associated 'team_member_category' terms (max 1 each)
          */
-        $teamMembers = get_posts([
+        $teamMembersEn = get_posts([
             'post_type' => 'estyn_team_member',
             'posts_per_page' => -1,
             'orderby' => 'menu_order',
             'order' => 'ASC',
         ]);
+
+        $teamMembers = [];
+        foreach($teamMembersEn as $teamMemberEn) {
+            $teamMembers[] = get_post(pll_get_post($teamMemberEn->ID));
+        }
 
         // Add the 'team_member_category' term to each team member post object
         $teamMembers = array_map(function($teamMember) {

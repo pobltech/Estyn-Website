@@ -88,8 +88,8 @@
                             <img class="img-fluid" src="{{ $carouselItem['featured_image_src'] }}" alt="{{ $carouselItem['featured_image_alt'] ?? '' }}" />
                         </div>
                         <div class="card-footer py-sm-4 pb-0 px-0">
-                            @if(!empty($carouselItem['date']))
-                                <p class="slider-item-date mb-0">{{ (new \DateTime($carouselItem['date']))->format('j F Y') }}</p>
+                            @if( (!empty($carouselItem['date'])) || (!empty($carouselItem['formatted_date'])) )
+                                <p class="slider-item-date mb-0">{{ empty($carouselItem['formatted_date']) ? ((\App\estynFormatDate($carouselItem['date']))) : $carouselItem['formatted_date'] }}</p>
                             @endif
                             @if(!empty($carouselItem['link']))
                             <a class="stretched-link" href="{{ $carouselItem['link'] ?? '#' }}"><h4 class="mb-0 {{ !empty($carouselItem['excerpt']) ? 'mb-2' : '' }}">{{ html_entity_decode($carouselItem['title'], ENT_QUOTES, 'UTF-8') }}</h4></a>

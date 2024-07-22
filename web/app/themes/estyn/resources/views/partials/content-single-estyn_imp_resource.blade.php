@@ -188,7 +188,7 @@
                         } else {
                           // Get the provider post objects
                           $featuredProviders = array_map(function($providerID) {
-                            return get_post($providerID);
+                            return get_post(pll_get_post($providerID));
                           }, $featuredProviders);
                         }
                     }
