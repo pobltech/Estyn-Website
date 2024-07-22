@@ -2159,6 +2159,48 @@ if (defined('WP_CLI') && WP_CLI) {
     }
 
     \WP_CLI::add_command('generate_welsh_providers', __NAMESPACE__ . '\\Welsh_Providers_Command');
+
+
+
+    // Remove '-cy' suffix from the URL slug of all 'estyn_eduprovider' posts
+    class Remove_Cy_Suffix_Command {
+        /**
+         * Removes '-cy' suffix from the URL slug of all 'estyn_eduprovider' posts.
+         *
+         * ## EXAMPLES
+         *
+         *     wp remove_cy_suffix
+         *
+         */
+        public function __invoke($args, $assoc_args) {
+            $args = array(
+                'post_type' => 'estyn_eduprovider',
+                'posts_per_page' => -1, // Retrieve all posts
+                'post_status' => 'publish', // Only get published posts
+            );
+    
+            $posts = get_posts($args);
+    
+            foreach ($posts as $post) {
+                $slug = $post->post_name;
+                // Check if slug ends with '-cy'
+                if (substr($slug, -3) === '-cy') {
+                    // Remove '-cy' from the end
+                    $new_slug = substr($slug, 0, -3);
+                    // Update the post slug
+                    wp_update_post(array(
+                        'ID' => $post->ID,
+                        'post_name' => $new_slug, // Update the slug
+                    ));
+                    error_log('Updated slug for post ' . $post->ID . ' to ' . $new_slug);
+                }
+            }
+    
+            \WP_CLI::success('Removed "-cy" suffix from the URL slug of all "estyn_eduprovider" posts.');
+        }
+    }
+    
+    \WP_CLI::add_command('remove_cy_suffix', __NAMESPACE__ . '\\Remove_Cy_Suffix_Command');
 }
 
 // Make sure you only run this once! (use the WP CLI command, i.e. wp generate_welsh_providers, from the project root directly)
