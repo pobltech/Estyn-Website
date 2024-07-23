@@ -1072,15 +1072,20 @@ function estyn_resources_search(\WP_REST_Request $request) {
     $items = [];
 
 
-    // 'Similar Settings To Mine' filters
+    // ------------------- 'Similar Settings To Mine' filters -----------------
+    // These filters are AND, not OR, so what we do is start off with all the providers
+    // associated with the post (for each post), and as we check each chosen filter,
+    // the providers array shrinks, so the next filter check uses the filtered list of
+    // providers. At the end of the filters check, if there are any providers left then,
+    // that post is NOT removed from the results.
     $postsToRemove = [];
     
     if( ((!empty($params['numLearners'])) && ($params['numLearners'] != 'any')) || ((!empty($params['languageMedium'])) && $params['languageMedium'] != 'any' ) || ((!empty($params['proximity'])) && $params['proximity'] != 'any' && (!empty(trim($params['proximityPostcode'])))) || ((!empty($params['ageRange'])) && $params['ageRange'] != 'any' ) ) {
-        // We need to get all the estyn_eduprovider posts that are
+        // We need to get all the estyn_eduprovider posts (i.e. providers) that are
         // assigned to this post and check if any of them match the number of learners, language medium, age range, and/or proximity filters.
         // If they do, then we include this post in the results, otherwise we skip it.
         //
-        // Inspection reports (inspected_provider ACF Post Object field), effective practice (resource_creator ACF Post Object field), thematic reports (featured_providers ACF Relationship field)
+        // Custom fields: Inspection reports (inspected_provider ACF Post Object field), effective practice (resource_creator ACF Post Object field), thematic reports (featured_providers ACF Relationship field)
 
         // If they've chosen to filter by proximity, we need to make sure we have
         // a Google Maps API key, otherwise there's no point in continuing
@@ -1210,7 +1215,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
 
             // Note, if they've chosen to filter by more than one of these 'Similar settings to mine' filters,
             // then a "match" is only when at least 1 of the featured providers satisfies ALL those chosen filters
-            $potentialMatches = [];
+            $potentialMatches = []; // Keeps track of the providers that satisfy the current filter we're checking
             //$matchesFound = false;
 
             if((!empty($params['numLearners'])) && ($params['numLearners'] != 'any')) {
@@ -1268,7 +1273,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
 
             if(!empty($potentialMatches)) {
                 //$matchesFound = true;
-                $providers = $potentialMatches;
+                $providers = $potentialMatches; // We only want to consider the providers that have so far passed the filters
                 $potentialMatches = [];
             }
 
@@ -1429,7 +1434,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 }
             }
 
-            // At this point, the post must have at least 1 provider that matches all the filters, so we don't add the post to $postsToRemove
+            // At this point, the post must have at least 1 provider that matches all the chosen filters, so we don't add the post to $postsToRemove
             error_log('Post ' . $post->ID . ' (' . $post->post_title . ') passed all filters, because of the following providers:');
             error_log(print_r(array_map(function($provider) { return $provider->post_title; }, empty($potentialMatches) ? $providers : $potentialMatches), true));
         }
