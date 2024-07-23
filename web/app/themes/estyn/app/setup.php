@@ -1092,6 +1092,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
         $geoCodingResult = null;
         $latitude = 0;
         $longitude = 0;
+        $postCodeBoundariesPolygon = [];
         if(!empty(trim($params['proximityPostcode']))) {
             $GoogleMapsAPIKey = env('GOOGLE_MAPS_API_KEY');
             if(empty($GoogleMapsAPIKey)) {
@@ -1120,8 +1121,38 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
 
             $firstResult = $geoCodingResult->first();
+
+            //error_log('First result: ' . print_r($firstResult, true));
+
             $latitude = $firstResult->getCoordinates()->getLatitude();
             $longitude = $firstResult->getCoordinates()->getLongitude();
+
+            // We'll try to create a rough polygon representing the post code area/boundary
+            // If it fails, the code later on just uses the exact point of the postcode.
+            try {
+                // Extracting bounds
+                $bounds = $firstResult->getBounds();
+                $south = $bounds->getSouth();
+                $west = $bounds->getWest();
+                $north = $bounds->getNorth();
+                $east = $bounds->getEast();
+                
+                //error_log("Bounds - South: $south, West: $west, North: $north, East: $east");
+                
+                // If you were previously trying to get a polygon for the postcode, you might use these bounds as a simple rectangular approximation
+                $postCodeBoundariesPolygon = [
+                    [$north, $west], // Northwest corner
+                    [$north, $east], // Northeast corner
+                    [$south, $east], // Southeast corner
+                    [$south, $west], // Southwest corner
+                    [$north, $west]  // Closing the loop back at the Northwest corner
+                ];
+            } catch(\Exception $e) {
+                error_log('Error getting bounds: ' . $e->getMessage());
+            }
+            
+            // Log or use $postCodeBoundariesPolygon as needed
+            //error_log('Postcode boundaries polygon: ' . print_r($postCodeBoundariesPolygon, true));
         }
 
         foreach($posts as $post) {
@@ -1365,9 +1396,18 @@ function estyn_resources_search(\WP_REST_Request $request) {
                     }
 
                     // Calculate the distance between the provider and the postcode
-                    $distance = calculateDistanceBetween($latitude, $longitude, $providerLatitude, $providerLongitude);
+                    //$distance = calculateDistanceBetween($latitude, $longitude, $providerLatitude, $providerLongitude);
+                    
+                    if(!empty($postCodeBoundariesPolygon)) {
+                        $distance = distanceFromPolygon([$providerLatitude, $providerLongitude], $postCodeBoundariesPolygon);
+                    } else {
+                        // Fallback method.
+                        // This one is more restrictive because it uses the exact point of the post code
+                        $distance = calculateDistanceBetween($latitude, $longitude, $providerLatitude, $providerLongitude);
+                    }
+                    //error_log('Distance between ' . $postcode . ' and ' . $provider->post_title . ': ' . $distance . ' miles');
                     // In miles:
-                    $distance = $distance * 0.000621371;
+                    $distance = metersToMiles($distance);
 
                     // Store the distance for this provider so we don't recalculate it later
                     $providerDistances[$provider->ID] = $distance;
@@ -1390,7 +1430,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
             }
 
             // At this point, the post must have at least 1 provider that matches all the filters, so we don't add the post to $postsToRemove
-            error_log('Post ' . $post->ID . ' passed all filters, because of the following providers:');
+            error_log('Post ' . $post->ID . ' (' . $post->post_title . ') passed all filters, because of the following providers:');
             error_log(print_r(array_map(function($provider) { return $provider->post_title; }, empty($potentialMatches) ? $providers : $potentialMatches), true));
         }
     }
@@ -2406,4 +2446,59 @@ function estynFormatDate($dateString, $outputFormat = 'd MMMM yyyy') {
     $formatter = estynIntlDateFormatter($outputFormat);
 
     return $formatter->format($date);
+}
+
+function isPointInPolygon($point, $polygon) {
+    $x = $point[0];
+    $y = $point[1];
+    $inside = false;
+    for ($i = 0, $j = count($polygon) - 1; $i < count($polygon); $j = $i++) {
+        $xi = $polygon[$i][0];
+        $yi = $polygon[$i][1];
+        $xj = $polygon[$j][0];
+        $yj = $polygon[$j][1];
+        
+        $intersect = (($yi > $y) != ($yj > $y)) && ($x < ($xj - $xi) * ($y - $yi) / ($yj - $yi) + $xi);
+        if ($intersect) {
+            $inside = !$inside;
+        }
+    }
+    return $inside;
+}
+
+function haversineGreatCircleDistance($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $earthRadius = 6371000) {
+  // Convert from degrees to radians
+  $latFrom = deg2rad($latitudeFrom);
+  $lonFrom = deg2rad($longitudeFrom);
+  $latTo = deg2rad($latitudeTo);
+  $lonTo = deg2rad($longitudeTo);
+
+  $latDelta = $latTo - $latFrom;
+  $lonDelta = $lonTo - $lonFrom;
+
+  $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) +
+    cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+  return $angle * $earthRadius;
+}
+
+function distanceFromPolygon($point, $polygon) {
+    if (isPointInPolygon($point, $polygon)) {
+        return 0; // Point is inside the polygon
+    } else {
+        $minDistance = PHP_INT_MAX;
+        for ($i = 0, $j = count($polygon) - 1; $i < count($polygon); $j = $i++) {
+            $segmentDistance = haversineGreatCircleDistance(
+                $point[0], $point[1],
+                ($polygon[$i][0] + $polygon[$j][0]) / 2, // Midpoint of the segment for simplicity
+                ($polygon[$i][1] + $polygon[$j][1]) / 2,
+                6371000 // Earth's radius in meters
+            );
+            $minDistance = min($minDistance, $segmentDistance);
+        }
+        return $minDistance; // meters
+    }
+}
+
+function metersToMiles($meters) {
+    return $meters * 0.000621371;
 }

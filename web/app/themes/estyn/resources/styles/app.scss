@@ -266,7 +266,12 @@ pre {
         border-bottom-right-radius: 0;
     }
     .tag-list {
-        max-height: 173px;
+        max-height: 346px;
+        
+        @include media-breakpoint-down(sm) {
+            max-height: 173px;
+        }
+        
         overflow-y: auto;
 
         border-left: 1px solid $estyn-bluegrey;
