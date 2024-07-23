@@ -2248,6 +2248,25 @@ if (defined('WP_CLI') && WP_CLI) {
     \WP_CLI::add_command('generate_welsh_providers', __NAMESPACE__ . '\\Welsh_Providers_Command');
 
 
+    // Update provider data from the table in the DB
+    class Update_Provider_Data {
+        /**
+         * Updates provider data from the table in the DB.
+         *
+         * ## EXAMPLES
+         *
+         *     wp update_provider_data
+         *
+         */
+        public function __invoke($args, $assoc_args) {
+            // Call your function here
+            updateProviderData();
+            \WP_CLI::success('Provider data updated.');
+        }
+    }
+
+    \WP_CLI::add_command('update_provider_data', __NAMESPACE__ . '\\Update_Provider_Data');
+
 
     // Remove '-cy' suffix from the URL slug of all 'estyn_eduprovider' posts
     class Remove_Cy_Suffix_Command {
@@ -2547,5 +2566,39 @@ function updateProviderData() {
      * 
      * And, of course, each provider has a post title (in English and Welsh) which is their name, although
      * the Welsh is the same as the English.
+     * 
+     * It might also be good if there's a log table that records the results of this function whenever it's run.
+     * Let's assume the row cells are 'id', 'timestamp', 'details', 'status' (success or fail)
      */
+
+    // If the 'estyn_provider_update_log' table doesn't exist, create it
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'estyn_provider_update_log';
+    $charset_collate = $wpdb->get_charset_collate();
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        details text NOT NULL,
+        status varchar(10) NOT NULL,
+        PRIMARY KEY  (id)
+    ) $charset_collate;";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    $result = dbDelta($sql);
+
+    if ($result === false) {
+        error_log('Error creating or checking the provider update log table');
+        return;
+    } else {
+        error_log('Provider update log table created or already exists');
+    }
+
+    // Lets just insert a new record into the provider update log table saying successfully did nothing, just as a test
+    $wpdb->insert($table_name, array(
+        'details' => 'Successfully did nothing',
+        'status' => 'success',
+    ));
+
+
+    error_log('Nothing changed!');
 }
