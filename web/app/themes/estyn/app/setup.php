@@ -2507,3 +2507,45 @@ function distanceFromPolygon($point, $polygon) {
 function metersToMiles($meters) {
     return $meters * 0.000621371;
 }
+
+function updateProviderData() {
+    // This function will pull provider data from a table in the DB
+    // and update the providers accordingly. For now, just making notes.
+    
+    /**
+     * Providers in WP have the following ACF fields:
+     * 
+     * ACF fields:
+     * 
+     * number_of_pupils (number)
+     * age_range (select) e.g. '3-11', '11-16', '16-18', '21+'
+     * icon_image (image)
+     * provider_id (text) - the ID of the provider in the old site's DB. Don't change it.
+     * wg_number (text)
+     * address_line_1 to 4 (text)
+     * town (text)
+     * county (text)
+     * postcode (text)
+     * latitude (text)
+     * longitude (text)
+     * phone (text)
+     * email (text)
+     * external_url (text)
+     * consortium_id (text)
+     * provider_language_id_external_db (text)
+     * next_scheduled_inspection_date (date picker)
+     * next_report_publication_date (date picker)
+     * language_medium (select) - 'English' or 'Cymraeg' - higher priority than language field above
+     * 
+     * Taxonomies:
+     * 
+     * Sectors
+     * Local Authorities
+     * Provider Statuses
+     * 
+     * ^^^ In English and Welsh
+     * 
+     * And, of course, each provider has a post title (in English and Welsh) which is their name, although
+     * the Welsh is the same as the English.
+     */
+}
