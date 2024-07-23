@@ -1077,7 +1077,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
     
     if( ((!empty($params['numLearners'])) && ($params['numLearners'] != 'any')) || ((!empty($params['languageMedium'])) && $params['languageMedium'] != 'any' ) || ((!empty($params['proximity'])) && $params['proximity'] != 'any' && (!empty(trim($params['proximityPostcode'])))) || ((!empty($params['ageRange'])) && $params['ageRange'] != 'any' ) ) {
         // We need to get all the estyn_eduprovider posts that are
-        // assigned to this post and check if any of them match the number of learners.
+        // assigned to this post and check if any of them match the number of learners, language medium, age range, and/or proximity filters.
         // If they do, then we include this post in the results, otherwise we skip it.
         //
         // Inspection reports (inspected_provider ACF Post Object field), effective practice (resource_creator ACF Post Object field), thematic reports (featured_providers ACF Relationship field)
@@ -1092,7 +1092,7 @@ function estyn_resources_search(\WP_REST_Request $request) {
         $geoCodingResult = null;
         $latitude = 0;
         $longitude = 0;
-        if((!empty($params['proximity'])) && $params['proximity'] != 'any') {
+        if(!empty(trim($params['proximityPostcode']))) {
             $GoogleMapsAPIKey = env('GOOGLE_MAPS_API_KEY');
             if(empty($GoogleMapsAPIKey)) {
                 error_log('NO MAPS API KEY!');
@@ -1177,6 +1177,11 @@ function estyn_resources_search(\WP_REST_Request $request) {
             //error_log('Providers for ' . $post->ID . ':');
             //error_log(print_r($providers, true));
 
+            // Note, if they've chosen to filter by more than one of these 'Similar settings to mine' filters,
+            // then a "match" is only when at least 1 of the featured providers satisfies ALL those chosen filters
+            $potentialMatches = [];
+            //$matchesFound = false;
+
             if((!empty($params['numLearners'])) && ($params['numLearners'] != 'any')) {
                 $numLearnersMin = 0;
                 $numLearnersMax = 0;
@@ -1209,15 +1214,18 @@ function estyn_resources_search(\WP_REST_Request $request) {
                         // If it's between the min and max, we have a match
                         if(intval($numLearners) >= intval($numLearnersMin) && intval($numLearners) <= intval($numLearnersMax)) {
                             $match = true;
+                            $potentialMatches[] = $provider;
                             //error_log('Matched ' . $numLearners . ' with ' . $params['numLearners']);
-                            break;
+                            //break;
+                            continue;
                         }
                     }
 
                     if($numLearners == $params['numLearners']) {
                         $match = true;
+                        $potentialMatches[] = $provider;
                         //error_log('Matched ' . $numLearners . ' with ' . $params['numLearners']);
-                        break;
+                        //break;
                     }
                 }
 
@@ -1225,6 +1233,12 @@ function estyn_resources_search(\WP_REST_Request $request) {
                     $postsToRemove[] = $post->ID;
                     continue; // We skip this improvement resource if the number of learners doesn't match
                 }
+            }
+
+            if(!empty($potentialMatches)) {
+                //$matchesFound = true;
+                $providers = $potentialMatches;
+                $potentialMatches = [];
             }
 
             if((!empty($params['languageMedium'])) && $params['languageMedium'] != 'any') {
@@ -1255,8 +1269,10 @@ function estyn_resources_search(\WP_REST_Request $request) {
 
                     if(strtolower($languageMedium) == strtolower($params['languageMedium'])) {
                         $match = true;
+                        $potentialMatches[] = $provider;
                         //error_log('Matched ' . $languageMedium . ' with ' . $params['languageMedium']);
-                        break;
+                        //error_log('Matched ' . $provider->post_title . ' with ' . $params['languageMedium']);
+                        //break;
                     }
                 }
 
@@ -1266,6 +1282,16 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 }
             }
 
+            if(!empty($potentialMatches)) {
+                /* if($matchesFound) {
+                    $providers = array_merge($providers, $potentialMatches);
+                } else { */
+                    $providers = $potentialMatches;
+                    //$matchesFound = true;
+                /* } */
+                $potentialMatches = [];
+            }
+
             if((!empty($params['ageRange'])) && $params['ageRange'] != 'any') {
                 $match = false;
 
@@ -1273,8 +1299,9 @@ function estyn_resources_search(\WP_REST_Request $request) {
                     $ageRange = get_field('age_range', $provider->ID);
                     if($ageRange == $params['ageRange']) {
                         $match = true;
+                        $potentialMatches[] = $provider;
                         //error_log('Matched ' . $ageRange . ' with ' . $params['ageRange']);
-                        break;
+                        //break;
                     }
                 }
 
@@ -1284,7 +1311,17 @@ function estyn_resources_search(\WP_REST_Request $request) {
                 }
             }
 
-            if((!empty($params['proximity'])) && $params['proximity'] != 'any') {
+            if(!empty($potentialMatches)) {
+                /*if($matchesFound) {
+                    $providers = array_merge($providers, $potentialMatches);
+                } else { */
+                    $providers = $potentialMatches;
+                    //$matchesFound = true;
+                /* } */
+                $potentialMatches = [];
+            }
+
+            if(!empty(trim($params['proximityPostcode']))) {
                 // $params['proximity'] will be e.g. '0-50', '50-100', '100-200', '200-250', '250+'
                 // Lets convert it to a min and max
                 $proximityMin = 0;
@@ -1310,8 +1347,9 @@ function estyn_resources_search(\WP_REST_Request $request) {
                         $distance = $providerDistances[$provider->ID];
                         if($distance >= $proximityMin && $distance <= $proximityMax) {
                             $match = true;
+                            $potentialMatches[] = $provider;
                             //error_log('Matched ' . $distance . ' miles with ' . $params['proximity']);
-                            break;
+                            //break;
                         }
                         continue;
                     }
@@ -1339,8 +1377,9 @@ function estyn_resources_search(\WP_REST_Request $request) {
 
                     if($distance >= $proximityMin && $distance <= $proximityMax) {
                         $match = true;
+                        $potentialMatches[] = $provider;
                         //error_log('Matched ' . $distance . ' miles with ' . $params['proximity']);
-                        break;
+                        //break;
                     }
                 }
 
@@ -1349,7 +1388,10 @@ function estyn_resources_search(\WP_REST_Request $request) {
                     continue; // We skip this improvement resource if the proximity doesn't match
                 }
             }
-            
+
+            // At this point, the post must have at least 1 provider that matches all the filters, so we don't add the post to $postsToRemove
+            error_log('Post ' . $post->ID . ' passed all filters, because of the following providers:');
+            error_log(print_r(array_map(function($provider) { return $provider->post_title; }, empty($potentialMatches) ? $providers : $potentialMatches), true));
         }
     }
 
