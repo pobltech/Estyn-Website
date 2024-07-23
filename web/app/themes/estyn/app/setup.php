@@ -2260,8 +2260,13 @@ if (defined('WP_CLI') && WP_CLI) {
          */
         public function __invoke($args, $assoc_args) {
             // Call your function here
-            updateProviderData();
-            \WP_CLI::success('Provider data updated.');
+            $result = updateProviderData();
+
+            if(empty($result)) {
+                \WP_CLI::error('Failed to update provider data. See log table for more info.');
+            } else {
+                \WP_CLI::success('Provider data updated. Status is: ' . $result . '. See log table for more info.');
+            }
         }
     }
 
@@ -2573,9 +2578,9 @@ function updateProviderData() {
 
     // If the 'estyn_provider_update_log' table doesn't exist, create it
     global $wpdb;
-    $table_name = $wpdb->prefix . 'estyn_provider_update_log';
+    $log_table_name = $wpdb->prefix . 'estyn_provider_update_log';
     $charset_collate = $wpdb->get_charset_collate();
-    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+    $sql = "CREATE TABLE IF NOT EXISTS $log_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         details text NOT NULL,
@@ -2584,21 +2589,193 @@ function updateProviderData() {
     ) $charset_collate;";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    $result = dbDelta($sql);
-
-    if ($result === false) {
-        error_log('Error creating or checking the provider update log table');
-        return;
-    } else {
-        error_log('Provider update log table created or already exists');
+    
+    try {
+        dbDelta($sql);
+    } catch(\Exception $e) {
+        error_log('Error creating table ' . $log_table_name . ': ' . $e->getMessage());
+        return false;
     }
 
-    // Lets just insert a new record into the provider update log table saying successfully did nothing, just as a test
-    $wpdb->insert($table_name, array(
-        'details' => 'Successfully did nothing',
-        'status' => 'success',
+
+    $testData = [
+        [
+            'id' => 123,
+            'wg_number' => '123456',
+            'name' => 'Test School',
+            'address_line_1' => '123 Test Street',
+            'town' => 'Testville',
+            'county' => 'Testshire',
+            'postcode' => 'TE1 2ST',
+            'latitude' => '51.4816',
+            'longitude' => '-3.1791',
+            'phone' => '01234 567890',
+            'email' => 'test@test.com',
+            'external_url' => 'https://www.test.com',
+            'next_scheduled_inspection_date' => '2022-01-01',
+            'next_report_publication_date' => '2022-01-02',
+            'language_medium' => 'English',
+            'number_of_pupils' => 100,
+            'age_range' => '3-11',
+            'consortium_id' => '123'
+        ],
+        [
+            'id' => 456,
+            'wg_number' => '6814039',
+            'name' => 'Cardiff High School',
+            'address_line_1' => 'Llandennis Road',
+            'address_line_2' => 'Cyncoed',
+            'town' => 'Testville',
+            'county' => 'Testshire',
+            'postcode' => 'CF23 6WG',
+            'latitude' => '51.4816',
+            'longitude' => '-3.1791',
+            'phone' => '01234 567890',
+            'email' => 'test2@test.com',
+            'external_url' => 'https://www.test2.com',
+            'next_scheduled_inspection_date' => '2022-01-01',
+            'next_report_publication_date' => '2022-01-02',
+            'language_medium' => 'English',
+            'number_of_pupils' => 200,
+            'age_range' => '11-16',
+            'consortium_id' => '456'
+        ]
+    ];
+
+    // WP ACF fields key (or post_title in one case) -> Latest provider data table column name
+    $keyMap = [
+        'wg_number' => 'wg_number',
+        'post_title' => 'name',
+        'address_line_1' => 'address_line_1',
+        'address_line_2' => 'address_line_2',
+        'town' => 'town',
+        'county' => 'county',
+        'postcode' => 'postcode',
+        'latitude' => 'latitude',
+        'longitude' => 'longitude',
+        'phone' => 'phone',
+        'email' => 'email',
+        'external_url' => 'external_url',
+        'next_scheduled_inspection_date' => 'next_scheduled_inspection_date',
+        'next_report_publication_date' => 'next_report_publication_date',
+        'language_medium' => 'language_medium',
+        'number_of_pupils' => 'number_of_pupils',
+        'age_range' => 'age_range',
+        'consortium_id' => 'consortium_id'
+    ];
+
+    // Normally we'd get the data from the DB
+    $latestProvidersData = $testData;
+
+    if(empty($latestProvidersData)) {
+        error_log('No latest provider data found');
+        $wpdb->insert($log_table_name, array(
+            'details' => 'No latest provider data found',
+            'status' => 'fail',
+        ));
+        return false;
+    }
+
+    $currentProviders = get_posts([
+        'post_type' => 'estyn_eduprovider',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+    ]);
+
+    // Well this should never happen, but just in case
+    if(empty($currentProviders)) {
+        error_log('No current providers found');
+        $wpdb->insert($log_table_name, array(
+            'details' => 'No current providers found',
+            'status' => 'fail',
+        ));
+        return false;
+    }
+
+    $logDetails = [];
+    $logStatus = 'success';
+
+    foreach($latestProvidersData as $providerWithLatestData) {
+        // Find the corresponding provider in the current providers
+        // by comparing the 'wg_number' field AND the name/post title.
+        // If both are the same, then we have a match
+        
+        $matchingProviderInWP = null;
+        foreach($currentProviders as $providerInWP) {
+            $wgNumber = get_field('wg_number', $providerInWP->ID);
+            $name = $providerInWP->post_title;
+            if($wgNumber == $providerWithLatestData[$keyMap['wg_number']] && $name == $providerWithLatestData[$keyMap['post_title']]) {
+                $match = true;
+                $matchingProviderInWP = $providerInWP;
+                break;
+            }
+        }
+
+        if(empty($matchingProviderInWP)) {
+            error_log('No match found for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Is this a new provider? Or has the WG number changed?');
+            $logDetails[] = 'No match found for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Is this a new provider? Or has the WG number changed?';
+            $logStatus = 'success with warnings';
+            continue;
+        }
+
+        $logString = 'Matching provider found: ' . $providerWithLatestData[$keyMap['post_title']];
+        error_log($logString);
+        $logDetails[] = $logString;
+
+        $differences = [];
+        foreach($keyMap as $acfKey => $tableColumn) {
+            $latestValue = null;
+
+            try {
+                $latestValue = $providerWithLatestData[$tableColumn];
+            } catch(\Exception $e) {
+                error_log('Error getting latest value for ' . $tableColumn . ': ' . $e->getMessage());
+                $logDetails[] = 'Error getting latest value for ' . $tableColumn . ': ' . $e->getMessage();
+                $logStatus = 'success with warnings';
+                continue;
+            }
+            
+            $acfValue = null;
+            if($acfKey == 'post_title') {
+                $acfValue = $matchingProviderInWP->post_title;
+            } else {
+                $acfFieldExists = get_field_object($acfKey, $matchingProviderInWP->ID);
+
+                if($acfFieldExists === false) {
+                    error_log('Failed to get value for ACF key ' . $acfKey . '. Has the field been removed?');
+                    $logDetails[] = 'Failed to get value for ACF key ' . $acfKey . '. Has the field been removed?';
+                    $logStatus = 'success with warnings';
+                    continue;
+                }
+
+                $acfValue = get_field($acfKey, $matchingProviderInWP->ID);
+            }
+
+            if($acfValue != $latestValue) {
+                $differences[] = $acfKey . ': ' . $acfValue . ' -> ' . $latestValue;
+                //update_field($acfKey, $latestValue, $matchingProviderInWP->ID);
+            }
+        }
+
+        $logString = 'Differences found for provider ' . $providerWithLatestData[$keyMap['post_title']] . ': ' . implode(', ', $differences);
+        $logDetails[] = $logString;
+        error_log($logString);
+
+    }
+
+    // Log the results
+    
+    $logInsertResult = $wpdb->insert($log_table_name, array(
+        'details' => implode("\n", $logDetails),
+        'status' => $logStatus,
     ));
+
+    if($logInsertResult === false) {
+        error_log('Failed to insert log entry. Error: ' . $wpdb->last_error);
+    }
+
 
 
     error_log('Nothing changed!');
+    return $logStatus;
 }
