@@ -7,6 +7,11 @@
  * in which cases we will serve the file ./2024-04/Inspection%20report%20Cefn%20Glas%20Infant%20School%202024.pdf
  * OR ./2024-04/Inspection report Cefn Glas Infant School 2024.pdf
  * because some files' names actually have "%20" in them!
+ * 
+ * Here's another stupid example:
+ * 
+ * ?file=2020-08/Acton%20Park%20Primary%20School%20%282%29.pdf
+ * ^^^ the filename literally is Acton%20Park%20Primary%20School%20%282%29.pdf
  */
 
 // Get the requested file
@@ -18,13 +23,21 @@ if (!$file) {
     die('No file requested');
 }
 
+echo 'File: ' . $file . '<br>';
+
 // Get the path to the file
 $path = __DIR__ . '/' . $file;
 
 // If the file doesn't exist, return a 404
 if (!file_exists($path)) {
-    // Try it with '%20' in place of spaces
-    $file = str_replace(' ', '%20', $file);
+    // Try it with '%20' etc. actually in the filename
+    $fileParts = explode('/', $file);
+    $filename = array_pop($fileParts);
+    $filename = rawurlencode($filename);
+    $file = implode('/', $fileParts) . '/' . $filename;
+
+    echo 'File encoded for URL: ' . $file . '<br>';
+
     $path = __DIR__ . '/' . $file;
 
     if (!file_exists($path)) {
