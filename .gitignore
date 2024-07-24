@@ -37,7 +37,12 @@ composer.phar
 # Ignore application files
 /web/wp/
 /web/app/uploads/
-/web/system/
+
+# We want /web/system/ and /web/system/files/ and /web/system/files/index.php but nothing else
+/web/system/*
+!/web/system/files/
+/web/system/files/*
+!/web/system/files/index.php
 
 # Ignore IDE files
 .idea/
