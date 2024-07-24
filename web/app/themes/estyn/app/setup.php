@@ -2358,6 +2358,63 @@ if (defined('WP_CLI') && WP_CLI) {
     }
 
     \WP_CLI::add_command('sync_post_dates', __NAMESPACE__ . '\\Sync_Post_Dates_Command');
+
+
+    // Add a new WP CLI command to replace "private/files" with "files" in custom fields
+    function replacePrivateFilesPath() {
+        $post_types_and_fields = array(
+            'estyn_imp_resource' => array('document_node_files_uris', 'documents_uris', 'pdfs_uris'),
+            'estyn_inspectionrpt' => array('report_file_from_old_site'),
+            'estyn_inspguidance' => array('guidance_file_from_old_site'),
+            'estyn_insp_qu' => array('guidance_file_from_old_site'),
+        );
+
+        $changeCount = 0;
+        $errorCount = 0;
+
+        foreach ($post_types_and_fields as $post_type => $fields) {
+            $args = array(
+                'post_type' => $post_type,
+                'posts_per_page' => -1, // Retrieve all posts
+                'post_status' => 'publish', // Only get published posts
+            );
+
+            $posts = get_posts($args);
+
+            foreach ($posts as $post) {
+                foreach ($fields as $field) {
+                    $current_value = get_post_meta($post->ID, $field, true);
+                    if ($current_value) {
+                        $updated_value = str_replace('private/files', 'files', $current_value);
+                        if ($updated_value !== $current_value) {
+                            $updateResult = update_post_meta($post->ID, $field, $updated_value);
+
+                            if (!$updateResult) {
+                                error_log("");
+                                error_log("Failed to update $field for post ID {$post->ID}, post name: {$post->post_title}, post type: {$post->post_type}, from $current_value to $updated_value");
+                                
+                                $errorCount++;
+                                continue;
+                            }
+
+                            $changeCount++;
+                            error_log("");
+                            error_log("Updated $field for post ID {$post->ID}, post name: {$post->post_title}, post type: {$post->post_type}, from $current_value to $updated_value");
+                        }
+                    }
+                }
+            }
+        }
+
+        error_log("");
+        error_log("Made $changeCount changes.");
+        error_log("Failed to update $errorCount fields.");
+
+        \WP_CLI::success('Finished replacing "private/files" with "files" in custom fields.');
+    }
+
+    \WP_CLI::add_command('replace_private_files_path', __NAMESPACE__ . '\\replacePrivateFilesPath');
+
 }
 
 // Make sure you only run this once! (use the WP CLI command, i.e. wp generate_welsh_providers, from the project root directly)

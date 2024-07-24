@@ -9,6 +9,6 @@ add_action('init', function() {
         //define('ESTYN_OLD_FILES_URL', wp_upload_dir()['baseurl'] . '/estyn_old_files/');
         
         // The WP URL of site followed by /system/
-        define('ESTYN_OLD_FILES_URL', get_site_url() . '/system/');
+        define('ESTYN_OLD_FILES_URL', '/system/');
     }
 });
