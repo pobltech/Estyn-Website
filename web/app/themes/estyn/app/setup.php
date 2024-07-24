@@ -2584,7 +2584,7 @@ function updateProviderData() {
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         details text NOT NULL,
-        status varchar(10) NOT NULL,
+        status varchar(400) NOT NULL,
         PRIMARY KEY  (id)
     ) $charset_collate;";
 
@@ -2620,6 +2620,29 @@ function updateProviderData() {
             'consortium_id' => '123'
         ],
         [
+            'id' => 1234,
+            'wg_number' => '123456',
+            'name' => 'Test School 1',
+            'address_line_1' => '123 Test Street',
+            'address_line_2' => '',
+            'address_line_3' => '',
+            'address_line_4' => '',
+            'town' => 'Testvilletest',
+            'county' => 'Testshiretest',
+            'postcode' => 'TE1 2SR',
+            'latitude' => '51.4815',
+            'longitude' => '-3.1794',
+            'phone' => '01234 567891',
+            'email' => 'test1@test.com',
+            'external_url' => 'https://www.test1.com',
+            'next_scheduled_inspection_date' => '2023-01-01',
+            'next_report_publication_date' => '2023-01-02',
+            'language_medium' => 'Welsh',
+            'number_of_pupils' => '200',
+            'age_range' => '11-16',
+            'consortium_id' => '1234'
+        ]/* ,
+        [
             'id' => 456,
             'wg_number' => '6814039',
             'name' => 'Cardiff High School',
@@ -2639,7 +2662,7 @@ function updateProviderData() {
             'number_of_pupils' => 200,
             'age_range' => '11-16',
             'consortium_id' => '456'
-        ]
+        ] */
     ];
 
     // WP ACF fields key (or post_title in one case) -> Latest provider data table column name
@@ -2680,6 +2703,7 @@ function updateProviderData() {
         'post_type' => 'estyn_eduprovider',
         'posts_per_page' => -1,
         'post_status' => 'publish',
+        'lang' => 'en'
     ]);
 
     // Well this should never happen, but just in case
@@ -2724,6 +2748,10 @@ function updateProviderData() {
 
         $differences = [];
         foreach($keyMap as $acfKey => $tableColumn) {
+            $logString = 'Checking ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']];
+            error_log($logString);
+            $logDetails[] = $logString;
+            
             $latestValue = null;
 
             try {
@@ -2736,35 +2764,134 @@ function updateProviderData() {
             }
             
             $acfValue = null;
+            $acfFieldType = 'text';
             if($acfKey == 'post_title') {
                 $acfValue = $matchingProviderInWP->post_title;
             } else {
-                $acfFieldExists = get_field_object($acfKey, $matchingProviderInWP->ID);
+                
+                // This didn't work. ACF was returning false even though the field exists, but was just empty.
+/*                 $acfFieldExists = get_field_object($acfKey, $matchingProviderInWP->ID);
 
                 if($acfFieldExists === false) {
-                    error_log('Failed to get value for ACF key ' . $acfKey . '. Has the field been removed?');
-                    $logDetails[] = 'Failed to get value for ACF key ' . $acfKey . '. Has the field been removed?';
+                    error_log('ACF field ' . $acfKey . ' not found for this provider. Has the field been removed?');
+                    $logDetails[] = 'ACF field ' . $acfKey . ' not found for this provider. Has the field been removed?';
+                    $logStatus = 'success with warnings';
+                    continue;
+                } */
+
+                $acfValue = get_field($acfKey, $matchingProviderInWP->ID);
+                
+
+                // So get_field apparently returns false if the field is not found. Returns an empty string if the value is empty and the type is text.
+                if($acfValue === false) {
+                    error_log('ACF field ' . $acfKey . ' not found for this provider. Has the field been removed?');
+                    $logDetails[] = 'ACF field ' . $acfKey . ' not found for this provider. Has the field been removed?';
                     $logStatus = 'success with warnings';
                     continue;
                 }
 
-                $acfValue = get_field($acfKey, $matchingProviderInWP->ID);
+                $acfFieldObject = get_field_object($acfKey, $matchingProviderInWP->ID);
+                $acfFieldType = $acfFieldObject['type'];
+                $acfFieldReturnFormat = isset($acfFieldObject['return_format']) ? $acfFieldObject['return_format'] : null;
+
+                if($acfFieldType == 'select' && $acfFieldReturnFormat == 'array') {
+                    $acfValue = $acfValue['value'];
+                }
             }
 
+            $logString = 'Old value for ' . $acfKey . ' = ' . print_r($acfValue, true);
+            error_log($logString);
+
             if($acfValue != $latestValue) {
-                $differences[] = $acfKey . ': ' . $acfValue . ' -> ' . $latestValue;
-                //update_field($acfKey, $latestValue, $matchingProviderInWP->ID);
+                $differences[] = $acfKey . ': ' . ($acfValue === '' ? '(empty)' : $acfValue) . ' -> ' . $latestValue;
+                $logString = 'Difference found for ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . ': ' . ($acfValue === '' ? '(empty)' : $acfValue) . ' -> ' . $latestValue;
+                $logDetails[] = $logString;
+                error_log($logString);
+
+                $logString = 'Updating ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . ' to ' . $latestValue;
+                error_log($logString);
+                $logDetails[] = $logString;
+
+                if($acfKey == 'post_title') {
+                    $updateResult = wp_update_post([
+                        'ID' => $matchingProviderInWP->ID,
+                        'post_title' => $latestValue,
+                    ]);
+
+                    if($updateResult === 0) {
+                        $logString = 'Failed to update post title for provider ' . $providerWithLatestData[$keyMap['post_title']];
+                        error_log($logString);
+                        $logDetails[] = $logString;
+
+                        $logStatus = 'success with warnings';
+
+                        continue;
+                    }
+
+                    // Now to update the Welsh version
+                    $welshPostID = pll_get_post($matchingProviderInWP->ID, 'cy');
+                    if($welshPostID) {
+                        $updateResult = wp_update_post([
+                            'ID' => $welshPostID,
+                            'post_title' => $latestValue,
+                        ]);
+
+                        if($updateResult === 0) {
+                            $logString = 'Failed to update Welsh post title for provider ' . $providerWithLatestData[$keyMap['post_title']];
+                            error_log($logString);
+                            $logDetails[] = $logString;
+
+                            $logStatus = 'success with warnings';
+                        }
+                    } else {
+                        $logString = 'No Welsh translation found for provider ' . $providerWithLatestData[$keyMap['post_title']];
+                        error_log($logString);
+                        $logDetails[] = $logString;
+
+                        $logStatus = 'success with warnings';
+                    }
+                } else {
+                    $updateResult = update_field($acfKey, $latestValue, $matchingProviderInWP->ID);
+                    if($updateResult === false) {
+                        $logString = 'Failed to update ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Last wpdb error: ' . $wpdb->last_error;
+                        error_log($logString);
+                        $logDetails[] = $logString;
+
+                        $logStatus = 'success with warnings';
+
+                        continue;
+                    }
+
+                    // Now to update the Welsh version
+                    $welshPostID = pll_get_post($matchingProviderInWP->ID, 'cy');
+                    if($welshPostID) {
+                        $updateResult = update_field($acfKey, $latestValue, $welshPostID);
+                        if($updateResult === false) {
+                            $logString = 'Failed to update Welsh ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Last wpdb error: ' . $wpdb->last_error;
+                            error_log($logString);
+                            $logDetails[] = $logString;
+
+                            $logStatus = 'success with warnings';
+                        }
+                    } else {
+                        $logString = 'No Welsh translation found for provider ' . $providerWithLatestData[$keyMap['post_title']];
+                        error_log($logString);
+                        $logDetails[] = $logString;
+
+                        $logStatus = 'success with warnings';
+                    }
+                }
             }
         }
 
-        $logString = 'Differences found for provider ' . $providerWithLatestData[$keyMap['post_title']] . ': ' . implode(', ', $differences);
-        $logDetails[] = $logString;
-        error_log($logString);
+        //$logString = 'Differences found for provider ' . $providerWithLatestData[$keyMap['post_title']] . ' (old -> new): ' . implode(', ', $differences);
+        //$logDetails[] = $logString;
+        
+        //error_log($logString);
 
     }
 
     // Log the results
-    
     $logInsertResult = $wpdb->insert($log_table_name, array(
         'details' => implode("\n", $logDetails),
         'status' => $logStatus,
@@ -2776,6 +2903,6 @@ function updateProviderData() {
 
 
 
-    error_log('Nothing changed!');
+    //error_log('Nothing changed!');
     return $logStatus;
 }
