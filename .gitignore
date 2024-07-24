@@ -37,6 +37,7 @@ composer.phar
 # Ignore application files
 /web/wp/
 /web/app/uploads/
+/web/system/
 
 # Ignore IDE files
 .idea/

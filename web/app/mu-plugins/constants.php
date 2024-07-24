@@ -6,6 +6,9 @@
  */
 add_action('init', function() {
     if (!defined('ESTYN_OLD_FILES_URL')) {
-        define('ESTYN_OLD_FILES_URL', wp_upload_dir()['baseurl'] . '/estyn_old_files/');
+        //define('ESTYN_OLD_FILES_URL', wp_upload_dir()['baseurl'] . '/estyn_old_files/');
+        
+        // The WP URL of site followed by /system/
+        define('ESTYN_OLD_FILES_URL', get_site_url() . '/system/');
     }
 });
