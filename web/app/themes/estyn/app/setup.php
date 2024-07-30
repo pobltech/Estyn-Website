@@ -349,6 +349,43 @@ function create_improvement_resource_type_taxonomy() {
 }
 add_action( 'init', __NAMESPACE__ . '\\create_improvement_resource_type_taxonomy', 0 );
 
+// Redirects for old improvement resources links
+// Add rewrite rule
+add_action('init', function() {
+    add_rewrite_rule('^thematic-report/(.*)', 'index.php?imp_resource_redirect=$matches[1]', 'top');
+    // Same for annual-report, effective-practice, and additional-resource
+    add_rewrite_rule('^annual-report/(.*)', 'index.php?imp_resource_redirect=$matches[1]', 'top');
+    add_rewrite_rule('^effective-practice/(.*)', 'index.php?imp_resource_redirect=$matches[1]', 'top');
+    add_rewrite_rule('^additional-resource/(.*)', 'index.php?imp_resource_redirect=$matches[1]', 'top');
+
+    // Same for the Welsh versions
+    add_rewrite_rule('^adroddiadau-thematig/(.*)', 'index.php?imp_resource_redirect_cymraeg=$matches[1]', 'top');
+    add_rewrite_rule('^adroddiad-blynyddol/(.*)', 'index.php?imp_resource_redirect_cymraeg=$matches[1]', 'top');
+    add_rewrite_rule('^arfer-effeithiol/(.*)', 'index.php?imp_resource_redirect_cymraeg=$matches[1]', 'top');
+    add_rewrite_rule('^adnodd-ychwanegol/(.*)', 'index.php?imp_resource_redirect_cymraeg=$matches[1]', 'top');
+});
+
+// Add query var
+add_filter('query_vars', function($query_vars) {
+    $query_vars[] = 'imp_resource_redirect';
+    $query_vars[] = 'imp_resource_redirect_cymraeg';
+    return $query_vars;
+});
+
+// Handle the redirection
+add_action('template_redirect', function() {
+    $imp_resource_redirect = get_query_var('imp_resource_redirect');
+    if ($imp_resource_redirect) {
+        wp_redirect(home_url('improvement-resources/' . $imp_resource_redirect), 301);
+        exit;
+    }
+    $imp_resource_redirect_cymraeg = get_query_var('imp_resource_redirect_cymraeg');
+    if ($imp_resource_redirect_cymraeg) {
+        wp_redirect(home_url('adnoddau-gwella/' . $imp_resource_redirect_cymraeg), 301);
+        exit;
+    }
+});
+
 // Enable REST query for the 'improvement_resource_type' taxonomy
 add_action('rest_api_init', function () {
     register_rest_route('wp/v2', '/estyn_imp_resource', array(
