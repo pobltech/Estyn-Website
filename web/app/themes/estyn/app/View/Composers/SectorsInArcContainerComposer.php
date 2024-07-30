@@ -23,8 +23,9 @@ class SectorsInArcContainerComposer extends Composer
         $sectors = get_terms([
             'taxonomy' => 'sector',
             'hide_empty' => false,
-            'orderby' => 'count',
-            'order' => 'DESC'
+            /* 'orderby' => 'count', */
+            'orderby' => 'term_order',
+            /* 'order' => 'DESC' */
         ]);
 
         // Format them as an array of items, each being an array with 'title' and 'linkURL' keys

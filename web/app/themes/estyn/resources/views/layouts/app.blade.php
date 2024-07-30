@@ -34,8 +34,9 @@
         'sectors' => isset($sectors) ? $sectors : get_terms([
             'taxonomy' => 'sector',
             'hide_empty' => false,
-            'orderby' => 'count',
-            'order' => 'DESC'
+            /*'orderby' => 'count',
+            'order' => 'DESC'*/
+            'orderby' => 'term_order',
           ])
       ])
 
