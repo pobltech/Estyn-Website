@@ -150,9 +150,16 @@
 
                 // If there's an explicitly defined excerpt, show it, else show the content
                 //if (get_the_excerpt() && !preg_match('/\[\.\.\.\]$/', get_the_excerpt())) {
-                if(has_excerpt()) {
+                /*if(has_excerpt()) {
                   the_excerpt();
                 
+                  if(!empty(get_the_content())) {
+                    echo '<hr>';
+                  }
+                }*/
+                if(!empty($thematicReportData['summary'])) {
+                  echo '<p>' . $thematicReportData['summary'] . '</p>';
+
                   if(!empty(get_the_content())) {
                     echo '<hr>';
                   }

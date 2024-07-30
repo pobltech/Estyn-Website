@@ -99,9 +99,80 @@ class ImprovementResourceComposer extends Composer
             }
         }
 
+        // Sort out the summary/excerpt
+        $summary = null;
+        if(has_excerpt(get_the_ID())) {
+            $summary = get_the_excerpt();
+        }/* else {
+            // If this post's title includes the words "training materials" then there should be an associated
+            // post that we can take the excerpt from. "Associated post" is if the title matches the title of this post (minus " - training materials")
+            $title = strtolower(get_the_title());
+            
+            if(strpos($title, 'training materials') !== false) {
+
+// Decode HTML entities to their respective characters
+$title = html_entity_decode($title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+// Replace all types of hyphens and dashes with a standard hyphen
+$title = preg_replace('/[\p{Pd}]/u', '-', $title);
+
+// Remove specific unwanted substrings
+$title = str_replace(['- training materials', '-training materials', 'training materials', '- deunydd hyfforddiant', '-deunydd hyfforddiant', 'deunydd hyfforddiant'], '', $title);
+
+// Remove non-standard characters using a regular expression
+$title = preg_replace('/[^\x20-\x7E]/', '', $title);
+
+// Trim the string to remove any leading or trailing whitespace
+$title = trim($title);
+
+// Remove the last character if it's a non-standard character
+$title = rtrim($title, "-");
+
+// Final trim to ensure no leading or trailing whitespace
+$title = trim($title);
+
+$title = substr($title, 0, -1);
+
+                
+                $reports = get_posts([
+                    'post_type' => 'estyn_imp_resource',
+                    'posts_per_page' => -1,
+                    
+                    'lang' => pll_get_post_language(get_the_ID()),
+                    'tax_query' => [
+                        [
+                            'taxonomy' => 'improvement_resource_type',
+                            'field' => 'slug',
+                            'terms' => 'thematic-report'
+                        ]
+                    ]
+                ]);
+
+                if(!empty($reports)) {
+                    foreach($reports as $report) {
+                        if(strpos(strtolower(get_the_title($report->ID)), $title) === false) {
+                            continue;
+                        }
+
+                        if(!has_excerpt($report->ID)) {
+                            continue;
+                        }
+
+                        if(strpos(strtolower(get_the_title($report->ID)), 'training materials') !== false) {
+                            continue;
+                        }
+
+                        $summary = get_the_excerpt($report->ID);
+                        break;
+                    }
+                }
+            }
+        } */
+
         return [
             'fullReportDownloadURL' => $fullReportDownloadURL,
-            'fullReportLanguage' => $language
+            'fullReportLanguage' => $language,
+            'summary' => $summary
         ];
     }
 
