@@ -35,7 +35,7 @@ export default async (app) => {
    */
   app
     .setUrl('http://127.0.0.1:3000')
-    .setProxyUrl('http://estyn.something:8010')
+    .setProxyUrl('http://estyn.local:8010')
     .watch(['resources/views', 'app']);
 
   /**
