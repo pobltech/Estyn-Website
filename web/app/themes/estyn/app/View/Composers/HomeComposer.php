@@ -131,7 +131,8 @@ class HomeComposer extends Composer
 
         return array_map(function($signpost) {
             return [
-                'bgColourClass' => $signpost['signpost_colour'],
+                'bgColour' => $signpost['signpost_colour'],
+                'svg' => $signpost['use_estyn_logo_for_icon'] ? asset('images/estyn-logo-icon-only-darkblue.svg') : null,
                 'iconClasses' => 'fa-solid ' . $signpost['icon'],
                 'title' => $signpost['link_text'],
                 'description' => $signpost['description'],

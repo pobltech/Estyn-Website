@@ -3714,7 +3714,9 @@ R	Re-Inspection
 
                                     continue;
                                 }
-                            } 
+
+                                $term = get_term($termID['term_id'], $acfKey);
+                            }
                         }
 
                         if($isTaxonomy) {
