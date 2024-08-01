@@ -30,7 +30,7 @@ class ProviderComposer extends Composer
 
     public function providerData()
     {
-        $fields = ['address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', 'town', 'county', 'postcode', 'phone', 'email'];//, 'latitude', 'longitude'];
+        $fields = ['address_line_1', 'address_line_2', 'address_line_3', 'address_line_4', /* 'town', 'county', */'postcode', 'phone', 'email'];//, 'latitude', 'longitude'];
         $data = [];
 
         foreach ($fields as $field) {
@@ -57,8 +57,8 @@ class ProviderComposer extends Composer
         $addressLine2 = get_field('address_line_2');
         $addressLine3 = get_field('address_line_3');
         $addressLine4 = get_field('address_line_4');
-        $town = get_field('town');
-        $county = get_field('county');
+        //$town = get_field('town');
+        //$county = get_field('county');
         $postcode = get_field('postcode');
 
         $latitudeACF = get_field('latitude');

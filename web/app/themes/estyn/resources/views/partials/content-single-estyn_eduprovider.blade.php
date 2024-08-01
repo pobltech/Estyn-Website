@@ -66,8 +66,8 @@
                 <div>
                     @if($hasInspectionReports)
                         @include('components.dot-text-date', [
-                            'text' => __('Report publication date', 'sage'),
-                            'date' => (new \DateTime($reportPublicationDate))->format('j F Y'),
+                            'text' => __('Next report publication date', 'sage'),
+                            'date' => !empty($reportPublicationDate) ? (new \DateTime($reportPublicationDate))->format('j F Y') : __('No details available', 'sage'),
                             'bgColourClass' => 'bg-signpost-blue',
                             'dontShrink' => true
                         ])

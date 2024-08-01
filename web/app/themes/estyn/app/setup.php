@@ -212,7 +212,6 @@ add_action('init', function() {
 /**
  * Register 'estyn_newsarticle' post type.
  * 
- * TODO: Remove hack to get custom post type URL slugs translations to work with Polylang (when we use Polylang Pro)
  */
 add_action('init', function () {
     $news_slug = 'news'; //__('news', 'sage');
@@ -348,6 +347,43 @@ function create_improvement_resource_type_taxonomy() {
     ));
 }
 add_action( 'init', __NAMESPACE__ . '\\create_improvement_resource_type_taxonomy', 0 );
+
+// Redirects for old improvement resources links
+// Add rewrite rule
+add_action('init', function() {
+    add_rewrite_rule('^thematic-report/(.*)', 'index.php?imp_resource_redirect=$matches[1]', 'top');
+    // Same for annual-report, effective-practice, and additional-resource
+    add_rewrite_rule('^annual-report/(.*)', 'index.php?imp_resource_redirect=$matches[1]', 'top');
+    add_rewrite_rule('^effective-practice/(.*)', 'index.php?imp_resource_redirect=$matches[1]', 'top');
+    add_rewrite_rule('^additional-resource/(.*)', 'index.php?imp_resource_redirect=$matches[1]', 'top');
+
+    // Same for the Welsh versions
+    add_rewrite_rule('^adroddiadau-thematig/(.*)', 'index.php?imp_resource_redirect_cymraeg=$matches[1]', 'top');
+    add_rewrite_rule('^adroddiad-blynyddol/(.*)', 'index.php?imp_resource_redirect_cymraeg=$matches[1]', 'top');
+    add_rewrite_rule('^arfer-effeithiol/(.*)', 'index.php?imp_resource_redirect_cymraeg=$matches[1]', 'top');
+    add_rewrite_rule('^adnodd-ychwanegol/(.*)', 'index.php?imp_resource_redirect_cymraeg=$matches[1]', 'top');
+});
+
+// Add query var
+add_filter('query_vars', function($query_vars) {
+    $query_vars[] = 'imp_resource_redirect';
+    $query_vars[] = 'imp_resource_redirect_cymraeg';
+    return $query_vars;
+});
+
+// Handle the redirection
+add_action('template_redirect', function() {
+    $imp_resource_redirect = get_query_var('imp_resource_redirect');
+    if ($imp_resource_redirect) {
+        wp_redirect(home_url('improvement-resources/' . $imp_resource_redirect), 301);
+        exit;
+    }
+    $imp_resource_redirect_cymraeg = get_query_var('imp_resource_redirect_cymraeg');
+    if ($imp_resource_redirect_cymraeg) {
+        wp_redirect(home_url('adnoddau-gwella/' . $imp_resource_redirect_cymraeg), 301);
+        exit;
+    }
+});
 
 // Enable REST query for the 'improvement_resource_type' taxonomy
 add_action('rest_api_init', function () {
@@ -2273,6 +2309,67 @@ if (defined('WP_CLI') && WP_CLI) {
     \WP_CLI::add_command('update_provider_data', __NAMESPACE__ . '\\Update_Provider_Data');
 
 
+    // Check for missing providers command
+    class Check_Missing_Providers {
+        /**
+         * Checks for missing providers.
+         *
+         * ## EXAMPLES
+         *
+         *     wp check_missing_providers
+         *
+         */
+        public function __invoke($args, $assoc_args) {
+            // Call your function here
+            $result = checkForMissingProviders();
+
+            \WP_CLI::success('Check for missing providers complete.');
+        }
+    }
+
+    \WP_CLI::add_command('check_missing_providers', __NAMESPACE__ . '\\Check_Missing_Providers');
+
+
+    // tidy_up_providers command (tidyUpProviders() function)
+    class Tidy_Up_Providers {
+        /**
+         * Checks for and removes duplicated providers, matched by name+wg_number. The one with the oldest publication date is kept.
+         *
+         * ## EXAMPLES
+         *
+         *     wp tidy_up_providers
+         *
+         */
+        public function __invoke($args, $assoc_args) {
+            // Call your function here
+            $result = tidyUpProviders();
+
+            \WP_CLI::success('Duplicate providers deleted. Kept the oldest.');
+        }
+    }
+
+    \WP_CLI::add_command('tidy_up_providers', __NAMESPACE__ . '\\Tidy_Up_Providers');
+
+    // Add our checkForDuplicateProvidersInAPITable function
+    class Check_For_Duplicate_Providers_In_API_Table {
+        /**
+         * Checks for duplicate providers in the API table.
+         *
+         * ## EXAMPLES
+         *
+         *     wp check_for_duplicate_providers
+         *
+         */
+        public function __invoke($args, $assoc_args) {
+            // Call your function here
+            $result = checkForDuplicateProvidersInAPITable();
+
+            \WP_CLI::success('Check for duplicate providers in the API table complete.');
+        }
+    }
+
+    \WP_CLI::add_command('check_for_duplicate_providers_in_api_table', __NAMESPACE__ . '\\Check_For_Duplicate_Providers_In_API_Table');
+
     // Remove '-cy' suffix from the URL slug of all 'estyn_eduprovider' posts
     class Remove_Cy_Suffix_Command {
         /**
@@ -2591,7 +2688,7 @@ function metersToMiles($meters) {
 
 function updateProviderData() {
     // This function will pull provider data from a table in the DB
-    // and update the providers accordingly. For now, just making notes.
+    // and update the providers accordingly.
     
     /**
      * Providers in WP have the following ACF fields:
@@ -2605,8 +2702,8 @@ function updateProviderData() {
      * wg_number (text)
      * address_line_1 to 4 (text)
      * town (text)
-     * county (text)
-     * postcode (text)
+     * county (text) UNUSED. Just use address_line_1 to 4
+     * postcode (text) UNUSED: Remove this field. Just use address_line_1 to 4
      * latitude (text)
      * longitude (text)
      * phone (text)
@@ -2617,6 +2714,10 @@ function updateProviderData() {
      * next_scheduled_inspection_date (date picker)
      * next_report_publication_date (date picker)
      * language_medium (select) - 'English' or 'Cymraeg' - higher priority than language field above
+     * last_inspection_date (date),
+     * date_in (date),
+     * date_out (date),
+     * created_by_api (true or false) 
      * 
      * Taxonomies:
      * 
@@ -2629,8 +2730,6 @@ function updateProviderData() {
      * And, of course, each provider has a post title (in English and Welsh) which is their name, although
      * the Welsh is the same as the English.
      * 
-     * It might also be good if there's a log table that records the results of this function whenever it's run.
-     * Let's assume the row cells are 'id', 'timestamp', 'details', 'status' (success or fail)
      */
 
     // If the 'estyn_provider_update_log' table doesn't exist, create it
@@ -2668,63 +2767,21 @@ function updateProviderData() {
             'phone' => '01234 567890',
             'email' => 'test@test.com',
             'external_url' => 'https://www.test.com',
-            'next_scheduled_inspection_date' => '2022-01-01',
-            'next_report_publication_date' => '2022-01-02',
+            'next_scheduled_inspection_date' => '2022-01-01T00:00:00',
+            'next_report_publication_date' => '2022-01-02T00:00:00',
             'language_medium' => 'English',
             'number_of_pupils' => 100,
             'age_range' => '3-11',
             'consortium_id' => '123',
             'sector' => 'Secondary',
             'local_authority' => 'Cardiff Council',
-            'provider_status' => 'Not in follow-up'
-        ],
-        [
-            'id' => 1234,
-            'wg_number' => '123456',
-            'name' => 'Test School 1',
-            'address_line_1' => '123 Test Street',
-            'address_line_2' => '',
-            'address_line_3' => '',
-            'address_line_4' => '',
-            'town' => 'Testvilletest',
-            'county' => 'Testshiretest',
-            'postcode' => 'TE1 2SR',
-            'latitude' => '51.4815',
-            'longitude' => '-3.1794',
-            'phone' => '01234 567891',
-            'email' => 'test1@test.com',
-            'external_url' => 'https://www.test1.com',
-            'next_scheduled_inspection_date' => '2023-01-01',
-            'next_report_publication_date' => '2023-01-02',
-            'language_medium' => 'Welsh',
-            'number_of_pupils' => '200',
-            'age_range' => '11-16',
-            'consortium_id' => '1234',
-            'sector' => 'Secondary',
-            'local_authority' => 'Cardiff Council',
-            'provider_status' => 'Not in follow-up'
-        ]/* ,
-        [
-            'id' => 456,
-            'wg_number' => '6814039',
-            'name' => 'Cardiff High School',
-            'address_line_1' => 'Llandennis Road',
-            'address_line_2' => 'Cyncoed',
-            'town' => 'Testville',
-            'county' => 'Testshire',
-            'postcode' => 'CF23 6WG',
-            'latitude' => '51.4816',
-            'longitude' => '-3.1791',
-            'phone' => '01234 567890',
-            'email' => 'test2@test.com',
-            'external_url' => 'https://www.test2.com',
-            'next_scheduled_inspection_date' => '2022-01-01',
-            'next_report_publication_date' => '2022-01-02',
-            'language_medium' => 'English',
-            'number_of_pupils' => 200,
-            'age_range' => '11-16',
-            'consortium_id' => '456'
-        ] */
+            'status' => 'N', // AMV, APS, N, NPE, PR, R, UNFV, F1SM, F2SI, F3EM, FI, IFU, INDER, INDN, MC, ER2017, ER2017DB,
+            'last_inspection_date' => '2021-01-01T00:00:00',
+            'date_in' => '2021-01-01T00:00:00',
+            'date_out' => null,
+            'cygnum_number' => '123456',
+            'timestamp' => '2024-01-01 00:00:00'
+        ]
     ];
 
     // WP ACF fields key (or post_title in one case, or taxonomy in the case of sector, local_authority, and provider_status) -> Latest provider data table column name
@@ -2733,15 +2790,17 @@ function updateProviderData() {
         'post_title' => 'name',
         'address_line_1' => 'address_line_1',
         'address_line_2' => 'address_line_2',
-        'town' => 'town',
-        'county' => 'county',
+        'address_line_3' => 'address_line_3',
+        'address_line_4' => 'address_line_4',
+        'town' => 'town', // Unused. Just use address_line_1 to 4
+        'county' => 'county', // Unused. Just use address_line_1 to 4
         'postcode' => 'postcode',
         'latitude' => 'latitude',
         'longitude' => 'longitude',
         'phone' => 'phone',
         'email' => 'email',
         'external_url' => 'external_url',
-        'next_scheduled_inspection_date' => 'next_scheduled_inspection_date',
+        'next_scheduled_inspection_date' => 'next_scheduled_inspection_date', // STRING in the table cell e.g. 2019-02-07T00:00:00
         'next_report_publication_date' => 'next_report_publication_date',
         'language_medium' => 'language_medium',
         'number_of_pupils' => 'number_of_pupils',
@@ -2749,13 +2808,86 @@ function updateProviderData() {
         'consortium_id' => 'consortium_id',
         'sector' => 'sector',
         'local_authority' => 'local_authority',
-        'provider_status' => 'status'
+        'provider_status' => 'status',
+        'last_inspection_date' => 'last_inspection_date', // STRING in the table cell e.g. 2019-02-07T00:00:00
+        'date_in' => 'date_in', // STRING in the table cell e.g. 2019-02-07T00:00:00
+        'date_out' => 'date_out', // STRING in the table cell e.g. 2019-02-07T00:00:00 // TODO: If date_out is valid, the provider no longer exists?
+        // We don't use cygnum_number and timestamp
     ];
 
     $taxonomiesMap = [
         'sector' => 'sector',
         'local_authority' => 'local_authority',
         'provider_status' => 'status'
+    ];
+
+    // Because the data going into the table from Estyn is so limited,
+    // we won't let it overwrite certain fields (with nothing)
+    $ignore = [
+        'town',
+        'county',
+        'latitude',
+        'longitude',
+        'phone',
+        'email',
+        'external_url',
+        'next_report_publication_date',
+        'language_medium',
+        'number_of_pupils',
+        'age_range',
+        'consortium_id',
+        'local_authority', // Taxonomy
+    ];
+
+    $dateFields = [
+        'next_scheduled_inspection_date',
+        'last_inspection_date',
+        'date_in',
+        'date_out',
+    ];
+
+    /*
+Status ID	Website Text
+AMV	"
+The school does not fully meet the Independent School Standards (Wales) Regulations 2024"
+APS	Progress Review
+ER2017	Estyn Review
+ER2017DB	Estyn Review
+F1SM	Special Measures
+F2SI	Significant Improvement
+F3EM	Estyn Monitoring
+FI	Focused Improvement
+IFU	In follow-up
+INDER	The school does not fully meet the Independent School Standards (Wales) Regulations 2024
+INDN	The school meets all of the Independent School Standards (Wales) Regulations 2024
+N	Not in follow-up
+NPE	This provider no longer provider education
+PR	Progress Review
+R	Re-Inspection
+
+    */
+
+    // Provider status codes -> Provider status text
+    // Taxonomy = provider_status
+    // ACF field = api_code
+    $providerStatusMap = [
+        'AMV' => 'The school does not fully meet the Independent School Standards (Wales) Regulations 2024',
+        'APS' => 'Under Progress Review',
+        'ER2017' => 'Estyn Review',
+        'ER2017DB' => 'Estyn to Review',
+        'F1SM' => 'Special Measures',
+        'F2SI' => 'Significant Improvement',
+        'F3EM' => 'Estyn Monitoring',
+        'FI' => 'Focused Improvement',
+        'IFU' => 'In follow-up',
+        'INDER' => 'The school does not fully meet the Independent School Standards (for Wales) Regulations 2024',
+        'INDN' => 'The school meets all of the Independent School Standards (Wales) Regulations 2024',
+        'N' => 'Not in follow-up',
+        'NPE' => 'This provider no longer provides education',
+        'PR' => 'Progress Review',
+        'R' => 'Re-Inspection',
+        'UNFV' => 'UNFV', // TODO
+        'MC' => 'MC', // TODO
     ];
 
     // Normally we'd get the data from the DB
@@ -2801,6 +2933,7 @@ function updateProviderData() {
         return false;
     }
 
+    // We have to make sure all the current providers have a language set, and have a Welsh translation
     foreach($currentProviders as $currentProvider) {
         if(pll_get_post_language($currentProvider->ID) === false) {
             $logString = 'No language set for provider ' . $currentProvider->post_title . '. Setting to English and creating corresponding Welsh version (errors will be logged, otherwise assume all good...';
@@ -2811,7 +2944,7 @@ function updateProviderData() {
             ));
 
             $result = pll_set_post_language($currentProvider->ID, 'en');
-            if(!$result) {
+/*             if(!$result) {
                 $logString = 'Failed to set language to English for provider ' . $currentProvider->post_title;
                 error_log($logString);
                 $wpdb->insert($log_table_name, array(
@@ -2820,7 +2953,7 @@ function updateProviderData() {
                 ));
 
                 return false;
-            }
+            } */
 
             // Now to create the Welsh translation, copying over all ACF fields and taxonomies+terms (sector, local authority, provider status)
             $newProviderID = wp_insert_post([
@@ -2841,7 +2974,7 @@ function updateProviderData() {
             }
 
             $result = pll_set_post_language($newProviderID, 'cy');
-            if(!$result) {
+/*             if(!$result) {
                 $logString = 'Failed to set language to Welsh for new provider ' . $currentProvider->post_title;
                 error_log($logString);
                 $wpdb->insert($log_table_name, array(
@@ -2850,7 +2983,7 @@ function updateProviderData() {
                 ));
 
                 return false;
-            }
+            } */
 
             // Copy over the ACF fields
             $acfFields = get_fields($currentProvider->ID);
@@ -2905,53 +3038,105 @@ function updateProviderData() {
         return false;
     }
 
+    // For all the latestProviderData, trim the values, in case there are any leading or trailing spaces
+/*     foreach($latestProvidersData as $provider) {
+        foreach($provider as $key => $value) {
+            $provider[$key] = trim($value);
+        }
+    } */
+
     $logDetails = [];
     $logStatus = 'success';
 
-    foreach($latestProvidersData as $providerWithLatestData) {
-        // Find the corresponding provider in the current providers
-        // by comparing the 'wg_number' field AND the name/post title.
-        // If both are the same, then we have a match
-        
-        $matchingProviderInWP = null;
-        foreach($currentProviders as $providerInWP) {
-            //$wgNumber = get_field('wg_number', $providerInWP->ID);
-            $name = $providerInWP->post_title;
-            //if($wgNumber == $providerWithLatestData[$keyMap['wg_number']] && $name == $providerWithLatestData[$keyMap['post_title']]) {
-            if($name == $providerWithLatestData[$keyMap['post_title']]) {
-                $match = true;
-                $matchingProviderInWP = $providerInWP;
-                break;
-            }
-        }
+    $ADD_AND_EDIT = env('ALLOW_PROVIDER_ADD_AND_UPDATE', false);
+    $REMOVE = env('ALLOW_PROVIDER_UNPUBLISH', false);
 
-        if(empty($matchingProviderInWP)) {
-            $logString = 'No match found for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Creating new provider (errors will be logged, otherwise assume all good)...';
-            error_log($logString);
-            $logDetails[] = $logString;
+    if($ADD_AND_EDIT) {
+        $missingInWPCount = 0;
+        foreach($latestProvidersData as $providerWithLatestData) {
+            // Find the corresponding provider in the current providers
+            // by comparing the 'wg_number' field AND the name/post title.
+            // If both are the same, then we have a match
+            $nameOfProviderWithLatestData = strtolower(trim($providerWithLatestData[$keyMap['post_title']]));
+            $wgNumberOfProviderWithLatestData = strtolower(trim($providerWithLatestData[$keyMap['wg_number']]));
             
-            // Create a new provider, set its PLL language to English, then create a Welsh translation
-            $newProviderID = wp_insert_post([
-                'post_type' => 'estyn_eduprovider',
-                'post_title' => $providerWithLatestData[$keyMap['post_title']],
-                'post_status' => 'publish',
-            ]);
+            $matchingProviderInWP = null;
+            foreach($currentProviders as $providerInWP) {
+                $wgNumber = get_field('wg_number', $providerInWP->ID);
+                if($wgNumber === false) {
+                    $logString = 'MAJOR FAIL. Terminating. No wg_number field found for provider ' . $providerInWP->post_title;
+                    error_log($logString);
+                    $logDetails[] = $logString;
+                    $logStatus = 'fail';
 
-            if($newProviderID === 0) {
-                $logString = 'Failed to create new provider ' . $providerWithLatestData[$keyMap['post_title']];
+                    // Major fail.
+                    return false;
+                }
+
+                $wgNumber = strtolower(trim($wgNumber));
+                $name = strtolower(trim($providerInWP->post_title));
+
+                if($wgNumber == $wgNumberOfProviderWithLatestData && $name == $nameOfProviderWithLatestData) {
+                //if($name == $providerWithLatestData[$keyMap['post_title']]) {
+                    $match = true;
+                    $matchingProviderInWP = $providerInWP;
+                    break;
+                }
+            }
+
+            if(empty($matchingProviderInWP)) {
+                $logString = 'No match found for provider ' . $providerWithLatestData[$keyMap['post_title']] . ' - ' . $providerWithLatestData[$keyMap['wg_number']] . '. Creating new provider (errors will be logged, otherwise assume all good)...';
                 error_log($logString);
                 $logDetails[] = $logString;
-                $logStatus = 'success with warnings';
-                continue;
-            }
 
-            $newProviderLanguage = pll_get_post_language($newProviderID);
+                $missingInWPCount++;
+                
+                // Create a new provider, set its PLL language to English, then create a Welsh translation
+                $newProviderID = wp_insert_post([
+                    'post_type' => 'estyn_eduprovider',
+                    'post_title' => trim($providerWithLatestData[$keyMap['post_title']]),
+                    'post_status' => 'publish',
+                ]);
 
-            if(empty($newProviderLanguage)) {
-                // Set the language to English
-                $setLanguageResult = pll_set_post_language($newProviderID, 'en');
-                if(!$setLanguageResult) {
-                    $logString = 'Failed to set language to English for new provider ' . $providerWithLatestData[$keyMap['post_title']];
+                if($newProviderID === 0) {
+                    $logString = 'Failed to create new provider ' . $providerWithLatestData[$keyMap['post_title']];
+                    error_log($logString);
+                    $logDetails[] = $logString;
+                    $logStatus = 'success with warnings';
+                    continue;
+                }
+
+                $newProviderLanguage = pll_get_post_language($newProviderID);
+
+                if(empty($newProviderLanguage)) {
+                    // Set the language to English
+                    $setLanguageResult = pll_set_post_language($newProviderID, 'en');
+/*                     if(!$setLanguageResult) {
+                        $logString = 'Failed to set language to English for new provider ' . $providerWithLatestData[$keyMap['post_title']];
+                        error_log($logString);
+                        $logDetails[] = $logString;
+                        // This is a major failure
+                        $logStatus = 'fail';
+
+                        // Update the log
+                        $wpdb->insert($log_table_name, array(
+                            'details' => implode("\n", $logDetails),
+                            'status' => $logStatus,
+                        ));
+
+                        return false;
+                    } */
+                }
+
+                // Now to create the Welsh translation
+                $newProviderWelshID = wp_insert_post([
+                    'post_type' => 'estyn_eduprovider',
+                    'post_title' => trim($providerWithLatestData[$keyMap['post_title']]),
+                    'post_status' => 'publish',
+                ]);
+
+                if($newProviderWelshID === 0) {
+                    $logString = 'Failed to create Welsh translation for new provider ' . $providerWithLatestData[$keyMap['post_title']];
                     error_log($logString);
                     $logDetails[] = $logString;
                     // This is a major failure
@@ -2965,284 +3150,760 @@ function updateProviderData() {
 
                     return false;
                 }
-            }
 
-            // Now to create the Welsh translation
-            $newProviderWelshID = wp_insert_post([
-                'post_type' => 'estyn_eduprovider',
-                'post_title' => $providerWithLatestData[$keyMap['post_title']],
-                'post_status' => 'publish',
-            ]);
+                // Set the language to Welsh
+                $setLanguageResult = pll_set_post_language($newProviderWelshID, 'cy');
+/*                 if(!$setLanguageResult) {
+                    $logString = 'Failed to set language to Welsh for new provider ' . $providerWithLatestData[$keyMap['post_title']];
+                    error_log($logString);
+                    $logDetails[] = $logString;
+                    // This is a major failure
+                    $logStatus = 'fail';
 
-            if($newProviderWelshID === 0) {
-                $logString = 'Failed to create Welsh translation for new provider ' . $providerWithLatestData[$keyMap['post_title']];
-                error_log($logString);
-                $logDetails[] = $logString;
-                // This is a major failure
-                $logStatus = 'fail';
+                    // Update the log
+                    $wpdb->insert($log_table_name, array(
+                        'details' => implode("\n", $logDetails),
+                        'status' => $logStatus,
+                    ));
 
-                // Update the log
-                $wpdb->insert($log_table_name, array(
-                    'details' => implode("\n", $logDetails),
-                    'status' => $logStatus,
-                ));
-
-                return false;
-            }
-
-            // Set the language to Welsh
-            $setLanguageResult = pll_set_post_language($newProviderWelshID, 'cy');
-            if(!$setLanguageResult) {
-                $logString = 'Failed to set language to Welsh for new provider ' . $providerWithLatestData[$keyMap['post_title']];
-                error_log($logString);
-                $logDetails[] = $logString;
-                // This is a major failure
-                $logStatus = 'fail';
-
-                // Update the log
-                $wpdb->insert($log_table_name, array(
-                    'details' => implode("\n", $logDetails),
-                    'status' => $logStatus,
-                ));
-
-                return false;
-            }
-
-            // Set the Welsh translation for the English version
-            $setTranslationResult = pll_save_post_translations([
-                'en' => $newProviderID,
-                'cy' => $newProviderWelshID,
-            ]);
-
-            if(!$setTranslationResult) {
-                $logString = 'Failed to set Welsh translation for new provider ' . $providerWithLatestData[$keyMap['post_title']];
-                error_log($logString);
-                $logDetails[] = $logString;
-                // This is a major failure
-                $logStatus = 'fail';
-
-                // Update the log
-                $wpdb->insert($log_table_name, array(
-                    'details' => implode("\n", $logDetails),
-                    'status' => $logStatus,
-                ));
-
-                return false;
-            }
-
-            $matchingProviderInWP = get_post($newProviderID);
-        } else {
-            $logString = 'Matching provider found: ' . $providerWithLatestData[$keyMap['post_title']];
-            error_log($logString);
-            $logDetails[] = $logString;
-        }
-
-        $differences = [];
-        foreach($keyMap as $acfKey => $tableColumn) {
-            $logString = 'Checking ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']];
-            error_log($logString);
-            $logDetails[] = $logString;
-            
-            $latestValue = null;
-
-            try {
-                $latestValue = $providerWithLatestData[$tableColumn];
-            } catch(\Exception $e) {
-                error_log('Error getting latest value for ' . $tableColumn . ': ' . $e->getMessage());
-                $logDetails[] = 'Error getting latest value for ' . $tableColumn . ': ' . $e->getMessage();
-                $logStatus = 'success with warnings';
-                continue;
-            }
-
-            $isTaxonomy = false;
-            if(array_key_exists($acfKey, $taxonomiesMap)) {
-                $isTaxonomy = true;
-            }
-            
-            $acfValue = null;
-            $acfFieldType = 'text';
-
-            if($acfKey == 'post_title') {
-                $acfValue = $matchingProviderInWP->post_title;
-            } else {
-                
-                // This didn't work. ACF was returning false even though the field exists, but was just empty.
-/*                 $acfFieldExists = get_field_object($acfKey, $matchingProviderInWP->ID);
-
-                if($acfFieldExists === false) {
-                    error_log('ACF field ' . $acfKey . ' not found for this provider. Has the field been removed?');
-                    $logDetails[] = 'ACF field ' . $acfKey . ' not found for this provider. Has the field been removed?';
-                    $logStatus = 'success with warnings';
-                    continue;
+                    return false;
                 } */
 
-                if(!$isTaxonomy) {
-                    $acfValue = get_field($acfKey, $matchingProviderInWP->ID);
-                    
+                // Set the Welsh translation for the English version
+                $setTranslationResult = pll_save_post_translations([
+                    'en' => $newProviderID,
+                    'cy' => $newProviderWelshID,
+                ]);
 
-                    // So get_field apparently returns false if the field is not found. Returns an empty string if the value is empty and the type is text.
-                    if($acfValue === false) {
-                        error_log('ACF field ' . $acfKey . ' not found for this provider. Has the field been removed?');
-                        $logDetails[] = 'ACF field ' . $acfKey . ' not found for this provider. Has the field been removed?';
-                        $logStatus = 'success with warnings';
-                        continue;
-                    }
+                if(!$setTranslationResult) {
+                    $logString = 'Failed to set Welsh translation for new provider ' . $providerWithLatestData[$keyMap['post_title']];
+                    error_log($logString);
+                    $logDetails[] = $logString;
+                    // This is a major failure
+                    $logStatus = 'fail';
 
-                    $acfFieldObject = get_field_object($acfKey, $matchingProviderInWP->ID);
+                    // Update the log
+                    $wpdb->insert($log_table_name, array(
+                        'details' => implode("\n", $logDetails),
+                        'status' => $logStatus,
+                    ));
 
-                    if($acfFieldObject !== false) { // Note: Don't worry if it is false, because it just means the field is a custom meta field so will return text
-                        $acfFieldType = $acfFieldObject['type'];
-    
-                        $acfFieldReturnFormat = isset($acfFieldObject['return_format']) ? $acfFieldObject['return_format'] : null;
-    
-                        if($acfFieldType == 'select' && $acfFieldReturnFormat == 'array') {
-                            $acfValue = $acfValue['value'];
-                        }
-                    }
-                } else {
-                    $acfValue = wp_get_post_terms($matchingProviderInWP->ID, $acfKey, ['fields' => 'names']);
-                    if(is_wp_error($acfValue)) {
-                        $logString = 'Error getting terms for taxonomy ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Error = ' . $acfValue->get_error_message();
-                        error_log($logString);
-                        $logDetails[] = $logString;
-                        $logStatus = 'success with warnings';
-                        continue;
-                    }
-
-                    if(empty($acfValue)) {
-                        $acfValue = '';
-                    } else {
-                        $acfValue = $acfValue[0];
-                    }
+                    return false;
                 }
+
+                $matchingProviderInWP = get_post($newProviderID);
+
+                // Set the 'created_by_api' field to true
+                $logString = 'Setting created_by_api to true for the new provider ' . $providerWithLatestData[$keyMap['post_title']];
+                error_log($logString);
+                $logDetails[] = $logString;
+                $result = update_field('created_by_api', true, $matchingProviderInWP->ID);
+
+                if(!$result) {
+                    $logString = 'Failed to set created_by_api to true for the new provider ' . $providerWithLatestData[$keyMap['post_title']];
+                    error_log($logString);
+                    $logDetails[] = $logString;
+                    $logStatus = 'success with warnings';
+                }
+                
+                // and for the Welsh version
+                $logString = 'Setting created_by_api to true for WELSH version of the new provider ' . $providerWithLatestData[$keyMap['post_title']];
+                $result = update_field('created_by_api', true, $newProviderWelshID);
+
+                if(!$result) {
+                    $logString = 'Failed to set created_by_api to true for the WELSH version of the new provider ' . $providerWithLatestData[$keyMap['post_title']];
+                    error_log($logString);
+                    $logDetails[] = $logString;
+                    $logStatus = 'success with warnings';
+                }
+            } else {
+                $logString = 'Matching provider found: ' . $providerWithLatestData[$keyMap['post_title']];
+                //error_log($logString);
+                //$logDetails[] = $logString;
             }
 
-            $logString = 'Old value for ' . $acfKey . ' = ' . print_r($acfValue, true);
-            error_log($logString);
-
-            if($acfValue != $latestValue) {
-                $differences[] = $acfKey . ': ' . ($acfValue === '' ? '(empty)' : $acfValue) . ' -> ' . $latestValue;
-                $logString = 'Difference found for ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . ': ' . ($acfValue === '' ? '(empty)' : $acfValue) . ' -> ' . $latestValue;
-                $logDetails[] = $logString;
-                error_log($logString);
-
-                $logString = 'Updating ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . ' to ' . $latestValue;
-                error_log($logString);
-                $logDetails[] = $logString;
-
+            $differences = [];
+            foreach($keyMap as $acfKey => $tableColumn) {
                 if($acfKey == 'post_title') {
-                    $updateResult = wp_update_post([
-                        'ID' => $matchingProviderInWP->ID,
-                        'post_title' => $latestValue,
-                    ]);
+                    continue;
+                }
+                
+                if(in_array($acfKey, $ignore)) {
+                    $logString = 'Ignoring ' . $acfKey . ' because it is in the ignore list';
+                    //error_log($logString);
+                    //$logDetails[] = $logString;
 
-                    if($updateResult === 0) {
-                        $logString = 'Failed to update post title for provider ' . $providerWithLatestData[$keyMap['post_title']];
-                        error_log($logString);
-                        $logDetails[] = $logString;
+                    continue;
+                }
+                
+                $logString = 'Checking ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']];
+                //error_log($logString);
+                //$logDetails[] = $logString;
+                
+                $latestValue = null;
 
+                try {
+                    $latestValue = trim($providerWithLatestData[$tableColumn]);
+                } catch(\Exception $e) {
+                    error_log('Error getting latest value for ' . $tableColumn . ': ' . $e->getMessage());
+                    $logDetails[] = 'Error getting latest value for ' . $tableColumn . ': ' . $e->getMessage();
+                    $logStatus = 'success with warnings';
+                    continue;
+                }
+
+                $isTaxonomy = false;
+                if(array_key_exists($acfKey, $taxonomiesMap)) {
+                    $isTaxonomy = true;
+                }
+                
+                $acfValue = null;
+                $acfFieldType = 'text';
+
+                /* if($acfKey == 'post_title') {
+                    $acfValue = $matchingProviderInWP->post_title;
+                } else { */
+                    if(!$isTaxonomy) {
+                        $acfValue = get_field($acfKey, $matchingProviderInWP->ID);
+                        
+
+                        // So get_field apparently returns false if the field is not found. Returns an empty string if the value is empty and the type is text.
+                        if($acfValue === false) {
+                            error_log('ACF field ' . $acfKey . ' not found for this provider. Has the field been removed?');
+                            $logDetails[] = 'ACF field ' . $acfKey . ' not found for this provider. Has the field been removed?';
+                            $logStatus = 'success with warnings';
+                            continue;
+                        }
+
+                        $acfFieldObject = get_field_object($acfKey, $matchingProviderInWP->ID);
+
+                        if($acfFieldObject !== false) { // Note: Don't worry if it is false, because it just means the field is a custom meta field so will return text
+                            $acfFieldType = $acfFieldObject['type'];
+        
+                            $acfFieldReturnFormat = isset($acfFieldObject['return_format']) ? $acfFieldObject['return_format'] : null;
+        
+                            if($acfFieldType == 'select' && $acfFieldReturnFormat == 'array') {
+                                $acfValue = $acfValue['value'];
+                            }
+                        }
+                    } else {
+                        if($acfKey == 'provider_status') {
+                            $acfValue = wp_get_post_terms($matchingProviderInWP->ID, 'provider_status');
+
+                            if(is_wp_error($acfValue) || empty($acfValue)) {
+                                $acfValue = '';
+                            } else {
+                                $acfValue = $acfValue[0];
+
+                                $apiCode = get_field('api_code', 'provider_status_' . $acfValue->term_id);
+                                if($apiCode === false) {
+                                    $logString = 'No api_code field found for provider status term ' . $acfValue->name;
+                                    error_log($logString);
+                                    $logDetails[] = $logString;
+                                    $logStatus = 'success with errors';
+    
+                                    continue;
+                                }
+    
+                                $acfValue = $apiCode;
+                            }
+                        } else {
+                            $acfValue = wp_get_post_terms($matchingProviderInWP->ID, $acfKey, ['fields' => 'names']);
+                            if(is_wp_error($acfValue)) {
+                                $logString = 'Error getting terms for taxonomy ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Error = ' . $acfValue->get_error_message();
+                                error_log($logString);
+                                $logDetails[] = $logString;
+                                $logStatus = 'success with warnings';
+                                continue;
+                            }
+
+                            if(empty($acfValue)) {
+                                $acfValue = '';
+                            } else {
+                                $acfValue = $acfValue[0];
+                            }
+                        }
+                    }
+                /* } */
+
+                $logString = 'Old value for ' . $acfKey . ' = ' . print_r($acfValue, true);
+                //error_log($logString);
+
+                $valuesAreDates = false;
+                $latestValueAsDateTime = null;
+                $currentValueAsDateTime = null;
+
+                // If we're dealing with dates...
+                if(in_array($acfKey, $dateFields)) {
+                    // Try to parse $latestValue as a date
+                    try {
+                        $latestValueAsDateTime = new \DateTime($latestValue);
+                    } catch(\Exception $e) {
+                        error_log('Error parsing latest value as a date for ' . $acfKey . ': ' . $e->getMessage());
+                        $logDetails[] = 'Error parsing latest value as a date for ' . $acfKey . ': ' . $e->getMessage();
                         $logStatus = 'success with warnings';
-
                         continue;
                     }
 
-                    // Now to update the Welsh version
-                    $welshPostID = pll_get_post($matchingProviderInWP->ID, 'cy');
-                    if($welshPostID !== false) {
+                    // Try to parse our provider's date value as a date
+                    try {
+                        $currentValueAsDateTime = new \DateTime($acfValue);
+                    } catch(\Exception $e) {
+                        error_log('Error parsing ACF value as a date for ' . $acfKey . ': ' . $e->getMessage());
+                        $logDetails[] = 'Error parsing ACF value as a date for ' . $acfKey . ': ' . $e->getMessage();
+                        $logStatus = 'success with warnings';
+                        continue;
+                    }
+
+                    $valuesAreDates = true;
+                }
+
+                if(!$valuesAreDates) {
+                    $currentValue = $acfValue;
+                    $newValue = $latestValue;
+                } else {
+                    // Reset the times because we only care about the dates
+                    $currentValueAsDateTime->setTime(0, 0, 0);
+                    $latestValueAsDateTime->setTime(0, 0, 0);
+
+                    $currentValue = $currentValueAsDateTime->format('Y-m-d');
+                    $newValue = $latestValueAsDateTime->format('Y-m-d');
+                }
+                
+                $currentValue = trim($currentValue);
+
+                //if($acfValue != $latestValue) {
+                if($currentValue != $newValue) {
+                    $differences[] = $acfKey . ': ' . ($acfValue === '' ? '(empty)' : $acfValue) . ' -> ' . $latestValue;
+                    
+                    if(!($acfKey == 'provider_status' && empty($latestValue))) {
+                        $logString = 'Difference found for ' . $acfKey . ' for provider ' . $matchingProviderInWP->post_title . ': ' . ($acfValue === '' ? '(empty)' : $acfValue) . ' -> ' . $latestValue;
+                        $logDetails[] = $logString;
+                        error_log($logString);
+
+                        $logString = 'Updating ' . $acfKey . ' for provider ' . $matchingProviderInWP->post_title . ' to ' . (empty($latestValue) ? '(empty) (if it is appropriate to set it to empty)' : $latestValue);
+                        error_log($logString);
+                    }
+
+
+                    //$logDetails[] = $logString;
+
+/*                     if($acfKey == 'post_title') {
                         $updateResult = wp_update_post([
-                            'ID' => $welshPostID,
+                            'ID' => $matchingProviderInWP->ID,
                             'post_title' => $latestValue,
                         ]);
 
                         if($updateResult === 0) {
-                            $logString = 'Failed to update post title for WELSH version of provider ' . $providerWithLatestData[$keyMap['post_title']];
+                            $logString = 'Failed to update post title for provider ' . $providerWithLatestData[$keyMap['post_title']];
                             error_log($logString);
                             $logDetails[] = $logString;
 
                             $logStatus = 'success with warnings';
+
+                            continue;
                         }
-                    } else {
-                        $logString = 'No Welsh translation found for provider ' . $providerWithLatestData[$keyMap['post_title']];
-                        error_log($logString);
-                        $logDetails[] = $logString;
 
-                        $logStatus = 'success with warnings';
-                    }
-                } else {
-                    $updateResult = false;
+                        // Now to update the Welsh version
+                        $welshPostID = pll_get_post($matchingProviderInWP->ID, 'cy');
+                        if($welshPostID !== false) {
+                            $updateResult = wp_update_post([
+                                'ID' => $welshPostID,
+                                'post_title' => $latestValue,
+                            ]);
 
-                    if(!$isTaxonomy) {
-                        $updateResult = update_field($acfKey, $latestValue, $matchingProviderInWP->ID);
-                    } else {
-                        $updateResult = wp_set_object_terms($matchingProviderInWP->ID, $latestValue, $acfKey);
-                    }
+                            if($updateResult === 0) {
+                                $logString = 'Failed to update post title for WELSH version of provider ' . $providerWithLatestData[$keyMap['post_title']];
+                                error_log($logString);
+                                $logDetails[] = $logString;
 
-                    if($updateResult === false || is_wp_error($updateResult)) {
-                        $logString = 'Failed to update ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. ' . (is_wp_error($updateResult) ? 'Error: ' . $updateResult->get_error_message() : 'Unknown error');
-                        error_log($logString);
-                        $logDetails[] = $logString;
+                                $logStatus = 'success with warnings';
+                            }
+                        } else {
+                            $logString = 'No Welsh translation found for provider ' . $providerWithLatestData[$keyMap['post_title']];
+                            error_log($logString);
+                            $logDetails[] = $logString;
 
-                        $logStatus = 'success with warnings';
-
-                        continue;
-                    }
-
-                    // Now to update the Welsh version
-                    $welshPostID = pll_get_post($matchingProviderInWP->ID, 'cy');
-                    if($welshPostID !== false) {
+                            $logStatus = 'success with warnings';
+                        } 
+                    } else {*/
+                    if($acfKey != 'post_title') {
                         $updateResult = false;
 
+                        $term = null; // For if taxonomy
+                        $welshTerm = null; // For if taxonomy
+
                         if(!$isTaxonomy) {
-                            $updateResult = update_field($acfKey, $latestValue, $welshPostID);
+                            $updateResult = false;
+
+                            if(!$valuesAreDates) {
+                                $updateResult = update_field($acfKey, $latestValue, $matchingProviderInWP->ID);
+                            } else {
+                                $updateResult = update_field($acfKey, $latestValueAsDateTime->format('Ymd'), $matchingProviderInWP->ID);
+                            }
+
+                            //error_log('Update result = ' . $updateResult);
+
+                            if($updateResult === false) {
+                                $logString = 'Failed to update ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']];
+                                error_log($logString);
+                                $logDetails[] = $logString;
+
+                                $logStatus = 'success with warnings';
+
+                                continue;
+                            }
                         } else {
-                            // We need to get the Welsh version of the term
-                            $englishTerm = get_term_by('name', $latestValue, $acfKey);
+                            if($acfKey == 'provider_status') {
+                                if(trim($latestValue) == '') {
+                                    $logString = 'Latest provider status is empty for provider ' . $providerWithLatestData[$keyMap['post_title']];
+                                    //error_log($logString);
+                                    //$logDetails[] = $logString;
+                                    $logStatus = 'success with warnings';
 
-                            if($englishTerm === false) {
-                                $logString = 'Failed to get English term ("' . $latestValue . '") for taxonomy ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Could it be a new term?';
+                                    continue;
+                                }
+                                
+                                // Special cases
+/*                                 if(trim($latestValue) == 'APS') {
+                                    $latestValue = 'PR';
+                                }
+                                if(trim($latestValue) == 'ER2017DB') {
+                                    $latestValue = 'ER2017';
+                                }
+                                if(trim($latestValue) == 'INDER') {
+                                    $latestValue = 'AMV';
+                                } */
+
+                                // We need to get the term ID for term that has ACF field 'api_code' set to $latestValue.
+                                // If we don't find it, then we need to add the new term
+                                $allTerms = get_terms([
+                                    'taxonomy' => 'provider_status',
+                                    'hide_empty' => false,
+                                ]);
+
+                                // Filter terms by language using Polylang
+                                $allTerms = array_filter($allTerms, function($term) {
+                                    return pll_get_term_language($term->term_id) === 'en';
+                                });
+
+                                $matchingTerm = null;
+                                foreach($allTerms as $term) {
+                                    $apiCode = get_field('api_code', 'provider_status_' . $term->term_id);
+                                    
+                                    if($apiCode === $latestValue) {
+                                        $matchingTerm = $term;
+                                        break;
+                                    }
+                                }
+
+                                if($matchingTerm === null) {
+                                    $logString = 'No matching term found for provider status ' . $latestValue . '. Creating new term';
+                                    error_log($logString);
+                                    $logDetails[] = $logString;
+
+                                    $newTerm = wp_insert_term($providerStatusMap[trim($latestValue)], 'provider_status');
+                                    if(is_wp_error($newTerm)) {
+                                        $logString = 'Failed to create new term for provider status ' . $latestValue . '. Error: ' . $newTerm->get_error_message();
+                                        error_log($logString);
+                                        $logDetails[] = $logString;
+                                        $logStatus = 'success with warnings';
+
+                                        continue;
+                                    }
+
+                                    $matchingTerm = get_term($newTerm['term_id'], 'provider_status');
+
+                                    // Set the language to English
+                                    $setLanguageResult = pll_set_term_language($matchingTerm->term_id, 'en');
+                                    
+                                    // We have to assume success because the stupid function returns false if
+                                    // it fails OR the term already has the language set to English!
+
+/*                                     if(!$setLanguageResult) {
+                                        $logString = 'Failed to set language to English for new term for provider status ' . $latestValue;
+                                        error_log($logString);
+                                        $logDetails[] = $logString;
+                                        $logStatus = 'success with warnings';
+
+                                        continue;
+                                    } */
+
+                                    $matchingTerm = get_term($newTerm['term_id']); // Yes, do this again in case PLL has done something to the term
+
+                                    if($matchingTerm === null || is_wp_error($matchingTerm)) {
+                                        $logString = 'Failed to get new term for provider status ' . $latestValue . ' that we created';
+                                        error_log($logString);
+                                        $logDetails[] = $logString;
+                                        $logStatus = 'success with warnings';
+
+                                        continue;
+                                    }
+
+                                    // Now to create the Welsh version
+                                    $welshTerm = wp_insert_term($providerStatusMap[trim($latestValue)] . ' (Cymraeg)', 'provider_status');
+
+                                    if(is_wp_error($welshTerm)) {
+                                        $logString = 'Failed to create Welsh version of term for provider status ' . $latestValue . '. Error: ' . $welshTerm->get_error_message();
+                                        error_log($logString);
+                                        $logDetails[] = $logString;
+                                        $logStatus = 'success with warnings';
+
+                                        continue;
+                                    }
+
+                                    $setLanguageResult = pll_set_term_language($welshTerm['term_id'], 'cy');
+
+/*                                     if(!$setLanguageResult) {
+                                        $logString = 'Failed to set language to Welsh for new term for provider status ' . $latestValue;
+                                        error_log($logString);
+                                        $logDetails[] = $logString;
+                                        $logStatus = 'success with warnings';
+
+                                        continue;
+                                    } */
+
+                                    // Set term translation
+                                    $setTranslationResult = pll_save_term_translations([
+                                        'en' => $matchingTerm->term_id,
+                                        'cy' => $welshTerm['term_id'],
+                                    ]);
+
+                                    if(!$setTranslationResult) {
+                                        $logString = 'Failed to set term translation for term for provider status ' . $latestValue;
+                                        error_log($logString);
+                                        $logDetails[] = $logString;
+                                        $logStatus = 'success with warnings';
+
+                                        continue;
+                                    }
+
+                                    // Set the 'api_code' field
+                                    $updateResult = update_field('api_code', $latestValue, 'provider_status_' . $matchingTerm->term_id);
+                                    if($updateResult === false) {
+                                        $logString = 'Failed to set api_code field for new term for provider status ' . $latestValue;
+                                        error_log($logString);
+                                        $logDetails[] = $logString;
+                                        $logStatus = 'success with warnings';
+
+                                        continue;
+                                    }
+
+                                    // Set the 'api_code' for the Welsh version
+                                    $matchingWelshTermID = pll_get_term($matchingTerm->term_id, 'cy');
+                                    if($matchingWelshTermID === false) {
+                                        $logString = 'Failed to get Welsh version of term even though we just created it for provider status ' . $latestValue;
+                                        error_log($logString);
+                                        $logDetails[] = $logString;
+                                        $logStatus = 'success with warnings';
+
+                                        continue;
+                                    }
+
+                                    $updateResult = update_field('api_code', $latestValue, 'provider_status_' . $matchingWelshTermID);
+                                    if($updateResult === false) {
+                                        $logString = 'Failed to set api_code field for new Welsh term for provider status ' . $latestValue;
+                                        error_log($logString);
+                                        $logDetails[] = $logString;
+                                        $logStatus = 'success with warnings';
+
+                                        continue;
+                                    }
+                                }
+
+                                // Update the provider with the new term
+                                // Remove the old term first
+                                $oldTerms = wp_get_post_terms($matchingProviderInWP->ID, 'provider_status');
+                                if(is_wp_error($oldTerms)) {
+                                    $logString = 'Failed to get old provider status term for provider ' . $providerWithLatestData[$keyMap['post_title']];
+                                    error_log($logString);
+                                    $logDetails[] = $logString;
+                                    $logStatus = 'success with warnings';
+
+                                    continue;
+                                }
+
+                                if(!empty($oldTerms)) {
+                                    $removeResult = wp_remove_object_terms($matchingProviderInWP->ID, $oldTerms[0]->term_id, 'provider_status');
+                                    if($removeResult === false || is_wp_error($removeResult)) {
+                                        $logString = 'Failed to remove old provider status term for provider ' . $providerWithLatestData[$keyMap['post_title']];
+                                        
+                                        if(is_wp_error($removeResult)) {
+                                            $logString .= '. Error: ' . $removeResult->get_error_message();
+                                        }
+                                        
+                                        error_log($logString);
+                                        $logDetails[] = $logString;
+                                        $logStatus = 'success with warnings';
+
+                                        continue;
+                                    }
+                                }
+
+                                $updateResult = wp_set_object_terms($matchingProviderInWP->ID, $matchingTerm->term_id, 'provider_status');
+                                if($updateResult === false || is_wp_error($updateResult)) {
+                                    $logString = 'Failed to update provider status for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. ' . (is_wp_error($updateResult) ? 'Error: ' . $updateResult->get_error_message() : 'Unknown error');
+                                    error_log($logString);
+                                    $logDetails[] = $logString;
+                                    $logStatus = 'success with warnings';
+
+                                    continue;
+                                }
+
+                                // Now we need to update the Welsh version
+                                $welshPostID = pll_get_post($matchingProviderInWP->ID, 'cy');
+                                if($welshPostID !== false) {
+                                    // Remove the old term first
+                                    $welshOldterms = wp_get_post_terms($welshPostID, 'provider_status');
+                                    if(is_wp_error($welshOldterms)) {
+                                        $logString = 'Failed to get old Welsh provider status term for provider ' . $providerWithLatestData[$keyMap['post_title']];
+                                        error_log($logString);
+                                        $logDetails[] = $logString;
+                                        $logStatus = 'success with warnings';
+
+                                        continue;
+                                    }
+                                    
+                                    if(!empty($welshOldterms)) {
+                                        $removeResult = wp_remove_object_terms($welshPostID, $welshOldterms[0]->term_id, 'provider_status');
+                                        if($removeResult === false) {
+                                            $logString = 'Failed to remove old Welsh provider status term for provider ' . $providerWithLatestData[$keyMap['post_title']];
+                                            error_log($logString);
+                                            $logDetails[] = $logString;
+                                            $logStatus = 'success with warnings';
+
+                                            continue;
+                                        }
+                                    }
+
+                                    // Get the Welsh version of the term
+                                    $welshTermID = pll_get_term($matchingTerm->term_id, 'cy');
+
+                                    $updateResult = wp_set_object_terms($welshPostID, $welshTermID, 'provider_status');
+                                    if($updateResult === false || is_wp_error($updateResult)) {
+                                        $logString = 'Failed to update Welsh provider status for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. ' . (is_wp_error($updateResult) ? 'Error: ' . $updateResult->get_error_message() : 'Unknown error');
+                                        error_log($logString);
+                                        $logDetails[] = $logString;
+                                        $logStatus = 'success with warnings';
+                                    }
+                                } else {
+                                    $logString = 'No Welsh translation found for provider ' . $providerWithLatestData[$keyMap['post_title']];
+                                    error_log($logString);
+                                    $logDetails[] = $logString;
+                                    $logStatus = 'success with warnings';
+
+                                    
+                                }
+
+                                continue;
+                            }
+
+                            // For all other taxonomies
+                            $term = get_term_by('name', $latestValue, $acfKey);
+                            if($term === false) {
+                                $logString = 'Failed to get term (' . $latestValue . ') by name for taxonomy ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Creating a new one...';
                                 error_log($logString);
                                 $logDetails[] = $logString;
 
                                 $logStatus = 'success with warnings';
-                                continue;
+
+                                $termID = wp_insert_term($latestValue, $acfKey);
+                                if(is_wp_error($termID)) {
+                                    $logString = 'Failed to create new term (' . $latestValue . ') for taxonomy ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Error: ' . $termID->get_error_message();
+                                    error_log($logString);
+                                    $logDetails[] = $logString;
+
+                                    continue;
+                                }
+
+                                $term = get_term($termID['term_id'], $acfKey);
                             }
-
-                            $welshTerm = pll_get_term($englishTerm->term_id, 'cy');
-                            if($welshTerm === false) {
-                                $logString = 'Failed to get Welsh term ("' . $latestValue . '") for taxonomy ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Is the term missing its translation?';
-                                error_log($logString);
-                                $logDetails[] = $logString;
-
-                                $logStatus = 'success with warnings';
-                                continue;
-                            }
-
-                            $updateResult = wp_set_object_terms($welshPostID, $welshTerm, $acfKey);            
                         }
 
-                        if($updateResult === false || is_wp_error($updateResult)) {
-                            $logString = 'Failed to update ' . $acfKey . ' for WELSH version of provider ' . $providerWithLatestData[$keyMap['post_title']] . '. ' . (is_wp_error($updateResult) ? 'Error: ' . $updateResult->get_error_message() : 'Unknown error. Maybe invalid value for a select field?');
+                        if($isTaxonomy) {
+                            $getLanguageResult = pll_get_term_language($term->term_id);
+
+                            if($getLanguageResult === false) {
+                                $logString = 'Setting term language to English for term ' . $latestValue . ' in taxonomy ' . $acfKey;
+                                error_log($logString);
+                                $logDetails[] = $logString;
+
+                                $setLanguageResult = pll_set_term_language($term->term_id, 'en');
+/*                                 if(!$setLanguageResult) {
+                                    $logString = 'Failed to set term language to English for term ' . $latestValue . ' in taxonomy ' . $acfKey;
+                                    error_log($logString);
+                                    $logDetails[] = $logString;
+                                    $logStatus = 'success with warnings';
+
+                                    continue;
+                                } */
+                            }
+
+                            // Now to get/set the Welsh translation
+                            $welshTerm = pll_get_term($term->term_id, 'cy');
+                            if($welshTerm === false) {
+                                $logString = 'Creating a Welsh version of term ' . $latestValue . ' in taxonomy ' . $acfKey;
+                                error_log($logString);
+                                $logDetails[] = $logString;
+
+                                $welshTerm = wp_insert_term($latestValue, $acfKey);
+                                if(is_wp_error($welshTerm)) {
+                                    $logString = 'Failed to create Welsh version of term ' . $latestValue . ' in taxonomy ' . $acfKey . '. Error: ' . $welshTerm->get_error_message();
+                                    error_log($logString);
+                                    $logDetails[] = $logString;
+                                    $logStatus = 'success with warnings';
+
+                                    continue;
+                                }
+
+                                $setLanguageResult = pll_set_term_language($welshTerm['term_id'], 'cy');
+/*                                 if(!$setLanguageResult) {
+                                    $logString = 'Failed to set term language to Welsh for term ' . $latestValue . ' in taxonomy ' . $acfKey;
+                                    error_log($logString);
+                                    $logDetails[] = $logString;
+                                    $logStatus = 'success with warnings';
+
+                                    continue;
+                                } */
+
+                                // Set term translation
+                                $setTranslationResult = pll_save_term_translations([
+                                    'en' => $term->term_id,
+                                    'cy' => $welshTerm['term_id'],
+                                ]);
+
+                                if(!$setTranslationResult) {
+                                    $logString = 'Failed to set term translation for term ' . $latestValue . ' in taxonomy ' . $acfKey;
+                                    error_log($logString);
+                                    $logDetails[] = $logString;
+                                    $logStatus = 'success with warnings';
+
+                                    continue;
+                                }
+
+                                $welshTerm = get_term($welshTerm['term_id']);
+                                if($welshTerm === null || is_wp_error($welshTerm)) {
+                                    $logString = 'Failed to get Welsh term ' . $latestValue . ' that we created in taxonomy ' . $acfKey;
+                                    error_log($logString);
+                                    $logDetails[] = $logString;
+                                    $logStatus = 'success with warnings';
+
+                                    continue;
+                                }
+                            } else {
+                                // Get the term object from the ID (from pll_get_term)
+                                $welshTerm = get_term($welshTerm, $acfKey);
+                                if($welshTerm === null || is_wp_error($welshTerm)) {
+                                    $logString = 'Failed to get Welsh term ' . $latestValue . ' from ID that we got from pll_get_term in taxonomy ' . $acfKey;
+                                    error_log($logString);
+                                    $logDetails[] = $logString;
+                                    $logStatus = 'success with warnings';
+
+                                    continue;
+                                }
+                            }
+                        }
+
+                        // Now to update the Welsh version
+                        $welshPostID = pll_get_post($matchingProviderInWP->ID, 'cy');
+                        if($welshPostID !== false) {
+                            $updateResult = false;
+
+                            if(!$isTaxonomy) {
+                                $updateResult = update_field($acfKey, $latestValue, $welshPostID);
+                            } else {
+                                $updateResult = wp_set_object_terms($welshPostID, $welshTerm->name, $acfKey);            
+                            }
+
+                            if($updateResult === false || is_wp_error($updateResult)) {
+                                $logString = 'Failed to update ' . $acfKey . ' for WELSH version of provider ' . $providerWithLatestData[$keyMap['post_title']] . '. ' . (is_wp_error($updateResult) ? 'Error: ' . $updateResult->get_error_message() : 'Unknown error. Maybe invalid value for a select field?');
+                                error_log($logString);
+                                $logDetails[] = $logString;
+
+                                $logStatus = 'success with warnings';
+                            }
+                        } else {
+                            $logString = 'No Welsh translation found for provider ' . $providerWithLatestData[$keyMap['post_title']];
                             error_log($logString);
                             $logDetails[] = $logString;
 
                             $logStatus = 'success with warnings';
                         }
-                    } else {
-                        $logString = 'No Welsh translation found for provider ' . $providerWithLatestData[$keyMap['post_title']];
-                        error_log($logString);
-                        $logDetails[] = $logString;
-
-                        $logStatus = 'success with warnings';
                     }
                 }
             }
+
+            //$logString = 'Differences found for provider ' . $providerWithLatestData[$keyMap['post_title']] . ' (old -> new): ' . implode(', ', $differences);
+            //$logDetails[] = $logString;
+            
+            //error_log($logString);
+
         }
 
-        //$logString = 'Differences found for provider ' . $providerWithLatestData[$keyMap['post_title']] . ' (old -> new): ' . implode(', ', $differences);
-        //$logDetails[] = $logString;
-        
-        //error_log($logString);
+        $logString = $missingInWPCount . ' providers found in the table but not in WP';
+        error_log($logString);
+    }
 
+    // Now to check for any providers in WP that are not in the table
+    $providersWPNotInTable = [];
+
+    foreach($currentProviders as $providerInWP) {
+        $match = false;
+        $name = strtolower(trim($providerInWP->post_title));
+        $wgNumber = strtolower(trim(get_field('wg_number', $providerInWP->ID)));
+        foreach($latestProvidersData as $providerWithLatestData) {
+            $latestProviderName = strtolower(trim($providerWithLatestData[$keyMap['post_title']]));
+            $latestProviderWGNumber = strtolower(trim($providerWithLatestData[$keyMap['wg_number']]));
+
+            if($name == $latestProviderName && $wgNumber == $latestProviderWGNumber) {
+                $match = true;
+                break;
+            }
+        }
+
+        if(!$match) {
+            $providersWPNotInTable[] = $providerInWP;
+        }
+    }
+
+    $logString = count($providersWPNotInTable) . ' providers found in the WP but not the table: ' . print_r(array_map(function($provider) { return $provider->post_title . ' - ' . get_field('wg_number', $provider->ID); }, $providersWPNotInTable), true);
+    error_log($logString);
+    $logDetails[] = $logString;
+    $logStatus = 'success with warnings';
+
+    if($REMOVE) {
+        $logString = 'Setting those providers to unpublished in WP...';
+        error_log($logString);
+        $logDetails[] = $logString;
+    
+        foreach($providersWPNotInTable as $provider) {
+            $result = wp_update_post([
+                'ID' => $provider->ID,
+                'post_status' => 'draft',
+            ]);
+
+            if($result === 0 || is_wp_error($result)) {
+                $logString = 'Failed to set provider ' . $provider->post_title . ' to unpublished';
+                error_log($logString);
+                $logDetails[] = $logString;
+                $logStatus = 'success with warnings';
+            }
+
+            // Also set the Welsh version to unpublished
+            $welshPostID = pll_get_post($provider->ID, 'cy');
+            if($welshPostID !== false) {
+                $result = wp_update_post([
+                    'ID' => $welshPostID,
+                    'post_status' => 'draft',
+                ]);
+
+                if($result === 0) {
+                    $logString = 'Failed to set WELSH version of provider ' . $provider->post_title . ' to unpublished';
+                    error_log($logString);
+                    $logDetails[] = $logString;
+                    $logStatus = 'success with warnings';
+                }
+            }
+        }
     }
 
     // Log the results
@@ -3259,4 +3920,430 @@ function updateProviderData() {
 
     //error_log('Nothing changed!');
     return $logStatus;
+}
+
+function checkForMissingProviders() {
+    /**
+     * We'll get all the current providers and compare them to the providers in the provider_data_latest_test table.
+     * 
+     * We'll return a message listing any providers that are in the table but not in WP, and any that are in WP but not in the table.
+     */
+
+    global $wpdb;
+
+    $log_table_name = $wpdb->prefix . 'estyn_provider_update_log';
+
+    $latestProviderDataTestTable = 'provider_data_latest_test';
+
+    // Get the provider data from the test table
+    $latestProvidersData = $wpdb->get_results("SELECT * FROM $latestProviderDataTestTable", ARRAY_A);
+
+    // If error, log it and return false
+    if($latestProvidersData === false) {
+        error_log('Error getting latest provider data from table ' . $latestProviderDataTestTable);
+        $wpdb->insert($log_table_name, array(
+            'details' => 'Error getting latest provider data from table ' . $latestProviderDataTestTable,
+            'status' => 'fail',
+        ));
+        return false;
+    }
+
+    if(empty($latestProvidersData)) {
+        error_log('No latest provider data found in the table ' . $latestProviderDataTestTable);
+        $wpdb->insert($log_table_name, array(
+            'details' => 'No latest provider data found in the table ' . $latestProviderDataTestTable,
+            'status' => 'fail',
+        ));
+        return false;
+    }
+
+    // Get all the current providers
+    $currentProviders = get_posts([
+        'post_type' => 'estyn_eduprovider',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'lang' => 'en'
+    ]);
+
+    if(empty($currentProviders)) {
+        error_log('No current providers found');
+        $wpdb->insert($log_table_name, array(
+            'details' => 'No current providers found',
+            'status' => 'fail',
+        ));
+        return false;
+    }
+
+    // For all the latestProviderData, trim the values, in case there are any leading or trailing spaces
+/*     foreach($latestProvidersData as $provider) {
+        foreach($provider as $key => $value) {
+            $provider[$key] = trim($value);
+        }
+    } */
+
+    $logDetails = [];
+
+    $providersInTableNotInWP = [];
+    $providersInTableNotInWPLogStrings = [];
+
+    foreach($latestProvidersData as $providerWithLatestData) {
+        $matchingProviderInWP = null;
+
+        $latestProviderName = strtolower(trim($providerWithLatestData['name']));
+        $latestProviderWGNumber = strtolower(trim($providerWithLatestData['wg_number']));
+
+        foreach($currentProviders as $providerInWP) {
+            $name = strtolower(trim($providerInWP->post_title));
+            $wgNumber = strtolower(trim(get_field('wg_number', $providerInWP->ID)));
+            
+            if($name == $latestProviderName && $wgNumber == $latestProviderWGNumber) {
+                $match = true;
+                $matchingProviderInWP = $providerInWP;
+
+                //error_log('Match found for ' . $providerWithLatestData['name'] . ' - ' . $providerInWP->post_title);
+
+                break;
+            }
+        }
+
+        if(empty($matchingProviderInWP)) {
+            $providersInTableNotInWPLogStrings[] = $providerWithLatestData['name'] . ' - ' . $providerWithLatestData['wg_number'];
+            $providersInTableNotInWP[] = $providerWithLatestData;
+        }
+    }
+
+    $providersInWPNotInTable = [];
+    $providersInWPNotInTableLogStrings = [];
+
+    foreach($currentProviders as $providerInWP) {
+        $match = false;
+        $name = strtolower(trim($providerInWP->post_title));
+        $wgNumber = strtolower(trim(get_field('wg_number', $providerInWP->ID)));
+
+        foreach($latestProvidersData as $providerWithLatestData) {
+            $latestProviderName = strtolower(trim($providerWithLatestData['name']));
+            $latestProviderWGNumber = strtolower(trim($providerWithLatestData['wg_number']));
+
+            if($name == $latestProviderName && $wgNumber == $latestProviderWGNumber) {
+                $match = true;
+                //error_log('Match found for ' . $providerInWP->post_title . ' - ' . $providerWithLatestData['name']);
+
+                break;
+            }
+        }
+
+        if(!$match) {
+            $providersInWPNotInTableLogStrings[] = $providerInWP->post_title . ' - ' . get_field('wg_number', $providerInWP->ID);
+            $providersInWPNotInTable[] = $providerInWP;
+        }
+    }
+
+    // Sort the arrays
+    sort($providersInTableNotInWPLogStrings);
+    sort($providersInWPNotInTableLogStrings);
+
+    $logString = 'Providers in the table but not in WP: ' . print_r($providersInTableNotInWPLogStrings, true);
+
+    error_log($logString);
+
+    $logDetails[] = $logString;
+
+    $logString = 'Providers in WP but not in the table: ' . print_r($providersInWPNotInTableLogStrings, true);
+
+    error_log($logString);
+
+    $logDetails[] = $logString;
+
+    $logString = 'Number of providers in the table but not in WP: ' . count($providersInTableNotInWP);
+    $logDetails[] = $logString;
+    error_log($logString);
+
+    $logString = 'Number of providers in WP but not in the table: ' . count($providersInWPNotInTable);
+    $logDetails[] = $logString;
+    error_log($logString);
+
+    // Log the results
+/*     $logInsertResult = $wpdb->insert($log_table_name, array(
+        'details' => implode("\n", $logDetails),
+        'status' => 'success',
+    ));
+
+    if($logInsertResult === false) {
+        error_log('Failed to insert log entry. Error: ' . $wpdb->last_error);
+    } */
+
+    return [
+        'providersInTableNotInWP' => $providersInTableNotInWP,
+        'providersInWPNotInTable' => $providersInWPNotInTable,
+    ];
+}
+
+function tidyUpProviders() {
+    // For all providers, if there are some that have the same name and WG number,
+    // only keep the one with the oldest publication date,
+    // because it's likely that the update system had created new ones for no good reason
+
+    $providers = get_posts([
+        'post_type' => 'estyn_eduprovider',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'lang' => 'en'
+    ]);
+
+    if(empty($providers)) {
+        error_log('No providers found');
+        return 'fail';
+    }
+
+    $providersSharingSameName = [];
+    $providersSoFar = [];
+    $providerNamesSoFar = [];
+
+    foreach($providers as $provider) {
+        $name = strtolower(trim($provider->post_title));
+        $wgNumber = get_field('wg_number', $provider->ID);
+
+        if($wgNumber === false) {
+            error_log('No WG number found for provider ' . $name);
+            continue;
+        }
+
+        $wgNumber = strtolower(trim($wgNumber));
+
+        if(empty($providersSoFar)) {
+            $providersSoFar[] = $provider;
+            $providerNamesSoFar[] = $name;
+            continue;
+        }
+
+        if(in_array($name, $providerNamesSoFar)) {
+            if(empty($providersSharingSameName[$name])) {
+                $providerWithSameName = array_map(function($provider) use ($name, $wgNumber) {
+                    $wgNumberForThisProvider = get_field('wg_number', $provider->ID);
+                    if($wgNumberForThisProvider === false) {
+                        error_log('No WG number found for provider ' . $provider->post_title);
+                        return null;
+                    }
+
+                    $nameOfThisProvider = strtolower(trim($provider->post_title));
+                    $wgNumberForThisProvider = strtolower(trim($wgNumberForThisProvider));
+
+
+                    if($nameOfThisProvider == $name && $wgNumberForThisProvider == $wgNumber) {
+                        return $provider;
+                    }
+
+                    return null;
+                }, $providersSoFar);
+
+                // Get the first non-null value
+                $providerWithSameName = array_filter($providerWithSameName);
+                $providerWithSameName = array_shift($providerWithSameName);
+
+                if(empty($providerWithSameName)) {
+                    //error_log('No provider with the same name and WG number found');
+                    $providersSoFar[] = $provider;
+                    continue;
+                }
+
+                $providersSharingSameName[$name] = [$providerWithSameName, $provider];
+
+                $providersSoFar[] = $provider;
+
+                continue;
+            }
+
+            $providerToCompare = $providersSharingSameName[$name][0];
+            $providerToCompareWgNumber = strtolower(trim(get_field('wg_number', $providerToCompare->ID)));
+            if($providerToCompareWgNumber == $wgNumber) {
+                $providersSharingSameName[$name][] = $provider;
+            }
+
+            $providersSoFar[] = $provider;
+            continue;
+        }
+
+        $providersSoFar[] = $provider;
+        $providerNamesSoFar[] = $name;
+    }
+
+    if(empty($providersSharingSameName)) {
+        error_log('No providers sharing the same name and wg_number found');
+        return 'success';
+    }
+
+    $providersToDelete = [];
+
+    //error_log(print_r($providersSharingSameName, true));
+
+    foreach($providersSharingSameName as $name => $providers) {
+        $providersCopy = $providers;
+        // Sort the providers by publication date
+        usort($providersCopy, function($a, $b) {
+            $dateA = $a->post_date;
+            $dateB = $b->post_date;
+
+            if($dateA == $dateB) {
+                return 0;
+            }
+
+            return $dateA < $dateB ? -1 : 1;
+        });
+
+        // Keep the oldest one
+        $oldestProvider = array_shift($providersCopy);
+
+        // Add the rest to the delete list
+        foreach($providersCopy as $provider) {
+            $providersToDelete[] = $provider;
+        }
+    }
+
+    // Now add their Welsh versions to the delete list
+    foreach($providersToDelete as $provider) {
+        $welshPostID = pll_get_post($provider->ID, 'cy');
+        if($welshPostID !== false) {
+            $welshProvider = get_post($welshPostID);
+            $providersToDelete[] = $welshProvider;
+        }
+    }
+
+    error_log('Providers to delete (includes Welsh versions): ' . print_r(array_map(function($provider) { return $provider->ID . ' - ' . $provider->post_title; }, $providersToDelete), true));
+
+    // Now delete them!
+    foreach($providersToDelete as $provider) {
+        $result = wp_delete_post($provider->ID, true);
+        if($result === false) {
+            error_log('Failed to delete provider ' . $provider->ID  . $provider->post_title);
+
+            continue;
+        }
+
+        error_log('Deleted provider ' . $provider->ID . ' - ' . $provider->post_title);
+    }
+
+    return 'success';
+}
+
+function checkForDuplicateProvidersInAPITable() {
+    global $wpdb;
+
+    $log_table_name = $wpdb->prefix . 'estyn_provider_update_log';
+
+    $latestProviderDataTestTable = 'provider_data_latest_test';
+
+    // Get the provider data from the test table
+    $latestProvidersData = $wpdb->get_results("SELECT * FROM $latestProviderDataTestTable", ARRAY_A);
+
+    // If error, log it and return false
+    if($latestProvidersData === false) {
+        error_log('Error getting latest provider data from table ' . $latestProviderDataTestTable);
+        $wpdb->insert($log_table_name, array(
+            'details' => 'Error getting latest provider data from table ' . $latestProviderDataTestTable,
+            'status' => 'fail',
+        ));
+        return false;
+    }
+
+    if(empty($latestProvidersData)) {
+        error_log('No latest provider data found in the table ' . $latestProviderDataTestTable);
+        $wpdb->insert($log_table_name, array(
+            'details' => 'No latest provider data found in the table ' . $latestProviderDataTestTable,
+            'status' => 'fail',
+        ));
+        return false;
+    }
+
+    $providersSharingSameName = [];
+    $providersSoFar = [];
+    $providerNamesSoFar = [];
+
+    foreach($latestProvidersData as $provider) {
+        $name = strtolower(trim($provider['name']));
+        $wgNumber = strtolower(trim($provider['wg_number']));
+
+        if(empty($providersSoFar)) {
+            $providersSoFar[] = $provider;
+            $providerNamesSoFar[] = $name;
+            continue;
+        }
+
+        if(in_array($name, $providerNamesSoFar)) {
+            if(empty($providersSharingSameName[$name])) {
+                $providerWithSameName = array_map(function($provider) use ($name, $wgNumber) {
+                    $nameOfThisProvider = strtolower(trim($provider['name']));
+                    $wgNumberForThisProvider = strtolower(trim($provider['wg_number']));
+
+                    if($nameOfThisProvider == $name && $wgNumberForThisProvider == $wgNumber) {
+                        return $provider;
+                    }
+
+                    return null;
+                }, $providersSoFar);
+
+                // Get the first non-null value
+                $providerWithSameName = array_filter($providerWithSameName);
+                $providerWithSameName = array_shift($providerWithSameName);
+
+                if(empty($providerWithSameName)) {
+                    //error_log('No provider with the same name and WG number found');
+                    $providersSoFar[] = $provider;
+                    continue;
+                }
+
+                $providersSharingSameName[$name] = [$providerWithSameName, $provider];
+
+                $providersSoFar[] = $provider;
+
+                continue;
+
+
+            }
+
+            $providerToCompare = $providersSharingSameName[$name][0];
+            $providerToCompareWgNumber = strtolower(trim($providerToCompare['wg_number']));
+            if($providerToCompareWgNumber == $wgNumber) {
+                $providersSharingSameName[$name][] = $provider;
+            }
+
+            $providersSoFar[] = $provider;
+            continue;
+
+        }
+
+        $providersSoFar[] = $provider;
+
+        $providerNamesSoFar[] = $name;
+
+    }
+
+    if(empty($providersSharingSameName)) {
+        error_log('No providers sharing the same name and wg_number found');
+        return 'success';
+    }
+
+    $logDetails = [];
+
+    $logString = 'Providers sharing the same name and WG number: ' . print_r($providersSharingSameName, true);
+    error_log($logString);
+
+    $logDetails[] = $logString;
+
+    $logString = 'Number of providers sharing the same name and WG number: ' . count($providersSharingSameName);
+
+    error_log($logString);
+
+    $logDetails[] = $logString;
+
+    // Log the results
+    $logInsertResult = $wpdb->insert($log_table_name, array(
+        'details' => implode("\n", $logDetails),
+        'status' => 'success',
+    ));
+
+    if($logInsertResult === false) {
+        error_log('Failed to insert log entry. Error: ' . $wpdb->last_error);
+    }
+
+    return 'success';
 }
