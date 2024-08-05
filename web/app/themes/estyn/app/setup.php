@@ -3706,16 +3706,16 @@ R	Re-Inspection
 
                                 $logStatus = 'success with warnings';
 
-                                $termID = wp_insert_term($latestValue, $acfKey);
-                                if(is_wp_error($termID)) {
-                                    $logString = 'Failed to create new term (' . $latestValue . ') for taxonomy ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Error: ' . $termID->get_error_message();
+                                $term = wp_insert_term($latestValue, $acfKey);
+                                if(is_wp_error($term)) {
+                                    $logString = 'Failed to create new term (' . $latestValue . ') for taxonomy ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Error: ' . $term->get_error_message();
                                     error_log($logString);
                                     $logDetails[] = $logString;
 
                                     continue;
                                 }
 
-                                $term = get_term($termID['term_id'], $acfKey);
+                                $term = get_term($term['term_id'], $acfKey);
                             }
                         }
 
@@ -3791,6 +3791,7 @@ R	Re-Inspection
                                 }
                             } else {
                                 // Get the term object from the ID (from pll_get_term)
+                                error_log('Getting Welsh term from ID ' . $welshTerm);
                                 $welshTerm = get_term($welshTerm, $acfKey);
                                 if($welshTerm === null || is_wp_error($welshTerm)) {
                                     $logString = 'Failed to get Welsh term ' . $latestValue . ' from ID that we got from pll_get_term in taxonomy ' . $acfKey;
