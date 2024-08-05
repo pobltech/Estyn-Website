@@ -4348,3 +4348,43 @@ function checkForDuplicateProvidersInAPITable() {
 
     return 'success';
 }
+
+function newsAndBlogSliderItems($maxItems = 20) {
+    $newsAndBlogPosts = \get_posts([
+        'post_type' => ['post', 'estyn_newsarticle'],
+        'posts_per_page' => -1,
+        'status' => 'publish',
+        // Must have a featured image
+        'meta_query' => [
+            [
+                'key' => '_thumbnail_id',
+                'compare' => 'EXISTS'
+            ]
+        ]
+    ]);
+
+    $sliderItems = [];
+    $itemsCount = 0;
+
+    foreach($newsAndBlogPosts as $post) {
+        if($itemsCount >= $maxItems) {
+            break;
+        }
+        
+        // Extra check for featured image
+        if(empty(get_post_thumbnail_id($post->ID))) {
+            continue;
+        }
+
+        $sliderItems[] = [
+            'featured_image_ID' => get_post_thumbnail_id($post->ID),
+            'title' => get_the_title($post->ID),
+            'link' => get_the_permalink($post->ID),
+            'date' => get_the_date('Y-m-d', $post->ID),
+        ];
+
+        $itemsCount++;
+    }
+
+    return $sliderItems;
+}
