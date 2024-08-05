@@ -14,7 +14,7 @@
 	@else
 		<div class="d-flex w-100 justify-content-start">
 			@if(!empty($superText))
-				<span class="searchResourceType me-2">{{ $superText }}</span>
+				<span class="searchResourceType me-2"><strong>{{ $superText }}</strong></span>
 			@endif
 			@if((!isset($greenVersion)) || $greenVersion === false)
 				<span class="searchResourceDate me-2">{{ $superDate }}</span>

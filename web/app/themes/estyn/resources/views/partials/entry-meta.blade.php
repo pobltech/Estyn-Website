@@ -1,5 +1,5 @@
 @if(isset($subtitle))
-  <span class="reportTypeHero me-4">{{ $subtitle }}</span>
+  <span class="reportTypeHero me-4"><strong>{{ $subtitle }}</strong></span>
 @endif
 <span class="reportDateHero me-4">
   <time class="dt-published" datetime="{{ $dateTime ?? get_the_date('c') }}">

@@ -1458,8 +1458,8 @@ p.sp-desc {
     color: $estyn-darkblue;
     font-size:12px;
 }
-.searchResourceType {font-weight: 600;}
-.searchResourceDate, .searchResourceExtra {font-weight: 400;}
+/* .searchResourceType {font-weight: 600;} */ // Fails accessibility
+/* .searchResourceDate, .searchResourceExtra {font-weight: 400;} */ // Fails accessibility
 
 
 
@@ -1858,12 +1858,12 @@ p.sp-desc {
 
 .reportTypeHero {
     font-size: 16px;
-    font-weight: 600;
+    /* font-weight: 600; */
 }
 
 .reportDateHero, .reportReadHero {
     font-size: 14px;
-    font-weight: 400;
+    /* font-weight: 400; */
 }
 
 .landscapeImg {
