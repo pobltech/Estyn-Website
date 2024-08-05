@@ -16,7 +16,7 @@
 								<div class="row numrow">
 									<div class="w-100 h-100">
 										<div class="rounded-circle w-100 h-100 d-flex">
-											<span class="align-self-center mx-auto"><a href="{{ $footerData['facebook_url'] }}" class="stretched-link"><i class="fa-brands fa-facebook"></i></a></span>
+											<span class="align-self-center mx-auto"><a href="{{ $footerData['facebook_url'] }}" class="stretched-link" aria-label="{{ __('Estyn\'s Facebook page') }}"><i class="fa-brands fa-facebook" aria-hidden="true"></i></a></span>
 										</div>
 									</div>
 								</div>
@@ -27,7 +27,7 @@
 								<div class="row numrow">
 									<div class="w-100 h-100">
 										<div class="rounded-circle w-100 h-100 d-flex">
-											<span class="align-self-center mx-auto"><a href="{{ $footerData['x_twitter_url'] }}" class="stretched-link"><i class="fa-brands fa-x-twitter"></i></a></span>
+											<span class="align-self-center mx-auto"><a href="{{ $footerData['x_twitter_url'] }}" class="stretched-link" aria-label="{{ __('Estyn\'s X (formerly known as Twitter) page') }}"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a></span>
 										</div>
 									</div>
 								</div>
@@ -38,7 +38,7 @@
 								<div class="row numrow">
 									<div class="w-100 h-100">
 										<div class="rounded-circle w-100 h-100 d-flex">
-											<span class="align-self-center mx-auto"><a href="{{ $footerData['linkedin_url'] }}" class="stretched-link"><i class="fa-brands fa-linkedin"></i></a></span>
+											<span class="align-self-center mx-auto"><a href="{{ $footerData['linkedin_url'] }}" class="stretched-link" aria-label="{{ __('Estyn\'s LinkedIn page') }}"><i class="fa-brands fa-linkedin" aria-hidden="true"></i></a></span>
 										</div>
 									</div>
 								</div>
