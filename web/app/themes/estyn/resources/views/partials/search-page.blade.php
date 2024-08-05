@@ -153,7 +153,7 @@
                       {{ __('Sector', 'sage') }}
                     </button>
                   </h2>
-                  <div id="flush-collapse-sector" class="accordion-collapse collapse" aria-labelledby="flush-heading-sector" data-bs-parent="#accordionFlushExample">
+                  <div id="flush-collapse-sector" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
                       <div class="form-check">
                         <input class="form-check-input" type="radio" name="sector" value="any" id="flexCheckSector-any" checked>
