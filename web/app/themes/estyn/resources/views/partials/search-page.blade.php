@@ -78,7 +78,7 @@
 
 						<div id="search-box-container" class="input-group mb-4">
 						  <input type="text" class="form-control" placeholder="" aria-label="Search filter" aria-describedby="searchFilter" value="{{ !empty($_GET['search']) ? $_GET['search'] : '' }}">
-						  <button class="btn btn-primary" type="button" id="searchFilter"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+						  <button class="btn btn-primary" type="button" id="searchFilter" aria-label="{{ __('Search') }}"><i class="fa-sharp fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
 						</div>
 
             <button class="btn btn-outline-info d-md-none" data-bs-toggle="collapse" data-bs-target="#search-filters">{{ __('Filter results', 'sage' ) }}</button>
