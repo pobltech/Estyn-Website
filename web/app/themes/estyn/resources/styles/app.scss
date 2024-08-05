@@ -120,6 +120,10 @@ $paragraph-margin-bottom: 1.6rem;
     color: black;
 }
 
+.no-scroll {
+    overflow: hidden;
+}
+
 .wtimprove-spacer {
     max-width: 60px;
     width: 100%;
@@ -1533,6 +1537,8 @@ p.sp-desc {
                 transform: none;
             }
         } */
+
+        border-radius: $border-radius-xl;
 
         &.breakOut {
             max-width: 100%;

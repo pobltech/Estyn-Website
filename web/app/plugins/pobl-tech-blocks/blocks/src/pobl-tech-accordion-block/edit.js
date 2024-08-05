@@ -12,7 +12,7 @@ import { __ } from '@wordpress/i18n';
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
 import { useBlockProps, InnerBlocks, InspectorControls } from '@wordpress/block-editor';
-import { TextControl, PanelBody, Disabled } from '@wordpress/components';
+import { TextControl, PanelBody, Disabled, SelectControl } from '@wordpress/components';
 import { useEffect } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
 import ServerSideRender from '@wordpress/server-side-render';
@@ -38,7 +38,7 @@ import metadata from './block.json';
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { getBlockOrder } = useSelect( ( select ) => select( 'core/block-editor' ), [] );
 	const { updateBlockAttributes, moveBlockToPosition } = useDispatch( 'core/block-editor' );
-	const { accordionID, accordionHeading } = attributes;
+	const { accordionID, accordionHeading, fullWidthSection } = attributes;
 
 	const isSelected = useSelect( ( select ) => {
         const { getSelectedBlockClientId } = select( 'core/block-editor' );
@@ -74,6 +74,15 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						value={ accordionHeading }
 						onChange={ ( value ) => setAttributes( { accordionHeading: value } ) }
 					/>
+                    <SelectControl
+                        label={ __( 'Full Width Section?', 'pobl-tech-accordion-block' ) }
+                        value={ fullWidthSection }
+                        options={ [
+                            { label: 'Yes', value: true },
+                            { label: 'No', value: false },
+                        ] }
+                        onChange={ ( value ) => setAttributes( { fullWidthSection: value === 'true' } ) }
+                    />					
 				</PanelBody>
 			</InspectorControls>
 			<div className="accordion accordion-flush p-2">
