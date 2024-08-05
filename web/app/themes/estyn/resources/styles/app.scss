@@ -1738,6 +1738,12 @@ p.sp-desc {
     }
 }
 
+.carousel-control-prev, .carousel-control-next {
+    &:focus-visible {
+        outline: 4px solid black;;
+    }
+}
+
 .slideMenu {
 /*     .carousel-control-next, .carousel-control-prev {
         position: inherit;
@@ -2122,7 +2128,7 @@ p.sp-desc {
 
 .cta-carousel-item-container {
     min-width: 660px;
-    max-width: 660px;
+    /* max-width: 660px; */
     overflow: hidden;
     position: relative;
     background: transparent;
