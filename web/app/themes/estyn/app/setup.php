@@ -4388,3 +4388,12 @@ function newsAndBlogSliderItems($maxItems = 20) {
 
     return $sliderItems;
 }
+
+// Make WordPress' 'Button' block meet accessibility standards. Needs 'role="button"' and 'tabindex="0"'
+add_filter('render_block', function($block_content, $block) {
+    if($block['blockName'] === 'core/button') {
+        $block_content = str_replace('<a', '<a role="button" tabindex="0"', $block_content);
+    }
+
+    return $block_content;
+}, 10, 2);
