@@ -37,7 +37,7 @@
       <ul class="navbar-nav ms-auto mt-5 mt-xl-0">
         <!-- Parents Carers and learners -->
         <li class="nav-item dropdown mb-4 mb-xl-0">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarParentsDropdownMenuLink" role="button" aria-label="{{ __('Parents, carers, and learners dropdown menu') }}" data-bs-toggle="dropdown" aria-expanded="false">
           	<div class="d-flex justify-content-between d-xl-inline-block">
 				<div>
 					<span class="nav-item-sub">{{ __('Estyn for', 'sage') }}</span>
@@ -122,7 +122,7 @@
         </li>
         <!-- Education Proffessionals -->
         <li class="nav-item dropdown mb-4 mb-xl-0">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" aria-label="{{ __('Education Professionals dropdown menu') }}" data-bs-toggle="dropdown" aria-expanded="false">
 		    <div class="d-flex justify-content-between d-xl-inline-block">
 				<div>
 					<span class="nav-item-sub">{{ __('Estyn for', 'sage') }}</span>
@@ -271,7 +271,7 @@
         </li>
         <!-- About -->
         <li class="nav-item nav-item-no-border dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarAboutDropdownMenuLink" role="button" aria-label="About Estyn dropdown menu" data-bs-toggle="dropdown" aria-expanded="false">
           	<div class="d-flex justify-content-between d-xl-inline-block">
 				<div>          	
 					<span class="nav-item-sub">{{ __('Who we are', 'sage') }}</span>
@@ -436,7 +436,7 @@
 			</li>
 			<!-- Search -->
 			<li class="nav-item d-flex flex-column justify-content-center nav-search dropdown">
-				<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
+				<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" aria-label="{{ __('Search dropdown menu') }}" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
 				<div class="megaMenu dropdown-menu w-100 bg-white search-menu">
 					<div class="container mt-5 mb-md-5">
 						<div class="row d-flex justify-content-center">
