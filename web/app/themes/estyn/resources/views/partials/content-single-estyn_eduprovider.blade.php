@@ -27,7 +27,8 @@
             'title' => __('Estyn widget', 'sage'),
             'description' => __('Find out when your inspection is due', 'sage')
         ]*/
-    ]
+    ],
+    'cropIntroImagePortrait' => true
 ])
 <div class="reportMain pb-5">
     <div class="container px-md-4 px-xl-5 mt-5 pt-md-5">
