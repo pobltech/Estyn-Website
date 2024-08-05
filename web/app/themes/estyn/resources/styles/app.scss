@@ -835,10 +835,12 @@ hr {
         font-size: 24px;
     }
     
-    p {
+    p, h3 {
         &.sp-title {
             font-size: 16px;
             line-height: 20px;
+
+            font-family: "Source Sans 3", sans-serif;
         }
 
         &.sp-desc {
@@ -1407,10 +1409,12 @@ header {
         background-color: $esytn-signpost-green2;
     }
 }
-p.sp-title {
+p.sp-title, h3.sp-title {
     font-size: 20px;
     line-height: 24px;
     font-weight: 700;
+
+    font-family: "Source Sans 3", sans-serif;
 }
 p.sp-desc {
     font-size: 18px;
@@ -2234,9 +2238,11 @@ p.sp-desc {
         font-size: 26px;
     }
 
-    p.sp-title {
+    p.sp-title, h3.sp-title {
         font-size: 18px;
         line-height: 22px;
+
+        font-family: "Source Sans 3", sans-serif;
     }
 
     p.sp-desc {
@@ -2351,9 +2357,11 @@ p.sp-desc {
         font-size: 24px;
     }
 
-    p.sp-title {
+    p.sp-title, h3.sp-title {
         font-size: 16px;
         line-height: 20px;
+
+        font-family: "Source Sans 3", sans-serif;
     }
 
     p.sp-desc {
