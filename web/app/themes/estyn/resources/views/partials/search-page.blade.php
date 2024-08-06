@@ -1173,6 +1173,14 @@
           }
           $("#proximityPostcode").removeClass('is-invalid');
           
+          // For tags checkboxes, if this is checked then move it to the top of the list
+          if($(this).attr('type') == 'checkbox' && $(this).attr('name') == 'tags[]' && $(this).is(':checked')) {
+            $(this).closest('.form-check').prependTo($(this).closest('.tag-list'));
+
+            // Scroll to the top of the tag list
+            $(".tag-list").scrollTop(0);
+          }
+
           currentPage = 1;
 					applyFilters();
 				});
