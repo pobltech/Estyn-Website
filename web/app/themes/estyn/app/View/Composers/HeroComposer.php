@@ -53,6 +53,7 @@ class HeroComposer extends Composer
             'introImageID' => $introImage['ID'],
             'secondHeading' => $introHeading,
             'introContent' => $introContent,
+            'cropIntroImagePortrait' => true
         ];
 
         if(!empty($introLinks)) {

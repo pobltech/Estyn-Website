@@ -110,40 +110,13 @@
         ])--}}
     </div>
     @include('partials.our-work')
-  @php
-    $query1 = new WP_Query([
-      'post_type' => 'estyn_newsarticle',
-      'posts_per_page' => 10,
-      'status' => 'publish'
-    ]);
-
-    $sliderItems = [];
-
-    if($query1->have_posts()) {
-      while($query1->have_posts()) {
-        $query1->the_post();
-        // Do something with the post data
-        $sliderItems[] = [
-          'featured_image_src' => get_the_post_thumbnail_url(),
-          'title' => get_the_title(),
-          'excerpt' => get_the_excerpt(),
-            'link' => get_the_permalink()
-        ];
-      }
-
-      wp_reset_postdata();
-    }
-
-    // For TESTING: Append a copy of $sliderItems to $sliderItems to make the carousel longer
-    //$sliderItems = array_merge($sliderItems, $sliderItems);
-  @endphp
   @include('partials.slider', [
     'carouselID' => 'estyn-home-latest-news-carousel',
     'carouselHeading' => __('Latest articles', 'sage'),
     'carouselDescription' => __('Blog posts and news articles from Estyn', 'sage'),
     'carouselButtonText' => __('All articles', 'sage'),
     'carouselButtonLink' => \App\get_permalink_by_template('template-news-and-blog.blade.php'),
-    'carouselItems' => $sliderItems,
+    'carouselItems' => $newsAndBlogSliderItems,
     'doNotDoJavaScript' => false,
     'carouselSectionClass' => 'pobl-tech-carousel-block py-md-5',
   ])

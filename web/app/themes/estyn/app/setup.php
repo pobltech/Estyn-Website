@@ -1864,11 +1864,11 @@ add_action('init', function () {
 });
 
 function getInspectionGuidancePostPlaceholderImageURL($post) {
-    return asset('images/inspection-guidance-placeholder.jpg');
+    return asset('images/inspection-guidance-placeholder.png');
 }
 
 function getInspectionQuestionnairePostPlaceholderImageURL($post) {
-    return asset('images/inspection-guidance-placeholder.jpg');
+    return asset('images/inspection-guidance-placeholder.png');
 }
 
 /**
@@ -3706,16 +3706,16 @@ R	Re-Inspection
 
                                 $logStatus = 'success with warnings';
 
-                                $termID = wp_insert_term($latestValue, $acfKey);
-                                if(is_wp_error($termID)) {
-                                    $logString = 'Failed to create new term (' . $latestValue . ') for taxonomy ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Error: ' . $termID->get_error_message();
+                                $term = wp_insert_term($latestValue, $acfKey);
+                                if(is_wp_error($term)) {
+                                    $logString = 'Failed to create new term (' . $latestValue . ') for taxonomy ' . $acfKey . ' for provider ' . $providerWithLatestData[$keyMap['post_title']] . '. Error: ' . $term->get_error_message();
                                     error_log($logString);
                                     $logDetails[] = $logString;
 
                                     continue;
                                 }
 
-                                $term = get_term($termID['term_id'], $acfKey);
+                                $term = get_term($term['term_id'], $acfKey);
                             }
                         }
 
@@ -3791,6 +3791,7 @@ R	Re-Inspection
                                 }
                             } else {
                                 // Get the term object from the ID (from pll_get_term)
+                                error_log('Getting Welsh term from ID ' . $welshTerm);
                                 $welshTerm = get_term($welshTerm, $acfKey);
                                 if($welshTerm === null || is_wp_error($welshTerm)) {
                                     $logString = 'Failed to get Welsh term ' . $latestValue . ' from ID that we got from pll_get_term in taxonomy ' . $acfKey;
@@ -4347,3 +4348,52 @@ function checkForDuplicateProvidersInAPITable() {
 
     return 'success';
 }
+
+function newsAndBlogSliderItems($maxItems = 20) {
+    $newsAndBlogPosts = \get_posts([
+        'post_type' => ['post', 'estyn_newsarticle'],
+        'posts_per_page' => -1,
+        'status' => 'publish',
+        // Must have a featured image
+        'meta_query' => [
+            [
+                'key' => '_thumbnail_id',
+                'compare' => 'EXISTS'
+            ]
+        ]
+    ]);
+
+    $sliderItems = [];
+    $itemsCount = 0;
+
+    foreach($newsAndBlogPosts as $post) {
+        if($itemsCount >= $maxItems) {
+            break;
+        }
+        
+        // Extra check for featured image
+        if(empty(get_post_thumbnail_id($post->ID))) {
+            continue;
+        }
+
+        $sliderItems[] = [
+            'featured_image_ID' => get_post_thumbnail_id($post->ID),
+            'title' => get_the_title($post->ID),
+            'link' => get_the_permalink($post->ID),
+            'date' => get_the_date('Y-m-d', $post->ID),
+        ];
+
+        $itemsCount++;
+    }
+
+    return $sliderItems;
+}
+
+// Make WordPress' 'Button' block meet accessibility standards. Needs 'role="button"' and 'tabindex="0"'
+add_filter('render_block', function($block_content, $block) {
+    if($block['blockName'] === 'core/button') {
+        $block_content = str_replace('<a', '<a role="button" tabindex="0"', $block_content);
+    }
+
+    return $block_content;
+}, 10, 2);

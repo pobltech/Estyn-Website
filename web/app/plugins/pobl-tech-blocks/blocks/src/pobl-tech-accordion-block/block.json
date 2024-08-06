@@ -26,6 +26,10 @@
 		"accordionHeading": {
 			"type": "string",
 			"default": ""
+		},
+		"fullWidthSection": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

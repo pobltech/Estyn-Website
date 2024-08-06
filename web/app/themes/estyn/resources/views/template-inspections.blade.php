@@ -21,6 +21,7 @@
                 'text' => $button['text']
             ];
         }, get_field('inside_hero_buttons') ?: []), // ACF Repeater field
+        'cropIntroImagePortrait' => true
     ])
 <div class="reportMain">
 	<div class="container px-md-4 px-xl-5 pt-md-5">

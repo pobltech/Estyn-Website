@@ -254,7 +254,7 @@ class SectorComposer extends Composer
     }
 
     private function latestNewsAndBlogPostsCarouselItems() {
-        $latestNewsAndBlogPosts = get_posts([
+/*         $latestNewsAndBlogPosts = get_posts([
             'posts_per_page' => 10,
             'post_type' => ['post', 'estyn_newsarticle'],
             'meta_query' => [
@@ -280,7 +280,9 @@ class SectorComposer extends Composer
         }, $latestNewsAndBlogPosts);
 
         // Cut it down to maximum of 10 items
-        $latestNewsAndBlogPosts = array_slice($latestNewsAndBlogPosts, 0, 10);
+        $latestNewsAndBlogPosts = array_slice($latestNewsAndBlogPosts, 0, 10); */
+
+        $latestNewsAndBlogPosts = \App\newsAndBlogSliderItems();
 
         return $latestNewsAndBlogPosts;
     }

@@ -15,7 +15,6 @@
         featured_image_src: The URL of the featured image.
         title: The title of the item.
         excerpt: The excerpt of the item.
-        [TODO: Alt tag for the image]
     
 
     
@@ -85,7 +84,11 @@
                             <div class="carousel-item-tag text-white px-2 py-1">{{ $carouselItem['tag'] }}</div>
                         @endif
                         <div class="slideCardBody">
-                            <img class="img-fluid" src="{{ $carouselItem['featured_image_src'] }}" alt="{{ $carouselItem['featured_image_alt'] ?? '' }}" />
+                            @if(!empty($carouselItem['featured_image_ID']))
+                                {!! wp_get_attachment_image($carouselItem['featured_image_ID'], 'full', false, ['class' => 'img-fluid']) !!}
+                            @else
+                                <img class="img-fluid" src="{{ $carouselItem['featured_image_src'] }}" alt="{{ $carouselItem['featured_image_alt'] ?? '' }}" />
+                            @endif
                         </div>
                         <div class="card-footer py-sm-4 pb-0 px-0">
                             @if( (!empty($carouselItem['date'])) || (!empty($carouselItem['formatted_date'])) )

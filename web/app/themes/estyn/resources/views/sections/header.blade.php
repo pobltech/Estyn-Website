@@ -37,7 +37,7 @@
       <ul class="navbar-nav ms-auto mt-5 mt-xl-0">
         <!-- Parents Carers and learners -->
         <li class="nav-item dropdown mb-4 mb-xl-0">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarParentsDropdownMenuLink" role="button" aria-label="{{ __('Parents, carers, and learners dropdown menu') }}" data-bs-toggle="dropdown" aria-expanded="false">
           	<div class="d-flex justify-content-between d-xl-inline-block">
 				<div>
 					<span class="nav-item-sub">{{ __('Estyn for', 'sage') }}</span>
@@ -52,7 +52,7 @@
           <div class="megaMenu dropdown-menu w-100 bg-white">
           	<div class="container mt-5 mb-md-5">
           		<div class="row d-flex justify-content-center">
-          			<div class="col-12 px-0 col-lg-8">
+          			<div class="col-12 px-0 col-xl-8">
           				<h3 class="mb-4">{{ __('Parents, carers & learners', 'sage') }}</h3>
           				<div class="row w-100 pb-3 pb-md-5">
           					<div class="col-12 col-md-6 pb-4 pb-md-0 megaMenuFeature">
@@ -122,7 +122,7 @@
         </li>
         <!-- Education Proffessionals -->
         <li class="nav-item dropdown mb-4 mb-xl-0">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" aria-label="{{ __('Education Professionals dropdown menu') }}" data-bs-toggle="dropdown" aria-expanded="false">
 		    <div class="d-flex justify-content-between d-xl-inline-block">
 				<div>
 					<span class="nav-item-sub">{{ __('Estyn for', 'sage') }}</span>
@@ -137,7 +137,7 @@
           <div class="megaMenu dropdown-menu w-100 bg-white">
           	<div class="container my-5">
           		<div class="row d-flex justify-content-center">
-          			<div class="col-12 px-0 col-lg-8">
+          			<div class="col-12 px-0 col-xl-8">
           				<h3 class="mb-4">{{ __('Education professionals', 'sage') }}</h3>
           				<div class="row w-100 pb-3 pb-md-5">
           					<div class="col-12 col-md-6 pb-4 pb-md-0 megaMenuFeature">
@@ -271,7 +271,7 @@
         </li>
         <!-- About -->
         <li class="nav-item nav-item-no-border dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarAboutDropdownMenuLink" role="button" aria-label="About Estyn dropdown menu" data-bs-toggle="dropdown" aria-expanded="false">
           	<div class="d-flex justify-content-between d-xl-inline-block">
 				<div>          	
 					<span class="nav-item-sub">{{ __('Who we are', 'sage') }}</span>
@@ -286,7 +286,7 @@
           <div class="megaMenu dropdown-menu w-100 bg-white">
           	<div class="container mt-5 mb-md-5">
           		<div class="row d-flex justify-content-center">
-          			<div class="col-12 px-0 col-lg-8">
+          			<div class="col-12 px-0 col-xl-8">
           				<h3 class="mb-4">{{ __('About Estyn', 'sage') }}</h3>
           				<div class="row w-100 pb-3 pb-md-5">
           					<div class="col-12 col-md-6 pb-4 pb-md-0 megaMenuFeature">
@@ -436,7 +436,7 @@
 			</li>
 			<!-- Search -->
 			<li class="nav-item d-flex flex-column justify-content-center nav-search dropdown">
-				<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
+				<a class="nav-link ps-0 ps-xl-4 pe-5 pe-xl-0" href="#" id="navbarSearchDropdownMenuLink" role="button" aria-label="{{ __('Search dropdown menu') }}" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></a>
 				<div class="megaMenu dropdown-menu w-100 bg-white search-menu">
 					<div class="container mt-5 mb-md-5">
 						<div class="row d-flex justify-content-center">
@@ -557,6 +557,41 @@
 					resetDropdownToggles();
 				}
 			});*/
+
+			// Stop the webpage from scrolling when hovering over the header element and its children
+			/*$('header, header *').on('mousewheel DOMMouseScroll', function(e) {
+				var e0 = e.originalEvent,
+					delta = e0.wheelDelta || -e0.detail;
+			
+				this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+				e.preventDefault();
+			});
+			
+			// Stop the webpage from scrolling when touching the header element and its children
+			$('header, header *').on('touchstart', function(e) {
+				var startY = e.originalEvent.touches[0].pageY;
+			
+				$(this).on('touchmove', function(e) {
+					var e0 = e.originalEvent,
+						moveY = e0.touches[0].pageY,
+						delta = startY - moveY;
+			
+					this.scrollTop += delta;
+					e.preventDefault();
+				});
+			
+				$(this).on('touchend', function() {
+					$(this).off('touchmove touchend');
+				});
+			});*/
+
+			// Disable scrolling the browser window when any of the megaMenu dropdowns are open
+			$('header .dropdown-toggle').on('show.bs.dropdown', function() {
+				$('body').addClass('no-scroll');
+			});
+			$('header .dropdown-toggle').on('hide.bs.dropdown', function() {
+				$('body').removeClass('no-scroll');
+			});			
 		});
 	</script>
 @endpush

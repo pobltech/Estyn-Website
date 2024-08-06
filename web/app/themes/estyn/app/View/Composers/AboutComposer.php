@@ -15,6 +15,7 @@ class AboutComposer extends Composer
         return [
             'teamMembersCarouselItems' => $this->teamMembersCarouselItems(),
             'teamMemberCategories' => $this->teamMemberCategories(),
+            'newsAndBlogSliderItems' => \App\newsAndBlogSliderItems(),
         ];
     }
 

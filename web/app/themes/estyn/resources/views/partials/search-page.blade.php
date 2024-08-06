@@ -78,7 +78,7 @@
 
 						<div id="search-box-container" class="input-group mb-4">
 						  <input type="text" class="form-control" placeholder="" aria-label="Search filter" aria-describedby="searchFilter" value="{{ !empty($_GET['search']) ? $_GET['search'] : '' }}">
-						  <button class="btn btn-primary" type="button" id="searchFilter"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+						  <button class="btn btn-primary" type="button" id="searchFilter" aria-label="{{ __('Search') }}"><i class="fa-sharp fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
 						</div>
 
             <button class="btn btn-outline-info d-md-none" data-bs-toggle="collapse" data-bs-target="#search-filters">{{ __('Filter results', 'sage' ) }}</button>
@@ -153,7 +153,7 @@
                       {{ __('Sector', 'sage') }}
                     </button>
                   </h2>
-                  <div id="flush-collapse-sector" class="accordion-collapse collapse" aria-labelledby="flush-heading-sector" data-bs-parent="#accordionFlushExample">
+                  <div id="flush-collapse-sector" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
                       <div class="form-check">
                         <input class="form-check-input" type="radio" name="sector" value="any" id="flexCheckSector-any" checked>
@@ -1173,6 +1173,14 @@
           }
           $("#proximityPostcode").removeClass('is-invalid');
           
+          // For tags checkboxes, if this is checked then move it to the top of the list
+          if($(this).attr('type') == 'checkbox' && $(this).attr('name') == 'tags[]' && $(this).is(':checked')) {
+            $(this).closest('.form-check').prependTo($(this).closest('.tag-list'));
+
+            // Scroll to the top of the tag list
+            $(".tag-list").scrollTop(0);
+          }
+
           currentPage = 1;
 					applyFilters();
 				});

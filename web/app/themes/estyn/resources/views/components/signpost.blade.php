@@ -11,7 +11,7 @@
                 @endif
             </div>
             <div class="sp-text ms-3 d-flex flex-column justify-content-center">
-                <p class="sp-title m-0">{{ $title }}</p>
+                <h3 class="sp-title m-0">{{ $title }}</h3>
                 <p class="sp-desc m-0">{{ $description }}</p>
             </div>
             @if(isset($arrow) && $arrow)

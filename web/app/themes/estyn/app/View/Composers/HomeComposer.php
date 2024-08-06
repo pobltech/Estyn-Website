@@ -28,8 +28,10 @@ class HomeComposer extends Composer
             'image_url' => get_field('home_cta_image')['url'],
             'image_alt' => get_field('home_cta_image')['alt'],
             'button_text' => get_field('home_cta_button_text'),
-            'button_link' => get_permalink(get_field('home_cta_button_content_to_link_to_post'))
+            'button_link' => get_permalink(get_field('home_cta_button_content_to_link_to_post')),
         ];
+
+        $homeData['newsAndBlogSliderItems'] = \App\newsAndBlogSliderItems();
 
         $waysToImproveCarouselItems = get_field('home_ways_to_improve_carousel_items');
         if(!empty($waysToImproveCarouselItems)) {
