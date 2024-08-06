@@ -23,7 +23,7 @@
 									@if(!empty($ctaContent))
 										{!! $ctaContent !!}
 									@elseif(isset($ctaText))
-										<p>{{ $ctaText }}</p>
+										<p>{!! $ctaText !!}</p>
 									@endif
 									@if(!empty($ctaButtons))
 										@foreach($ctaButtons as $ctaButton)
