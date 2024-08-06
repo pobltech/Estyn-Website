@@ -61,7 +61,7 @@
 	  fill="#DCEEFE" />
 	</svg>
 </div>
-<div class="insideIntro pt-4 pt-sm-5 pb-5 pb-md-0 position-relative w-100">
+<div class="insideIntro position-relative w-100">
 	<div class="container pb-md-5 px-md-4 px-xl-5">
 		@if(isset($insideIntroLinks))
 			<div class="row py-5 px-xl-5 justify-content-center">
@@ -79,35 +79,39 @@
 			</div>
 		@else
 			<div class="row justify justify-content-center">
-				<div class="col-12 col-sm-5 mb-4 mb-sm-0 {{ isset($cropIntroImagePortrait) && $cropIntroImagePortrait == true ? '' : '' }}">
-					<div class="d-flex flex-column h-100 justify-content-center">
-						<div>
-							<h2>{{ $secondHeading }}</h2>
-							<div class="inside-intro-content">
-								{!! $introContent !!}
-								@if(!empty($introLinks))
-									<div class="row gy-3">
-									@foreach($introLinks as $introLink)
-										<div class="col-12">
-											<a class="btn btn-outline-primary" href="{{ $introLink['url'] }}">{{ $introLink['text'] }}</a>
+				<div class="col-12 col-md-10 my-5">
+					<div class="row">
+						<div class="col-11 col-md-6 pb-5 pb-md-0 pe-xl-5 {{ isset($cropIntroImagePortrait) && $cropIntroImagePortrait == true ? 'pt-xl-5' : '' }}">
+							<div class="{{ isset($cropIntroImagePortrait) && $cropIntroImagePortrait == true ? 'pt-xxl-5' : '' }}">
+								<h2 class="pe-xl-5">{{ $secondHeading }}</h2>
+								<div class="inside-intro-content">
+									{!! $introContent !!}
+									@if(!empty($introLinks))
+										<div class="row">
+										@foreach($introLinks as $introLink)
+											<div class="col-12">
+												<a class="btn btn-outline-primary" href="{{ $introLink['url'] }}">{{ $introLink['text'] }}</a>
+											</div>
+										@endforeach
 										</div>
-									@endforeach
-									</div>
-								@endif
+									@endif
+								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div class="col-12 col-sm-auto col-md-4 offset-md-1">
-					<div class="d-flex h-100 flex-sm-column justify-content-center">
-						<div class="intro-image-container {{ isset($cropIntroImagePortrait) && $cropIntroImagePortrait == true ? 'crop-portrait' : '' }}">
-							@if(!empty($introImageID))
-								{!! wp_get_attachment_image($introImageID, 'full', false, ['class' => 'rounded-2 img-fluid']) !!}
-							@elseif(!empty($introImageSrc))
-								<img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" class="rounded-2 img-fluid" />
-							@elseif(!empty($introImageImgTag))
-								{!! $introImageImgTag !!}					
-							@endif
+						<div class="col-12 col-md-6 ps-md-5">
+							<div class="ps-lg-5">
+								<div class="d-flex justify-content-center px-me-5 px-md-0">
+									<div class="intro-image-container {{ isset($cropIntroImagePortrait) && $cropIntroImagePortrait == true ? 'crop-portrait' : '' }}">
+										@if(!empty($introImageID))
+											{!! wp_get_attachment_image($introImageID, 'full', false, ['class' => 'rounded-2 img-fluid']) !!}
+										@elseif(!empty($introImageSrc))
+											<img src="{{ $introImageSrc }}" alt="{{ $introImageAlt }}" class="rounded-2 img-fluid" />
+										@elseif(!empty($introImageImgTag))
+											{!! $introImageImgTag !!}					
+										@endif
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

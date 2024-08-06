@@ -1241,7 +1241,9 @@ header {
     .inside-intro-content {
 
         .btn {
-            margin-bottom: $m-3;
+            &:not(:last-child) {
+                margin-bottom: $m-3;
+            }
         }
     }
 
