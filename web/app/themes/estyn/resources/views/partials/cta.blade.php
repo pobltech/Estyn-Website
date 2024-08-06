@@ -12,7 +12,7 @@
 						<div class="card-body my-2 mx-0 my-sm-5 mx-sm-4 my-lg-5 mx-lg-4">
 					@endif
 						@if(empty($ctaCarouselItems))
-						<div class="row">
+						<div class="row justify-content-center justify-content-lg-start">
 							@if(isset($ctaImageURL))
 							<div class="col-12 col-lg-6 col-xl-5 col-xxl-4 mb-4 mb-md-0 pb-md-5">
 							@else
@@ -41,9 +41,12 @@
 									@endif
 								</div>
 							</div>
-							<div class="col-12 col-lg-6 offset-xl-1 position-relative px-5 px-md-0 text-center text-lg-end {{ isset($showSearchBox) && ($showSearchBox === true) ? 'cta-search-col' : '' }}">
+							<div class="col-12 col-md-8 col-lg-6 offset-xl-1 position-relative px-sm-5 px-md-0 text-center text-lg-end {{ isset($showSearchBox) && ($showSearchBox === true) ? 'cta-search-col' : '' }}">
 								@if(isset($ctaImageURL))
-									<img src="{{ $ctaImageURL }}" class="img-fluid pt-cta-image {{ isset($imageBreakOut) && ($imageBreakOut == true) ? 'breakOut' : '' }} {{ $imageExtraClasses ?? ''}}" alt="{{ $ctaImageAlt }}" />
+									{{-- <img src="{{ $ctaImageURL }}" class="img-fluid pt-cta-image {{ isset($imageBreakOut) && ($imageBreakOut == true) ? 'breakOut' : '' }} {{ $imageExtraClasses ?? ''}}" alt="{{ $ctaImageAlt }}" /> --}}
+									<div class="magic-responsive-landscape-image-container">
+										<img src="{{ $ctaImageURL }}" class=" {{ isset($imageBreakOut) && ($imageBreakOut == true) ? 'breakOut' : '' }} {{ $imageExtraClasses ?? ''}}" alt="{{ $ctaImageAlt }}" />
+									</div>
 								@endif
 								@if(isset($showSearchBox) && ($showSearchBox === true))
 									<div class="d-flex justify-content-center justify-content-lg-end ctaSearchBoxContainer">
@@ -280,7 +283,7 @@
 		<script>
 			// Scale the image so it looks good in relation to the height of
 			// the text content
-			jQuery(document).ready(function($) {
+			/*jQuery(document).ready(function($) {
 				const contentHeight = $('#{{ $ctaUniqueID }} .pt-cta-content').height();
 				const height = contentHeight * 1.25; // 125% of the text content's height
 				$('#{{ $ctaUniqueID }} .pt-cta-image:not(.breakOut)').css('height', height);
@@ -296,7 +299,7 @@
 						$('#caption-' + nextSlideIndex).removeClass('d-none');
 					});
 				}
-			});
+			});*/
 		</script>
 	@endif
 @endpush
