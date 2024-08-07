@@ -355,13 +355,13 @@ add_action('init', function() {
     // Same for annual-report, effective-practice, and additional-resource
     add_rewrite_rule('^annual-report/(.*)', 'index.php?imp_resource_redirect=$matches[1]', 'top');
     add_rewrite_rule('^effective-practice/(.*)', 'index.php?imp_resource_redirect=$matches[1]', 'top');
-    add_rewrite_rule('^additional-resource/(.*)', 'index.php?imp_resource_redirect=$matches[1]', 'top');
+    add_rewrite_rule('^additional-resources/(.*)', 'index.php?imp_resource_redirect=$matches[1]', 'top');
 
     // Same for the Welsh versions
     add_rewrite_rule('^adroddiadau-thematig/(.*)', 'index.php?imp_resource_redirect_cymraeg=$matches[1]', 'top');
     add_rewrite_rule('^adroddiad-blynyddol/(.*)', 'index.php?imp_resource_redirect_cymraeg=$matches[1]', 'top');
     add_rewrite_rule('^arfer-effeithiol/(.*)', 'index.php?imp_resource_redirect_cymraeg=$matches[1]', 'top');
-    add_rewrite_rule('^adnodd-ychwanegol/(.*)', 'index.php?imp_resource_redirect_cymraeg=$matches[1]', 'top');
+    add_rewrite_rule('^adnoddau-ychwanegol/(.*)', 'index.php?imp_resource_redirect_cymraeg=$matches[1]', 'top');
 });
 
 // Add query var
