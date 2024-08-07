@@ -2370,6 +2370,30 @@ if (defined('WP_CLI') && WP_CLI) {
 
     \WP_CLI::add_command('check_for_duplicate_providers_in_api_table', __NAMESPACE__ . '\\Check_For_Duplicate_Providers_In_API_Table');
 
+    // Add out mapOldTagsToNew function
+    class Map_Old_Tags_To_New {
+        /**
+         * Maps old tags to new tags.
+         *
+         * ## EXAMPLES
+         *
+         *     wp map_old_tags_to_new
+         *
+         */
+        public function __invoke($args, $assoc_args) {
+            // Call your function here
+            $result = mapOldTagsToNew();
+
+            if($result === true) {
+                \WP_CLI::success('Finished.');
+            } else {
+                \WP_CLI::error('Failed. See log for more info.');
+            }
+        }
+    }
+
+    \WP_CLI::add_command('map_old_tags_to_new', __NAMESPACE__ . '\\Map_Old_Tags_To_New');
+
     // Remove '-cy' suffix from the URL slug of all 'estyn_eduprovider' posts
     class Remove_Cy_Suffix_Command {
         /**
@@ -4448,3 +4472,464 @@ function old_files_management_page() {
         'totalFiles' => $totalFiles,
     ]);
 }
+
+function mapOldTagsToNew() {
+    // Good luck
+
+    // Old tags:
+
+    /*
+14-19
+5x60 initiative
+Community
+Absence
+Additional learning needs
+Adult basic education
+ALN
+Assessment
+Attendance
+Basic skills
+Behaviour
+Boys' attainment
+Bullying
+Care, support and guidance
+Careers
+Communication skills
+Construction
+Continual professional development
+Curriculum
+Data
+Digital
+E-learning
+Education other than at school
+English
+English as an additional language
+English for speakers of other languages
+Equality and diversity
+Evaluation
+Finance
+Financial skills
+Foundation Phase
+Governors
+Growth mindset
+Gypsy and Traveller
+Healthy
+ICT
+Inclusion
+Inspection preparation
+Inspection process
+Keep Wales Learning
+Key skills
+Key Stage 2
+Key Stage 3
+Key Stage 4
+Key Stage 5
+Language and literacy
+Leadership
+Leadership and management
+Learner involvement
+Learning environment
+Literacy
+Local Authority
+Mathematics
+Mental health
+Modern foreign languages
+More able and talented
+Music
+NPQH
+Numeracy
+Outdoor learning
+Parents
+Partnership working
+Perseverance
+Personal and Social Education
+Personal development
+Personal relationships
+Physical education
+Planning
+Post-16
+Poverty and disadvantage
+Professional learning
+Provision for skills
+Pupil participation
+Pupil voice
+Quality of teaching
+Recognising excellence
+Religious education
+Resilience
+Safeguarding
+School meals
+Science
+Self-evaluation
+SEN
+Sex and relationships
+Skills framework
+Special educational needs
+Standards
+Surplus places
+Sustainability
+Teacher absence
+Teacher training
+Teaching
+Teaching and learning experiences
+Teaching and learning observation
+Thinking skills
+Tracking, monitoring and learning support
+Training
+Transition
+Underperformance
+Use of resources
+Wellbeing
+Wellbeing and attitudes to learning
+Welsh
+Welsh Baccalaureate
+Welsh language
+Welsh second language
+Workforce remodelling
+Working in partnership
+Youth workers
+    */
+
+    $oldTags = [
+        "14-19",
+        "5x60 initiative",
+        "Community",
+        "Absence",
+        "Additional learning needs",
+        "Adult basic education",
+        "ALN",
+        "Assessment",
+        "Attendance",
+        "Basic skills",
+        "Behaviour",
+        "Boys' attainment",
+        "Bullying",
+        "Care, support and guidance",
+        "Careers",
+        "Communication skills",
+        "Construction",
+        "Continual professional development",
+        "Curriculum",
+        "Data",
+        "Digital",
+        "E-learning",
+        "Education other than at school",
+        "English",
+        "English as an additional language",
+        "English for speakers of other languages",
+        "Equality and diversity",
+        "Evaluation",
+        "Finance",
+        "Financial skills",
+        "Foundation Phase",
+        "Governors",
+        "Growth mindset",
+        "Gypsy and Traveller",
+        "Healthy",
+        "ICT",
+        "Inclusion",
+        "Inspection preparation",
+        "Inspection process",
+        "Keep Wales Learning",
+        "Key skills",
+        "Key Stage 2",
+        "Key Stage 3",
+        "Key Stage 4",
+        "Key Stage 5",
+        "Language and literacy",
+        "Leadership",
+        "Leadership and management",
+        "Learner involvement",
+        "Learning environment",
+        "Literacy",
+        "Local Authority",
+        "Mathematics",
+        "Mental health",
+        "Modern foreign languages",
+        "More able and talented",
+        "Music",
+        "NPQH",
+        "Numeracy",
+        "Outdoor learning",
+        "Parents",
+        "Partnership working",
+        "Perseverance",
+        "Personal and Social Education",
+        "Personal development",
+        "Personal relationships",
+        "Physical education",
+        "Planning",
+        "Post-16",
+        "Poverty and disadvantage",
+        "Professional learning",
+        "Provision for skills",
+        "Pupil participation",
+        "Pupil voice",
+        "Quality of teaching",
+        "Recognising excellence",
+        "Religious education",
+        "Resilience",
+        "Safeguarding",
+        "School meals",
+        "Science",
+        "Self-evaluation",
+        "SEN",
+        "Sex and relationships",
+        "Skills framework",
+        "Special educational needs",
+        "Standards",
+        "Surplus places",
+        "Sustainability",
+        "Teacher absence",
+        "Teacher training",
+        "Teaching",
+        "Teaching and learning experiences",
+        "Teaching and learning observation",
+        "Thinking skills",
+        "Tracking, monitoring and learning support",
+        "Training",
+        "Transition",
+        "Underperformance",
+        "Use of resources",
+        "Wellbeing",
+        "Wellbeing and attitudes to learning",
+        "Welsh",
+        "Welsh Baccalaureate",
+        "Welsh language",
+        "Welsh second language",
+        "Workforce remodelling",
+        "Working in partnership",
+        "Youth workers"
+    ];
+
+    $map = [
+        "Secondary|Further Education|Youth work",
+        "Health and Well-being|Primary|Secondary",
+        "Adult Learning in the Community",
+        "Attendance",
+        "ALN",
+        "Adult Learning in the Community",
+        "ALN",
+        "Assessment",
+        "Attendance",
+        "Adult Learning in the Community",
+        "Behaviour",
+        "Attitudes to Learning",
+        "Health and Well-being|Behaviour",
+        "Well-being, care, support and guidance",
+        "Careers",
+        "Languages, Literacy and Communication",
+        "Apprenticeships|Careers",
+        "Professional Learning",
+        "Teaching|Assessment",
+        "Data",
+        "Digital skills",
+        "Teaching",
+        "Pupil Referral Units|Youth work",
+        "English Literacy",
+        "English as an additional language Literacy",
+        "English as an additional language Literacy",
+        "Equality and diversity",
+        "Self-Evaluation and Improvement Planning",
+        "Finance",
+        "Finance",
+        "Foundation learning",
+        "Governors",
+        "Self-Evaluation and Improvement Planning",
+        "Equality and diversity",
+        "Health and Well-being",
+        "Science and Technology",
+        "Equality and diversity",
+        "Self-Evaluation and Improvement Planning|Education professionals",
+        "Education professionals",
+        "Attitudes to Learning",
+        "Teaching",
+        "Primary|All-age",
+        "Secondary|All-age",
+        "Secondary|All-age",
+        "Secondary|All-age|Further Education",
+        "Languages, Literacy and Communication",
+        "Leadership",
+        "Leadership",
+        "Learners",
+        "Learners",
+        "Languages, Literacy and Communication",
+        "Local authority",
+        "Mathematics and Numeracy",
+        "Health and Well-being",
+        "Languages, Literacy and Communication",
+        "Learners|Attitudes to Learning",
+        "Expressive Arts",
+        "Professional Learning|Leadership",
+        "Numeracy",
+        "Learners|Teaching",
+        "Parents",
+        "Education professionals",
+        "Attitudes to Learning",
+        "Health and Well-being",
+        "Health and Well-being",
+        "Health and Well-being",
+        "Health and Well-being",
+        "Self-Evaluation and Improvement Planning",
+        "Further Education|Apprenticeships",
+        "Poverty and disadvantage",
+        "Professional Learning",
+        "Teaching",
+        "Learners|Teaching",
+        "Learners|Teaching",
+        "Self-Evaluation and Improvement Planning|Leadership",
+        "Teaching|Assessment|Attitudes to Learning",
+        "Humanities",
+        "Well-being, care, support and guidance|Health and Well-being",
+        "Safeguarding",
+        "Poverty and disadvantage",
+        "Science and Technology",
+        "Self-Evaluation and Improvement Planning",
+        "ALN",
+        "Health and Well-being",
+        "Teaching|Assessment",
+        "ALN",
+        "Teaching|Assessment|Attitudes to Learning",
+        "Leadership|Local authority",
+        "Sustainability",
+        "Teaching",
+        "Teaching|Professional Learning",
+        "Teaching",
+        "Teaching",
+        "Teaching|Self-Evaluation and Improvement Planning",
+        "Health and Well-being",
+        "Well-being, care, support and guidance",
+        "Professional Learning",
+        "Secondary|Primary|All-age|Learners",
+        "Assessment|Self-Evaluation and Improvement Planning",
+        "Teaching",
+        "Health and Well-being",
+        "Attitudes to Learning|Health and Well-being",
+        "Welsh Literacy",
+        "Secondary|Further Education",
+        "Welsh Literacy",
+        "Welsh Literacy",
+        "Leadership",
+        "Teaching|Education professionals",
+        "Youth work",
+    ];
+
+    // Lets check that all those tags exist in our system
+    $tags = get_terms([
+        'taxonomy' => 'post_tag',
+        'hide_empty' => false,
+        'fields' => 'names',
+    ]);
+
+    $currentTagsLowercase = array_map('strtolower', $tags);
+
+    $missingTags = [];
+
+    foreach($oldTags as $oldTag) {
+        if(!in_array(strtolower($oldTag), $currentTagsLowercase)) {
+            $missingTags[] = $oldTag;
+        }
+    }
+
+    if(!empty($missingTags)) {
+        error_log('These old tags are not in the new system: ' . print_r($missingTags, true));
+
+        return false;
+    }
+
+    // Now to check that all of the tags in the $map variable are in the system
+    // Note: "|" is a separator for multiple tags
+    $missingNewTags = [];
+    $newTagsSoFar = []; // To avoid repeated checking for the same tag
+
+    foreach($map as $newTags) {
+        $newTags = explode('|', $newTags);
+
+        foreach($newTags as $newTag) {
+            if(in_array($newTag, $newTagsSoFar)) {
+                continue;
+            }
+
+            if(!in_array($newTag, $tags)) {
+                // Let's see if it's just a difference in the letter case
+                if(in_array(strtolower($newTag), $currentTagsLowercase)) {
+                    error_log('Tag ' . $newTag . ' is in the system but with a different letter case');
+                    error_log('Attempting to update the tag to the correct letter case...');
+
+                    // Let's rename the tag in the current system to the correct letter case
+                    $tag = get_term_by('name', $newTag, 'post_tag');
+                    $result = wp_update_term($tag->term_id, 'post_tag', ['name' => $newTag]);
+
+                    if(is_wp_error($result)) {
+                        error_log('Failed to update tag ' . $newTag . ' to the correct letter case. Error: ' . $result->get_error_message());
+
+                        return false;
+                    }
+                } else {
+                    $missingNewTags[] = $newTag;
+                }
+            }
+
+            $newTagsSoFar[] = $newTag;
+        }
+    }
+
+    if(!empty($missingNewTags)) {
+        error_log('These new tags are not in the system: ' . print_r($missingNewTags, true));
+
+        error_log('Attempting to add the missing tags to the system...');
+        
+        // Add the tags to the system, set their language to English, create a Welsh version (same name but with " (Cymraeg)" at the end), set its language to Welsh, then set the translations
+        foreach($missingNewTags as $missingNewTag) {
+            $newTagID = wp_insert_term($missingNewTag, 'post_tag', ['lang' => 'en']);
+            if(is_wp_error($newTagID)) {
+                error_log('Failed to insert new tag ' . $missingNewTag . ' in English. Error: ' . $newTagID->get_error_message());
+                
+                return false;
+            }
+
+            $newTagID = $newTagID['term_id'];
+
+            $welshTagID = wp_insert_term($missingNewTag . ' (Cymraeg)', 'post_tag', ['lang' => 'cy']);
+            if(is_wp_error($welshTagID)) {
+                error_log('Failed to insert new tag ' . $missingNewTag . ' in Welsh. Error: ' . $welshTagID->get_error_message());
+                
+                return false;
+            }
+
+            $welshTagID = $welshTagID['term_id'];
+
+            if(pll_get_term_language($newTagID) !== 'en') {
+                $result = pll_set_term_language($newTagID, 'en');
+                if($result === false) {
+                    error_log('Failed to set language of new tag ' . $missingNewTag . ' in English');
+
+                    return false;
+                }
+            }
+
+            $result = pll_set_term_language($welshTagID, 'cy');
+            if($result === false) {
+                error_log('Failed to set language of new tag ' . $missingNewTag . ' in Welsh');
+
+                return false;
+            }
+
+            $result = pll_save_term_translations([
+                'en' => $newTagID,
+                'cy' => $welshTagID,
+            ]);
+
+            if($result === false) {
+                error_log('Failed to save translations for new tag ' . $missingNewTag);
+
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+// Enable the default WordPress sitemap
+//add_filter('wp_sitemaps_enabled', '__return_true');
