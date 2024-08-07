@@ -586,12 +586,19 @@
 			});*/
 
 			// Disable scrolling the browser window when any of the megaMenu dropdowns are open
+			let openDropdowns = 0;
+
 			$('header .dropdown-toggle').on('show.bs.dropdown', function() {
+				openDropdowns++;
 				$('body').addClass('no-scroll');
 			});
+
 			$('header .dropdown-toggle').on('hide.bs.dropdown', function() {
-				$('body').removeClass('no-scroll');
-			});			
+				openDropdowns--;
+				if (openDropdowns === 0) {
+					$('body').removeClass('no-scroll');
+				}
+			});	
 		});
 	</script>
 @endpush

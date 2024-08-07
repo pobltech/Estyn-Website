@@ -4397,3 +4397,54 @@ add_filter('render_block', function($block_content, $block) {
 
     return $block_content;
 }, 10, 2);
+
+// Add a new admin page called 'Old Files Management' that lists all the files in the /system/files/ directory
+/* add_action('admin_menu', function() {
+    add_menu_page('Old Files Management', 'Old Files Management', 'manage_options', 'old-files-management', __NAMESPACE__ . '\\old_files_management_page', 'dashicons-media-archive');
+}); */
+
+function old_files_management_page() {
+    $filenames = [];
+    $totalFiles = 0;
+
+    try {
+/*         $files = scandir(ABSPATH . '../system/files/');
+        $files = array_filter($files, function($file) {
+            return $file !== '.' && $file !== '..';
+        });
+        
+        $filenames = $files; */
+
+        $rootPath = ABSPATH . '../system/files/';
+
+        // Search all subfolders recursively for PDF files
+        $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($rootPath));
+        //$files = new \RegexIterator($pdfFiles, '/\.pdf$/i');
+        
+        foreach($files as $file) {
+            if ((!$file->isDir()) && $file->isFile() && trim($file->getFilename()) !== '.' && trim($file->getFilename()) !== '..') {
+                $filenames[] = $file->getFilename();
+            }
+        }
+
+
+
+
+
+        foreach($files as $file) {
+            $filenames[] = $file->getFilename();
+        }
+
+        // Sort alphabetically
+        sort($filenames);
+
+        $totalFiles = count($filenames);
+    } catch(\Exception $e) {
+        error_log('Failed to get files in /system/files/ directory. Error: ' . $e->getMessage());
+    }
+
+    echo \Roots\view('admin.old-files-management', [
+        'filenames' => $filenames,
+        'totalFiles' => $totalFiles,
+    ]);
+}

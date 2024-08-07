@@ -212,7 +212,11 @@
                     let map = L.map('map').setView(location, 15);
 
                     // Set the map's tiles
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+                    @if(pll_current_language() == 'cy')
+                        L.tileLayer('https://openstreetmap.cymru/osm_tiles/{z}/{x}/{y}.png').addTo(map);
+                    @else
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+                    @endif
 
                     // Create a marker at the property's location
                     L.marker(location).addTo(map);

@@ -79,7 +79,7 @@
 	    <div class="row">
 	        <div class="slider-carousel-items-container d-flex flex-row flex-nowrap">
                 <?php foreach($carouselItems as $carouselItem) : ?>
-                    <div class="slider-carousel-item card me-2 me-sm-4 h-100" {!! (!empty($carouselItem['team_member_category_term'])) ? 'data-team-member-category-id="' . $carouselItem['team_member_category_term']->term_id . '"' : '' !!}>
+                    <div class="slider-carousel-item card me-2 me-sm-4 h-100" {!! (!empty($carouselItem['team_member_category_term'])) ? 'data-team-member-category-id="' . ((!empty($carouselItem['team_member_category_term'])) ? $carouselItem['team_member_category_term']->term_id : '-1') . '"' : '' !!}>
                         @if(!empty($carouselItem['tag']))
                             <div class="carousel-item-tag text-white px-2 py-1">{{ $carouselItem['tag'] }}</div>
                         @endif

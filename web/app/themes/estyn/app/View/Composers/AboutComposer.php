@@ -38,7 +38,7 @@ class AboutComposer extends Composer
 
         // Add the 'team_member_category' term to each team member post object
         $teamMembers = array_map(function($teamMember) {
-            $teamMember->category = get_the_terms($teamMember->ID, 'team_member_category')[0];
+            $teamMember->category = get_the_terms($teamMember->ID, 'team_member_category') ? get_the_terms($teamMember->ID, 'team_member_category')[0] : null;
             return $teamMember;
         }, $teamMembers);
 
@@ -63,7 +63,7 @@ class AboutComposer extends Composer
             ];
 
             // If the team member is assigned to a team member category, add the category to the carousel item
-            if ($teamMember->category) {
+            if (!empty($teamMember->category)) {
                 $carouselItem['team_member_category_term'] = $teamMember->category;
             }
 
