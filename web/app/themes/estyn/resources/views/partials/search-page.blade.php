@@ -94,7 +94,7 @@
                           {{ __('Type', 'sage') }}
                         </button>
                       </h2>
-                      <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                      <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
                           <div class="form-check">
                             <input class="form-check-input" type="radio" name="postType" id="flexCheckNewsAndBlog" checked>
@@ -123,7 +123,7 @@
                           {{ __('Dates', 'sage') }}
                         </button>
                       </h2>
-                      <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                      <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
                           <div class="row">
                             <div class="col">
@@ -179,7 +179,7 @@
                       {{ __('Local authority', 'sage') }}
                     </button>
                   </h2>
-                  <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                  <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
                       <div class="form-check">
                         <input class="form-check-input" type="radio" name="localAuthority" value="Any" id="flexCheckLocalAuthority-any" checked>
@@ -206,7 +206,7 @@
                       {{ __('Tags', 'sage') }}
                     </button>
                   </h2>
-                  <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                  <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
                       <div class="tag-search-container">
                         <div class="form-group">
@@ -243,7 +243,7 @@
                         {{ __('Type', 'sage') }}
                       </button>
                     </h2>
-                    <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
+                    <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                       <div class="accordion-body">
                         <div class="form-check">
                           <input class="form-check-input" type="radio" name="improvement_resource_type" value="any" id="flexCheckType-any">
@@ -269,7 +269,7 @@
                           {{ __('Year', 'sage') }}
                         </button>
                       </h2>
-                      <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
+                      <div id="flush-collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
                           <div class="row">
                             <div class="col">
@@ -314,7 +314,7 @@
                         {{ __('Type', 'sage') }}
                       </button>
                     </h2>
-                    <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
+                    <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                       <div class="accordion-body">
                         <div class="form-check">
                           <input class="form-check-input" type="radio" name="improvement_resource_type" value="any" id="flexCheckType-any" checked>
@@ -339,7 +339,7 @@
                           {{ __('Year', 'sage') }}
                         </button>
                       </h2>
-                      <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
+                      <div id="flush-collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
                           <div class="row">
                             <div class="col">
@@ -370,7 +370,7 @@
                         {{ __('Category', 'sage') }}
                       </button>
                     </h2>
-                    <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushExample">
+                    <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                       <div class="accordion-body">
                         <div class="form-check">
                           <input class="form-check-input" type="radio" name="inspection_questionnaire_cat" value="any" id="flexCheckCategory-any" checked>
@@ -395,7 +395,7 @@
                           {{ __('Year', 'sage') }}
                         </button>
                       </h2>
-                      <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
+                      <div id="flush-collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
                           <div class="row">
                             <div class="col">
@@ -431,7 +431,7 @@
                       {{ __('Proximity', 'sage') }}
                     </button>
                   </h2>
-                  <div id="flush-collapseProximity" class="accordion-collapse collapse" aria-labelledby="flush-headingProximity" data-bs-parent="#accordionFlushExample">
+                  <div id="flush-collapseProximity" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
                       <div class="form-input mb-2">
                         <label for="proximityPostcode" class="form-label">{{ __('Postcode', 'sage') }}:</label>
@@ -526,7 +526,7 @@
                       {{ __('Language medium', 'sage') }}
                     </button>
                   </h2>
-                  <div id="flush-collapseLanguageMedium" class="accordion-collapse collapse" aria-labelledby="flush-headingLanguageMedium" data-bs-parent="#accordionFlushExample">
+                  <div id="flush-collapseLanguageMedium" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
                       <div class="form-check">
                         <input class="form-check-input" type="radio" name="languageMedium" value="any" id="flexCheckLanguageMedium-any" checked>

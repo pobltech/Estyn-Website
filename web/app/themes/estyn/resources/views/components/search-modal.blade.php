@@ -18,8 +18,8 @@
             <div class="col">
             <h3 class="mb-3">{{ $heading }}</h3>
             <div class="input-group mb-4">
-                <input type="text" list="{{ $modalID }}-datalist-options" class="estyn-search-box form-control" {{ !empty($postType) ? 'data-posttype="' . $postType . '"' : '' }} data-language="{{ empty($language) ? pll_current_language() : $language }}" placeholder="" aria-label="providerSearch" aria-describedby="providerSearch">
-                <button class="estyn-search-box-button {{ $isProviderSearch ? 'estyn-provider-search-button estyn-provider-search-mobile-modal-button' : 'estyn-search-mobile-modal-button' }}  btn btn-secondary" type="button"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+                <input type="text" list="{{ $modalID }}-datalist-options" class="estyn-search-box form-control" {{ !empty($postType) ? 'data-posttype="' . $postType . '"' : '' }} data-language="{{ empty($language) ? pll_current_language() : $language }}" placeholder="" aria-label="{{ __('Search box') }}">
+                <button class="estyn-search-box-button {{ $isProviderSearch ? 'estyn-provider-search-button estyn-provider-search-mobile-modal-button' : 'estyn-search-mobile-modal-button' }}  btn btn-secondary" type="button" aria-label="{{ __('Search button') }}"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
                 <datalist class="search-datalist" id="{{ $modalID }}-datalist-options">
 
                 </datalist>

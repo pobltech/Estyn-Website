@@ -87,8 +87,8 @@
                         </div>
                       </div>
                     </div>--}}
-                    <input type="text" data-modal-id="home-hero-provider-search-modal" list="home-provider-search-datalist-options" class="estyn-search-box form-control" data-posttype="estyn_eduprovider" data-language="{{ pll_current_language() }}" placeholder="" aria-label="providerSearch" aria-describedby="providerSearch">
-                    <button class="estyn-search-box-button estyn-provider-search-button btn btn-secondary" type="button" id="providerSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+                    <input type="text" data-modal-id="home-hero-provider-search-modal" list="home-provider-search-datalist-options" class="estyn-search-box form-control" data-posttype="estyn_eduprovider" data-language="{{ pll_current_language() }}" placeholder="" aria-label="{{ __('Provider search box') }}">
+                    <button class="estyn-search-box-button estyn-provider-search-button btn btn-secondary" type="button" id="providerSearch" aria-label="{{ __('Search button') }}"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
                     <datalist class="search-datalist" id="home-provider-search-datalist-options">
 
                     </datalist>

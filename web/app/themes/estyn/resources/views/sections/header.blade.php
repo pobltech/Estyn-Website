@@ -37,8 +37,8 @@
       <ul class="navbar-nav ms-auto mt-5 mt-xl-0">
         <!-- Parents Carers and learners -->
         <li class="nav-item dropdown mb-4 mb-xl-0">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarParentsDropdownMenuLink" role="button" aria-label="{{ __('Parents, carers, and learners dropdown menu') }}" data-bs-toggle="dropdown" aria-expanded="false">
-          	<div class="d-flex justify-content-between d-xl-inline-block">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarParentsDropdownMenuLink" role="button" aria-labelledby="navbarParentsDropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+          	<div class="d-flex justify-content-between d-xl-inline-block" id="navbarParentsDropdownMenu">
 				<div>
 					<span class="nav-item-sub">{{ __('Estyn for', 'sage') }}</span>
 					<span class="nav-item-main">{{ __('Parents, carers & learners', 'sage') }}</span>
@@ -122,8 +122,8 @@
         </li>
         <!-- Education Proffessionals -->
         <li class="nav-item dropdown mb-4 mb-xl-0">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" aria-label="{{ __('Education Professionals dropdown menu') }}" data-bs-toggle="dropdown" aria-expanded="false">
-		    <div class="d-flex justify-content-between d-xl-inline-block">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarProfessionalDropdownMenuLink" role="button" aria-labelledby="navbarProfessionalDropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+		    <div class="d-flex justify-content-between d-xl-inline-block" id="navbarProfessionalDropdownMenu">
 				<div>
 					<span class="nav-item-sub">{{ __('Estyn for', 'sage') }}</span>
 					<span class="nav-item-main">{{ __('Education professionals', 'sage') }}</span>
@@ -271,8 +271,8 @@
         </li>
         <!-- About -->
         <li class="nav-item nav-item-no-border dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarAboutDropdownMenuLink" role="button" aria-label="About Estyn dropdown menu" data-bs-toggle="dropdown" aria-expanded="false">
-          	<div class="d-flex justify-content-between d-xl-inline-block">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarAboutDropdownMenuLink" role="button" aria-labelledby="navbarAboutDropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+          	<div class="d-flex justify-content-between d-xl-inline-block" id="navbarAboutDropdownMenu">
 				<div>          	
 					<span class="nav-item-sub">{{ __('Who we are', 'sage') }}</span>
 					<span class="nav-item-main">{{ __('About Estyn', 'sage') }}</span>
@@ -447,8 +447,8 @@
 											<div class="col-md-10 pb-4 pb-sm-0 estyn-search-container">
 												<h3 class="mb-4">{{ __('Search Estyn') }}</h3>
 												<div class="estyn-search-container input-group mb-3">
-													<input type="text" id="navSearchEstynBox" data-modal-id="{{ $navSearchUniqueID . '-search-results-modal' }}" data-language="{{ pll_current_language() }}" list="datalistOptions-{{ $navSearchUniqueID }}" class="form-control estyn-search-box" placeholder="" aria-label="estynSearch" aria-describedby="estynSearch">
-													<button class="estyn-search-box-button btn btn-primary" type="button" id="estynSearch"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+													<input type="text" id="navSearchEstynBox" data-modal-id="{{ $navSearchUniqueID . '-search-results-modal' }}" data-language="{{ pll_current_language() }}" list="datalistOptions-{{ $navSearchUniqueID }}" class="form-control estyn-search-box" placeholder="" aria-label="{{ __('Search box') }}">
+													<button class="estyn-search-box-button btn btn-primary" type="button" id="estynSearch" aria-label="{{ __('Search button') }}"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
 													<datalist class="search-datalist" id="datalistOptions-{{ $navSearchUniqueID }}">
 														
 													</datalist>
