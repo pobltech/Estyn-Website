@@ -70,8 +70,8 @@
 													</div>
 												</div>
 											</div>
-											<input type="text" class="form-control estyn-search-box" data-posttype="estyn_eduprovider" list="{{ $ctaUniqueID }}-search-datalist-options" placeholder="Primary schools" aria-label="Primary schools" aria-describedby="button-addon2">
-											<button class="estyn-search-box-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#{{ $ctaUniqueID }}-search-results-modal"><i class="fa-solid fa-magnifying-glass"></i></button>
+											<input type="text" class="form-control estyn-search-box" data-posttype="estyn_eduprovider" list="{{ $ctaUniqueID }}-search-datalist-options" placeholder="{{ __('Primary schools') }}" aria-label="{{ __('Search box') }}">
+											<button class="estyn-search-box-button btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#{{ $ctaUniqueID }}-search-results-modal" aria-label="{{ __('Search button') }}"><i class="fa-solid fa-magnifying-glass"></i></button>
 											<datalist class="search-datalist" id="{{ $ctaUniqueID }}-search-datalist-options">
 
                     						</datalist>

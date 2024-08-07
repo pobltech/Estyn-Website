@@ -40,8 +40,8 @@
                           </div>
                         </div>
                       </div>--}}
-											<input type="text" data-modal-id="estyn-page-header-search-results-modal" list="page-header-provider-search-datalist-options" class="estyn-search-box form-control" data-posttype="estyn_eduprovider" placeholder="{{ __('Primary schools', 'sage') }}" aria-label="{{ __('Primary schools', 'sage') }}" aria-describedby="button-addon2">
-											<button class="estyn-search-box-button estyn-provider-search-button btn btn-primary" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+											<input type="text" data-modal-id="estyn-page-header-search-results-modal" list="page-header-provider-search-datalist-options" class="estyn-search-box form-control" data-posttype="estyn_eduprovider" placeholder="{{ __('Primary schools', 'sage') }}" aria-label="{{ __('Provider search box', 'sage') }}">
+											<button class="estyn-search-box-button estyn-provider-search-button btn btn-primary" type="button" aria-label="{{ __('Search button') }}"><i class="fa-solid fa-magnifying-glass"></i></button>
                       <datalist class="search-datalist" id="page-header-provider-search-datalist-options">
 
                       </datalist>
