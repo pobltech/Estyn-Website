@@ -11,7 +11,7 @@
 	</h2>
 	<div id="<?php echo $attributes['itemID']; ?>" class="accordion-collapse collapse" data-bs-parent="#<?php echo $attributes['parentID']; ?>">
 		<div class="accordion-body">
-			<?php echo $attributes['body']; ?>
+			<?php echo $content; ?>
 		</div>
 	</div>
 </div>

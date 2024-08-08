@@ -516,7 +516,7 @@
 							return;
 						}
 						// Dropdown is open, change to "Back" with left arrow
-						$(this).html('<i class="fa-sharp fa-solid fa-arrow-left"></i> Back');
+						$(this).html("<i class=\"fa-sharp fa-solid fa-arrow-left\"></i> {{ __('Back', 'sage') }}");
 
 						// Hide the other .dropdown-toggle elements' parent
 						$(navDropdownToggles).not(this).parent().hide();

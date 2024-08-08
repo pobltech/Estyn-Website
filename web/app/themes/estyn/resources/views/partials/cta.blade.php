@@ -3,7 +3,7 @@
 @endphp
 <section class="cta my-5 position-relative {{ isset($ctaContainerExtraClasses) ? $ctaContainerExtraClasses : '' }}" id="{{ $ctaUniqueID }}">
 	<div class="container {{ isset($noPY) && $noPY === false ? 'py-5' : '' }} px-md-4 px-xl-5">
-		<div class="row px-md-5 justify justify-content-center">
+		<div class="row justify justify-content-center">
 			<div class="col-12 col-md-10">
 				<div class="card card-cta">
 					@if(isset($imageBreakOut) && $imageBreakOut === true)
@@ -12,40 +12,46 @@
 						<div class="card-body my-2 mx-0 my-sm-5 mx-sm-4 my-lg-5 mx-lg-4">
 					@endif
 						@if(empty($ctaCarouselItems))
-						<div class="row justify-content-center justify-content-lg-start">
+						<div class="row justify-content-center gap-4 justify-content-sm-start gap-sm-0">
 							@if(isset($ctaImageURL))
-							<div class="col-12 col-lg-6 col-xl-5 col-xxl-4 mb-4 mb-md-0 pb-md-5">
+							<div class="col-12 col-sm-6">
 							@else
 							<div class="col-12">
 							@endif
-								<div class="pt-cta-content">
-									<h2 class="mb-3 mb-md-4">{{ $ctaHeading }}</h2>
-									@if(!empty($ctaContent))
-										{!! $ctaContent !!}
-									@elseif(isset($ctaText))
-										<p>{!! $ctaText !!}</p>
-									@endif
-									@if(!empty($ctaButtons))
-										@foreach($ctaButtons as $ctaButton)
-											<a class="btn btn-primary me-3 mb-3" href="{{ $ctaButton['link'] }}">
-												{{ $ctaButton['text'] }}
+								<div class="d-flex flex-column justify-content-center h-100">
+									<div class="pt-cta-content">
+										<h2 class="mb-3 mb-md-4">{{ $ctaHeading }}</h2>
+										@if(!empty($ctaContent))
+											{!! $ctaContent !!}
+										@elseif(isset($ctaText))
+											<p>{!! $ctaText !!}</p>
+										@endif
+										@if(!empty($ctaButtons))
+											<div class="d-flex gap-3">
+												@foreach($ctaButtons as $ctaButton)
+													<a class="btn btn-primary" href="{{ $ctaButton['link'] }}">
+														{{ $ctaButton['text'] }}
+													</a>
+												@endforeach
+											</div>
+										@elseif(!empty($ctaButtonText) && !empty($ctaButtonLinkURL))
+											<a class="btn btn-primary" href="{{ $ctaButtonLinkURL }}">
+												{{ $ctaButtonText }}
+												@if(isset($ctaButtonIconClasses))
+													<i class="{{ $ctaButtonIconClasses }}"></i>
+												@endif
 											</a>
-										@endforeach
-									@elseif(!empty($ctaButtonText) && !empty($ctaButtonLinkURL))
-										<a class="btn btn-primary" href="{{ $ctaButtonLinkURL }}">
-											{{ $ctaButtonText }}
-											@if(isset($ctaButtonIconClasses))
-												<i class="{{ $ctaButtonIconClasses }}"></i>
-											@endif
-										</a>
-									@endif
+										@endif
+									</div>
 								</div>
 							</div>
-							<div class="col-12 col-md-8 col-lg-6 offset-xl-1 position-relative px-sm-5 px-md-0 text-center text-lg-end {{ isset($showSearchBox) && ($showSearchBox === true) ? 'cta-search-col' : '' }}">
+							<div class="col-8 col-sm-5 col-md-4 col-xl-3 offset-sm-1 offset-xl-2 position-relative {{ isset($showSearchBox) && ($showSearchBox === true) ? 'cta-search-col' : '' }}">
 								@if(isset($ctaImageURL))
 									{{-- <img src="{{ $ctaImageURL }}" class="img-fluid pt-cta-image {{ isset($imageBreakOut) && ($imageBreakOut == true) ? 'breakOut' : '' }} {{ $imageExtraClasses ?? ''}}" alt="{{ $ctaImageAlt }}" /> --}}
-									<div class="magic-responsive-landscape-image-container">
-										<img src="{{ $ctaImageURL }}" class=" {{ isset($imageBreakOut) && ($imageBreakOut == true) ? 'breakOut' : '' }} {{ $imageExtraClasses ?? ''}}" alt="{{ $ctaImageAlt }}" />
+									<div class="d-flex flex-column justify-content-center h-100">
+										<div class="magic-responsive-portrait-image-container">
+											<img src="{{ $ctaImageURL }}" class=" {{ isset($imageBreakOut) && ($imageBreakOut == true) ? 'breakOut' : '' }} {{ $imageExtraClasses ?? ''}}" alt="{{ $ctaImageAlt }}" />
+										</div>
 									</div>
 								@endif
 								@if(isset($showSearchBox) && ($showSearchBox === true))

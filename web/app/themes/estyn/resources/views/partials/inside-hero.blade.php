@@ -64,7 +64,7 @@
 <div class="insideIntro pt-4 pt-sm-5 pb-5 pb-md-0 position-relative w-100">
 	<div class="container pb-md-5 px-md-4 px-xl-5">
 		@if(isset($insideIntroLinks))
-			<div class="row py-5 px-xl-5 justify-content-center">
+			<div class="row py-4 py-lg-5 px-xl-5 justify-content-center">
 				@foreach($insideIntroLinks as $link)
 					<div class="col-12 col-md-auto {{ $loop->index > 0 ? 'mt-3 mt-md-0' : '' }}">
 						@include('components.signpost', [
