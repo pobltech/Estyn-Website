@@ -11,7 +11,7 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor';
+import { useBlockProps, InspectorControls, RichText, InnerBlocks } from '@wordpress/block-editor';
 import { TextControl, PanelBody, Disabled } from '@wordpress/components';
 import { useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
@@ -28,20 +28,23 @@ import './editor.scss';
  * Only show the accordion item text if the item is selected/focussed
  */
 const BodySection = ( { isSelected, body, onChange } ) => {
-	if ( isSelected === true ) {
+/* 	const isAnyInnerBlockSelected = useSelect( ( select ) => {
+        const { hasSelectedInnerBlock } = select( 'core/block-editor' );
+        return hasSelectedInnerBlock();
+    }, [] );
+	if ( isSelected === true || isAnyInnerBlockSelected === true ) { */
 		return (
-			<RichText
-				tagName="p"
-				placeholder={ __( 'Content...', 'pobl-tech-accordion-item-block' ) }
-				value={ body }
-				onChange={ onChange }
-			/>
+            <InnerBlocks
+                template={ [
+                    [ 'core/paragraph', { placeholder: __( 'Content...', 'pobl-tech-accordion-item-block' ), content: body } ]
+                ] }
+            />
 		)
-	} else {
+/* 	} else {
 		return (
 			<></>
 		)
-	}
+	} */
 };
 
 /**
@@ -90,7 +93,12 @@ export default function Edit( { attributes, setAttributes, clientId }) {
 					value={ heading }
 					onChange={ ( value ) => setAttributes( { heading: value } ) }
 				/>
-				<BodySection isSelected={isSelected} body={body} onChange = {( value ) => setAttributes( { body: value } )} />
+				<InnerBlocks
+					allowedBlocks={ null } 
+					template={ [
+						[ 'core/paragraph', { placeholder: __( 'Content...', 'pobl-tech-accordion-item-block' ), content: body } ]
+					] }
+            	/>
 			</div>
 		</div>
 	);

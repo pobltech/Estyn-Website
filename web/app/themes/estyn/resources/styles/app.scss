@@ -116,6 +116,14 @@ $m-5: $p-5;
 
 $paragraph-margin-bottom: 1.6rem;
 
+a, a:visited, a:active {
+    color: $estyn-darkblue;
+
+    &.btn-primary {
+        color: white;
+    }
+}
+
 .colour-black {
     color: black;
 }
@@ -192,6 +200,10 @@ body {
 }
 .bg-blue {
     background-color: $estyn-blue;
+
+    a, a:visited, a:active {
+        color: white;
+    }
 
     .accordion-item {
         background: transparent;
@@ -1586,7 +1598,7 @@ p.sp-desc {
             }
         }*/
 
-        border-radius: $border-radius-sm;
+        border-radius: $border-radius-sm + 0.20;
 
 /*         &.breakOut {
             max-width: 100%;

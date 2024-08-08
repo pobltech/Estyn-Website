@@ -713,6 +713,26 @@ add_action('rest_api_init', function () {
     ));
 });
 
+function providerOrderBy($orderby, $query) {
+    /**
+     * Order by post title except that we want to put the providers whose title starts with a number or symbol at the bottom
+     */
+    $postType = $query->get('post_type');
+    if( (is_array($postType) && in_array('estyn_eduprovider', $postType)) || $postType == 'estyn_eduprovider' )  {
+        $orderby = "CASE
+            WHEN post_title REGEXP '^[0-9]' THEN 1
+            ELSE 0
+        END, post_title ASC";
+    } else {
+        $orderby = "post_title ASC";
+    }
+
+    return $orderby;
+}
+
+add_filter('posts_orderby', __NAMESPACE__ . '\\providerOrderBy', 10, 2);
+
+
 // For the typical 'search Estyn' boxes
 // Returns an array of items with the URL and title or an empty array if no results
 function estyn_all_search(\WP_REST_Request $request) {
@@ -722,10 +742,11 @@ function estyn_all_search(\WP_REST_Request $request) {
     $language = !empty($params['language']) ? $params['language'] : (function_exists('pll_current_language') ? pll_current_language() : 'en');
 
     $query = new \WP_Query([
-        'posts_per_page' => 20,
-        'post_type' => $request->get_param('postType') != null ? $request->get_param('postType') : ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_inspguidance', 'estyn_insp_qu', 'estyn_eduprovider'],
-        's' => $request->get_param('searchText'),
-        'lang' => $language
+        'posts_per_page' => -1,
+        'post_type' => !empty($params['postType']) ? $params['postType'] : ['post', 'estyn_newsarticle', 'estyn_imp_resource', 'estyn_inspectionrpt', 'estyn_inspguidance', 'estyn_insp_qu', 'estyn_eduprovider'],
+        's' => $params['searchText'],
+        'lang' => $language,
+        'orderby' => 'custom'
     ]);
 
 
@@ -762,10 +783,33 @@ function estyn_all_search(\WP_REST_Request $request) {
 
     if($query->found_posts == 0) {
         return [];
-    } 
+    }
+
+    /**
+     * If post type is estyn_eduprovider, we don't want the posts whose title
+     * starts with a number or symbol to be at the top of the list
+     */
+/*     if($request->get_param('postType') == 'estyn_eduprovider') {
+        foreach($posts as $key => $post) {
+            if(preg_match('/^[0-9\W]/', $post->post_title)) {
+                unset($posts[$key]);
+                array_push($posts, $post);
+            }
+        }
+    } */
+
+    $maxPosts = 20;
+    $numPostsSoFar = 0;
 
     $items = [];
     foreach($posts as $post) {
+        error_log($post->post_title);
+        if($numPostsSoFar >= $maxPosts) {
+            break;
+        }
+
+        $numPostsSoFar++;
+
         // When finding an inspection report or annual report of inspection guidance or inspection questionnaire,
         // return the link to the PDF file instead of the link to the post
         $isAnnualReport = false;
@@ -846,6 +890,7 @@ function calculateDistanceBetween($latitudeFrom, $longitudeFrom, $latitudeTo, $l
 }
 
 
+
 // For the search pages (ajax) requests
 // Also used to search for anything. The main difference is that it returns the 'resource list' HTML using the 'resource-list' Blade template
 function estyn_resources_search(\WP_REST_Request $request) {
@@ -877,9 +922,9 @@ function estyn_resources_search(\WP_REST_Request $request) {
         } elseif($params['postType'] === 'estyn_eduprovider') {
             if(empty($params['inspectionSchedule'])) {
                 $args['post_type'] = 'estyn_eduprovider';
-                $args['posts_per_page'] = 50;
-                $args['orderby'] = 'title';
-                $args['order'] = 'ASC';
+                /* $args['posts_per_page'] = 50; */
+                $args['orderby'] = 'custom'; // This will use the posts_orderby filter which calls our providerOrderBy function
+                //$args['order'] = 'ASC';
                 //$args['lang'] = 'en'; // We only want to show the English version of the provider
             } else {
                 $args['post_type'] = 'estyn_eduprovider';
