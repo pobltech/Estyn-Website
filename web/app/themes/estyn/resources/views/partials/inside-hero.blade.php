@@ -38,9 +38,11 @@
 		@if(!empty($heroImageID))
 			{!! wp_get_attachment_image($heroImageID, 'full', false, ['class' => 'img-fluid']) !!}
 		@elseif(!empty($heroImageSrc))
-			<img src="{{ $heroImageSrc }}" alt="{{ $heroImageAlt }}" />
+			<img src="{{ $heroImageSrc }}" class="img-fluid" alt="{{ $heroImageAlt }}" />
 		@elseif(!empty($heroImageImgTag))
 			{!! $heroImageImgTag !!}
+		@else
+			<img src="@asset('images/' . ESTYN_DEFAULT_HERO_IMAGE_FILENAME)" class="img-fluid" alt="{{ __('Estyn logo on a blue background', 'sage') }}" />
 		@endif
 	</div>
 	<div class="heroOverlay"></div>
