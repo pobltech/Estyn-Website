@@ -81,17 +81,17 @@
     }
 
     if($providerPostID) {
-        $providerName = get_the_title($providerPostID);
-        $providerIconImage = get_field('icon_image', $providerPostID) ? get_field('icon_image', $providerPostID) : null;
-        $providerNumPupils = get_field('number_of_pupils', $providerPostID) ? get_field('number_of_pupils', $providerPostID) : null;
-        $providerAgeRange = get_field('age_range', $providerPostID) ? get_field('age_range', $providerPostID) : null;
+      $providerName = get_the_title($providerPostID);
+      $providerIconImage = get_field('icon_image', $providerPostID) ? get_field('icon_image', $providerPostID) : null;
+      $providerNumPupils = get_field('number_of_pupils', $providerPostID) ? get_field('number_of_pupils', $providerPostID) : null;
+      $providerAgeRange = get_field('age_range', $providerPostID) ? get_field('age_range', $providerPostID) : null;
 
-        $pageHeaderArgs['providerDetails'] = [
-            'name' => $providerName,
-            'icon_image' => $providerIconImage,
-            'number_of_pupils' => $providerNumPupils,
-            'age_range' => $providerAgeRange
-        ];
+      $pageHeaderArgs['providerDetails'] = [
+          'name' => $providerName,
+          'icon_image' => is_array($providerIconImage) ? $providerIconImage : null, // Bugfix. ACF should return an array.
+          'number_of_pupils' => $providerNumPupils,
+          'age_range' => $providerAgeRange
+      ];
     }
 ?>
 @include('partials.page-header', $pageHeaderArgs)
