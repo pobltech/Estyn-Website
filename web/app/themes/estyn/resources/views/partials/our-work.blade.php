@@ -24,7 +24,7 @@
                     <!-- Box -->
                     {{--<div class="col-12 col-md-6 py-md-4">
                         <div class="landscapeImg mb-2 mb-md-4">
-                            <img src="{{ asset('images/sectordefaulthero.jpg') }}" alt=""/>
+                            <img src="{{ asset('images/sectordefaulthero1.jpg') }}" alt=""/>
                         </div>
             <h4 class="mb-0">Title</h4>
             <p>Desc</p>
@@ -32,7 +32,7 @@
                     <!-- Box -->
                     <div class="col-12 col-md-6 py-md-4">
                         <div class="landscapeImg mb-2 mb-md-4">
-                            <img src="{{ asset('images/sectordefaulthero.jpg') }}" alt=""/>
+                            <img src="{{ asset('images/sectordefaulthero1.jpg') }}" alt=""/>
                         </div>
             <h4 class="mb-0">Title</h4>
             <p>Desc</p>
@@ -40,7 +40,7 @@
                     <!-- Box -->
                     <div class="col-12 col-md-6 py-md-4">
                         <div class="landscapeImg mb-2 mb-md-4">
-                            <img src="{{ asset('images/sectordefaulthero.jpg') }}" alt=""/>
+                            <img src="{{ asset('images/sectordefaulthero1.jpg') }}" alt=""/>
                         </div>
             <h4 class="mb-0">Title</h4>
             <p>Desc</p>
@@ -48,7 +48,7 @@
                     <!-- Box -->
                     <div class="col-12 col-md-6 py-md-4">
                         <div class="landscapeImg mb-2 mb-md-4">
-                            <img src="{{ asset('images/sectordefaulthero.jpg') }}" alt=""/>
+                            <img src="{{ asset('images/sectordefaulthero1.jpg') }}" alt=""/>
                         </div>
             <h4 class="mb-0">Title</h4>
             <p class="mb-0">Desc</p>

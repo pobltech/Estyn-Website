@@ -45,7 +45,7 @@
                 'ctaText' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultrices nist et risus tristique, et ornare eros vulputate. Vivamus justo sem, elementum congue nist ut, elementum tristique neque.', 'sage'),
                 'ctaButtonLinkURL' => '#',
                 'ctaButtonText' => __('Becoming an inspector', 'sage'),
-                'ctaImageURL' => asset('images/cta-example.png'),
+                'ctaImageURL' => asset('images/cta-example1.png'),
                 'ctaImageAlt' => 'CTA example'
             ])--}}
         </div>

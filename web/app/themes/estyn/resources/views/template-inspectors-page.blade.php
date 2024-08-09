@@ -59,7 +59,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="magic-responsive-image-container">
-                                    <a href="#"><img src="{{ asset('images/homeherofallback.png') }}" alt="Inspectors" class="img-fluid rounded-3"></a>
+                                    <a href="#"><img src="{{ asset('images/homeherofallback1.jpg') }}" alt="Inspectors" class="img-fluid rounded-3"></a>
                                 </div>
                             </div>
                             <div class="col-12">

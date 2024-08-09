@@ -48,7 +48,7 @@ class AboutComposer extends Composer
             $imageURL = get_the_post_thumbnail_url($teamMember->ID, 'full');
             $imageAlt = '';
             if(empty($imageURL)) {
-                $imageURL = asset('images/teammemberplaceholder.png')->uri();
+                $imageURL = asset('images/teammemberplaceholder1.png')->uri();
                 $imageAlt = __('Placeholder image', 'sage');
             } else {
                 $imageAlt = get_post_meta(get_post_thumbnail_id($teamMember->ID), '_wp_attachment_image_alt', true);

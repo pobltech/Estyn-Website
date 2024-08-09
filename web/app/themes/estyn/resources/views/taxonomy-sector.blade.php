@@ -8,7 +8,7 @@
         $heroImageID = null;
         $heroImageSrc = null;
         if(empty($heroImage)) {
-            $heroImageSrc = asset('images/sectordefaulthero.jpg');
+            $heroImageSrc = asset('images/sectordefaulthero1.jpg');
             $heroImageAlt = __('Education in the ' . $term->name . ' sector', 'sage');
         } else {
             $heroImageID = $heroImage['ID'];
@@ -20,7 +20,7 @@
         $introImageID = null;
         $introImageSrc = null;
         if(empty($introImage)) {
-            $introImageSrc = asset('images/sectordefaulthero.jpg');
+            $introImageSrc = asset('images/sectordefaulthero1.jpg');
             $introImageAlt = __('Education in the ' . $term->name . ' sector', 'sage');
         } else {
             $introImageID = $introImage['ID'];
@@ -127,7 +127,7 @@
                     'ctaText' => get_field('cta_text', $term) ?? __('Our guide on what to expect during an inspection of your setting.', 'sage'),
                     'ctaButtonLinkURL' => (!empty(get_field('cta_button_link', $term))) ? get_field('cta_button_link', $term) : App\get_permalink_by_template('template-inspections.blade.php'),
                     'ctaButtonText' => get_field('cta_button_text', $term) ?? __('My inspection guide', 'sage'),
-                    'ctaImageURL' => get_field('cta_image', $term) ?? asset('images/inspection1.png'),
+                    'ctaImageURL' => get_field('cta_image', $term) ?? asset('images/inspectionctaplaceholder.png'),
                     'ctaImageAlt' => get_field('cta_image_alt', $term) ?? __('Education in the ' . $term->name . ' sector', 'sage')
                 ])
                 </div>

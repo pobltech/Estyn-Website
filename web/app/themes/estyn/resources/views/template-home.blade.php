@@ -15,11 +15,11 @@
       </div>
     </div>
     <div class="heroImage">
-      {{-- If there's a featured image, we'll use Wordpress' function, otherwise we use asset('images/homeherofallback.png') --}}
+      {{-- If there's a featured image, we'll use Wordpress' function, otherwise we use asset('images/homeherofallback1.jpg') --}}
       @if(has_post_thumbnail())
         {!! the_post_thumbnail('full') !!}
       @else
-        <img src="{{ asset('images/homeherofallback.png') }}" alt="{{ __('Several children in a bright, Chemistry classroom') }}" />
+        <img src="{{ asset('images/homeherofallback1.jpg') }}" alt="{{ __('Several children in a bright, Chemistry classroom') }}" />
       @endif
     </div>
     <div class="heroOverlay"></div>

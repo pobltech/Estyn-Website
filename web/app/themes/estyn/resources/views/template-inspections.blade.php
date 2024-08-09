@@ -5,7 +5,7 @@
 @section('content')
     @include('partials.inside-hero', [
         'title' => get_the_title(),
-        'heroImageImgTag' => get_the_post_thumbnail(get_the_ID(), 'full') ?: '<img src="' . asset('attendance-and-attitudes-to-learning-photo-2-BPF-ESP-55.jpg') . '" alt="Primary school children in red polo shirts, playing outside their school." />',
+        'heroImageImgTag' => get_the_post_thumbnail(get_the_ID(), 'full') ?: '<img src="' . asset('images/' . ESTYN_DEFAULT_HERO_IMAGE_FILENAME) . '" alt="{{ __('Estyn logo on blue background', 'sage') }}" />',
         'secondHeading' => get_field('inside_hero_heading') ?: __('Estyn inspections', 'sage'),
         'introContent' => get_field('inside_hero_content') ?: '
             <p>Estyn carry out inspections with the aim of improving the quality of education and training for all learners in Wales.</p>
@@ -13,8 +13,8 @@
             <a class="btn btn-outline-primary">The current inspection process</a><br/>
             <a class="btn btn-outline-primary">Inspection from 2024-2030</a>
         ',
-        'introImageSrc' => get_field('inside_hero_image') ? get_field('inside_hero_image')['url'] : asset('images/cta-example.png'),
-        'introImageAlt' => get_field('inside_hero_image') ? get_field('inside_hero_image')['alt'] : 'A cartoon hand is holding a phone or tablet which is displaying some questionnaire data, while some cheerful people are pointing at it and discussing it.',
+        'introImageSrc' => get_field('inside_hero_image') ? get_field('inside_hero_image')['url'] : asset('images/cta-example1.png'),
+        'introImageAlt' => get_field('inside_hero_image') ? get_field('inside_hero_image')['alt'] : __('Estyn logo on a blue background', 'sage'),
         'introLinks' => array_map(function($button) {
             return [
                 'url' => $button['custom_url'] ?: get_permalink($button['content_to_link_to'][0]->ID), // ACF Relationship field. Custom URL field has priority.
