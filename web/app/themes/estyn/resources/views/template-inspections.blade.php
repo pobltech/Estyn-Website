@@ -5,7 +5,7 @@
 @section('content')
     @include('partials.inside-hero', [
         'title' => get_the_title(),
-        'heroImageImgTag' => get_the_post_thumbnail(get_the_ID(), 'full') ?: '<img src="' . asset('images/' . ESTYN_DEFAULT_HERO_IMAGE_FILENAME) . '" alt="{{ __('Estyn logo on blue background', 'sage') }}" />',
+        'heroImageImgTag' => get_the_post_thumbnail(get_the_ID(), 'full') ?: '<img src="' . asset('images/' . ESTYN_DEFAULT_HERO_IMAGE_FILENAME) . '" alt="' . __('Estyn logo on blue background', 'sage') . '" />',
         'secondHeading' => get_field('inside_hero_heading') ?: __('Estyn inspections', 'sage'),
         'introContent' => get_field('inside_hero_content') ?: '
             <p>Estyn carry out inspections with the aim of improving the quality of education and training for all learners in Wales.</p>
