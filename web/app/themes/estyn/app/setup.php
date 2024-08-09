@@ -4445,9 +4445,16 @@ function newsAndBlogSliderItems($maxItems = 20) {
             continue;
         }
 
+        $truncatedTitle = get_field('pretty_title', $post->ID) ?: get_the_title($post->ID);
+/*         if(empty($truncatedTitle)) {
+            // Truncate to 80 characters + ' [...]' if necessary
+            $title = get_the_title($post->ID);
+            $truncatedTitle = strlen($title) > 80 ? substr($title, 0, 80) . ' [...]' : $title;
+        } */
+
         $sliderItems[] = [
             'featured_image_ID' => get_post_thumbnail_id($post->ID),
-            'title' => get_the_title($post->ID),
+            'title' => $truncatedTitle,
             'link' => get_the_permalink($post->ID),
             'date' => get_the_date('Y-m-d', $post->ID),
         ];
