@@ -189,7 +189,7 @@
                       </div>
                       @foreach($localAuthorities as $localAuthority)
                         <div class="form-check">
-                          <input class="form-check-input" type="radio" name="localAuthority" value="{{ $localAuthority->slug }}" id="flexCheckLocalAuthority-{{ $localAuthority->slug }}">
+                          <input class="form-check-input" type="radio" name="localAuthority" value="{{ $localAuthority->slug }}" id="flexCheckLocalAuthority-{{ $localAuthority->slug }}" {{ (!empty($_GET['sector'])) && ((strtolower($_GET['sector']) == strtolower($localAuthority->name)) || (strtolower($_GET['sector']) == strtolower($localAuthority->slug))) ? 'checked' : '' }}>
                           <label class="form-check-label" for="flexCheckLocalAuthority-{{ $localAuthority->slug }}">
                             {{ $localAuthority->name }}
                           </label>
@@ -253,7 +253,7 @@
                         </div>
                         @foreach($improvementResourceTypes as $improvementResourceType)
                           <div class="form-check">
-                            <input class="form-check-input" type="radio" name="improvement_resource_type" value="{{ $improvementResourceType->slug }}" id="flexCheckType-{{ $improvementResourceType->slug }}" {{ (!empty($_GET['type'])) && (strtolower($_GET['type']) == strtolower($improvementResourceType->name)) ? 'checked' : '' }}>
+                            <input class="form-check-input" type="radio" name="improvement_resource_type" value="{{ $improvementResourceType->slug }}" id="flexCheckType-{{ $improvementResourceType->slug }}" {{ (!empty($_GET['type'])) && ((strtolower($_GET['type']) == strtolower($improvementResourceType->name)) || (strtolower($_GET['type']) == strtolower($improvementResourceType->slug))) ? 'checked' : '' }}>
                             <label class="form-check-label" for="flexCheckType-{{ $improvementResourceType->slug }}">
                               {{ $improvementResourceType->name }}
                             </label>
@@ -1233,6 +1233,37 @@
 
         $("#searchTags").on("keyup", function(key) {
           filterTags();
+        });
+
+        // If any of the tags checkboxes are already checked on page load, open the tags collapse
+        $(".search-filters input[name='tags[]']:checked").each(function() {
+          $(this).closest('.collapse').collapse('show');
+        });
+
+        // If any of the tags checkboxes are checked, then move them to the top of the list
+        $(".search-filters input[name='tags[]']:checked").each(function() {
+          $(this).closest('.form-check').prependTo($(this).closest('.tag-list'));
+        });
+
+        // If a sector radio button is checked on page load (except for 'Any sector'), open the sector collapse
+        $(".search-filters input[name='sector']:checked").each(function() {
+          if($(this).val() != 'any') {
+            $(this).closest('.collapse').collapse('show');
+          }
+        });
+
+        // If a 'type' radio button is checked on page load (except for 'Any type'), open the type collapse
+        $(".search-filters input[name='improvement_resource_type']:checked").each(function() {
+          if($(this).val() != 'any') {
+            $(this).closest('.collapse').collapse('show');
+          }
+        });
+
+        // If a 'local authority' radio button is checked on page load (except for 'Any local authority'), open the local authority collapse
+        $(".search-filters input[name='localAuthority']:checked").each(function() {
+          if($(this).val() != 'Any') {
+            $(this).closest('.collapse').collapse('show');
+          }
         });
 
         @if(!empty($searchArgs))
