@@ -51,12 +51,19 @@
 
     $reportResources = null; // For Thematic Reports
 
+    $isTrainingMaterials = false; // For Thematic Reports that are actually just the training materials for another thematic report
+
 
     if($isThematicReport) {
+      // If the title contains the words 'training materials' or 'deunydd hyfforddiant', $isTrainingMaterials is true
+      if(preg_match('/training materials/i', get_the_title()) || preg_match('/deunydd hyfforddiant/i', get_the_title())) {
+        $isTrainingMaterials = true;
+      }
+
       $reportResources = get_field('report_resources');
 
       $pageHeaderArgs['extraButtons'] = [
-          ['text' => __('Download report', 'sage') . ($thematicReportData['fullReportLanguage'] != pll_current_language() ? (pll_current_language() == 'cy' ? ' (Saesneg)' : ' (Welsh)') : ''), 'url' => $thematicReportData['fullReportDownloadURL'] ?? '#', 'iconClasses' => 'fa-sharp fa-solid fa-file-arrow-down']
+          ['text' => ($isTrainingMaterials ? __('Download training materials', 'sage') : __('Download report', 'sage')) . ($thematicReportData['fullReportLanguage'] != pll_current_language() ? (pll_current_language() == 'cy' ? ' (Saesneg)' : ' (Welsh)') : ''), 'url' => $thematicReportData['fullReportDownloadURL'] ?? '#', 'iconClasses' => 'fa-sharp fa-solid fa-file-arrow-down']
       ];
 
       if(!empty($thematicReportResources)) {
@@ -272,9 +279,9 @@
 	@include('partials.cta', [
 		'noArc' => true,
 		'ctaUniqueID' => 'download-full-report',
-		'ctaHeading' => __('Download the full report', 'sage'),
+		'ctaHeading' => $isTrainingMaterials ? __('Download the training materials') : __('Download the full report', 'sage'),
 		'ctaButtonLinkURL' => $thematicReportData['fullReportDownloadURL'] ?? '#',
-		'ctaButtonText' => __('Download the full report', 'sage'),
+		'ctaButtonText' => $isTrainingMaterials ? __('Download the training materials') : __('Download the full report', 'sage'),
 		'ctaButtonIconClasses' => 'fa-sharp fa-solid fa-file-arrow-down',
 		'ctaContainerExtraClasses' => 'pb-md-5',
 	])
