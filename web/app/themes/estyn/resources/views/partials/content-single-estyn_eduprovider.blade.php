@@ -54,6 +54,8 @@
                         'items' => $items,
                         'noMarginBottom' => true
                     ])
+                @else
+                    <p>{{ __('No inspection reports available for this provider', 'sage') }}</p>
                 @endif
             </div>
             <div class="col-auto col-md-5">

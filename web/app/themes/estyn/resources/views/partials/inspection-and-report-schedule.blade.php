@@ -5,9 +5,12 @@
 </div>
 <div class="row justify-content-center">
     <div class="col-12 col-md-6 mb-5">
+        <h3>{{ __('Latest inspection reports', 'sage') }}</h3>
         @if(!empty($inspectionReports))
-            <h3>{{ __('Latest inspection reports', 'sage') }}</h3>
             @include('components.resource-list', ['items' => $inspectionReports])
+            <a class="btn btn-outline-primary" href="{{ App\get_permalink_by_template('template-inspection-report-search.blade.php') }}">{{ __('See all inspection reports', 'sage') }}</a>
+        @else
+            <p>{{ __('No inspection reports available', 'sage') }}</p>
         @endif
         {{--@include('components.resource-list', ['items' => [
             [
@@ -59,12 +62,14 @@
                 'title' => 'Ceredigion Adult Learning in the Community Partnership'
             ]
         ]])--}}
-        <a class="btn btn-outline-primary" href="{{ App\get_permalink_by_template('template-inspection-report-search.blade.php') }}">{{ __('See all inspection reports', 'sage') }}</a>
     </div>
     <div class="col-12 col-md-6">
+        <h3>{{ __('Inspection schedule', 'sage') }}</h3>
         @if(!empty($inspectionScheduleResourceListItems))
-            <h3>{{ __('Inspection schedule', 'sage') }}</h3>
             @include('components.resource-list', ['items' => $inspectionScheduleResourceListItems])
+            <a class="btn btn-outline-primary" href="{{ App\get_permalink_by_template('template-inspection-schedule-search-page.blade.php') }}">{{ __('View the full inspection schedule', 'sage') }}</a>
+        @else
+            <p>{{ __('No inspection schedule available', 'sage') }}</p>
         @endif
         {{--@include('components.resource-list', ['items' => [
             [
@@ -104,6 +109,5 @@
                 'title' => 'Ceredigion Adult Learning in the Community Partnership'
             ]*/
         ]])--}}
-        <a class="btn btn-outline-primary" href="{{ App\get_permalink_by_template('template-inspection-schedule-search-page.blade.php') }}">{{ __('View the full inspection schedule', 'sage') }}</a>
     </div>
 </div>
