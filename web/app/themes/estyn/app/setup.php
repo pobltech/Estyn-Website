@@ -4418,7 +4418,7 @@ function checkForDuplicateProvidersInAPITable() {
     return 'success';
 }
 
-function newsAndBlogSliderItems($maxItems = 20) {
+function newsAndBlogSliderItems($maxItems = 10) {
     $newsAndBlogPosts = \get_posts([
         'post_type' => ['post', 'estyn_newsarticle'],
         'posts_per_page' => -1,
